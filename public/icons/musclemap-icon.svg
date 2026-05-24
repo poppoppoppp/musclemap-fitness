@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="MuscleMap Fitness icon">
+  <rect width="512" height="512" rx="104" fill="#020617"/>
+  <path d="M104 348c46-64 78-130 88-198 28 42 49 90 64 144 15-54 36-102 64-144 10 68 42 134 88 198" fill="none" stroke="#22d3ee" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M138 190c32-24 69-36 118-36s86 12 118 36" fill="none" stroke="#14b8a6" stroke-width="22" stroke-linecap="round"/>
+  <path d="M126 380h260" fill="none" stroke="#5eead4" stroke-width="26" stroke-linecap="round"/>
+</svg>

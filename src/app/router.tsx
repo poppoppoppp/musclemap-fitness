@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import App from './App';
 import Dashboard from '../pages/Dashboard';
@@ -6,6 +7,22 @@ import ExerciseLibrary from '../pages/ExerciseLibrary';
 import MuscleMap from '../pages/MuscleMap';
 import PlanBuilder from '../pages/PlanBuilder';
 import WorkoutLog from '../pages/WorkoutLog';
+
+const ThreeMuscleDemo = lazy(() => import('../pages/ThreeMuscleDemo'));
+
+function ThreeMuscleDemoRoute() {
+  return (
+    <Suspense
+      fallback={
+        <div className="rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600 shadow-sm">
+          正在加载 3D 技术预研 Demo…
+        </div>
+      }
+    >
+      <ThreeMuscleDemo />
+    </Suspense>
+  );
+}
 
 export const router = createBrowserRouter([
   {
@@ -17,6 +34,7 @@ export const router = createBrowserRouter([
       { path: 'exercises', element: <ExerciseLibrary /> },
       { path: 'exercises/:exerciseId', element: <ExerciseDetail /> },
       { path: 'plan-builder', element: <PlanBuilder /> },
+      { path: 'three-muscle-demo', element: <ThreeMuscleDemoRoute /> },
       { path: 'workout-log', element: <WorkoutLog /> }
     ]
   }

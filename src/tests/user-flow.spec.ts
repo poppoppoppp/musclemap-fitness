@@ -28,6 +28,50 @@ test('app exposes pwa metadata for installation', async ({ page }) => {
   await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveAttribute('href', '/icons/musclemap-192.png');
 });
 
+test('three muscle demo renders selectable placeholder muscle regions', async ({ page }) => {
+  await page.goto('/three-muscle-demo');
+
+  await expect(page.getByRole('heading', { name: '3D 肌群模型技术预研' })).toBeVisible();
+  await expect(page.getByText('该页面为实验 Demo，不影响正式肌群地图。当前模型为占位几何体，不代表真实解剖结构。')).toBeVisible();
+  await expect(page.getByTestId('three-muscle-canvas')).toBeVisible();
+
+  await page.getByTestId('select-three-muscle-latissimus-dorsi').click();
+  await expect(page.getByTestId('three-selected-muscle-id')).toContainText('latissimus-dorsi');
+  await expect(page.getByTestId('three-selected-muscle-name')).toContainText('背阔肌');
+  await expect(page.getByTestId('three-selected-muscle-match')).toContainText('已匹配');
+
+  await page.getByTestId('select-three-muscle-rhomboids').click();
+  await expect(page.getByTestId('three-selected-muscle-id')).toContainText('rhomboids');
+
+  await page.getByTestId('select-three-muscle-rear-deltoid').click();
+  await expect(page.getByTestId('three-selected-muscle-id')).toContainText('rear-deltoid');
+});
+
+test('three muscle demo loads the GLB pipeline test model', async ({ page }) => {
+  await page.goto('/three-muscle-demo');
+
+  await expect(page.getByTestId('glb-experiment-panel')).toBeVisible();
+  await expect(page.getByText('当前 GLB 模型仅用于加载管线测试，不代表真实人体或肌群结构。')).toBeVisible();
+  await expect(page.getByText('模型文件：BoxTextured.glb')).toBeVisible();
+  await expect(page.getByText('用途：仅用于 GLBLoader 管线测试')).toBeVisible();
+  await expect(page.getByText('说明：该模型不是人体模型，也不是肌肉模型，不代表真实解剖结构。')).toBeVisible();
+  await expect(page.getByTestId('glb-load-status')).toContainText('加载成功');
+  await expect(page.getByTestId('glb-mesh-count')).toContainText(/[1-9]/);
+
+  await page.getByTestId('select-glb-test-mesh').click();
+  await expect(page.getByTestId('glb-selected-mesh-name')).not.toContainText('未选择');
+  await expect(page.getByTestId('glb-technical-muscle-id')).toContainText('latissimus-dorsi');
+});
+
+test('three muscle demo does not overflow at 390px mobile width', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/three-muscle-demo');
+
+  await expect(page.getByTestId('three-muscle-canvas')).toBeVisible();
+  const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+  expect(hasHorizontalOverflow).toBe(false);
+});
+
 test('workout log hides invalid legacy latest sets instead of rendering undefined values', async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.removeItem('musclemap.latestGeneratedPlan.v0.2');

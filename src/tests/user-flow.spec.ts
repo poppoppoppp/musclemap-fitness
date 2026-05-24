@@ -77,7 +77,8 @@ test('rhomboids exercise detail keeps muscle context across alternatives', async
 
   await expect(page).toHaveURL(/\/exercises\/seated-row\?muscleId=rhomboids$/);
   const alternatives = page.getByTestId('contextual-alternatives');
-  await expect(alternatives).toContainText('涓荤粌鍖归厤');
+  await expect(alternatives).toContainText('主练匹配');
+  await expect(alternatives).not.toContainText('滑草科键归屎');
   await expect(alternatives).not.toContainText('Deadlift');
   await expect(alternatives).not.toContainText('Back Extension');
   await expect(alternatives).not.toContainText('Romanian Deadlift');
@@ -92,11 +93,13 @@ test('rhomboids exercise detail keeps muscle context across alternatives', async
 test('exercise detail falls back to primary muscle when muscleId is missing or invalid', async ({ page }) => {
   await page.goto('/exercises/lat-pulldown');
   await expect(page.getByTestId('alternative-link-pull-up')).toBeVisible();
-  await expect(page.getByTestId('contextual-alternatives')).toContainText('涓荤粌鍖归厤');
+  await expect(page.getByTestId('contextual-alternatives')).toContainText('主练匹配');
+  await expect(page.getByTestId('contextual-alternatives')).not.toContainText('滑草科键归屎');
 
   await page.goto('/exercises/lat-pulldown?muscleId=not-a-real-muscle');
   await expect(page.getByTestId('alternative-link-pull-up')).toBeVisible();
-  await expect(page.getByTestId('contextual-alternatives')).toContainText('涓荤粌鍖归厤');
+  await expect(page.getByTestId('contextual-alternatives')).toContainText('主练匹配');
+  await expect(page.getByTestId('contextual-alternatives')).not.toContainText('滑草科键归屎');
 });
 
 test('exercise detail removes misleading alternative relationships', async ({ page }) => {

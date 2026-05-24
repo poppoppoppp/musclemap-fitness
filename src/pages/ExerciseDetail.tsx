@@ -62,7 +62,7 @@ export default function ExerciseDetail() {
                   className="inline-flex flex-col gap-1 rounded-md border border-line bg-slate-950 px-3 py-2 text-sm hover:border-accent hover:text-accent"
                 >
                   <span>{alternative.exercise.name}</span>
-                  <span className="text-xs text-slate-400">{alternative.matchType === 'primary' ? '涓荤粌鍖归厤' : '娆¤鍙備笌'}</span>
+                  <span className="text-xs text-slate-400">{alternative.matchType === 'primary' ? '主练匹配' : '次要参与'}</span>
                 </Link>
               ))}
             </div>

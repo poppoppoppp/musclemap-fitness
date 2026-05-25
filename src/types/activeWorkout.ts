@@ -1,5 +1,5 @@
 export type ActiveWorkoutStatus = 'active';
-export type ActiveWorkoutSource = 'manual';
+export type ActiveWorkoutSource = 'manual' | 'exercise-detail';
 
 export interface ActiveWorkout {
   id: string;

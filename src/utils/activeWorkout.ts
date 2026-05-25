@@ -1,4 +1,4 @@
-import type { ActiveWorkout, ActiveWorkoutExercise, ActiveWorkoutSet } from '../types/activeWorkout';
+import type { ActiveWorkout, ActiveWorkoutExercise, ActiveWorkoutSet, ActiveWorkoutSource } from '../types/activeWorkout';
 import type { WorkoutLog, WorkoutLogExercise, WorkoutSet } from '../types/workout';
 import { readStorage, removeStorage, writeStorage } from './storage';
 
@@ -39,17 +39,36 @@ export function createManualActiveWorkout(now = new Date()): ActiveWorkout {
 export function addExerciseToActiveWorkout(workout: ActiveWorkout, exerciseId: string): ActiveWorkout {
   return touch({
     ...workout,
-    exercises: [
-      ...workout.exercises,
-      {
-        id: createId('active-exercise'),
-        exerciseId,
-        order: workout.exercises.length,
-        source: 'manual',
-        sets: [createActiveWorkoutSet(1)]
-      }
-    ]
+    exercises: [...workout.exercises, createActiveWorkoutExercise(exerciseId, workout.exercises.length, 'manual')]
   });
+}
+
+export function startWorkoutWithExercise(exerciseId: string): ActiveWorkout {
+  const workout = createManualActiveWorkout();
+  const nextWorkout: ActiveWorkout = {
+    ...workout,
+    source: 'exercise-detail',
+    exercises: [createActiveWorkoutExercise(exerciseId, 0, 'exercise-detail')]
+  };
+  writeActiveWorkout(nextWorkout);
+  return readActiveWorkout() ?? nextWorkout;
+}
+
+export function addExerciseToExistingActiveWorkout(exerciseId: string): { status: 'added' | 'duplicate' | 'missing'; workout: ActiveWorkout | null } {
+  const workout = readActiveWorkout();
+  if (!workout) return { status: 'missing', workout: null };
+  if (isExerciseInActiveWorkout(workout, exerciseId)) return { status: 'duplicate', workout };
+
+  const nextWorkout = touch({
+    ...workout,
+    exercises: [...workout.exercises, createActiveWorkoutExercise(exerciseId, workout.exercises.length, 'exercise-detail')]
+  });
+  writeActiveWorkout(nextWorkout);
+  return { status: 'added', workout: readActiveWorkout() ?? nextWorkout };
+}
+
+export function isExerciseInActiveWorkout(workout: ActiveWorkout, exerciseId: string): boolean {
+  return workout.exercises.some((exercise) => exercise.exerciseId === exerciseId);
 }
 
 export function removeExerciseFromActiveWorkout(workout: ActiveWorkout, activeExerciseId: string): ActiveWorkout {
@@ -195,6 +214,16 @@ function createActiveWorkoutSet(setIndex: number): ActiveWorkoutSet {
   };
 }
 
+function createActiveWorkoutExercise(exerciseId: string, order: number, source: ActiveWorkoutSource): ActiveWorkoutExercise {
+  return {
+    id: createId('active-exercise'),
+    exerciseId,
+    order,
+    source,
+    sets: [createActiveWorkoutSet(1)]
+  };
+}
+
 function reindexSets(sets: ActiveWorkoutSet[]) {
   return sets.map((set, index) => ({ ...set, setIndex: index + 1 }));
 }
@@ -211,7 +240,7 @@ function isActiveWorkout(value: unknown): value is ActiveWorkout {
     typeof workout.id === 'string' &&
     typeof workout.startedAt === 'string' &&
     typeof workout.trainingDate === 'string' &&
-    workout.source === 'manual' &&
+    (workout.source === 'manual' || workout.source === 'exercise-detail') &&
     Array.isArray(workout.exercises)
   );
 }

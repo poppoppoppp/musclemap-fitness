@@ -1,10 +1,19 @@
+import { useEffect, useState } from 'react';
 import PageHeader from '../components/layout/PageHeader';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import EmptyState from '../components/ui/EmptyState';
 import { exercises, getExerciseById } from '../data/exercises';
 import { getMuscleById } from '../data/muscles';
+import type { ActiveWorkout } from '../types/activeWorkout';
 import type { Exercise } from '../types/exercise';
+import {
+  addExerciseToExistingActiveWorkout,
+  isExerciseInActiveWorkout,
+  readActiveWorkout,
+  startWorkoutWithExercise
+} from '../utils/activeWorkout';
 
 type AlternativeMatch = {
   exercise: Exercise;
@@ -16,7 +25,15 @@ const MAX_CONTEXTUAL_ALTERNATIVES = 6;
 export default function ExerciseDetail() {
   const { exerciseId } = useParams();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [activeWorkout, setActiveWorkout] = useState<ActiveWorkout | null>(null);
+  const [workoutStatus, setWorkoutStatus] = useState('');
   const exercise = exerciseId ? getExerciseById(exerciseId) : undefined;
+
+  useEffect(() => {
+    setActiveWorkout(readActiveWorkout());
+    setWorkoutStatus('');
+  }, [exerciseId]);
 
   if (!exercise) {
     return (
@@ -32,6 +49,32 @@ export default function ExerciseDetail() {
   const currentMuscleId = queryMuscleId && getMuscleById(queryMuscleId) ? queryMuscleId : fallbackMuscleId;
   const contextualAlternatives = getContextualAlternatives(exercise, currentMuscleId);
   const hasFewAlternatives = contextualAlternatives.length < 3;
+  const isInActiveWorkout = activeWorkout ? isExerciseInActiveWorkout(activeWorkout, exercise.id) : false;
+
+  const handleStartWorkoutWithExercise = () => {
+    startWorkoutWithExercise(exercise.id);
+    setWorkoutStatus('已开始训练并加入当前动作');
+    navigate('/workout-log');
+  };
+
+  const handleAddToActiveWorkout = () => {
+    const result = addExerciseToExistingActiveWorkout(exercise.id);
+    setActiveWorkout(result.workout);
+
+    if (result.status === 'duplicate') {
+      setWorkoutStatus('该动作已在当前训练中');
+      return;
+    }
+
+    if (result.status === 'missing') {
+      startWorkoutWithExercise(exercise.id);
+      setWorkoutStatus('已开始训练并加入当前动作');
+      navigate('/workout-log');
+      return;
+    }
+
+    setWorkoutStatus('已加入当前训练');
+  };
 
   return (
     <div>
@@ -51,6 +94,36 @@ export default function ExerciseDetail() {
           <DetailList title="动作步骤" items={exercise.steps} ordered />
           <DetailList title="发力提示" items={exercise.cues} />
           <DetailList title="常见错误" items={exercise.commonMistakes} />
+          <Card>
+            <div data-testid="exercise-active-workout-entry" className="space-y-3">
+              <div>
+                <h2 className="text-lg font-semibold text-white">当前训练</h2>
+                <p className="mt-2 text-sm text-slate-300">{activeWorkout ? '当前训练进行中' : '当前无进行中的训练'}</p>
+                {isInActiveWorkout ? <p className="mt-1 text-sm text-cyan-100">该动作已在当前训练中</p> : null}
+              </div>
+              {activeWorkout ? (
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <Button type="button" className="min-h-11" onClick={handleAddToActiveWorkout} data-testid="add-exercise-to-active-workout">
+                    加入当前训练
+                  </Button>
+                  <Link
+                    to="/workout-log"
+                    data-testid="go-to-active-workout"
+                    className="inline-flex min-h-11 items-center justify-center rounded-md border border-line bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:border-accent hover:text-accent"
+                  >
+                    去记录页
+                  </Link>
+                </div>
+              ) : (
+                <Button type="button" className="min-h-11 w-full sm:w-fit" onClick={handleStartWorkoutWithExercise} data-testid="start-workout-with-exercise">
+                  开始训练并加入本动作
+                </Button>
+              )}
+              <p data-testid="exercise-active-workout-status" className="min-h-6 text-sm text-cyan-100">
+                {workoutStatus}
+              </p>
+            </div>
+          </Card>
           <Card>
             <h2 className="text-lg font-semibold text-white">替代动作</h2>
             <div data-testid="contextual-alternatives" className="mt-3 flex flex-wrap gap-2">

@@ -160,6 +160,69 @@ test('exercise detail removes misleading alternative relationships', async ({ pa
   await expect(page.getByTestId('contextual-alternatives')).not.toContainText('Superman');
 });
 
+test('exercise detail can start an active workout with the current exercise', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
+    window.localStorage.removeItem('musclemap.workoutLogs.v0.3');
+    window.localStorage.removeItem('musclemap.latestWorkoutLog.v0.3');
+  });
+
+  await page.goto('/exercises/lat-pulldown');
+  await expect(page.getByTestId('exercise-active-workout-entry')).toContainText('当前无进行中的训练');
+  await expect(page.getByTestId('start-workout-with-exercise')).toBeVisible();
+
+  await page.getByTestId('start-workout-with-exercise').click();
+  await expect(page).toHaveURL(/\/workout-log$/);
+  await expect(page.getByTestId('active-workout-card')).toContainText('进行中');
+  await expect(page.getByTestId('workout-log-exercise')).toContainText('Lat Pulldown');
+
+  const stored = await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null'));
+  expect(stored.exercises).toHaveLength(1);
+  expect(stored.exercises[0].exerciseId).toBe('lat-pulldown');
+  expect(stored.exercises[0].source).toBe('exercise-detail');
+});
+
+test('exercise detail adds exercises to an existing active workout without duplicates', async ({ page }) => {
+  await page.goto('/workout-log');
+  await page.evaluate(() => {
+    window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
+  });
+  await page.reload();
+  await page.getByTestId('start-active-workout').click();
+  await expect(page.getByTestId('active-workout-card')).toContainText('进行中');
+  await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
+  await page.getByTestId('add-manual-exercise').click();
+  await expect(page.getByTestId('workout-log-exercise')).toHaveCount(1);
+
+  await page.goto('/exercises/seated-row');
+  await expect(page.getByTestId('exercise-active-workout-entry')).toContainText('当前训练进行中');
+  await page.getByTestId('add-exercise-to-active-workout').click();
+  await expect(page.getByTestId('exercise-active-workout-status')).toContainText('已加入当前训练');
+  await page.getByTestId('go-to-active-workout').click();
+  await expect(page).toHaveURL(/\/workout-log$/);
+  await expect(page.getByTestId('workout-log-exercise')).toHaveCount(2);
+  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('Lat Pulldown');
+  await expect(page.getByTestId('workout-log-exercise').last()).toContainText('Seated Cable Row');
+
+  await page.goto('/exercises/seated-row');
+  await page.getByTestId('add-exercise-to-active-workout').click();
+  await expect(page.getByTestId('exercise-active-workout-status')).toContainText('该动作已在当前训练中');
+  await page.getByTestId('go-to-active-workout').click();
+  await expect(page.getByTestId('workout-log-exercise')).toHaveCount(2);
+});
+
+test('exercise detail active workout entry does not overflow at 390px mobile width', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => {
+    window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
+  });
+  await page.goto('/exercises/lat-pulldown');
+  await expect(page.getByTestId('start-workout-with-exercise')).toBeVisible();
+
+  const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+  expect(hasHorizontalOverflow).toBe(false);
+});
+
 test('user can search and filter rowing exercises', async ({ page }) => {
   await page.goto('/exercises');
   await expect(page.getByText('结果包含主练该肌群的动作，也包含该肌群作为次要参与的动作。')).toBeVisible();

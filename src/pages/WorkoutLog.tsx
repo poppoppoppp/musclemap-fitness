@@ -4,12 +4,13 @@ import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import { exercises, getExerciseById } from '../data/exercises';
 import type { ActiveWorkout, ActiveWorkoutExercise } from '../types/activeWorkout';
-import type { WorkoutLog, WorkoutLogExercise, WorkoutSet } from '../types/workout';
+import type { GeneratedPlan, GeneratedWorkoutDay, WorkoutLog, WorkoutLogExercise, WorkoutSet } from '../types/workout';
 import {
   addExerciseToActiveWorkout,
   addSetToActiveWorkoutExercise,
   archiveActiveWorkout,
   clearActiveWorkout,
+  createActiveWorkoutFromPlanDay,
   createManualActiveWorkout,
   readActiveWorkout,
   removeExerciseFromActiveWorkout,
@@ -20,6 +21,7 @@ import {
   type ActiveWorkoutArchiveError
 } from '../utils/activeWorkout';
 import { LATEST_WORKOUT_LOG_KEY, WORKOUT_LOGS_KEY } from '../utils/backup';
+import { PLAN_STORAGE_KEY } from '../utils/planRules';
 import { readStorage, writeStorage } from '../utils/storage';
 
 const archiveMessages: Record<ActiveWorkoutArchiveError, string> = {
@@ -31,12 +33,15 @@ const archiveMessages: Record<ActiveWorkoutArchiveError, string> = {
 
 export default function WorkoutLog() {
   const [activeWorkout, setActiveWorkout] = useState<ActiveWorkout | null>(null);
+  const [recentPlan, setRecentPlan] = useState<GeneratedPlan | null>(null);
   const [selectedExerciseId, setSelectedExerciseId] = useState(exercises[0]?.id ?? '');
   const [latestLog, setLatestLog] = useState<WorkoutLog | null>(null);
   const [status, setStatus] = useState('');
 
   useEffect(() => {
     setActiveWorkout(readActiveWorkout());
+    const plan = readStorage<GeneratedPlan | null>(PLAN_STORAGE_KEY, null);
+    setRecentPlan(isGeneratedPlan(plan) ? plan : null);
     const latest = readStorage<WorkoutLog | null>(LATEST_WORKOUT_LOG_KEY, null);
     setLatestLog(isWorkoutLog(latest) ? latest : null);
   }, []);
@@ -79,6 +84,21 @@ export default function WorkoutLog() {
     }
     persistActiveWorkout(addExerciseToActiveWorkout(activeWorkout, selectedExerciseId));
     setStatus('');
+  };
+
+  const handleStartFromPlanDay = (day: GeneratedWorkoutDay) => {
+    if (!recentPlan) return;
+    const existing = readActiveWorkout();
+    if (existing) {
+      setActiveWorkout(existing);
+      setStatus('当前已有进行中的训练，请先结束或放弃当前训练');
+      return;
+    }
+
+    const workout = createActiveWorkoutFromPlanDay(recentPlan, day);
+    writeActiveWorkout(workout);
+    setActiveWorkout(readActiveWorkout());
+    setStatus('已从最近计划开始训练');
   };
 
   const handleDeleteExercise = (activeExerciseId: string) => {
@@ -198,6 +218,37 @@ export default function WorkoutLog() {
             </div>
           </Card>
 
+          <Card>
+            <div data-testid="latest-plan-start">
+              <h2 className="text-lg font-semibold text-white">从最近计划开始训练</h2>
+              {recentPlan && recentPlan.days.length > 0 ? (
+                <div className="mt-4 space-y-3">
+                  <p className="text-sm font-medium text-slate-300">{recentPlan.name}</p>
+                  <div className="space-y-3">
+                    {recentPlan.days.map((day) => (
+                      <div key={day.id} className="rounded-md border border-line bg-slate-950 p-3 text-sm text-slate-300" data-testid="latest-plan-day">
+                        <p className="font-semibold text-white">{day.name}</p>
+                        <p className="mt-1">训练重点：{day.focus}</p>
+                        <p className="mt-1">动作数量：{day.items.length}</p>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          className="mt-3 min-h-11 w-full"
+                          onClick={() => handleStartFromPlanDay(day)}
+                          data-testid={`start-plan-day-${day.id}`}
+                        >
+                          开始这一天训练
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <p className="mt-3 text-sm leading-6 text-slate-300">暂无最近计划，可先去训练计划页生成计划。</p>
+              )}
+            </div>
+          </Card>
+
           <LatestWorkoutLog log={latestLog} />
         </div>
 
@@ -274,6 +325,12 @@ function WorkoutExerciseEditor({
         <div>
           <h3 className="font-semibold text-white">{detail?.nameEn ?? exercise.exerciseId}</h3>
           <p className="text-sm text-slate-400">{detail?.name ?? exercise.exerciseId}</p>
+          {exercise.planned ? (
+            <p className="mt-2 text-sm text-cyan-100">
+              计划建议：{exercise.planned.sets ?? exercise.sets.length} 组，{exercise.planned.repRange ?? '-'} 次，休息 {exercise.planned.restSeconds ?? '-'} 秒
+              {exercise.planned.note ? `，${exercise.planned.note}` : ''}
+            </p>
+          ) : null}
         </div>
         <Button type="button" variant="ghost" className="min-h-11" onClick={() => onDeleteExercise(exercise.id)} data-testid="delete-workout-exercise">
           删除动作
@@ -360,7 +417,7 @@ function LatestWorkoutLog({ log }: { log: WorkoutLog | null }) {
                 <div key={item.id} className="rounded-md bg-slate-950 p-3 text-sm text-slate-300">
                   <p className="font-semibold text-white">{exercise?.nameEn ?? item.exerciseId}</p>
                   <p className="mt-1">{exercise?.name ?? item.exerciseId}</p>
-                  <p className="mt-1">{item.sets.map(formatWorkoutSet).join(' / ')}</p>
+                  <p className="mt-1">{item.sets.map(formatDisplayWorkoutSet).join(' / ')}</p>
                   {item.notes ? <p className="mt-1 text-cyan-100">{item.notes}</p> : null}
                 </div>
               );
@@ -403,6 +460,18 @@ function formatWorkoutSet(set: WorkoutSet) {
   return `绗?${set.setIndex} 缁勶細${set.reps} 娆?`;
 }
 
+function formatDisplayWorkoutSet(set: WorkoutSet) {
+  if (isDisplayableNumber(set.weight) && isDisplayableNumber(set.reps)) {
+    return `第 ${set.setIndex} 组：${set.weight}kg x ${set.reps} 次`;
+  }
+
+  if (isDisplayableNumber(set.weight)) {
+    return `第 ${set.setIndex} 组：${set.weight}kg`;
+  }
+
+  return `第 ${set.setIndex} 组：${set.reps} 次`;
+}
+
 function formatDateTime(value: string) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
@@ -413,4 +482,10 @@ function isWorkoutLog(value: unknown): value is WorkoutLog {
   if (!value || typeof value !== 'object') return false;
   const log = value as WorkoutLog;
   return typeof log.id === 'string' && typeof log.date === 'string' && Array.isArray(log.exercises);
+}
+
+function isGeneratedPlan(value: unknown): value is GeneratedPlan {
+  if (!value || typeof value !== 'object') return false;
+  const plan = value as GeneratedPlan;
+  return typeof plan.id === 'string' && typeof plan.name === 'string' && Array.isArray(plan.days);
 }

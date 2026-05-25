@@ -1,5 +1,5 @@
 import type { ActiveWorkout, ActiveWorkoutExercise, ActiveWorkoutSet, ActiveWorkoutSource } from '../types/activeWorkout';
-import type { WorkoutLog, WorkoutLogExercise, WorkoutSet } from '../types/workout';
+import type { GeneratedPlan, GeneratedPlanItem, GeneratedWorkoutDay, WorkoutLog, WorkoutLogExercise, WorkoutSet } from '../types/workout';
 import { readStorage, removeStorage, writeStorage } from './storage';
 
 export const ACTIVE_WORKOUT_KEY = 'musclemap.activeWorkout.v0.7';
@@ -52,6 +52,38 @@ export function startWorkoutWithExercise(exerciseId: string): ActiveWorkout {
   };
   writeActiveWorkout(nextWorkout);
   return readActiveWorkout() ?? nextWorkout;
+}
+
+export function createActiveWorkoutFromPlanDay(plan: GeneratedPlan, day: GeneratedWorkoutDay, now = new Date()): ActiveWorkout {
+  const timestamp = now.toISOString();
+  return {
+    id: createId('active-workout'),
+    status: 'active',
+    startedAt: timestamp,
+    trainingDate: getLocalDateKeyFromDate(now),
+    source: 'plan',
+    planId: plan.id,
+    planDayId: day.id,
+    exercises: day.items.map(mapGeneratedPlanItemToActiveWorkoutExercise),
+    createdAt: timestamp,
+    updatedAt: timestamp
+  };
+}
+
+export function mapGeneratedPlanItemToActiveWorkoutExercise(item: GeneratedPlanItem, index: number): ActiveWorkoutExercise {
+  return {
+    id: createId('active-exercise'),
+    exerciseId: item.exerciseId,
+    order: index,
+    source: 'plan',
+    planned: {
+      sets: item.sets,
+      repRange: item.repRange,
+      restSeconds: item.restSeconds,
+      note: item.note
+    },
+    sets: Array.from({ length: Math.max(1, item.sets) }, (_, setIndex) => createActiveWorkoutSet(setIndex + 1))
+  };
 }
 
 export function addExerciseToExistingActiveWorkout(exerciseId: string): { status: 'added' | 'duplicate' | 'missing'; workout: ActiveWorkout | null } {
@@ -160,6 +192,7 @@ export function archiveActiveWorkout(workout: ActiveWorkout, endedAt = new Date(
     log: {
       id: createId('workout-log'),
       date: workout.trainingDate,
+      planId: workout.planId,
       durationSeconds,
       exercises: exercisesWithSets,
       notes: workout.notes?.trim() || undefined,
@@ -240,7 +273,7 @@ function isActiveWorkout(value: unknown): value is ActiveWorkout {
     typeof workout.id === 'string' &&
     typeof workout.startedAt === 'string' &&
     typeof workout.trainingDate === 'string' &&
-    (workout.source === 'manual' || workout.source === 'exercise-detail') &&
+    (workout.source === 'manual' || workout.source === 'exercise-detail' || workout.source === 'plan') &&
     Array.isArray(workout.exercises)
   );
 }

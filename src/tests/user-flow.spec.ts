@@ -107,7 +107,12 @@ test('workout log hides invalid legacy latest sets instead of rendering undefine
 
   await expect(page.getByTestId('latest-workout-log')).toContainText('Lat Pulldown');
   await expect(page.getByTestId('latest-workout-log')).toContainText('35.5kg');
+  await expect(page.getByTestId('latest-workout-log')).toContainText('第 1 组');
+  await expect(page.getByTestId('latest-workout-log')).toContainText('次');
   await expect(page.getByTestId('latest-workout-log')).not.toContainText('undefined');
+  await expect(page.getByTestId('latest-workout-log')).not.toContainText('绗');
+  await expect(page.getByTestId('latest-workout-log')).not.toContainText('缁');
+  await expect(page.getByTestId('latest-workout-log')).not.toContainText('娆');
   await expect(page.getByTestId('latest-workout-log')).not.toContainText('Seated Cable Row');
 });
 
@@ -367,6 +372,127 @@ test('plan builder keeps mobile bottom content above navigation', async ({ page 
   expect(lastDayBox!.y + lastDayBox!.height).toBeLessThanOrEqual(navBox!.y);
 });
 
+test('workout log starts active workout from latest plan day and archives plan id', async ({ page }) => {
+  await page.goto('/workout-log');
+  await page.evaluate(() => {
+    window.localStorage.setItem(
+      'musclemap.latestGeneratedPlan.v0.2',
+      JSON.stringify({
+        id: 'plan-v072',
+        name: 'V0.7.2 Test Plan',
+        input: {
+          goal: 'hypertrophy',
+          daysPerWeek: 3,
+          level: 'beginner',
+          availableEquipment: 'fullGym',
+          focusBodyParts: ['back']
+        },
+        createdAt: '2026-05-25T00:00:00.000Z',
+        days: [
+          {
+            id: 'pull-day',
+            name: 'Pull Day',
+            focus: 'Back',
+            items: [
+              {
+                exerciseId: 'lat-pulldown',
+                sets: 3,
+                repRange: '8-12',
+                restSeconds: 90,
+                targetMuscles: ['latissimus-dorsi'],
+                note: 'Keep shoulders down'
+              },
+              {
+                exerciseId: 'seated-row',
+                sets: 2,
+                repRange: '10-12',
+                restSeconds: 75,
+                targetMuscles: ['rhomboids']
+              }
+            ]
+          }
+        ]
+      })
+    );
+    window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
+    window.localStorage.removeItem('musclemap.workoutLogs.v0.3');
+    window.localStorage.removeItem('musclemap.latestWorkoutLog.v0.3');
+  });
+
+  await page.reload();
+  await expect(page.getByTestId('latest-plan-start')).toContainText('从最近计划开始训练');
+  await expect(page.getByTestId('latest-plan-start')).toContainText('V0.7.2 Test Plan');
+  await page.getByTestId('start-plan-day-pull-day').click();
+
+  await expect(page.getByTestId('active-workout-card')).toContainText('进行中');
+  await expect(page.getByTestId('workout-log-exercise')).toHaveCount(2);
+  const firstExercise = page.getByTestId('workout-log-exercise').first();
+  await expect(firstExercise).toContainText('Lat Pulldown');
+  await expect(firstExercise).toContainText('计划建议');
+  await expect(firstExercise).toContainText('8-12');
+  await expect(firstExercise).toContainText('90');
+  await expect(firstExercise).toContainText('Keep shoulders down');
+  await expect(firstExercise.getByTestId('workout-set-row')).toHaveCount(3);
+  await expect(firstExercise.getByTestId('set-reps-input').first()).toHaveValue('');
+
+  const active = await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null'));
+  expect(active.source).toBe('plan');
+  expect(active.planId).toBe('plan-v072');
+  expect(active.planDayId).toBe('pull-day');
+  expect(active.exercises[0].planned.repRange).toBe('8-12');
+  expect(active.exercises[0].sets[0].reps).toBeUndefined();
+
+  await page.reload();
+  await expect(page.getByTestId('workout-log-exercise')).toHaveCount(2);
+  await page.getByTestId('workout-log-exercise').first().getByTestId('set-weight-input').first().fill('40');
+  await page.getByTestId('workout-log-exercise').first().getByTestId('set-reps-input').first().fill('10');
+  await page.getByTestId('end-active-workout').click();
+
+  const latest = await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.latestWorkoutLog.v0.3') ?? 'null'));
+  expect(latest.planId).toBe('plan-v072');
+  expect(latest.exercises).toHaveLength(1);
+  expect(await page.evaluate(() => window.localStorage.getItem('musclemap.activeWorkout.v0.7'))).toBeNull();
+});
+
+test('workout log blocks starting a plan day when active workout already exists on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      'musclemap.latestGeneratedPlan.v0.2',
+      JSON.stringify({
+        id: 'plan-existing-active',
+        name: 'Existing Active Plan',
+        input: {
+          goal: 'hypertrophy',
+          daysPerWeek: 3,
+          level: 'beginner',
+          availableEquipment: 'fullGym',
+          focusBodyParts: ['back']
+        },
+        createdAt: '2026-05-25T00:00:00.000Z',
+        days: [
+          {
+            id: 'blocked-day',
+            name: 'Blocked Day',
+            focus: 'Back',
+            items: [{ exerciseId: 'seated-row', sets: 2, repRange: '10-12', restSeconds: 75, targetMuscles: ['rhomboids'] }]
+          }
+        ]
+      })
+    );
+    window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
+  });
+
+  await page.goto('/workout-log');
+  await page.getByTestId('start-active-workout').click();
+  await page.getByTestId('start-plan-day-blocked-day').click();
+  await expect(page.getByTestId('save-status')).toContainText('当前已有进行中的训练，请先结束或放弃当前训练');
+  await expect(page.getByTestId('workout-log-exercise')).toHaveCount(0);
+
+  const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+  expect(hasHorizontalOverflow).toBe(false);
+});
+
 
 
 
@@ -586,6 +712,7 @@ test('data management exports current local backup data', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('link', { name: '数据备份与恢复' }).click();
   await expect(page).toHaveURL(/\/data-management$/);
+  await expect(page.getByText('进行中的训练不会导出，请先结束训练后再备份。')).toBeVisible();
   await expect(page.getByRole('heading', { name: '数据备份与恢复' })).toBeVisible();
   await expect(page.getByTestId('backup-workout-log-count')).toContainText('2 条');
 

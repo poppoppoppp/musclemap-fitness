@@ -114,6 +114,7 @@ export default function DataManagement() {
           <Card>
             <h2 className="text-lg font-semibold text-white">导出备份</h2>
             <p className="mt-2 text-sm leading-6 text-slate-300">导出文件只包含最近生成计划、训练记录列表和最近训练记录。</p>
+            <p className="mt-2 text-sm leading-6 text-amber-100">进行中的训练不会导出，请先结束训练后再备份。</p>
             <Button type="button" className="mt-4 min-h-11 w-full sm:w-fit" data-testid="export-backup-json" onClick={handleExport}>
               导出为 JSON
             </Button>

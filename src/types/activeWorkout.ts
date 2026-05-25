@@ -1,5 +1,5 @@
 export type ActiveWorkoutStatus = 'active';
-export type ActiveWorkoutSource = 'manual' | 'exercise-detail';
+export type ActiveWorkoutSource = 'manual' | 'exercise-detail' | 'plan';
 
 export interface ActiveWorkout {
   id: string;
@@ -7,6 +7,8 @@ export interface ActiveWorkout {
   startedAt: string;
   trainingDate: string;
   source: ActiveWorkoutSource;
+  planId?: string;
+  planDayId?: string;
   exercises: ActiveWorkoutExercise[];
   notes?: string;
   createdAt: string;
@@ -18,6 +20,12 @@ export interface ActiveWorkoutExercise {
   exerciseId: string;
   order: number;
   source: ActiveWorkoutSource;
+  planned?: {
+    sets?: number;
+    repRange?: string;
+    restSeconds?: number;
+    note?: string;
+  };
   sets: ActiveWorkoutSet[];
   notes?: string;
 }

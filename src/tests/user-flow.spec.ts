@@ -304,14 +304,30 @@ test('plan builder keeps mobile bottom content above navigation', async ({ page 
   expect(lastDayBox!.y + lastDayBox!.height).toBeLessThanOrEqual(navBox!.y);
 });
 
-test('workout log allows manual exercise entry and persists latest log', async ({ page }) => {
+
+
+
+
+
+
+
+
+test('workout log active workout flow persists edits archives and clears', async ({ page }) => {
   await page.goto('/workout-log');
   await page.evaluate(() => {
     window.localStorage.removeItem('musclemap.latestGeneratedPlan.v0.2');
     window.localStorage.removeItem('musclemap.workoutLogs.v0.3');
     window.localStorage.removeItem('musclemap.latestWorkoutLog.v0.3');
+    window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
   });
   await page.reload();
+
+  await expect(page.getByTestId('active-workout-empty')).toContainText('当前无进行中的训练');
+  await page.getByTestId('start-active-workout').click();
+  await expect(page.getByTestId('active-workout-card')).toContainText('进行中');
+
+  await page.reload();
+  await expect(page.getByTestId('active-workout-card')).toContainText('进行中');
 
   await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
   await page.getByTestId('add-manual-exercise').click();
@@ -321,192 +337,93 @@ test('workout log allows manual exercise entry and persists latest log', async (
   await exercise.getByTestId('set-weight-input').fill('42.5');
   await exercise.getByTestId('set-reps-input').fill('10');
   await exercise.getByTestId('exercise-notes-input').fill('controlled first working set');
-  await page.getByTestId('save-workout-log').click();
+  await page.getByTestId('end-active-workout').click();
 
-  await expect(page.getByTestId('save-status')).toContainText('训练记录已保存');
+  await expect(page.getByTestId('save-status')).toContainText('训练已结束并保存');
+  await expect(page.getByTestId('active-workout-empty')).toBeVisible();
+  expect(await page.evaluate(() => window.localStorage.getItem('musclemap.activeWorkout.v0.7'))).toBeNull();
   await page.reload();
   await expect(page.getByTestId('latest-workout-log')).toContainText('Lat Pulldown');
-  await expect(page.getByTestId('latest-workout-log')).toContainText('第 1 组：42.5kg x 10 次');
+  await expect(page.getByTestId('latest-workout-log')).toContainText('42.5kg');
   await expect(page.getByTestId('latest-workout-log')).toContainText('controlled first working set');
 });
 
-test('workout log rejects empty records before saving', async ({ page }) => {
+test('workout log rejects empty active workout before archiving', async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.removeItem('musclemap.latestGeneratedPlan.v0.2');
     window.localStorage.removeItem('musclemap.workoutLogs.v0.3');
     window.localStorage.removeItem('musclemap.latestWorkoutLog.v0.3');
+    window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
   });
 
   await page.goto('/workout-log');
-  await page.getByTestId('save-workout-log').click();
+  await page.getByTestId('start-active-workout').click();
+  await page.getByTestId('end-active-workout').click();
 
   await expect(page.getByTestId('save-status')).toContainText('请先添加至少一个动作');
   const stored = await page.evaluate(() => window.localStorage.getItem('musclemap.latestWorkoutLog.v0.3'));
   expect(stored).toBeNull();
 });
 
-test('workout log rejects exercises without any valid set values', async ({ page }) => {
+test('workout log rejects empty sets and invalid reps in active workout', async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.removeItem('musclemap.latestGeneratedPlan.v0.2');
     window.localStorage.removeItem('musclemap.workoutLogs.v0.3');
     window.localStorage.removeItem('musclemap.latestWorkoutLog.v0.3');
+    window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
   });
 
   await page.goto('/workout-log');
+  await page.getByTestId('start-active-workout').click();
   await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
   await page.getByTestId('add-manual-exercise').click();
-  await page.getByTestId('save-workout-log').click();
-
+  await page.getByTestId('end-active-workout').click();
   await expect(page.getByTestId('save-status')).toContainText('请至少填写一组重量或次数');
-  const stored = await page.evaluate(() => window.localStorage.getItem('musclemap.latestWorkoutLog.v0.3'));
-  expect(stored).toBeNull();
-});
 
-test('workout log rejects decimal reps without truncating them', async ({ page }) => {
-  await page.addInitScript(() => {
-    window.localStorage.removeItem('musclemap.latestGeneratedPlan.v0.2');
-    window.localStorage.removeItem('musclemap.workoutLogs.v0.3');
-    window.localStorage.removeItem('musclemap.latestWorkoutLog.v0.3');
-  });
-
-  await page.goto('/workout-log');
-  await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
-  await page.getByTestId('add-manual-exercise').click();
   const exercise = page.getByTestId('workout-log-exercise').first();
   await exercise.getByTestId('set-reps-input').fill('10.5');
-  await page.getByTestId('save-workout-log').click();
-
+  await page.getByTestId('end-active-workout').click();
   await expect(page.getByTestId('save-status')).toContainText('次数必须是整数');
-  const stored = await page.evaluate(() => window.localStorage.getItem('musclemap.latestWorkoutLog.v0.3'));
-  expect(stored).toBeNull();
 });
 
-test('workout log imports a recent plan day with empty actual set values', async ({ page }) => {
+test('workout log can discard active workout after confirmation', async ({ page }) => {
   await page.addInitScript(() => {
-    window.localStorage.setItem(
-      'musclemap.latestGeneratedPlan.v0.2',
-      JSON.stringify({
-        id: 'plan-test',
-        name: 'Test Plan',
-        input: {
-          goal: 'hypertrophy',
-          daysPerWeek: 2,
-          level: 'beginner',
-          availableEquipment: 'fullGym',
-          focusBodyParts: ['back']
-        },
-        createdAt: '2026-05-23T00:00:00.000Z',
-        days: [
-          {
-            id: 'pull-1',
-            name: 'Pull Day',
-            focus: 'Back',
-            items: [
-              {
-                exerciseId: 'lat-pulldown',
-                sets: 3,
-                repRange: '8-12',
-                restSeconds: 90,
-                targetMuscles: ['latissimus-dorsi']
-              },
-              {
-                exerciseId: 'seated-row',
-                sets: 2,
-                repRange: '10-12',
-                restSeconds: 75,
-                targetMuscles: ['latissimus-dorsi']
-              }
-            ]
-          }
-        ]
-      })
-    );
     window.localStorage.removeItem('musclemap.workoutLogs.v0.3');
     window.localStorage.removeItem('musclemap.latestWorkoutLog.v0.3');
+    window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
   });
 
   await page.goto('/workout-log');
-  await page.getByTestId('plan-day-select').selectOption('pull-1');
-  await page.getByTestId('start-from-plan').click();
+  await page.getByTestId('start-active-workout').click();
+  await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
+  await page.getByTestId('add-manual-exercise').click();
 
-  const exercise = page.getByTestId('workout-log-exercise').first();
-  await expect(exercise).toContainText('Lat Pulldown');
-  await expect(exercise).toContainText('8-12');
-  await expect(exercise.getByTestId('workout-set-row')).toHaveCount(3);
-  await expect(exercise.getByTestId('set-weight-input').first()).toHaveValue('');
-  await expect(exercise.getByTestId('set-reps-input').first()).toHaveValue('');
-});
-
-test('workout log saves only valid sets and hides empty planned exercises from latest log', async ({ page }) => {
-  await page.addInitScript(() => {
-    window.localStorage.setItem(
-      'musclemap.latestGeneratedPlan.v0.2',
-      JSON.stringify({
-        id: 'plan-test',
-        name: 'Test Plan',
-        input: {
-          goal: 'hypertrophy',
-          daysPerWeek: 2,
-          level: 'beginner',
-          availableEquipment: 'fullGym',
-          focusBodyParts: ['back']
-        },
-        createdAt: '2026-05-23T00:00:00.000Z',
-        days: [
-          {
-            id: 'pull-1',
-            name: 'Pull Day',
-            focus: 'Back',
-            items: [
-              {
-                exerciseId: 'lat-pulldown',
-                sets: 3,
-                repRange: '8-12',
-                restSeconds: 90,
-                targetMuscles: ['latissimus-dorsi']
-              },
-              {
-                exerciseId: 'seated-row',
-                sets: 2,
-                repRange: '10-12',
-                restSeconds: 75,
-                targetMuscles: ['latissimus-dorsi']
-              }
-            ]
-          }
-        ]
-      })
-    );
-    window.localStorage.removeItem('musclemap.workoutLogs.v0.3');
-    window.localStorage.removeItem('musclemap.latestWorkoutLog.v0.3');
+  page.once('dialog', async (dialog) => {
+    expect(dialog.type()).toBe('confirm');
+    await dialog.dismiss();
   });
+  await page.getByTestId('discard-active-workout').click();
+  await expect(page.getByTestId('active-workout-card')).toBeVisible();
 
-  await page.goto('/workout-log');
-  await page.getByTestId('plan-day-select').selectOption('pull-1');
-  await page.getByTestId('start-from-plan').click();
-
-  const firstExercise = page.getByTestId('workout-log-exercise').first();
-  await firstExercise.getByTestId('set-weight-input').first().fill('35.5');
-  await firstExercise.getByTestId('set-reps-input').first().fill('12');
-  await page.getByTestId('save-workout-log').click();
-
-  await expect(page.getByTestId('latest-workout-log')).toContainText('第 1 组：35.5kg x 12 次');
-  await expect(page.getByTestId('latest-workout-log')).not.toContainText('-kg x -');
-  await expect(page.getByTestId('latest-workout-log')).not.toContainText('Seated Cable Row');
-
-  const saved = await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.latestWorkoutLog.v0.3') ?? 'null'));
-  expect(saved.exercises).toHaveLength(1);
-  expect(saved.exercises[0].sets).toHaveLength(1);
+  page.once('dialog', async (dialog) => {
+    expect(dialog.type()).toBe('confirm');
+    await dialog.accept();
+  });
+  await page.getByTestId('discard-active-workout').click();
+  await expect(page.getByTestId('active-workout-empty')).toBeVisible();
+  expect(await page.evaluate(() => window.localStorage.getItem('musclemap.activeWorkout.v0.7'))).toBeNull();
 });
 
-test('workout log can add and delete sets', async ({ page }) => {
+test('workout log can add and delete sets and exercises in active workout', async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.removeItem('musclemap.latestGeneratedPlan.v0.2');
     window.localStorage.removeItem('musclemap.workoutLogs.v0.3');
     window.localStorage.removeItem('musclemap.latestWorkoutLog.v0.3');
+    window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
   });
 
   await page.goto('/workout-log');
+  await page.getByTestId('start-active-workout').click();
   await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
   await page.getByTestId('add-manual-exercise').click();
 
@@ -516,24 +433,31 @@ test('workout log can add and delete sets', async ({ page }) => {
   await expect(exercise.getByTestId('workout-set-row')).toHaveCount(2);
   await exercise.getByTestId('delete-set').last().click();
   await expect(exercise.getByTestId('workout-set-row')).toHaveCount(1);
+  await exercise.getByTestId('delete-workout-exercise').click();
+  await expect(page.getByTestId('workout-log-exercise')).toHaveCount(0);
 });
 
-test('workout log bottom save button is available above mobile navigation', async ({ page }) => {
+test('workout log active controls are available above mobile navigation', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/workout-log');
+  await page.evaluate(() => {
+    window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
+  });
+  await page.reload();
+  await page.getByTestId('start-active-workout').click();
   await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
   await page.getByTestId('add-manual-exercise').click();
 
-  const saveButton = page.getByTestId('save-workout-log-bottom');
-  await saveButton.scrollIntoViewIfNeeded();
-  const buttonBox = await saveButton.boundingBox();
+  const endButton = page.getByTestId('end-active-workout-bottom');
+  await endButton.scrollIntoViewIfNeeded();
+  const buttonBox = await endButton.boundingBox();
   const navBox = await page.locator('nav').boundingBox();
 
   expect(buttonBox).not.toBeNull();
   expect(navBox).not.toBeNull();
   expect(buttonBox!.y + buttonBox!.height).toBeLessThanOrEqual(navBox!.y);
-  await saveButton.click();
-  await expect(page.getByTestId('save-status')).toContainText('请至少填写一组重量或次数');
+  const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+  expect(hasHorizontalOverflow).toBe(false);
 });
 
 test('core pages are usable on mobile viewport and static data survives refresh', async ({ page }) => {

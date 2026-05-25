@@ -3,46 +3,26 @@ import PageHeader from '../components/layout/PageHeader';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import { exercises, getExerciseById } from '../data/exercises';
-import type { GeneratedPlan, GeneratedWorkoutDay, WorkoutLog, WorkoutLogExercise, WorkoutSet } from '../types/workout';
-import { PLAN_STORAGE_KEY } from '../utils/planRules';
+import type { ActiveWorkout, ActiveWorkoutExercise } from '../types/activeWorkout';
+import type { WorkoutLog, WorkoutLogExercise, WorkoutSet } from '../types/workout';
+import {
+  addExerciseToActiveWorkout,
+  addSetToActiveWorkoutExercise,
+  archiveActiveWorkout,
+  clearActiveWorkout,
+  createManualActiveWorkout,
+  readActiveWorkout,
+  removeExerciseFromActiveWorkout,
+  removeSetFromActiveWorkoutExercise,
+  updateActiveWorkoutExerciseNotes,
+  updateActiveWorkoutSet,
+  writeActiveWorkout,
+  type ActiveWorkoutArchiveError
+} from '../utils/activeWorkout';
 import { LATEST_WORKOUT_LOG_KEY, WORKOUT_LOGS_KEY } from '../utils/backup';
 import { readStorage, writeStorage } from '../utils/storage';
 
-interface EditableWorkoutSet {
-  id: string;
-  setIndex: number;
-  weight: string;
-  reps: string;
-  completed: boolean;
-}
-
-interface EditableWorkoutExercise {
-  id: string;
-  exerciseId: string;
-  order: number;
-  sets: EditableWorkoutSet[];
-  notes: string;
-  prescription?: {
-    sets: number;
-    repRange: string;
-    restSeconds: number;
-  };
-}
-
-interface EditableWorkoutLog {
-  id: string;
-  date: string;
-  planId?: string;
-  exercises: EditableWorkoutExercise[];
-  notes: string;
-  createdAt: string;
-}
-
-type SaveValidationError = 'no-exercise' | 'no-valid-set' | 'integer-reps' | 'invalid-number';
-
-type NormalizeResult = { ok: true; log: WorkoutLog } | { ok: false; error: SaveValidationError };
-
-const saveMessages: Record<SaveValidationError, string> = {
+const archiveMessages: Record<ActiveWorkoutArchiveError, string> = {
   'no-exercise': '请先添加至少一个动作',
   'no-valid-set': '请至少填写一组重量或次数',
   'integer-reps': '次数必须是整数',
@@ -50,151 +30,145 @@ const saveMessages: Record<SaveValidationError, string> = {
 };
 
 export default function WorkoutLog() {
-  const [recentPlan, setRecentPlan] = useState<GeneratedPlan | null>(null);
-  const [selectedDayId, setSelectedDayId] = useState('');
+  const [activeWorkout, setActiveWorkout] = useState<ActiveWorkout | null>(null);
   const [selectedExerciseId, setSelectedExerciseId] = useState(exercises[0]?.id ?? '');
-  const [currentLog, setCurrentLog] = useState<EditableWorkoutLog>(() => createEmptyLog());
   const [latestLog, setLatestLog] = useState<WorkoutLog | null>(null);
   const [status, setStatus] = useState('');
 
   useEffect(() => {
-    const plan = readStorage<GeneratedPlan | null>(PLAN_STORAGE_KEY, null);
-    setRecentPlan(isGeneratedPlan(plan) ? plan : null);
-    setSelectedDayId(isGeneratedPlan(plan) ? plan.days[0]?.id ?? '' : '');
-
+    setActiveWorkout(readActiveWorkout());
     const latest = readStorage<WorkoutLog | null>(LATEST_WORKOUT_LOG_KEY, null);
     setLatestLog(isWorkoutLog(latest) ? latest : null);
   }, []);
 
-  const selectedPlanDay = useMemo(
-    () => recentPlan?.days.find((day) => day.id === selectedDayId) ?? null,
-    [recentPlan, selectedDayId]
-  );
+  const summary = useMemo(() => {
+    if (!activeWorkout) return { exerciseCount: 0, validSetCount: 0 };
+    return {
+      exerciseCount: activeWorkout.exercises.length,
+      validSetCount: activeWorkout.exercises.reduce(
+        (count, exercise) => count + exercise.sets.filter((set) => isDisplayableNumber(set.weight) || isDisplayableNumber(set.reps)).length,
+        0
+      )
+    };
+  }, [activeWorkout]);
 
-  const handleStartFromPlan = () => {
-    if (!recentPlan || !selectedPlanDay) return;
-    setCurrentLog(createLogFromPlanDay(recentPlan.id, selectedPlanDay));
-    setStatus('');
+  const persistActiveWorkout = (workout: ActiveWorkout) => {
+    writeActiveWorkout(workout);
+    setActiveWorkout(readActiveWorkout());
+  };
+
+  const handleStartWorkout = () => {
+    const existing = readActiveWorkout();
+    if (existing) {
+      setActiveWorkout(existing);
+      setStatus('已有进行中的训练，请继续当前训练或先结束当前训练');
+      return;
+    }
+
+    const workout = createManualActiveWorkout();
+    writeActiveWorkout(workout);
+    setActiveWorkout(workout);
+    setStatus('训练已开始');
   };
 
   const handleAddManualExercise = () => {
     if (!selectedExerciseId) return;
-    setCurrentLog((log) => ({
-      ...log,
-      exercises: [
-        ...log.exercises,
-        {
-          id: createId('log-exercise'),
-          exerciseId: selectedExerciseId,
-          order: log.exercises.length,
-          sets: [createEditableSet(1)],
-          notes: ''
-        }
-      ]
-    }));
+    if (!activeWorkout) {
+      setStatus('请先开始训练，再添加动作');
+      return;
+    }
+    persistActiveWorkout(addExerciseToActiveWorkout(activeWorkout, selectedExerciseId));
     setStatus('');
   };
 
-  const handleAddSet = (exerciseId: string) => {
-    setCurrentLog((log) => ({
-      ...log,
-      exercises: log.exercises.map((exercise) =>
-        exercise.id === exerciseId
-          ? {
-              ...exercise,
-              sets: [...exercise.sets, createEditableSet(exercise.sets.length + 1)]
-            }
-          : exercise
-      )
-    }));
+  const handleDeleteExercise = (activeExerciseId: string) => {
+    if (!activeWorkout) return;
+    persistActiveWorkout(removeExerciseFromActiveWorkout(activeWorkout, activeExerciseId));
   };
 
-  const handleDeleteSet = (exerciseId: string, setId: string) => {
-    setCurrentLog((log) => ({
-      ...log,
-      exercises: log.exercises.map((exercise) => {
-        if (exercise.id !== exerciseId) return exercise;
-        const nextSets = exercise.sets.filter((set) => set.id !== setId);
-        return {
-          ...exercise,
-          sets: reindexSets(nextSets.length > 0 ? nextSets : [createEditableSet(1)])
-        };
-      })
-    }));
+  const handleAddSet = (activeExerciseId: string) => {
+    if (!activeWorkout) return;
+    persistActiveWorkout(addSetToActiveWorkoutExercise(activeWorkout, activeExerciseId));
   };
 
-  const handleSetChange = (exerciseId: string, setId: string, key: 'weight' | 'reps', value: string) => {
-    setCurrentLog((log) => ({
-      ...log,
-      exercises: log.exercises.map((exercise) =>
-        exercise.id === exerciseId
-          ? {
-              ...exercise,
-              sets: exercise.sets.map((set) => (set.id === setId ? { ...set, [key]: value } : set))
-            }
-          : exercise
-      )
-    }));
+  const handleDeleteSet = (activeExerciseId: string, setId: string) => {
+    if (!activeWorkout) return;
+    persistActiveWorkout(removeSetFromActiveWorkoutExercise(activeWorkout, activeExerciseId, setId));
   };
 
-  const handleNotesChange = (exerciseId: string, notes: string) => {
-    setCurrentLog((log) => ({
-      ...log,
-      exercises: log.exercises.map((exercise) => (exercise.id === exerciseId ? { ...exercise, notes } : exercise))
-    }));
+  const handleSetChange = (activeExerciseId: string, setId: string, key: 'weight' | 'reps', value: string) => {
+    if (!activeWorkout) return;
+    persistActiveWorkout(updateActiveWorkoutSet(activeWorkout, activeExerciseId, setId, key, value));
   };
 
-  const handleSave = () => {
-    const normalized = normalizeLog(currentLog);
-    if (!normalized.ok) {
-      setStatus(saveMessages[normalized.error]);
+  const handleNotesChange = (activeExerciseId: string, notes: string) => {
+    if (!activeWorkout) return;
+    persistActiveWorkout(updateActiveWorkoutExerciseNotes(activeWorkout, activeExerciseId, notes));
+  };
+
+  const handleEndWorkout = () => {
+    if (!activeWorkout) return;
+
+    const archived = archiveActiveWorkout(activeWorkout);
+    if (!archived.ok) {
+      setStatus(archiveMessages[archived.error]);
       return;
     }
 
     const existing = readStorage<WorkoutLog[]>(WORKOUT_LOGS_KEY, []);
     const logs = Array.isArray(existing) ? existing.filter(isWorkoutLog) : [];
-    const index = logs.findIndex((log) => log.id === normalized.log.id);
-    const nextLogs = index >= 0 ? logs.map((log) => (log.id === normalized.log.id ? normalized.log : log)) : [normalized.log, ...logs];
+    const nextLogs = [archived.log, ...logs];
 
-    writeStorage(LATEST_WORKOUT_LOG_KEY, normalized.log);
     writeStorage(WORKOUT_LOGS_KEY, nextLogs);
-    setLatestLog(normalized.log);
-    setStatus('训练记录已保存');
+    writeStorage(LATEST_WORKOUT_LOG_KEY, archived.log);
+    clearActiveWorkout();
+    setActiveWorkout(null);
+    setLatestLog(archived.log);
+    setStatus('训练已结束并保存');
+  };
+
+  const handleDiscardWorkout = () => {
+    if (!activeWorkout) return;
+    const confirmed = window.confirm('确定放弃当前训练吗？本次未结束的内容不会保存为训练记录。');
+    if (!confirmed) return;
+    clearActiveWorkout();
+    setActiveWorkout(null);
+    setStatus('当前训练已放弃');
   };
 
   return (
     <div className="pb-32 lg:pb-0">
-      <PageHeader title="训练记录" description="记录今天完成的动作、重量、次数和训练备注。" />
+      <PageHeader title="训练记录" description="开始当前训练，记录动作、重量、次数和训练备注。" />
 
       <div className="grid gap-4 lg:grid-cols-[360px_minmax(0,1fr)]">
         <div className="space-y-4">
           <Card>
-            <h2 className="text-lg font-semibold text-white">从最近计划开始</h2>
-            {recentPlan && recentPlan.days.length > 0 ? (
-              <div className="mt-4 space-y-3">
-                <p className="text-sm text-slate-300">{recentPlan.name}</p>
-                <label className="block text-sm font-medium text-slate-300" htmlFor="plan-day-select">
-                  训练日
-                </label>
-                <select
-                  id="plan-day-select"
-                  data-testid="plan-day-select"
-                  value={selectedDayId}
-                  onChange={(event) => setSelectedDayId(event.target.value)}
-                  className="min-h-11 w-full rounded-md border border-line bg-slate-950 px-3 py-2 text-sm text-white"
-                >
-                  {recentPlan.days.map((day) => (
-                    <option key={day.id} value={day.id}>
-                      {day.name}
-                    </option>
-                  ))}
-                </select>
-                <Button type="button" className="min-h-11 w-full" onClick={handleStartFromPlan} data-testid="start-from-plan">
-                  带入计划动作
-                </Button>
+            <h2 className="text-lg font-semibold text-white">当前训练</h2>
+            {activeWorkout ? (
+              <div data-testid="active-workout-card" className="mt-4 space-y-3 text-sm text-slate-300">
+                <div className="rounded-md border border-cyan-300/40 bg-cyan-950/30 p-3">
+                  <p className="font-semibold text-cyan-100">进行中</p>
+                  <p className="mt-2">开始时间：{formatDateTime(activeWorkout.startedAt)}</p>
+                  <p>训练日期：{activeWorkout.trainingDate}</p>
+                  <p>动作数量：{summary.exerciseCount}</p>
+                  <p>有效组数：{summary.validSetCount}</p>
+                </div>
+                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+                  <Button type="button" className="min-h-11" onClick={handleEndWorkout} data-testid="end-active-workout">
+                    结束训练
+                  </Button>
+                  <Button type="button" variant="secondary" className="min-h-11" onClick={handleDiscardWorkout} data-testid="discard-active-workout">
+                    放弃当前训练
+                  </Button>
+                </div>
               </div>
             ) : (
-              <p className="mt-3 text-sm leading-6 text-slate-300">还没有最近生成计划，可以先手动添加动作。</p>
+              <div data-testid="active-workout-empty" className="mt-4 space-y-3">
+                <p className="text-sm leading-6 text-slate-300">当前无进行中的训练。开始训练后，可以添加动作并持续记录。</p>
+                <Button type="button" className="min-h-11 w-full" onClick={handleStartWorkout} data-testid="start-active-workout">
+                  开始训练
+                </Button>
+              </div>
             )}
           </Card>
 
@@ -220,6 +194,7 @@ export default function WorkoutLog() {
               <Button type="button" variant="secondary" className="min-h-11 w-full" onClick={handleAddManualExercise} data-testid="add-manual-exercise">
                 添加动作
               </Button>
+              {!activeWorkout ? <p className="text-sm leading-6 text-slate-400">请先开始训练，再把动作加入当前训练。</p> : null}
             </div>
           </Card>
 
@@ -230,11 +205,13 @@ export default function WorkoutLog() {
           <div className="flex flex-col gap-2 border-b border-line pb-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <h2 className="text-xl font-semibold text-white">本次训练</h2>
-              <p className="mt-1 text-sm text-slate-400">{currentLog.date}</p>
+              <p className="mt-1 text-sm text-slate-400">{activeWorkout ? activeWorkout.trainingDate : '尚未开始'}</p>
             </div>
-            <Button type="button" className="min-h-11" onClick={handleSave} data-testid="save-workout-log">
-              保存记录
-            </Button>
+            {activeWorkout ? (
+              <Button type="button" className="hidden min-h-11 sm:inline-flex" onClick={handleEndWorkout}>
+                结束训练
+              </Button>
+            ) : null}
           </div>
 
           <p data-testid="save-status" className="mt-3 min-h-6 text-sm text-cyan-100">
@@ -242,12 +219,12 @@ export default function WorkoutLog() {
           </p>
 
           <div className="mt-4 space-y-4">
-            {currentLog.exercises.length === 0 ? (
-              <p className="rounded-md border border-dashed border-line px-4 py-6 text-sm text-slate-300">
-                当前还没有动作。可以从最近计划带入，或手动添加一个动作。
-              </p>
+            {!activeWorkout ? (
+              <p className="rounded-md border border-dashed border-line px-4 py-6 text-sm text-slate-300">当前还没有开始训练。</p>
+            ) : activeWorkout.exercises.length === 0 ? (
+              <p className="rounded-md border border-dashed border-line px-4 py-6 text-sm text-slate-300">当前训练还没有动作，请先添加一个动作。</p>
             ) : (
-              currentLog.exercises.map((exercise) => (
+              activeWorkout.exercises.map((exercise) => (
                 <WorkoutExerciseEditor
                   key={exercise.id}
                   exercise={exercise}
@@ -255,15 +232,16 @@ export default function WorkoutLog() {
                   onDeleteSet={handleDeleteSet}
                   onSetChange={handleSetChange}
                   onNotesChange={handleNotesChange}
+                  onDeleteExercise={handleDeleteExercise}
                 />
               ))
             )}
           </div>
 
-          {currentLog.exercises.length > 0 ? (
+          {activeWorkout ? (
             <div className="mt-6 border-t border-line pt-4 sm:hidden">
-              <Button type="button" className="min-h-11 w-full" onClick={handleSave} data-testid="save-workout-log-bottom">
-                保存训练记录
+              <Button type="button" className="min-h-11 w-full" onClick={handleEndWorkout} data-testid="end-active-workout-bottom">
+                结束训练
               </Button>
             </div>
           ) : null}
@@ -278,13 +256,15 @@ function WorkoutExerciseEditor({
   onAddSet,
   onDeleteSet,
   onSetChange,
-  onNotesChange
+  onNotesChange,
+  onDeleteExercise
 }: {
-  exercise: EditableWorkoutExercise;
+  exercise: ActiveWorkoutExercise;
   onAddSet: (exerciseId: string) => void;
   onDeleteSet: (exerciseId: string, setId: string) => void;
   onSetChange: (exerciseId: string, setId: string, key: 'weight' | 'reps', value: string) => void;
   onNotesChange: (exerciseId: string, notes: string) => void;
+  onDeleteExercise: (exerciseId: string) => void;
 }) {
   const detail = getExerciseById(exercise.exerciseId);
 
@@ -295,13 +275,9 @@ function WorkoutExerciseEditor({
           <h3 className="font-semibold text-white">{detail?.nameEn ?? exercise.exerciseId}</h3>
           <p className="text-sm text-slate-400">{detail?.name ?? exercise.exerciseId}</p>
         </div>
-        {exercise.prescription ? (
-          <div className="flex flex-wrap gap-2 text-xs text-slate-300">
-            <span className="rounded bg-slate-900 px-2 py-1">建议 {exercise.prescription.sets} 组</span>
-            <span className="rounded bg-slate-900 px-2 py-1">{exercise.prescription.repRange}</span>
-            <span className="rounded bg-slate-900 px-2 py-1">休息 {exercise.prescription.restSeconds} 秒</span>
-          </div>
-        ) : null}
+        <Button type="button" variant="ghost" className="min-h-11" onClick={() => onDeleteExercise(exercise.id)} data-testid="delete-workout-exercise">
+          删除动作
+        </Button>
       </div>
 
       <div className="mt-4 space-y-3">
@@ -316,7 +292,7 @@ function WorkoutExerciseEditor({
                 inputMode="decimal"
                 min="0"
                 step="0.5"
-                value={set.weight}
+                value={set.weight ?? ''}
                 onChange={(event) => onSetChange(exercise.id, set.id, 'weight', event.target.value)}
                 className="min-h-11 w-full rounded-md border border-line bg-slate-950 px-3 py-2 text-base text-white"
               />
@@ -329,7 +305,7 @@ function WorkoutExerciseEditor({
                 inputMode="numeric"
                 min="0"
                 step="1"
-                value={set.reps}
+                value={set.reps ?? ''}
                 onChange={(event) => onSetChange(exercise.id, set.id, 'reps', event.target.value)}
                 className="min-h-11 w-full rounded-md border border-line bg-slate-950 px-3 py-2 text-base text-white"
               />
@@ -349,7 +325,7 @@ function WorkoutExerciseEditor({
           动作备注
           <textarea
             data-testid="exercise-notes-input"
-            value={exercise.notes}
+            value={exercise.notes ?? ''}
             onChange={(event) => onNotesChange(exercise.id, event.target.value)}
             className="min-h-20 w-full rounded-md border border-line bg-slate-950 px-3 py-2 text-sm text-white"
           />
@@ -379,17 +355,15 @@ function LatestWorkoutLog({ log }: { log: WorkoutLog | null }) {
         {displayableExercises.length > 0 ? (
           <div className="mt-3 space-y-3">
             {displayableExercises.map((item) => {
-            const exercise = getExerciseById(item.exerciseId);
-            return (
-              <div key={item.id} className="rounded-md bg-slate-950 p-3 text-sm text-slate-300">
-                <p className="font-semibold text-white">{exercise?.nameEn ?? item.exerciseId}</p>
-                <p className="mt-1">{exercise?.name ?? item.exerciseId}</p>
-                <p className="mt-1">
-                  {item.sets.map(formatWorkoutSet).join(' / ')}
-                </p>
-                {item.notes ? <p className="mt-1 text-cyan-100">{item.notes}</p> : null}
-              </div>
-            );
+              const exercise = getExerciseById(item.exerciseId);
+              return (
+                <div key={item.id} className="rounded-md bg-slate-950 p-3 text-sm text-slate-300">
+                  <p className="font-semibold text-white">{exercise?.nameEn ?? item.exerciseId}</p>
+                  <p className="mt-1">{exercise?.name ?? item.exerciseId}</p>
+                  <p className="mt-1">{item.sets.map(formatWorkoutSet).join(' / ')}</p>
+                  {item.notes ? <p className="mt-1 text-cyan-100">{item.notes}</p> : null}
+                </div>
+              );
             })}
           </div>
         ) : (
@@ -398,125 +372,6 @@ function LatestWorkoutLog({ log }: { log: WorkoutLog | null }) {
       </div>
     </Card>
   );
-}
-
-function createEmptyLog(): EditableWorkoutLog {
-  return {
-    id: createId('workout-log'),
-    date: new Date().toISOString().slice(0, 10),
-    exercises: [],
-    notes: '',
-    createdAt: new Date().toISOString()
-  };
-}
-
-function createLogFromPlanDay(planId: string, day: GeneratedWorkoutDay): EditableWorkoutLog {
-  return {
-    ...createEmptyLog(),
-    planId,
-    exercises: day.items.map((item, index) => ({
-      id: createId('log-exercise'),
-      exerciseId: item.exerciseId,
-      order: index,
-      sets: Array.from({ length: Math.max(1, item.sets) }, (_, setIndex) => createEditableSet(setIndex + 1)),
-      notes: '',
-      prescription: {
-        sets: item.sets,
-        repRange: item.repRange,
-        restSeconds: item.restSeconds
-      }
-    }))
-  };
-}
-
-function createEditableSet(setIndex: number): EditableWorkoutSet {
-  return {
-    id: createId('set'),
-    setIndex,
-    weight: '',
-    reps: '',
-    completed: false
-  };
-}
-
-function reindexSets(sets: EditableWorkoutSet[]) {
-  return sets.map((set, index) => ({ ...set, setIndex: index + 1 }));
-}
-
-function normalizeLog(log: EditableWorkoutLog): NormalizeResult {
-  if (log.exercises.length === 0) return { ok: false, error: 'no-exercise' };
-
-  const exercisesWithSets: WorkoutLogExercise[] = [];
-
-  for (const exercise of log.exercises) {
-    const validSets: WorkoutSet[] = [];
-
-    for (const set of exercise.sets) {
-      const normalizedSet = normalizeSet(set, validSets.length + 1);
-      if (normalizedSet.error) return { ok: false, error: normalizedSet.error };
-      if (normalizedSet.set) validSets.push(normalizedSet.set);
-    }
-
-    if (validSets.length > 0) {
-      exercisesWithSets.push({
-        id: exercise.id,
-        exerciseId: exercise.exerciseId,
-        order: exercisesWithSets.length,
-        notes: exercise.notes.trim() || undefined,
-        sets: validSets
-      });
-    }
-  }
-
-  if (exercisesWithSets.length === 0) return { ok: false, error: 'no-valid-set' };
-
-  return {
-    ok: true,
-    log: {
-      id: log.id,
-      date: log.date,
-      planId: log.planId,
-      exercises: exercisesWithSets,
-      notes: log.notes.trim() || undefined,
-      createdAt: log.createdAt
-    }
-  };
-}
-
-function normalizeSet(set: EditableWorkoutSet, setIndex: number): { set?: WorkoutSet; error?: SaveValidationError } {
-  const weight = parseOptionalWeight(set.weight);
-  const reps = parseOptionalReps(set.reps);
-
-  if (weight.error) return { error: weight.error };
-  if (reps.error) return { error: reps.error };
-  if (weight.value === undefined && reps.value === undefined) return {};
-
-  return {
-    set: {
-      id: set.id,
-      setIndex,
-      weight: weight.value,
-      reps: reps.value,
-      completed: true
-    }
-  };
-}
-
-function parseOptionalWeight(value: string): { value?: number; error?: SaveValidationError } {
-  const trimmed = value.trim();
-  if (trimmed === '') return {};
-  const parsed = Number(trimmed);
-  if (!Number.isFinite(parsed) || parsed < 0) return { error: 'invalid-number' };
-  return { value: parsed };
-}
-
-function parseOptionalReps(value: string): { value?: number; error?: SaveValidationError } {
-  const trimmed = value.trim();
-  if (trimmed === '') return {};
-  const parsed = Number(trimmed);
-  if (!Number.isFinite(parsed) || parsed <= 0) return { error: 'invalid-number' };
-  if (!Number.isInteger(parsed)) return { error: 'integer-reps' };
-  return { value: parsed };
 }
 
 function getDisplayableWorkoutExercises(log: WorkoutLog): WorkoutLogExercise[] {
@@ -529,37 +384,33 @@ function getDisplayableWorkoutExercises(log: WorkoutLog): WorkoutLogExercise[] {
 }
 
 function isDisplayableWorkoutSet(set: WorkoutSet) {
-  return isValidOptionalNumber(set.weight) || isValidOptionalNumber(set.reps);
+  return isDisplayableNumber(set.weight) || isDisplayableNumber(set.reps);
 }
 
-function isValidOptionalNumber(value: unknown): value is number {
+function isDisplayableNumber(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value);
 }
 
 function formatWorkoutSet(set: WorkoutSet) {
-  if (isValidOptionalNumber(set.weight) && isValidOptionalNumber(set.reps)) {
-    return `第 ${set.setIndex} 组：${set.weight}kg x ${set.reps} 次`;
+  if (isDisplayableNumber(set.weight) && isDisplayableNumber(set.reps)) {
+    return `绗?${set.setIndex} 缁勶細${set.weight}kg x ${set.reps} 娆?`;
   }
 
-  if (isValidOptionalNumber(set.weight)) {
-    return `第 ${set.setIndex} 组：${set.weight}kg`;
+  if (isDisplayableNumber(set.weight)) {
+    return `绗?${set.setIndex} 缁勶細${set.weight}kg`;
   }
 
-  return `第 ${set.setIndex} 组：${set.reps} 次`;
+  return `绗?${set.setIndex} 缁勶細${set.reps} 娆?`;
 }
 
-function isGeneratedPlan(value: unknown): value is GeneratedPlan {
-  if (!value || typeof value !== 'object') return false;
-  const plan = value as GeneratedPlan;
-  return typeof plan.id === 'string' && Array.isArray(plan.days);
+function formatDateTime(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString('zh-CN');
 }
 
 function isWorkoutLog(value: unknown): value is WorkoutLog {
   if (!value || typeof value !== 'object') return false;
   const log = value as WorkoutLog;
   return typeof log.id === 'string' && typeof log.date === 'string' && Array.isArray(log.exercises);
-}
-
-function createId(prefix: string) {
-  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }

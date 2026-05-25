@@ -5,10 +5,8 @@ import Card from '../components/ui/Card';
 import { exercises, getExerciseById } from '../data/exercises';
 import type { GeneratedPlan, GeneratedWorkoutDay, WorkoutLog, WorkoutLogExercise, WorkoutSet } from '../types/workout';
 import { PLAN_STORAGE_KEY } from '../utils/planRules';
+import { LATEST_WORKOUT_LOG_KEY, WORKOUT_LOGS_KEY } from '../utils/backup';
 import { readStorage, writeStorage } from '../utils/storage';
-
-const WORKOUT_LOGS_KEY = 'musclemap.workoutLogs.v0.3';
-const LATEST_WORKOUT_LOG_KEY = 'musclemap.latestWorkoutLog.v0.3';
 
 interface EditableWorkoutSet {
   id: string;

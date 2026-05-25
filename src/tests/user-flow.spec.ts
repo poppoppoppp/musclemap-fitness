@@ -550,3 +550,165 @@ test('core pages are usable on mobile viewport and static data survives refresh'
   await expect(page.getByRole('textbox', { name: '搜索动作' })).toBeVisible();
   await expect(page.locator('body')).not.toHaveCSS('overflow-x', 'scroll');
 });
+test('data management exports current local backup data', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      'musclemap.latestGeneratedPlan.v0.2',
+      JSON.stringify({
+        id: 'plan-backup',
+        name: 'Backup Plan',
+        input: {
+          goal: 'hypertrophy',
+          daysPerWeek: 3,
+          level: 'beginner',
+          availableEquipment: 'fullGym',
+          focusBodyParts: []
+        },
+        days: [],
+        createdAt: '2026-05-25T00:00:00.000Z'
+      })
+    );
+    window.localStorage.setItem(
+      'musclemap.workoutLogs.v0.3',
+      JSON.stringify([
+        {
+          id: 'log-1',
+          date: '2026-05-25',
+          exercises: [{ id: 'exercise-1', exerciseId: 'lat-pulldown', order: 0, sets: [{ id: 'set-1', setIndex: 1, reps: 12, completed: true }] }],
+          createdAt: '2026-05-25T00:00:00.000Z'
+        },
+        {
+          id: 'log-2',
+          date: '2026-05-24',
+          exercises: [{ id: 'exercise-2', exerciseId: 'seated-row', order: 0, sets: [{ id: 'set-2', setIndex: 1, weight: 40, completed: true }] }],
+          createdAt: '2026-05-24T00:00:00.000Z'
+        }
+      ])
+    );
+    window.localStorage.setItem(
+      'musclemap.latestWorkoutLog.v0.3',
+      JSON.stringify({
+        id: 'log-1',
+        date: '2026-05-25',
+        exercises: [{ id: 'exercise-1', exerciseId: 'lat-pulldown', order: 0, sets: [{ id: 'set-1', setIndex: 1, reps: 12, completed: true }] }],
+        createdAt: '2026-05-25T00:00:00.000Z'
+      })
+    );
+  });
+
+  await page.goto('/');
+  await page.getByRole('link', { name: '数据备份与恢复' }).click();
+  await expect(page).toHaveURL(/\/data-management$/);
+  await expect(page.getByRole('heading', { name: '数据备份与恢复' })).toBeVisible();
+  await expect(page.getByTestId('backup-workout-log-count')).toContainText('2 条');
+
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByTestId('export-backup-json').click();
+  const download = await downloadPromise;
+  const stream = await download.createReadStream();
+  const chunks: Buffer[] = [];
+  await new Promise<void>((resolve, reject) => {
+    stream?.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
+    stream?.on('end', resolve);
+    stream?.on('error', reject);
+  });
+  const exported = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+
+  expect(download.suggestedFilename()).toMatch(/^musclemap-backup-\d{4}-\d{2}-\d{2}\.json$/);
+  expect(exported.app).toBe('MuscleMap Fitness');
+  expect(exported.exportVersion).toBe(1);
+  expect(typeof exported.exportedAt).toBe('string');
+  expect(exported.data.workoutLogs).toHaveLength(2);
+});
+
+test('data management validates imported backup files before overwriting storage', async ({ page }) => {
+  await page.goto('/data-management');
+  await page.evaluate(() => {
+    window.localStorage.setItem(
+      'musclemap.latestWorkoutLog.v0.3',
+      JSON.stringify({
+        id: 'existing-log',
+        date: '2026-05-20',
+        exercises: [{ id: 'existing-exercise', exerciseId: 'lat-pulldown', order: 0, sets: [{ id: 'existing-set', setIndex: 1, reps: 8, completed: true }] }],
+        createdAt: '2026-05-20T00:00:00.000Z'
+      })
+    );
+  });
+
+  await page.reload();
+  await expect(page.getByRole('heading', { name: '数据备份与恢复' })).toBeVisible();
+
+  await page.setInputFiles('input[data-testid="import-backup-file"]', {
+    name: 'broken.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from('{bad json')
+  });
+  await expect(page.getByTestId('backup-status')).toContainText('文件内容不是有效 JSON。');
+
+  await page.setInputFiles('input[data-testid="import-backup-file"]', {
+    name: 'other.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify({ app: 'Other App', exportVersion: 1, exportedAt: '2026-05-25T00:00:00.000Z', data: {} }))
+  });
+  await expect(page.getByTestId('backup-status')).toContainText('这不是 MuscleMap Fitness 的导出文件。');
+
+  await page.setInputFiles('input[data-testid="import-backup-file"]', {
+    name: 'future.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify({ app: 'MuscleMap Fitness', exportVersion: 99, exportedAt: '2026-05-25T00:00:00.000Z', data: {} }))
+  });
+  await expect(page.getByTestId('backup-status')).toContainText('当前版本不支持该备份文件。');
+
+  const validBackup = {
+    app: 'MuscleMap Fitness',
+    exportVersion: 1,
+    exportedAt: '2026-05-25T08:00:00.000Z',
+    data: {
+      latestGeneratedPlan: null,
+      workoutLogs: [
+        {
+          id: 'imported-log',
+          date: '2026-05-25',
+          exercises: [{ id: 'imported-exercise', exerciseId: 'seated-row', order: 0, sets: [{ id: 'imported-set', setIndex: 1, weight: 42.5, reps: 10, completed: true }] }],
+          createdAt: '2026-05-25T08:00:00.000Z'
+        }
+      ],
+      latestWorkoutLog: {
+        id: 'imported-log',
+        date: '2026-05-25',
+        exercises: [{ id: 'imported-exercise', exerciseId: 'seated-row', order: 0, sets: [{ id: 'imported-set', setIndex: 1, weight: 42.5, reps: 10, completed: true }] }],
+        createdAt: '2026-05-25T08:00:00.000Z'
+      }
+    }
+  };
+
+  await page.setInputFiles('input[data-testid="import-backup-file"]', {
+    name: 'musclemap.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(validBackup))
+  });
+
+  await expect(page.getByTestId('import-summary')).toContainText('训练记录：1 条');
+  await expect(page.getByTestId('import-summary')).toContainText('最近训练记录：有');
+  expect(await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.latestWorkoutLog.v0.3') ?? 'null').id)).toBe('existing-log');
+
+  await page.getByTestId('confirm-overwrite-import').click();
+  await expect(page.getByTestId('backup-status')).toContainText('导入成功，当前本地数据已更新。');
+  expect(await page.evaluate(() => window.localStorage.getItem('musclemap.latestGeneratedPlan.v0.2'))).toBeNull();
+  expect(await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.workoutLogs.v0.3') ?? '[]'))).toHaveLength(1);
+  expect(await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.latestWorkoutLog.v0.3') ?? 'null').id)).toBe('imported-log');
+
+  await page.reload();
+  await expect(page.getByTestId('backup-workout-log-count')).toContainText('1 条');
+  await page.goto('/workout-log');
+  await expect(page.getByTestId('latest-workout-log')).toContainText('Seated Cable Row');
+});
+
+test('data management remains usable on mobile viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/data-management');
+  await expect(page.getByRole('heading', { name: '数据备份与恢复' })).toBeVisible();
+
+  const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+  expect(hasHorizontalOverflow).toBe(false);
+});

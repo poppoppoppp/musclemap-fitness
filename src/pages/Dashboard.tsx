@@ -5,7 +5,8 @@ const entries = [
   { to: '/muscle-map', title: '肌群地图', description: '从背面人体图认识目标肌群。' },
   { to: '/exercises', title: '动作库', description: '按肌群、器械和关键词查找动作。' },
   { to: '/plan-builder', title: '训练计划生成器', description: 'V0.2 开放，当前为占位入口。' },
-  { to: '/workout-log', title: '训练记录', description: 'V0.3 开放，当前为占位入口。' }
+  { to: '/workout-log', title: '训练记录', description: 'V0.3 开放，当前为占位入口。' },
+  { to: '/data-management', title: '数据备份与恢复', description: '导出或覆盖恢复当前浏览器中的本地训练数据。' }
 ];
 
 export default function Dashboard() {

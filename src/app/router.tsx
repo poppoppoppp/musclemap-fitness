@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import App from './App';
+import DataManagement from '../pages/DataManagement';
 import Dashboard from '../pages/Dashboard';
 import ExerciseDetail from '../pages/ExerciseDetail';
 import ExerciseLibrary from '../pages/ExerciseLibrary';
@@ -34,6 +35,7 @@ export const router = createBrowserRouter([
       { path: 'exercises', element: <ExerciseLibrary /> },
       { path: 'exercises/:exerciseId', element: <ExerciseDetail /> },
       { path: 'plan-builder', element: <PlanBuilder /> },
+      { path: 'data-management', element: <DataManagement /> },
       { path: 'three-muscle-demo', element: <ThreeMuscleDemoRoute /> },
       { path: 'workout-log', element: <WorkoutLog /> }
     ]

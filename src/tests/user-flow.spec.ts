@@ -139,6 +139,31 @@ test('three muscle demo shows local anatomy fallback when private model is missi
   await expect(page.getByText(/未检测到模型文件|加载成功/)).toBeVisible();
 });
 
+test('three muscle demo bridges mapped mesh selections to muscle and exercise data', async ({ page }) => {
+  await page.goto('/three-muscle-demo');
+  await page.getByTestId('select-three-region-back-partial').click();
+  await page.getByTestId('select-three-mapped-mesh-Right_teres_major').click();
+
+  await expect(page.getByTestId('glb-selected-mesh-name')).toContainText('Right_teres_major');
+  await expect(page.getByTestId('three-selected-muscle-id')).toContainText('teres-major');
+  await expect(page.getByTestId('three-selected-muscle-name')).toContainText('大圆肌');
+  await expect(page.getByTestId('three-selected-muscle-description')).toContainText('位于肩胛骨外侧缘附近');
+  await expect(page.getByTestId('three-related-exercises')).toContainText('直臂下拉');
+  await expect(page.getByTestId('three-related-exercises')).toContainText('主练');
+  await expect(page.getByTestId('three-related-exercises')).toContainText('高位下拉');
+  await expect(page.getByTestId('three-related-exercises')).toContainText('次要参与');
+
+  await page.getByTestId('three-muscle-detail-link').click();
+  await expect(page).toHaveURL(/\/muscle-map$/);
+  await expect(page.getByRole('heading', { name: '大圆肌' })).toBeVisible();
+
+  await page.goto('/three-muscle-demo');
+  await page.getByTestId('select-three-region-back-partial').click();
+  await page.getByTestId('select-three-mapped-mesh-Right_teres_major').click();
+  await page.getByTestId('three-related-exercise-link-straight-arm-pulldown').click();
+  await expect(page).toHaveURL(/\/exercises\/straight-arm-pulldown\?muscleId=teres-major$/);
+});
+
 test('three muscle demo does not overflow at 390px mobile width', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/three-muscle-demo');

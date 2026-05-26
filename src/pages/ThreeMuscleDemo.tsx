@@ -1,19 +1,29 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import PageHeader from '../components/layout/PageHeader';
+import { exercises } from '../data/exercises';
 import { getMuscleById } from '../data/muscles';
 import { threeModelRegions, type ThreeModelRegion } from '../data/threeModelRegions';
+import { useAppStore } from '../store/useAppStore';
+import type { Exercise } from '../types/exercise';
 
 type RegionMeshInfo = {
   name: string;
   mesh: THREE.Mesh;
 };
 
+type RelatedExercise = {
+  exercise: Exercise;
+  matchType: 'primary' | 'secondary';
+};
+
 const DEFAULT_REGION_ID = 'back-partial';
 const UNSELECTED_MESH_LABEL = '未选择';
 const UNMAPPED_LABEL = '未映射';
+const MAX_RELATED_EXERCISES = 6;
 
 export default function ThreeMuscleDemo() {
   const [selectedRegionId, setSelectedRegionId] = useState(DEFAULT_REGION_ID);
@@ -62,6 +72,7 @@ function RegionModelExperiment({ region }: { region: ThreeModelRegion }) {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const meshesRef = useRef<RegionMeshInfo[]>([]);
   const selectedMeshRef = useRef<THREE.Mesh | null>(null);
+  const setSelectedMuscleId = useAppStore((state) => state.setSelectedMuscleId);
   const [loadStatus, setLoadStatus] = useState(region.isConfigured ? '等待加载' : '未配置');
   const [modelAvailable, setModelAvailable] = useState(false);
   const [meshCount, setMeshCount] = useState(0);
@@ -70,7 +81,12 @@ function RegionModelExperiment({ region }: { region: ThreeModelRegion }) {
   const selectedMuscleId =
     selectedMeshName === UNSELECTED_MESH_LABEL ? undefined : region.mappings[selectedMeshName];
   const selectedMuscle = selectedMuscleId ? getMuscleById(selectedMuscleId) : undefined;
+  const relatedExercises = useMemo(
+    () => (selectedMuscleId ? getRelatedExercises(selectedMuscleId) : []),
+    [selectedMuscleId]
+  );
   const hasSelectedMesh = selectedMeshName !== UNSELECTED_MESH_LABEL;
+  const mappedMeshEntries = useMemo(() => Object.entries(region.mappings), [region.mappings]);
 
   const resetMeshHighlight = (mesh: THREE.Mesh) => {
     const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
@@ -102,6 +118,16 @@ function RegionModelExperiment({ region }: { region: ThreeModelRegion }) {
 
     selectedMeshRef.current = meshInfo.mesh;
     setSelectedMeshName(meshInfo.name);
+  };
+
+  const selectMappedMeshByName = (meshName: string) => {
+    const meshInfo = meshesRef.current.find((candidate) => candidate.name === meshName);
+    if (meshInfo) {
+      highlightMesh(meshInfo);
+      return;
+    }
+
+    setSelectedMeshName(meshName);
   };
 
   useEffect(() => {
@@ -382,6 +408,32 @@ function RegionModelExperiment({ region }: { region: ThreeModelRegion }) {
         >
           选择首个 mesh
         </button>
+
+        {mappedMeshEntries.length > 0 && (
+          <div className="mt-4 rounded-md border border-slate-200 bg-slate-50 p-3">
+            <h3 className="text-sm font-semibold text-slate-950">已注册 mesh 映射</h3>
+            <div className="mt-2 grid gap-2 sm:grid-cols-2">
+              {mappedMeshEntries.map(([meshName, muscleId]) => {
+                const muscle = getMuscleById(muscleId);
+
+                return (
+                  <button
+                    key={meshName}
+                    type="button"
+                    data-testid={`select-three-mapped-mesh-${meshName}`}
+                    onClick={() => selectMappedMeshByName(meshName)}
+                    className="min-w-0 rounded-md border border-slate-200 bg-white px-3 py-2 text-left text-xs transition hover:border-amber-300 hover:bg-amber-50"
+                  >
+                    <span className="block break-words font-mono text-slate-950">{meshName}</span>
+                    <span className="mt-1 block text-slate-600">
+                      {muscle?.nameZh ?? muscleId}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
       <aside className="min-w-0">
@@ -438,6 +490,60 @@ function RegionModelExperiment({ region }: { region: ThreeModelRegion }) {
               {mappedMuscleLabel}
             </dd>
           </div>
+          {selectedMuscle && (
+            <div>
+              <dt className="text-slate-500">肌群说明</dt>
+              <dd data-testid="three-selected-muscle-description" className="mt-1 space-y-2 text-slate-700">
+                <p>{selectedMuscle.description}</p>
+                <p>{selectedMuscle.function}</p>
+              </dd>
+            </div>
+          )}
+          {selectedMuscle && (
+            <div>
+              <dt className="text-slate-500">相关动作</dt>
+              <dd data-testid="three-related-exercises" className="mt-2 space-y-2">
+                {relatedExercises.length > 0 ? (
+                  relatedExercises.map(({ exercise, matchType }) => (
+                    <Link
+                      key={exercise.id}
+                      to={`/exercises/${exercise.id}?muscleId=${selectedMuscle.id}`}
+                      data-testid={`three-related-exercise-link-${exercise.id}`}
+                      className="flex min-h-11 items-center justify-between gap-3 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-950 transition hover:border-amber-300 hover:bg-amber-50"
+                    >
+                      <span>{exercise.name}</span>
+                      <span className="shrink-0 rounded bg-white px-2 py-1 text-xs text-slate-600">
+                        {matchType === 'primary' ? '主练' : '次要参与'}
+                      </span>
+                    </Link>
+                  ))
+                ) : (
+                  <span className="text-sm text-slate-500">暂无相关动作</span>
+                )}
+              </dd>
+            </div>
+          )}
+          {selectedMuscle && (
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+              <Link
+                to="/muscle-map"
+                data-testid="three-muscle-detail-link"
+                onClick={() => setSelectedMuscleId(selectedMuscle.id)}
+                className="inline-flex min-h-11 items-center justify-center rounded-md border border-amber-500 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-950 transition hover:bg-amber-100"
+              >
+                查看肌肉详情
+              </Link>
+              {relatedExercises[0] && (
+                <Link
+                  to={`/exercises/${relatedExercises[0].exercise.id}?muscleId=${selectedMuscle.id}`}
+                  data-testid="three-related-actions-link"
+                  className="inline-flex min-h-11 items-center justify-center rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300"
+                >
+                  查看相关动作
+                </Link>
+              )}
+            </div>
+          )}
           <div>
             <dt className="text-slate-500">模型限制</dt>
             <dd data-testid="three-region-limitations" className="mt-1 text-slate-700">
@@ -456,4 +562,16 @@ function RegionModelExperiment({ region }: { region: ThreeModelRegion }) {
       </aside>
     </section>
   );
+}
+
+function getRelatedExercises(muscleId: string): RelatedExercise[] {
+  const primaryMatches = exercises
+    .filter((exercise) => exercise.primaryMuscles.includes(muscleId))
+    .map((exercise) => ({ exercise, matchType: 'primary' as const }));
+
+  const secondaryMatches = exercises
+    .filter((exercise) => !exercise.primaryMuscles.includes(muscleId) && exercise.secondaryMuscles.includes(muscleId))
+    .map((exercise) => ({ exercise, matchType: 'secondary' as const }));
+
+  return [...primaryMatches, ...secondaryMatches].slice(0, MAX_RELATED_EXERCISES);
 }

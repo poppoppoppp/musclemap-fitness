@@ -116,6 +116,171 @@ test('workout log hides invalid legacy latest sets instead of rendering undefine
   await expect(page.getByTestId('latest-workout-log')).not.toContainText('Seated Cable Row');
 });
 
+test('workout history shows an empty state when there are no archived logs', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.removeItem('musclemap.workoutLogs.v0.3');
+  });
+
+  await page.goto('/workout-history');
+
+  await expect(page.getByRole('heading', { name: '训练历史' })).toBeVisible();
+  await expect(page.getByText('暂无训练记录')).toBeVisible();
+  await expect(page.getByText('完成一次训练后会显示在这里')).toBeVisible();
+});
+
+test('workout history lists logs by date and created time with summary details', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      'musclemap.workoutLogs.v0.3',
+      JSON.stringify([
+        {
+          id: 'older-log',
+          date: '2026-05-24',
+          exercises: [{ id: 'older-exercise', exerciseId: 'seated-row', order: 0, sets: [{ id: 'older-set', setIndex: 1, weight: 40, completed: true }] }],
+          createdAt: '2026-05-24T08:00:00.000Z'
+        },
+        {
+          id: 'same-day-later-log',
+          date: '2026-05-25',
+          planId: 'plan-v08',
+          durationSeconds: 2700,
+          notes: 'Back session note',
+          exercises: [
+            {
+              id: 'later-exercise',
+              exerciseId: 'lat-pulldown',
+              order: 0,
+              sets: [
+                { id: 'later-set-1', setIndex: 1, weight: 42.5, reps: 10, completed: true },
+                { id: 'later-set-empty', setIndex: 2, completed: true }
+              ]
+            }
+          ],
+          createdAt: '2026-05-25T09:00:00.000Z'
+        },
+        {
+          id: 'same-day-earlier-log',
+          date: '2026-05-25',
+          exercises: [{ id: 'earlier-exercise', exerciseId: 'pull-up', order: 0, sets: [{ id: 'earlier-set', setIndex: 1, reps: 8, completed: true }] }],
+          createdAt: '2026-05-25T07:00:00.000Z'
+        }
+      ])
+    );
+  });
+
+  await page.goto('/workout-history');
+
+  const cards = page.getByTestId('workout-history-card');
+  await expect(cards).toHaveCount(3);
+  await expect(cards.nth(0)).toContainText('2026-05-25');
+  await expect(cards.nth(0)).toContainText('动作：1 个');
+  await expect(cards.nth(0)).toContainText('有效组数：1 组');
+  await expect(cards.nth(0)).toContainText('时长：45 分钟');
+  await expect(cards.nth(0)).toContainText('来源：计划');
+  await expect(cards.nth(0)).toContainText('Back session note');
+  await expect(cards.nth(1)).toHaveAttribute('data-log-id', 'same-day-earlier-log');
+  await expect(cards.nth(2)).toContainText('2026-05-24');
+});
+
+test('workout history opens a read only workout log detail page', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      'musclemap.workoutLogs.v0.3',
+      JSON.stringify([
+        {
+          id: 'detail-log',
+          date: '2026-05-25',
+          planId: 'plan-v08',
+          durationSeconds: 2700,
+          notes: 'Keep tempo controlled',
+          exercises: [
+            {
+              id: 'detail-exercise',
+              exerciseId: 'lat-pulldown',
+              order: 0,
+              notes: 'No swinging',
+              sets: [
+                { id: 'set-1', setIndex: 1, weight: 42.5, reps: 10, completed: true },
+                { id: 'set-2', setIndex: 2, weight: 35, completed: true },
+                { id: 'set-3', setIndex: 3, reps: 12, completed: true },
+                { id: 'set-4', setIndex: 4, completed: true }
+              ]
+            }
+          ],
+          createdAt: '2026-05-25T09:00:00.000Z'
+        }
+      ])
+    );
+  });
+
+  await page.goto('/workout-history');
+  await page.getByTestId('workout-history-card').first().getByRole('link', { name: '查看详情' }).click();
+
+  await expect(page).toHaveURL(/\/workout-history\/detail-log$/);
+  await expect(page.getByRole('heading', { name: '训练详情' })).toBeVisible();
+  await expect(page.getByTestId('workout-log-detail')).toContainText('2026-05-25');
+  await expect(page.getByTestId('workout-log-detail')).toContainText('45 分钟');
+  await expect(page.getByTestId('workout-log-detail')).toContainText('plan-v08');
+  await expect(page.getByTestId('workout-log-detail')).toContainText('Keep tempo controlled');
+  await expect(page.getByTestId('workout-detail-exercise')).toContainText('高位下拉');
+  await expect(page.getByTestId('workout-detail-exercise')).toContainText('Lat Pulldown');
+  await expect(page.getByTestId('workout-detail-exercise')).toContainText('No swinging');
+  await expect(page.getByTestId('workout-detail-exercise')).toContainText('组数：3 组');
+  await expect(page.getByTestId('workout-detail-exercise')).toContainText('第 1 组：42.5kg x 10 次');
+  await expect(page.getByTestId('workout-detail-exercise')).toContainText('第 2 组：35kg');
+  await expect(page.getByTestId('workout-detail-exercise')).toContainText('第 3 组：12 次');
+  await expect(page.locator('input, textarea')).toHaveCount(0);
+});
+
+test('workout history detail handles missing logs and unknown exercises without crashing', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      'musclemap.workoutLogs.v0.3',
+      JSON.stringify([
+        {
+          id: 'unknown-exercise-log',
+          date: '2026-05-25',
+          exercises: [{ id: 'unknown-exercise', exerciseId: 'not-real-exercise', order: 0, sets: [{ id: 'set-1', setIndex: 1, reps: 9, completed: true }] }],
+          createdAt: '2026-05-25T09:00:00.000Z'
+        }
+      ])
+    );
+  });
+
+  await page.goto('/workout-history/not-found');
+  await expect(page.getByText('未找到这次训练记录')).toBeVisible();
+
+  await page.goto('/workout-history/unknown-exercise-log');
+  await expect(page.getByTestId('workout-detail-exercise')).toContainText('未知动作');
+  await expect(page.getByTestId('workout-detail-exercise')).toContainText('not-real-exercise');
+  await expect(page.getByTestId('workout-detail-exercise')).toContainText('第 1 组：9 次');
+});
+
+test('workout history has an entry from workout log and does not overflow at 390px mobile width', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      'musclemap.workoutLogs.v0.3',
+      JSON.stringify([
+        {
+          id: 'mobile-log',
+          date: '2026-05-25',
+          exercises: [{ id: 'mobile-exercise', exerciseId: 'lat-pulldown', order: 0, sets: [{ id: 'mobile-set', setIndex: 1, weight: 42.5, reps: 10, completed: true }] }],
+          createdAt: '2026-05-25T09:00:00.000Z'
+        }
+      ])
+    );
+  });
+
+  await page.goto('/workout-log');
+  await page.getByRole('link', { name: '查看训练历史' }).click();
+  await expect(page).toHaveURL(/\/workout-history$/);
+  await expect(page.getByRole('heading', { name: '训练历史' })).toBeVisible();
+
+  const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+  expect(hasHorizontalOverflow).toBe(false);
+});
+
 test('rhomboids exercise detail keeps muscle context across alternatives', async ({ page }) => {
   await page.goto('/muscle-map');
   await page.getByTestId('muscle-region-rhomboids-center').click();

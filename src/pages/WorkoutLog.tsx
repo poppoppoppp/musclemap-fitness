@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import PageHeader from '../components/layout/PageHeader';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
@@ -250,6 +251,21 @@ export default function WorkoutLog() {
           </Card>
 
           <LatestWorkoutLog log={latestLog} />
+
+          <Card>
+            <div className="flex flex-col gap-3">
+              <div>
+                <h2 className="text-lg font-semibold text-white">训练历史</h2>
+                <p className="mt-2 text-sm leading-6 text-slate-300">查看已保存的全部训练记录。</p>
+              </div>
+              <Link
+                to="/workout-history"
+                className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-slate-800 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-accent"
+              >
+                查看训练历史
+              </Link>
+            </div>
+          </Card>
         </div>
 
         <Card>

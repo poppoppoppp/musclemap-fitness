@@ -7,7 +7,9 @@ import ExerciseDetail from '../pages/ExerciseDetail';
 import ExerciseLibrary from '../pages/ExerciseLibrary';
 import MuscleMap from '../pages/MuscleMap';
 import PlanBuilder from '../pages/PlanBuilder';
+import WorkoutHistory from '../pages/WorkoutHistory';
 import WorkoutLog from '../pages/WorkoutLog';
+import WorkoutLogDetail from '../pages/WorkoutLogDetail';
 
 const ThreeMuscleDemo = lazy(() => import('../pages/ThreeMuscleDemo'));
 
@@ -37,7 +39,9 @@ export const router = createBrowserRouter([
       { path: 'plan-builder', element: <PlanBuilder /> },
       { path: 'data-management', element: <DataManagement /> },
       { path: 'three-muscle-demo', element: <ThreeMuscleDemoRoute /> },
-      { path: 'workout-log', element: <WorkoutLog /> }
+      { path: 'workout-log', element: <WorkoutLog /> },
+      { path: 'workout-history', element: <WorkoutHistory /> },
+      { path: 'workout-history/:logId', element: <WorkoutLogDetail /> }
     ]
   }
 ]);

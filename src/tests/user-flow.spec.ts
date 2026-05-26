@@ -46,6 +46,84 @@ test('three model region registry defines V0.10.0 regions and experimental back 
   }
 });
 
+test('three muscle selector presents a product entry for choosing training muscles', async ({ page }) => {
+  await page.goto('/three-muscle-selector');
+
+  await expect(page.getByRole('heading', { name: '3D 肌群选择' })).toBeVisible();
+  await expect(page.getByText('选择想练的身体部位')).toBeVisible();
+  await expect(page.getByTestId('three-region-selector')).toBeVisible();
+  await expect(page.getByTestId('select-three-region-back-partial')).toContainText('背部局部');
+  await expect(page.getByTestId('select-three-region-back-partial')).toContainText('当前可选');
+  await expect(page.getByTestId('select-three-region-chest')).toContainText('胸部，暂未配置');
+  await expect(page.getByTestId('select-three-region-legs')).toContainText('腿部，暂未配置');
+  await expect(page.getByTestId('select-three-region-shoulders-arms')).toContainText('肩臂，暂未配置');
+  await expect(page.getByTestId('select-three-region-core')).toContainText('核心，暂未配置');
+  await expect(page.getByTestId('select-three-region-box-test')).toContainText('GLB 管线测试，开发验证');
+
+  await expect(page.getByTestId('three-current-region-label')).toContainText('背部局部');
+  await expect(page.getByTestId('three-region-limitations')).toContainText('当前背部局部实验模型未包含背阔肌');
+  await expect(page.getByTestId('three-region-limitations')).toContainText('当前模型仅覆盖部分背部肌群');
+  await expect(page.getByText('点击模型中的肌肉区域，查看它能怎么练。')).toBeVisible();
+  await expect(page.getByText('mesh.name')).not.toBeVisible();
+});
+
+test('three muscle selector bridges mapped back meshes to muscle and exercise entry points', async ({ page }) => {
+  await page.goto('/three-muscle-selector');
+  await page.getByTestId('select-three-region-back-partial').click();
+  await page.getByTestId('select-three-mapped-mesh-Right_teres_major').click();
+
+  await expect(page.getByTestId('three-selected-muscle-name')).toContainText('大圆肌');
+  await expect(page.getByTestId('three-selected-muscle-description')).toContainText('位于肩胛骨外侧缘附近');
+  await expect(page.getByTestId('three-related-exercises')).toContainText('直臂下拉');
+  await expect(page.getByTestId('three-related-exercises')).toContainText('高位下拉');
+  await expect(page.getByTestId('three-selected-unmapped-state')).toHaveCount(0);
+
+  await page.getByTestId('three-related-exercise-link-straight-arm-pulldown').click();
+  await expect(page).toHaveURL(/\/exercises\/straight-arm-pulldown\?muscleId=teres-major$/);
+
+  await page.goto('/three-muscle-selector');
+  await page.getByTestId('select-three-region-back-partial').click();
+  await page.getByTestId('select-three-mapped-mesh-Right_teres_major').click();
+  await page.getByTestId('three-muscle-detail-link').click();
+  await expect(page).toHaveURL(/\/muscle-map$/);
+  await expect(page.getByRole('heading', { name: '大圆肌' })).toBeVisible();
+});
+
+test('three muscle selector handles unmapped and unconfigured regions without fake data', async ({ page }) => {
+  await page.goto('/three-muscle-selector');
+  await page.getByTestId('select-three-region-box-test').click();
+
+  await expect(page.getByTestId('three-current-region-label')).toContainText('GLB 管线测试');
+  await expect(page.getByTestId('three-region-limitations')).toContainText('不是人体模型，也不是正式肌群选择资源。');
+  await expect(page.getByTestId('glb-load-status')).toContainText('加载成功');
+  await page.getByTestId('select-glb-test-mesh').click();
+  await expect(page.getByTestId('three-selected-unmapped-state')).toContainText('该部位暂未配置为可训练肌群');
+  await expect(page.getByTestId('three-selected-unmapped-state')).toContainText('未映射');
+  await expect(page.getByTestId('three-related-exercises')).toHaveCount(0);
+  await expect(page.getByTestId('three-muscle-detail-link')).toHaveCount(0);
+
+  for (const regionId of ['chest', 'legs', 'shoulders-arms', 'core']) {
+    await page.getByTestId(`select-three-region-${regionId}`).click();
+    await expect(page.getByTestId('three-region-placeholder')).toContainText('该区域的 3D 肌群模型暂未配置');
+    await expect(page.getByTestId('three-region-placeholder')).toContainText('后续扩展区域');
+    await expect(page.getByTestId('three-related-exercises')).toHaveCount(0);
+  }
+});
+
+test('three muscle selector is usable on 390px mobile viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/three-muscle-selector');
+
+  await expect(page.getByRole('heading', { name: '3D 肌群选择' })).toBeVisible();
+  await expect(page.getByTestId('three-region-selector')).toBeVisible();
+  await page.getByTestId('select-three-region-back-partial').click();
+  await page.getByTestId('select-three-mapped-mesh-Right_teres_major').click();
+  await expect(page.getByTestId('three-selected-muscle-name')).toContainText('大圆肌');
+
+  const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+  expect(hasHorizontalOverflow).toBe(false);
+});
+
 test('three muscle demo exposes registered model regions and placeholder fallback', async ({ page }) => {
   await page.goto('/three-muscle-demo');
 

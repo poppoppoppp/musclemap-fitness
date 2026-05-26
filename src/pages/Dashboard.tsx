@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import Card from '../components/ui/Card';
 
 const entries = [
+  { to: '/three-muscle-selector', title: '3D 肌群选择', description: '选择想练的身体部位，从 3D 模型进入肌群和动作。' },
   { to: '/muscle-map', title: '肌群地图', description: '从背面人体图认识目标肌群。' },
   { to: '/exercises', title: '动作库', description: '按肌群、器械和关键词查找动作。' },
   { to: '/plan-builder', title: '训练计划生成器', description: 'V0.2 开放，当前为占位入口。' },

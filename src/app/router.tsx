@@ -12,6 +12,7 @@ import WorkoutLog from '../pages/WorkoutLog';
 import WorkoutLogDetail from '../pages/WorkoutLogDetail';
 
 const ThreeMuscleDemo = lazy(() => import('../pages/ThreeMuscleDemo'));
+const ThreeMuscleSelector = lazy(() => import('../pages/ThreeMuscleSelector'));
 
 function ThreeMuscleDemoRoute() {
   return (
@@ -27,6 +28,20 @@ function ThreeMuscleDemoRoute() {
   );
 }
 
+function ThreeMuscleSelectorRoute() {
+  return (
+    <Suspense
+      fallback={
+        <div className="rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600 shadow-sm">
+          正在加载 3D 肌群选择…
+        </div>
+      }
+    >
+      <ThreeMuscleSelector />
+    </Suspense>
+  );
+}
+
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -38,6 +53,7 @@ export const router = createBrowserRouter([
       { path: 'exercises/:exerciseId', element: <ExerciseDetail /> },
       { path: 'plan-builder', element: <PlanBuilder /> },
       { path: 'data-management', element: <DataManagement /> },
+      { path: 'three-muscle-selector', element: <ThreeMuscleSelectorRoute /> },
       { path: 'three-muscle-demo', element: <ThreeMuscleDemoRoute /> },
       { path: 'workout-log', element: <WorkoutLog /> },
       { path: 'workout-history', element: <WorkoutHistory /> },

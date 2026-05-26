@@ -1,5 +1,51 @@
 import { expect, test } from '@playwright/test';
 
+import { threeModelRegions } from '../data/threeModelRegions';
+
+test('three model region registry defines V0.10.0 regions and experimental back mapping', () => {
+  expect(threeModelRegions.map((region) => region.id)).toEqual([
+    'back-partial',
+    'box-test',
+    'chest',
+    'legs',
+    'shoulders-arms',
+    'core'
+  ]);
+
+  const backPartial = threeModelRegions.find((region) => region.id === 'back-partial');
+  expect(backPartial).toMatchObject({
+    label: '背部局部模型',
+    view: 'posterior',
+    modelPath: '/models/private/local-anatomy.glb',
+    isPrivateModel: true,
+    isConfigured: true,
+    isExperimental: true
+  });
+  expect(backPartial?.limitations).toContain('当前模型未包含 latissimus-dorsi / 背阔肌');
+  expect(backPartial?.mappings.Right_rhomboid_major).toBe('rhomboids');
+  expect(backPartial?.mappings.Left_spinalis_thoracis).toBe('erector-spinae');
+
+  const boxTest = threeModelRegions.find((region) => region.id === 'box-test');
+  expect(boxTest).toMatchObject({
+    modelPath: '/models/demo/BoxTextured.glb',
+    isPrivateModel: false,
+    isConfigured: true,
+    isExperimental: false,
+    mappings: {}
+  });
+
+  for (const id of ['chest', 'legs', 'shoulders-arms', 'core']) {
+    const placeholder = threeModelRegions.find((region) => region.id === id);
+    expect(placeholder).toMatchObject({
+      isConfigured: false,
+      isPrivateModel: false,
+      isExperimental: false,
+      mappings: {}
+    });
+    expect(placeholder?.modelPath).toBeUndefined();
+  }
+});
+
 test('user can discover latissimus dorsi and open lat pulldown detail', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('link', { name: '肌群地图' }).first().click();

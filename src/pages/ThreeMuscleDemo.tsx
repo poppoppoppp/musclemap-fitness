@@ -514,12 +514,15 @@ function LocalAnatomyExperiment() {
           const size = box.getSize(new THREE.Vector3());
           const center = box.getCenter(new THREE.Vector3());
           const maxAxis = Math.max(size.x, size.y, size.z, 1);
-          gltf.scene.position.sub(center);
-          gltf.scene.scale.setScalar(2.4 / maxAxis);
+          const modelScale = 2.4 / maxAxis;
+          gltf.scene.scale.setScalar(modelScale);
+          gltf.scene.position.set(-center.x * modelScale, -center.y * modelScale, -center.z * modelScale);
 
           controls.target.set(0, 0, 0);
           camera.position.set(0, 0.25, 4.2);
           scene.add(gltf.scene);
+          updateSize();
+          window.requestAnimationFrame(updateSize);
           meshesRef.current = loadedMeshes;
           setMeshCount(loadedMeshes.length);
           setLoadStatus('加载成功');

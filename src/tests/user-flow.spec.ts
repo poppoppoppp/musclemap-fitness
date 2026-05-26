@@ -63,11 +63,29 @@ test('three muscle demo loads the GLB pipeline test model', async ({ page }) => 
   await expect(page.getByTestId('glb-technical-muscle-id')).toContainText('latissimus-dorsi');
 });
 
+test('three muscle demo shows local anatomy fallback when private model is missing', async ({ page }) => {
+  await page.goto('/three-muscle-demo');
+
+  await expect(page.getByTestId('local-anatomy-experiment-panel')).toBeVisible();
+  await expect(page.getByRole('heading', { name: '本地真实模型实验区' })).toBeVisible();
+  await expect(
+    page.getByText('该区域仅用于本地真实模型技术实验。模型文件不会进入正式产品，也不会随项目发布。')
+  ).toBeVisible();
+  await expect(page.getByText('未检测到本地真实模型。')).toBeVisible();
+  await expect(page.getByText('请将本地实验用 .glb 放到 public/models/private/local-anatomy.glb。')).toBeVisible();
+  await expect(page.getByText('该目录已被 Git 忽略，模型不会进入提交。')).toBeVisible();
+  await expect(page.getByTestId('local-anatomy-expected-path')).toContainText('/models/private/local-anatomy.glb');
+  await expect(page.getByText('推荐格式：.glb')).toBeVisible();
+  await expect(page.getByText('不建议直接使用 .obj，优先用 Blender 转 .glb')).toBeVisible();
+  await expect(page.getByText('模型不会随项目发布。')).toBeVisible();
+});
+
 test('three muscle demo does not overflow at 390px mobile width', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/three-muscle-demo');
 
   await expect(page.getByTestId('three-muscle-canvas')).toBeVisible();
+  await expect(page.getByTestId('local-anatomy-experiment-panel')).toBeVisible();
   const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
   expect(hasHorizontalOverflow).toBe(false);
 });

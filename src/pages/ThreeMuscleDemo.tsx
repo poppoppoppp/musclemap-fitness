@@ -22,6 +22,11 @@ type GlbMeshInfo = {
   mesh: THREE.Mesh;
 };
 
+type LocalAnatomyMeshInfo = {
+  name: string;
+  mesh: THREE.Mesh;
+};
+
 const demoRegions: DemoMuscleRegion[] = [
   {
     id: 'left-lat-placeholder',
@@ -61,6 +66,16 @@ const demoRegions: DemoMuscleRegion[] = [
 const glbModelPath = '/models/demo/BoxTextured.glb';
 const glbFileSizeBytes = 6540;
 const glbTechnicalMuscleId = 'latissimus-dorsi';
+const localAnatomyModelPath = '/models/private/local-anatomy.glb';
+const localAnatomyMeshMappings: Record<string, string> = {
+  // 示例：真实 mesh name 后续手动填入。
+  // 'Latissimus_Dorsi_L': 'latissimus-dorsi',
+  // 'Rhomboid_Major': 'rhomboids',
+  // 'Trapezius_Middle_Lower': 'middle-lower-trapezius',
+  // 'Erector_Spinae': 'erector-spinae',
+  // 'Teres_Major': 'teres-major',
+  // 'Deltoid_Posterior': 'rear-deltoid'
+};
 const defaultSelectedRegion = demoRegions[0];
 
 export default function ThreeMuscleDemo() {
@@ -287,7 +302,354 @@ export default function ThreeMuscleDemo() {
       </div>
 
       <GlbPipelineExperiment />
+      <LocalAnatomyExperiment />
     </div>
+  );
+}
+
+function LocalAnatomyExperiment() {
+  const mountRef = useRef<HTMLDivElement | null>(null);
+  const meshesRef = useRef<LocalAnatomyMeshInfo[]>([]);
+  const selectedMeshRef = useRef<THREE.Mesh | null>(null);
+  const [loadStatus, setLoadStatus] = useState('等待检测');
+  const [modelAvailable, setModelAvailable] = useState(false);
+  const [meshCount, setMeshCount] = useState(0);
+  const [selectedMeshName, setSelectedMeshName] = useState('未选择');
+
+  const selectedMuscleId = selectedMeshName === '未选择' ? undefined : localAnatomyMeshMappings[selectedMeshName];
+  const selectedMuscle = selectedMuscleId ? getMuscleById(selectedMuscleId) : undefined;
+
+  const resetMeshHighlight = (mesh: THREE.Mesh) => {
+    const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+    materials.forEach((material) => {
+      if (material instanceof THREE.MeshStandardMaterial) {
+        material.emissive.set(0x000000);
+      } else if (material instanceof THREE.MeshBasicMaterial || material instanceof THREE.MeshLambertMaterial) {
+        const baseColor = material.userData.baseColor as number | undefined;
+        if (baseColor !== undefined) {
+          material.color.set(baseColor);
+        }
+      }
+    });
+  };
+
+  const highlightMesh = (meshInfo: LocalAnatomyMeshInfo) => {
+    if (selectedMeshRef.current) {
+      resetMeshHighlight(selectedMeshRef.current);
+    }
+
+    const materials = Array.isArray(meshInfo.mesh.material) ? meshInfo.mesh.material : [meshInfo.mesh.material];
+    materials.forEach((material) => {
+      if (material instanceof THREE.MeshStandardMaterial) {
+        material.emissive.set(0x7a4a00);
+      } else if (material instanceof THREE.MeshBasicMaterial || material instanceof THREE.MeshLambertMaterial) {
+        material.color.set(0xf59e0b);
+      }
+    });
+
+    selectedMeshRef.current = meshInfo.mesh;
+    setSelectedMeshName(meshInfo.name);
+  };
+
+  useEffect(() => {
+    const mount = mountRef.current;
+    if (!mount) {
+      return undefined;
+    }
+
+    let disposed = false;
+    let animationFrame = 0;
+    let renderer: THREE.WebGLRenderer | null = null;
+    let controls: OrbitControls | null = null;
+    let scene: THREE.Scene | null = null;
+
+    const disposeScene = () => {
+      if (animationFrame) {
+        window.cancelAnimationFrame(animationFrame);
+      }
+
+      controls?.dispose();
+
+      scene?.traverse((object) => {
+        if (object instanceof THREE.Mesh) {
+          object.geometry.dispose();
+          const material = object.material;
+          if (Array.isArray(material)) {
+            material.forEach((item) => item.dispose());
+          } else {
+            material.dispose();
+          }
+        }
+      });
+
+      renderer?.dispose();
+      renderer?.domElement.remove();
+      meshesRef.current = [];
+      selectedMeshRef.current = null;
+    };
+
+    const loadModel = async () => {
+      setLoadStatus('检测本地模型');
+
+      try {
+        const response = await fetch(localAnatomyModelPath, { method: 'HEAD' });
+        const contentType = response.headers.get('content-type') ?? '';
+        if (!response.ok || contentType.includes('text/html')) {
+          if (!disposed) {
+            setLoadStatus('未检测到本地真实模型');
+          }
+          return;
+        }
+      } catch {
+        if (!disposed) {
+          setLoadStatus('未检测到本地真实模型');
+        }
+        return;
+      }
+
+      if (disposed) {
+        return;
+      }
+
+      setModelAvailable(true);
+      setLoadStatus('加载中');
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xf8fafc);
+
+      const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+      camera.position.set(1.8, 1.4, 3.2);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      mount.appendChild(renderer.domElement);
+
+      controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.enablePan = false;
+      controls.minDistance = 0.5;
+      controls.maxDistance = 12;
+
+      scene.add(new THREE.AmbientLight(0xffffff, 1.35));
+      const keyLight = new THREE.DirectionalLight(0xffffff, 1.45);
+      keyLight.position.set(2, 3, 4);
+      scene.add(keyLight);
+
+      const raycaster = new THREE.Raycaster();
+      const pointer = new THREE.Vector2();
+
+      const updateSize = () => {
+        if (!renderer) {
+          return;
+        }
+
+        const { clientWidth, clientHeight } = mount;
+        const width = Math.max(clientWidth, 1);
+        const height = Math.max(clientHeight, 1);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(width, height, false);
+      };
+
+      const handlePointerDown = (event: PointerEvent) => {
+        if (!renderer) {
+          return;
+        }
+
+        const rect = renderer.domElement.getBoundingClientRect();
+        pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        raycaster.setFromCamera(pointer, camera);
+
+        const intersections = raycaster.intersectObjects(
+          meshesRef.current.map((meshInfo) => meshInfo.mesh),
+          false
+        );
+        const selectedMesh = intersections[0]?.object;
+        const meshInfo = meshesRef.current.find((candidate) => candidate.mesh === selectedMesh);
+        if (meshInfo) {
+          highlightMesh(meshInfo);
+        }
+      };
+
+      renderer.domElement.addEventListener('pointerdown', handlePointerDown);
+      window.addEventListener('resize', updateSize);
+
+      const loader = new GLTFLoader();
+      loader.load(
+        localAnatomyModelPath,
+        (gltf) => {
+          if (disposed || !scene || !controls) {
+            return;
+          }
+
+          const loadedMeshes: LocalAnatomyMeshInfo[] = [];
+          gltf.scene.traverse((object) => {
+            if (object instanceof THREE.Mesh) {
+              const meshName = object.name || `local-anatomy-mesh-${loadedMeshes.length + 1}`;
+              object.name = meshName;
+              if (Array.isArray(object.material)) {
+                object.material = object.material.map((material) => material.clone());
+              } else {
+                object.material = object.material.clone();
+              }
+
+              const materials = Array.isArray(object.material) ? object.material : [object.material];
+              materials.forEach((material) => {
+                if (
+                  material instanceof THREE.MeshBasicMaterial ||
+                  material instanceof THREE.MeshLambertMaterial ||
+                  material instanceof THREE.MeshStandardMaterial
+                ) {
+                  material.userData.baseColor = material.color.getHex();
+                }
+              });
+
+              loadedMeshes.push({ name: meshName, mesh: object });
+            }
+          });
+
+          const box = new THREE.Box3().setFromObject(gltf.scene);
+          const size = box.getSize(new THREE.Vector3());
+          const center = box.getCenter(new THREE.Vector3());
+          const maxAxis = Math.max(size.x, size.y, size.z, 1);
+          gltf.scene.position.sub(center);
+          gltf.scene.scale.setScalar(2.4 / maxAxis);
+
+          controls.target.set(0, 0, 0);
+          camera.position.set(0, 0.25, 4.2);
+          scene.add(gltf.scene);
+          meshesRef.current = loadedMeshes;
+          setMeshCount(loadedMeshes.length);
+          setLoadStatus('加载成功');
+        },
+        undefined,
+        () => {
+          if (!disposed) {
+            setLoadStatus('加载失败');
+          }
+        }
+      );
+
+      updateSize();
+
+      const animate = () => {
+        if (renderer && scene) {
+          controls?.update();
+          renderer.render(scene, camera);
+        }
+        animationFrame = window.requestAnimationFrame(animate);
+      };
+      animate();
+
+      return () => {
+        renderer?.domElement.removeEventListener('pointerdown', handlePointerDown);
+        window.removeEventListener('resize', updateSize);
+      };
+    };
+
+    let removeListeners: (() => void) | undefined;
+    void loadModel().then((cleanup) => {
+      removeListeners = cleanup;
+    });
+
+    return () => {
+      disposed = true;
+      removeListeners?.();
+      disposeScene();
+    };
+  }, []);
+
+  return (
+    <section
+      data-testid="local-anatomy-experiment-panel"
+      className="grid gap-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm lg:grid-cols-[minmax(0,1fr)_360px]"
+    >
+      <div className="min-w-0">
+        <div className="mb-3">
+          <h2 className="text-lg font-semibold text-slate-950">本地真实模型实验区</h2>
+          <p className="mt-1 text-sm text-slate-600">
+            该区域仅用于本地真实模型技术实验。模型文件不会进入正式产品，也不会随项目发布。
+          </p>
+        </div>
+
+        <div
+          ref={mountRef}
+          data-testid="local-anatomy-canvas"
+          className={
+            modelAvailable
+              ? 'h-[320px] w-full touch-none rounded-md border border-slate-100 bg-slate-50 sm:h-[420px]'
+              : 'hidden'
+          }
+          aria-label="本地真实人体模型实验画布"
+        />
+
+        {!modelAvailable && (
+          <div className="rounded-md border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
+            <p className="font-medium">未检测到本地真实模型。</p>
+            <p className="mt-2">请将本地实验用 .glb 放到 public/models/private/local-anatomy.glb。</p>
+            <p className="mt-2">该目录已被 Git 忽略，模型不会进入提交。</p>
+            <p className="mt-2">模型不会随项目发布。</p>
+            <dl className="mt-4 space-y-2">
+              <div>
+                <dt className="text-amber-800">当前期望路径</dt>
+                <dd data-testid="local-anatomy-expected-path" className="break-words font-mono text-xs">
+                  {localAnatomyModelPath}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-amber-800">推荐格式</dt>
+                <dd>推荐格式：.glb</dd>
+              </div>
+              <div>
+                <dt className="text-amber-800">格式处理</dt>
+                <dd>不建议直接使用 .obj，优先用 Blender 转 .glb</dd>
+              </div>
+            </dl>
+          </div>
+        )}
+      </div>
+
+      <aside className="min-w-0">
+        <dl className="space-y-3 text-sm">
+          <div>
+            <dt className="text-slate-500">模型路径</dt>
+            <dd className="mt-1 break-words font-mono text-xs text-slate-950">{localAnatomyModelPath}</dd>
+          </div>
+          <div>
+            <dt className="text-slate-500">加载状态</dt>
+            <dd data-testid="local-anatomy-load-status" className="mt-1 font-medium text-slate-950">
+              {loadStatus}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-slate-500">mesh 数量</dt>
+            <dd data-testid="local-anatomy-mesh-count" className="mt-1 font-mono text-xs text-slate-950">
+              {meshCount}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-slate-500">当前选中 mesh.name</dt>
+            <dd data-testid="local-anatomy-selected-mesh-name" className="mt-1 break-words font-mono text-xs text-slate-950">
+              {selectedMeshName}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-slate-500">映射 muscleId</dt>
+            <dd data-testid="local-anatomy-selected-muscle-id" className="mt-1 font-mono text-xs text-slate-950">
+              {selectedMuscleId ?? '未映射'}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-slate-500">中文肌肉名</dt>
+            <dd data-testid="local-anatomy-selected-muscle-name" className="mt-1 font-medium text-slate-950">
+              {selectedMuscle?.nameZh ?? '未映射'}
+            </dd>
+          </div>
+        </dl>
+      </aside>
+    </section>
   );
 }
 

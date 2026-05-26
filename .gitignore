@@ -4,3 +4,14 @@ test-results
 playwright-report
 .env
 .DS_Store
+local-models/
+public/models/private/
+*.blend
+*.fbx
+*.obj
+*.stl
+*.vtk
+*.dae
+*.ply
+*.usd
+*.usdz

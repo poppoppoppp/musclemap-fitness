@@ -46,6 +46,33 @@ test('three model region registry defines V0.10.0 regions and experimental back 
   }
 });
 
+test('three muscle demo exposes registered model regions and placeholder fallback', async ({ page }) => {
+  await page.goto('/three-muscle-demo');
+
+  await expect(page.getByTestId('three-region-selector')).toBeVisible();
+  await expect(page.getByTestId('select-three-region-back-partial')).toContainText('背部局部模型');
+  await expect(page.getByTestId('select-three-region-box-test')).toContainText('GLB 管线测试');
+  await expect(page.getByTestId('select-three-region-chest')).toContainText('胸部');
+  await expect(page.getByTestId('select-three-region-legs')).toContainText('腿部');
+  await expect(page.getByTestId('select-three-region-shoulders-arms')).toContainText('肩臂');
+  await expect(page.getByTestId('select-three-region-core')).toContainText('核心');
+
+  await page.getByTestId('select-three-region-back-partial').click();
+  await expect(page.getByTestId('three-current-region-label')).toContainText('背部局部模型');
+  await expect(page.getByTestId('three-current-region-path')).toContainText('/models/private/local-anatomy.glb');
+  await expect(page.getByTestId('three-current-region-private')).toContainText('private');
+  await expect(page.getByTestId('three-current-region-experimental')).toContainText('experimental');
+  await expect(page.getByTestId('three-region-limitations')).toContainText('当前模型未包含 latissimus-dorsi / 背阔肌');
+  await expect(page.getByTestId('three-region-limitations')).toContainText('仅用于本地实验');
+  await expect(page.getByTestId('three-region-limitations')).toContainText('不进入正式产品资源');
+  await expect(page.getByTestId('three-selected-muscle-id')).toContainText('未映射');
+
+  await page.getByTestId('select-three-region-chest').click();
+  await expect(page.getByTestId('three-current-region-label')).toContainText('胸部');
+  await expect(page.getByTestId('three-region-placeholder')).toContainText('暂未配置模型资源');
+  await expect(page.getByTestId('three-current-region-path')).toContainText('未配置');
+});
+
 test('user can discover latissimus dorsi and open lat pulldown detail', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('link', { name: '肌群地图' }).first().click();
@@ -74,64 +101,50 @@ test('app exposes pwa metadata for installation', async ({ page }) => {
   await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveAttribute('href', '/icons/musclemap-192.png');
 });
 
-test('three muscle demo renders selectable placeholder muscle regions', async ({ page }) => {
+test('three muscle demo renders the model region registry controls', async ({ page }) => {
   await page.goto('/three-muscle-demo');
 
   await expect(page.getByRole('heading', { name: '3D 肌群模型技术预研' })).toBeVisible();
-  await expect(page.getByText('该页面为实验 Demo，不影响正式肌群地图。当前模型为占位几何体，不代表真实解剖结构。')).toBeVisible();
-  await expect(page.getByTestId('three-muscle-canvas')).toBeVisible();
-
-  await page.getByTestId('select-three-muscle-latissimus-dorsi').click();
-  await expect(page.getByTestId('three-selected-muscle-id')).toContainText('latissimus-dorsi');
-  await expect(page.getByTestId('three-selected-muscle-name')).toContainText('背阔肌');
-  await expect(page.getByTestId('three-selected-muscle-match')).toContainText('已匹配');
-
-  await page.getByTestId('select-three-muscle-rhomboids').click();
-  await expect(page.getByTestId('three-selected-muscle-id')).toContainText('rhomboids');
-
-  await page.getByTestId('select-three-muscle-rear-deltoid').click();
-  await expect(page.getByTestId('three-selected-muscle-id')).toContainText('rear-deltoid');
+  await expect(page.getByTestId('three-region-selector')).toBeVisible();
+  await expect(page.getByTestId('select-three-region-back-partial')).toBeVisible();
+  await expect(page.getByTestId('select-three-region-box-test')).toBeVisible();
+  await expect(page.getByTestId('select-three-region-core')).toContainText('未配置');
 });
 
 test('three muscle demo loads the GLB pipeline test model', async ({ page }) => {
   await page.goto('/three-muscle-demo');
+  await page.getByTestId('select-three-region-box-test').click();
 
-  await expect(page.getByTestId('glb-experiment-panel')).toBeVisible();
-  await expect(page.getByText('当前 GLB 模型仅用于加载管线测试，不代表真实人体或肌群结构。')).toBeVisible();
-  await expect(page.getByText('模型文件：BoxTextured.glb')).toBeVisible();
-  await expect(page.getByText('用途：仅用于 GLBLoader 管线测试')).toBeVisible();
-  await expect(page.getByText('说明：该模型不是人体模型，也不是肌肉模型，不代表真实解剖结构。')).toBeVisible();
+  await expect(page.getByTestId('region-model-experiment')).toBeVisible();
+  await expect(page.getByTestId('three-current-region-label')).toContainText('GLB 管线测试');
+  await expect(page.getByTestId('three-current-region-path')).toContainText('/models/demo/BoxTextured.glb');
   await expect(page.getByTestId('glb-load-status')).toContainText('加载成功');
   await expect(page.getByTestId('glb-mesh-count')).toContainText(/[1-9]/);
 
   await page.getByTestId('select-glb-test-mesh').click();
   await expect(page.getByTestId('glb-selected-mesh-name')).not.toContainText('未选择');
-  await expect(page.getByTestId('glb-technical-muscle-id')).toContainText('latissimus-dorsi');
+  await expect(page.getByTestId('three-selected-muscle-id')).toContainText('未映射');
 });
 
 test('three muscle demo shows local anatomy fallback when private model is missing', async ({ page }) => {
   await page.goto('/three-muscle-demo');
+  await page.getByTestId('select-three-region-back-partial').click();
 
-  await expect(page.getByTestId('local-anatomy-experiment-panel')).toBeVisible();
-  await expect(page.getByRole('heading', { name: '本地真实模型实验区' })).toBeVisible();
-  await expect(
-    page.getByText('该区域仅用于本地真实模型技术实验。模型文件不会进入正式产品，也不会随项目发布。')
-  ).toBeVisible();
-  await expect(page.getByText('未检测到本地真实模型。')).toBeVisible();
-  await expect(page.getByText('请将本地实验用 .glb 放到 public/models/private/local-anatomy.glb。')).toBeVisible();
-  await expect(page.getByText('该目录已被 Git 忽略，模型不会进入提交。')).toBeVisible();
-  await expect(page.getByTestId('local-anatomy-expected-path')).toContainText('/models/private/local-anatomy.glb');
-  await expect(page.getByText('推荐格式：.glb')).toBeVisible();
-  await expect(page.getByText('不建议直接使用 .obj，优先用 Blender 转 .glb')).toBeVisible();
-  await expect(page.getByText('模型不会随项目发布。')).toBeVisible();
+  await expect(page.getByTestId('region-model-experiment')).toBeVisible();
+  await expect(page.getByTestId('three-current-region-label')).toContainText('背部局部模型');
+  await expect(page.getByTestId('three-current-region-path')).toContainText('/models/private/local-anatomy.glb');
+  await expect(page.getByTestId('three-region-limitations')).toContainText('当前模型未包含 latissimus-dorsi / 背阔肌');
+  await expect(page.getByTestId('three-region-limitations')).toContainText('仅用于本地实验');
+  await expect(page.getByTestId('three-region-limitations')).toContainText('不进入正式产品资源');
+  await expect(page.getByText(/未检测到模型文件|加载成功/)).toBeVisible();
 });
 
 test('three muscle demo does not overflow at 390px mobile width', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/three-muscle-demo');
 
-  await expect(page.getByTestId('three-muscle-canvas')).toBeVisible();
-  await expect(page.getByTestId('local-anatomy-experiment-panel')).toBeVisible();
+  await expect(page.getByTestId('three-region-selector')).toBeVisible();
+  await expect(page.getByTestId('region-model-experiment')).toBeVisible();
   const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
   expect(hasHorizontalOverflow).toBe(false);
 });

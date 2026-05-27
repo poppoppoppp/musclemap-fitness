@@ -21,7 +21,10 @@ test('three model region registry defines V0.10.0 regions and experimental back 
     isConfigured: true,
     isExperimental: true
   });
-  expect(backPartial?.limitations).toContain('当前模型未包含 latissimus-dorsi / 背阔肌');
+  expect(backPartial?.limitations).toContain('当前模型未包含 latissimus-dorsi / 背阔肌真实 mesh');
+  expect(backPartial?.limitations).toContain('背阔肌当前使用简化 3D 示意区域补充选择入口');
+  expect(backPartial?.mappings.Simplified_left_latissimus_dorsi).toBe('latissimus-dorsi');
+  expect(backPartial?.mappings.Simplified_right_latissimus_dorsi).toBe('latissimus-dorsi');
   expect(backPartial?.mappings.Right_rhomboid_major).toBe('rhomboids');
   expect(backPartial?.mappings.Left_spinalis_thoracis).toBe('erector-spinae');
 
@@ -87,6 +90,32 @@ test('three muscle selector bridges mapped back meshes to muscle and exercise en
   await page.getByTestId('three-muscle-detail-link').click();
   await expect(page).toHaveURL(/\/muscle-map$/);
   await expect(page.getByRole('heading', { name: '大圆肌' })).toBeVisible();
+});
+
+test('three muscle selector exposes simplified latissimus dorsi 3d targets', async ({ page }) => {
+  await page.goto('/three-muscle-selector');
+  await page.getByTestId('select-three-region-back-partial').click();
+
+  await expect(page.getByTestId('three-simplified-latissimus-note')).toContainText('简化 3D 示意区域');
+  await expect(page.getByTestId('select-three-mapped-mesh-Simplified_left_latissimus_dorsi')).toContainText('背阔肌');
+  await expect(page.getByTestId('select-three-mapped-mesh-Simplified_right_latissimus_dorsi')).toContainText('背阔肌');
+
+  await page.getByTestId('select-three-mapped-mesh-Simplified_left_latissimus_dorsi').click();
+  await expect(page.getByTestId('glb-selected-mesh-name')).toContainText('Simplified_left_latissimus_dorsi');
+  await expect(page.getByTestId('three-selected-muscle-id')).toContainText('latissimus-dorsi');
+  await expect(page.getByTestId('three-selected-muscle-name')).toContainText('背阔肌');
+  await expect(page.getByTestId('three-selected-muscle-description')).toContainText('肩关节伸展、内收、内旋');
+  await expect(page.getByTestId('three-simplified-selection-note')).toContainText('不是当前真实模型 mesh');
+  await expect(page.getByTestId('three-related-exercises')).toContainText('高位下拉');
+
+  await page.getByTestId('three-related-exercise-link-lat-pulldown').click();
+  await expect(page).toHaveURL(/\/exercises\/lat-pulldown\?muscleId=latissimus-dorsi$/);
+
+  await page.goto('/three-muscle-selector');
+  await page.getByTestId('select-three-mapped-mesh-Simplified_right_latissimus_dorsi').click();
+  await page.getByTestId('three-muscle-detail-link').click();
+  await expect(page).toHaveURL(/\/muscle-map$/);
+  await expect(page.getByRole('heading', { name: '背阔肌' })).toBeVisible();
 });
 
 test('three muscle selector handles unmapped and unconfigured regions without fake data', async ({ page }) => {

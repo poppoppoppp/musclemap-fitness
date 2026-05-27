@@ -26,6 +26,10 @@ const DEFAULT_REGION_ID = 'back-partial';
 const UNSELECTED_MESH_LABEL = '未选择';
 const UNMAPPED_LABEL = '未映射';
 const MAX_RELATED_EXERCISES = 6;
+const SIMPLIFIED_LATISSIMUS_TARGETS = [
+  'Simplified_left_latissimus_dorsi',
+  'Simplified_right_latissimus_dorsi'
+] as const;
 
 export default function ThreeMuscleDemo() {
   return <ThreeMuscleExperience mode="demo" />;
@@ -134,6 +138,7 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
     [selectedMuscleId]
   );
   const hasSelectedMesh = selectedMeshName !== UNSELECTED_MESH_LABEL;
+  const selectedIsSimplifiedLatissimus = isSimplifiedLatissimusTarget(selectedMeshName);
   const mappedMeshEntries = useMemo(() => Object.entries(region.mappings), [region.mappings]);
 
   const resetMeshHighlight = (mesh: THREE.Mesh) => {
@@ -363,6 +368,11 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
           gltf.scene.position.set(-center.x * modelScale, -center.y * modelScale, -center.z * modelScale);
 
           scene.add(gltf.scene);
+          if (region.id === 'back-partial') {
+            const simplifiedTargets = createSimplifiedLatissimusTargets();
+            simplifiedTargets.forEach((target) => scene?.add(target.mesh));
+            loadedMeshes.unshift(...simplifiedTargets);
+          }
           meshesRef.current = loadedMeshes;
           setMeshCount(loadedMeshes.length);
           setLoadStatus('加载成功');
@@ -426,6 +436,11 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
           </p>
           {isSelector && region.isConfigured && (
             <p className="mt-2 text-sm text-cyan-200">点击模型中的肌肉区域，查看它能怎么练。</p>
+          )}
+          {isSelector && region.id === 'back-partial' && (
+            <p data-testid="three-simplified-latissimus-note" className="mt-2 text-sm leading-6 text-amber-100">
+              背阔肌当前使用简化 3D 示意区域；当前真实背部模型未包含背阔肌 mesh，后续可替换为真实解剖模型。
+            </p>
           )}
         </div>
 
@@ -520,10 +535,15 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
                     key={meshName}
                     type="button"
                     data-testid={`select-three-mapped-mesh-${meshName}`}
+                    aria-pressed={selectedMeshName === meshName}
                     onClick={() => selectMappedMeshByName(meshName)}
                     className={
                       isSelector
-                        ? 'min-w-0 rounded-md border border-line bg-slate-950 px-3 py-2 text-left text-xs transition hover:border-cyan-500 hover:bg-cyan-500/10'
+                        ? `min-w-0 rounded-md border px-3 py-2 text-left text-xs transition hover:border-cyan-500 hover:bg-cyan-500/10 ${
+                            selectedMeshName === meshName
+                              ? 'border-cyan-400 bg-cyan-400/10'
+                              : 'border-line bg-slate-950'
+                          }`
                         : 'min-w-0 rounded-md border border-slate-200 bg-white px-3 py-2 text-left text-xs transition hover:border-amber-300 hover:bg-amber-50'
                     }
                   >
@@ -552,6 +572,7 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
             selectedMuscle={selectedMuscle}
             relatedExercises={relatedExercises}
             hasSelectedMesh={hasSelectedMesh}
+            selectedIsSimplifiedLatissimus={selectedIsSimplifiedLatissimus}
             setSelectedMuscleId={setSelectedMuscleId}
           />
         ) : (
@@ -581,6 +602,7 @@ function SelectorResultPanel({
   selectedMuscle,
   relatedExercises,
   hasSelectedMesh,
+  selectedIsSimplifiedLatissimus,
   setSelectedMuscleId
 }: {
   region: ThreeModelRegion;
@@ -591,6 +613,7 @@ function SelectorResultPanel({
   selectedMuscle: ReturnType<typeof getMuscleById>;
   relatedExercises: RelatedExercise[];
   hasSelectedMesh: boolean;
+  selectedIsSimplifiedLatissimus: boolean;
   setSelectedMuscleId: (muscleId: string) => void;
 }) {
   return (
@@ -614,6 +637,14 @@ function SelectorResultPanel({
               <p>{selectedMuscle.description}</p>
               <p>{selectedMuscle.function}</p>
             </div>
+            {selectedIsSimplifiedLatissimus && (
+              <p
+                data-testid="three-simplified-selection-note"
+                className="mt-3 rounded-md border border-amber-400/40 bg-amber-400/10 p-3 text-sm leading-6 text-amber-100"
+              >
+                当前选择的是背阔肌简化 3D 示意区域，不是当前真实模型 mesh。
+              </p>
+            )}
           </div>
         )}
 
@@ -941,13 +972,53 @@ function getSelectorRegionDescription(region: ThreeModelRegion) {
 function getSelectorLimitations(region: ThreeModelRegion) {
   if (region.id === 'back-partial') {
     return [
-      '当前背部局部实验模型未包含背阔肌',
-      '背阔肌会作为后续 3D 核心选择部位补齐',
+      '当前背部局部实验模型未包含背阔肌真实 mesh',
+      '背阔肌当前使用简化 3D 示意区域，后续可替换为真实解剖模型',
       '当前模型仅覆盖部分背部肌群'
     ];
   }
 
   return region.limitations ?? [];
+}
+
+function isSimplifiedLatissimusTarget(meshName: string) {
+  return SIMPLIFIED_LATISSIMUS_TARGETS.some((targetName) => targetName === meshName);
+}
+
+function createSimplifiedLatissimusTargets(): RegionMeshInfo[] {
+  return [
+    createSimplifiedLatissimusTarget('Simplified_left_latissimus_dorsi', -1),
+    createSimplifiedLatissimusTarget('Simplified_right_latissimus_dorsi', 1)
+  ];
+}
+
+function createSimplifiedLatissimusTarget(name: string, side: -1 | 1): RegionMeshInfo {
+  const shape = new THREE.Shape();
+  shape.moveTo(0.02 * side, 0.62);
+  shape.lineTo(0.34 * side, 0.28);
+  shape.lineTo(0.3 * side, -0.42);
+  shape.lineTo(0.08 * side, -0.68);
+  shape.lineTo(-0.12 * side, -0.42);
+  shape.lineTo(-0.1 * side, 0.22);
+  shape.lineTo(0.02 * side, 0.62);
+
+  const geometry = new THREE.ShapeGeometry(shape);
+  const material = new THREE.MeshBasicMaterial({
+    color: 0x22d3ee,
+    opacity: 0.42,
+    transparent: true,
+    side: THREE.DoubleSide,
+    depthTest: true
+  });
+  material.userData.baseColor = material.color.getHex();
+
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.name = name;
+  mesh.position.set(0.5 * side, -0.08, 0.14);
+  mesh.rotation.set(0, 0, -0.08 * side);
+  mesh.renderOrder = 2;
+
+  return { name, mesh };
 }
 
 function getRelatedExercises(muscleId: string): RelatedExercise[] {

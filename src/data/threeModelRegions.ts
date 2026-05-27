@@ -22,6 +22,8 @@ export interface ThreeModelRegion {
 }
 
 const backPartialMappings: Record<string, string> = {
+  Simplified_left_latissimus_dorsi: 'latissimus-dorsi',
+  Simplified_right_latissimus_dorsi: 'latissimus-dorsi',
   Right_rhomboid_major: 'rhomboids',
   Left_rhomboid_major: 'rhomboids',
   Right_rhomboid_minor: 'rhomboids',
@@ -56,7 +58,12 @@ export const threeModelRegions: ThreeModelRegion[] = [
     isConfigured: true,
     isExperimental: true,
     description: '该模型仅用于本地真实模型实验，用于验证 mesh 点击、高亮和映射。',
-    limitations: ['当前模型未包含 latissimus-dorsi / 背阔肌', '仅用于本地实验', '不进入正式产品资源'],
+    limitations: [
+      '当前模型未包含 latissimus-dorsi / 背阔肌真实 mesh',
+      '背阔肌当前使用简化 3D 示意区域补充选择入口',
+      '仅用于本地实验',
+      '不进入正式产品资源'
+    ],
     mappings: backPartialMappings
   },
   {

@@ -73,7 +73,7 @@ test('three muscle selector presents a product entry for choosing training muscl
 test('three muscle selector bridges mapped back meshes to muscle and exercise entry points', async ({ page }) => {
   await page.goto('/three-muscle-selector');
   await page.getByTestId('select-three-region-back-partial').click();
-  await page.getByTestId('select-three-mapped-mesh-Right_teres_major').click();
+  await page.getByTestId('select-three-muscle-option-teres-major').click();
 
   await expect(page.getByTestId('three-selected-muscle-name')).toContainText('大圆肌');
   await expect(page.getByTestId('three-selected-muscle-description')).toContainText('位于肩胛骨外侧缘附近');
@@ -86,7 +86,7 @@ test('three muscle selector bridges mapped back meshes to muscle and exercise en
 
   await page.goto('/three-muscle-selector');
   await page.getByTestId('select-three-region-back-partial').click();
-  await page.getByTestId('select-three-mapped-mesh-Right_teres_major').click();
+  await page.getByTestId('select-three-muscle-option-teres-major').click();
   await page.getByTestId('three-muscle-detail-link').click();
   await expect(page).toHaveURL(/\/muscle-map$/);
   await expect(page.getByRole('heading', { name: '大圆肌' })).toBeVisible();
@@ -97,10 +97,11 @@ test('three muscle selector exposes simplified latissimus dorsi 3d targets', asy
   await page.getByTestId('select-three-region-back-partial').click();
 
   await expect(page.getByTestId('three-simplified-latissimus-note')).toContainText('简化 3D 示意区域');
-  await expect(page.getByTestId('select-three-mapped-mesh-Simplified_left_latissimus_dorsi')).toContainText('背阔肌');
-  await expect(page.getByTestId('select-three-mapped-mesh-Simplified_right_latissimus_dorsi')).toContainText('背阔肌');
+  await expect(page.getByTestId('select-three-muscle-option-latissimus-dorsi')).toContainText('背阔肌');
+  await expect(page.getByTestId('select-three-mapped-mesh-Simplified_left_latissimus_dorsi')).toHaveCount(0);
+  await expect(page.getByTestId('select-three-mapped-mesh-Simplified_right_latissimus_dorsi')).toHaveCount(0);
 
-  await page.getByTestId('select-three-mapped-mesh-Simplified_left_latissimus_dorsi').click();
+  await page.getByTestId('select-three-muscle-option-latissimus-dorsi').click();
   await expect(page.getByTestId('glb-selected-mesh-name')).toContainText('Simplified_left_latissimus_dorsi');
   await expect(page.getByTestId('three-selected-muscle-id')).toContainText('latissimus-dorsi');
   await expect(page.getByTestId('three-selected-muscle-name')).toContainText('背阔肌');
@@ -112,10 +113,33 @@ test('three muscle selector exposes simplified latissimus dorsi 3d targets', asy
   await expect(page).toHaveURL(/\/exercises\/lat-pulldown\?muscleId=latissimus-dorsi$/);
 
   await page.goto('/three-muscle-selector');
-  await page.getByTestId('select-three-mapped-mesh-Simplified_right_latissimus_dorsi').click();
+  await page.getByTestId('select-three-muscle-option-latissimus-dorsi').click();
   await page.getByTestId('three-muscle-detail-link').click();
   await expect(page).toHaveURL(/\/muscle-map$/);
   await expect(page.getByRole('heading', { name: '背阔肌' })).toBeVisible();
+});
+
+test('three muscle selector groups the visible back muscle list by muscle id', async ({ page }) => {
+  await page.goto('/three-muscle-selector');
+  await page.getByTestId('select-three-region-back-partial').click();
+
+  for (const muscleId of [
+    'latissimus-dorsi',
+    'rhomboids',
+    'middle-lower-trapezius',
+    'teres-major',
+    'rear-deltoid',
+    'erector-spinae'
+  ]) {
+    await expect(page.getByTestId(`select-three-muscle-option-${muscleId}`)).toHaveCount(1);
+  }
+
+  await expect(page.getByTestId('three-muscle-options')).toContainText('背阔肌');
+  await expect(page.getByTestId('three-muscle-options')).toContainText('菱形肌');
+  await expect(page.getByTestId('three-muscle-options')).toContainText('斜方肌中下束');
+  await page.getByTestId('select-three-muscle-option-rhomboids').click();
+  await expect(page.getByTestId('three-selected-muscle-id')).toContainText('rhomboids');
+  await expect(page.getByTestId('three-selected-muscle-name')).toContainText('菱形肌');
 });
 
 test('three muscle selector handles unmapped and unconfigured regions without fake data', async ({ page }) => {
@@ -146,7 +170,7 @@ test('three muscle selector is usable on 390px mobile viewport', async ({ page }
   await expect(page.getByRole('heading', { name: '3D 肌群选择' })).toBeVisible();
   await expect(page.getByTestId('three-region-selector')).toBeVisible();
   await page.getByTestId('select-three-region-back-partial').click();
-  await page.getByTestId('select-three-mapped-mesh-Right_teres_major').click();
+  await page.getByTestId('select-three-muscle-option-teres-major').click();
   await expect(page.getByTestId('three-selected-muscle-name')).toContainText('大圆肌');
 
   const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);

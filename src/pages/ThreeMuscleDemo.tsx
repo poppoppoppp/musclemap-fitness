@@ -22,6 +22,11 @@ type RelatedExercise = {
   matchType: 'primary' | 'secondary';
 };
 
+type MuscleOption = {
+  muscleId: string;
+  meshNames: string[];
+};
+
 const DEFAULT_REGION_ID = 'back-partial';
 const UNSELECTED_MESH_LABEL = '未选择';
 const UNMAPPED_LABEL = '未映射';
@@ -140,6 +145,7 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
   const hasSelectedMesh = selectedMeshName !== UNSELECTED_MESH_LABEL;
   const selectedIsSimplifiedLatissimus = isSimplifiedLatissimusTarget(selectedMeshName);
   const mappedMeshEntries = useMemo(() => Object.entries(region.mappings), [region.mappings]);
+  const muscleOptions = useMemo(() => getUniqueMuscleOptions(region.mappings), [region.mappings]);
 
   const resetMeshHighlight = (mesh: THREE.Mesh) => {
     const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
@@ -181,6 +187,13 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
     }
 
     setSelectedMeshName(meshName);
+  };
+
+  const selectMuscleOption = (option: MuscleOption) => {
+    const availableMeshName =
+      option.meshNames.find((meshName) => meshesRef.current.some((candidate) => candidate.name === meshName)) ??
+      option.meshNames[0];
+    selectMappedMeshByName(availableMeshName);
   };
 
   useEffect(() => {
@@ -515,17 +528,40 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
           </button>
         )}
 
-        {mappedMeshEntries.length > 0 && (
+        {isSelector && muscleOptions.length > 0 && (
           <div
-            className={
-              isSelector
-                ? 'mt-4 rounded-md border border-line bg-slate-900/70 p-3'
-                : 'mt-4 rounded-md border border-slate-200 bg-slate-50 p-3'
-            }
+            className="mt-4 rounded-md border border-line bg-slate-900/70 p-3"
           >
-            <h3 className={isSelector ? 'text-sm font-semibold text-white' : 'text-sm font-semibold text-slate-950'}>
-              {isSelector ? '可选择的背部局部肌群' : '已注册 mesh 映射'}
-            </h3>
+            <h3 className="text-sm font-semibold text-white">可选择的背部局部肌群</h3>
+            <p className="mt-1 text-xs leading-5 text-slate-400">3D 模型是主入口；这里按肌群合并左右侧 mesh 和简化区域，作为辅助选择。</p>
+            <div data-testid="three-muscle-options" className="mt-2 grid gap-2 sm:grid-cols-2">
+              {muscleOptions.map((option) => {
+                const muscle = getMuscleById(option.muscleId);
+                const selected = selectedMuscleId === option.muscleId;
+
+                return (
+                  <button
+                    key={option.muscleId}
+                    type="button"
+                    data-testid={`select-three-muscle-option-${option.muscleId}`}
+                    aria-pressed={selected}
+                    onClick={() => selectMuscleOption(option)}
+                    className={`min-w-0 rounded-md border px-3 py-2 text-left text-xs transition hover:border-cyan-500 hover:bg-cyan-500/10 ${
+                      selected ? 'border-cyan-400 bg-cyan-400/10' : 'border-line bg-slate-950'
+                    }`}
+                  >
+                    <span className="block font-medium text-white">{muscle?.nameZh ?? option.muscleId}</span>
+                    <span className="mt-1 block break-words text-slate-400">{muscle?.nameEn ?? option.muscleId}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {!isSelector && mappedMeshEntries.length > 0 && (
+          <div className="mt-4 rounded-md border border-slate-200 bg-slate-50 p-3">
+            <h3 className="text-sm font-semibold text-slate-950">已注册 mesh 映射</h3>
             <div className="mt-2 grid gap-2 sm:grid-cols-2">
               {mappedMeshEntries.map(([meshName, muscleId]) => {
                 const muscle = getMuscleById(muscleId);
@@ -535,24 +571,11 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
                     key={meshName}
                     type="button"
                     data-testid={`select-three-mapped-mesh-${meshName}`}
-                    aria-pressed={selectedMeshName === meshName}
                     onClick={() => selectMappedMeshByName(meshName)}
-                    className={
-                      isSelector
-                        ? `min-w-0 rounded-md border px-3 py-2 text-left text-xs transition hover:border-cyan-500 hover:bg-cyan-500/10 ${
-                            selectedMeshName === meshName
-                              ? 'border-cyan-400 bg-cyan-400/10'
-                              : 'border-line bg-slate-950'
-                          }`
-                        : 'min-w-0 rounded-md border border-slate-200 bg-white px-3 py-2 text-left text-xs transition hover:border-amber-300 hover:bg-amber-50'
-                    }
+                    className="min-w-0 rounded-md border border-slate-200 bg-white px-3 py-2 text-left text-xs transition hover:border-amber-300 hover:bg-amber-50"
                   >
-                    <span className={`block ${isSelector ? 'font-medium text-white' : 'break-words font-mono text-slate-950'}`}>
-                      {muscle?.nameZh ?? muscleId}
-                    </span>
-                    <span className={`mt-1 block break-words ${isSelector ? 'text-slate-400' : 'text-slate-600'}`}>
-                      {isSelector ? muscle?.nameEn ?? meshName : meshName}
-                    </span>
+                    <span className="block break-words font-mono text-slate-950">{muscle?.nameZh ?? muscleId}</span>
+                    <span className="mt-1 block break-words text-slate-600">{meshName}</span>
                   </button>
                 );
               })}
@@ -690,7 +713,7 @@ function SelectorResultPanel({
             onClick={() => setSelectedMuscleId(selectedMuscle.id)}
             className="inline-flex min-h-11 items-center justify-center rounded-md border border-cyan-400 bg-cyan-400/10 px-3 py-2 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-400/20"
           >
-            查看肌肉入口
+            查看肌肉详情
           </Link>
           {relatedExercises[0] && (
             <Link
@@ -698,7 +721,7 @@ function SelectorResultPanel({
               data-testid="three-related-actions-link"
               className="inline-flex min-h-11 items-center justify-center rounded-md border border-line bg-slate-900 px-3 py-2 text-sm font-semibold text-slate-200 transition hover:border-cyan-500"
             >
-              查看动作入口
+              查看相关动作
             </Link>
           )}
         </div>
@@ -983,6 +1006,22 @@ function getSelectorLimitations(region: ThreeModelRegion) {
 
 function isSimplifiedLatissimusTarget(meshName: string) {
   return SIMPLIFIED_LATISSIMUS_TARGETS.some((targetName) => targetName === meshName);
+}
+
+function getUniqueMuscleOptions(mappings: Record<string, string>): MuscleOption[] {
+  const options = new Map<string, MuscleOption>();
+
+  Object.entries(mappings).forEach(([meshName, muscleId]) => {
+    const existing = options.get(muscleId);
+    if (existing) {
+      existing.meshNames.push(meshName);
+      return;
+    }
+
+    options.set(muscleId, { muscleId, meshNames: [meshName] });
+  });
+
+  return Array.from(options.values());
 }
 
 function createSimplifiedLatissimusTargets(): RegionMeshInfo[] {

@@ -119,6 +119,61 @@ test('three muscle selector exposes simplified latissimus dorsi 3d targets', asy
   await expect(page.getByRole('heading', { name: '背阔肌' })).toBeVisible();
 });
 
+test('three muscle selector can add related exercises to the active workout without duplicates', async ({ page }) => {
+  await page.goto('/three-muscle-selector');
+  await page.evaluate(() => {
+    window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
+  });
+  await page.reload();
+
+  await page.getByTestId('select-three-region-back-partial').click();
+  await page.getByTestId('select-three-muscle-option-latissimus-dorsi').click();
+
+  await expect(page.getByTestId('three-related-exercise-card-lat-pulldown')).toBeVisible();
+  await expect(page.getByTestId('three-related-exercise-link-lat-pulldown')).toBeVisible();
+  await expect(page.getByTestId('three-add-exercise-lat-pulldown')).toBeVisible();
+
+  await page.getByTestId('three-add-exercise-lat-pulldown').click();
+  await expect(page).toHaveURL(/\/workout-log$/);
+  await expect(page.getByTestId('workout-log-exercise')).toHaveCount(1);
+  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('Lat Pulldown');
+
+  let active = await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null'));
+  expect(active.exercises.map((exercise: { exerciseId: string }) => exercise.exerciseId)).toEqual(['lat-pulldown']);
+
+  await page.goto('/three-muscle-selector');
+  await page.getByTestId('select-three-region-back-partial').click();
+  await page.getByTestId('select-three-muscle-option-teres-major').click();
+  await page.getByTestId('three-add-exercise-straight-arm-pulldown').click();
+  await expect(page).toHaveURL(/\/workout-log$/);
+  await expect(page.getByTestId('workout-log-exercise')).toHaveCount(2);
+  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('Lat Pulldown');
+  await expect(page.getByTestId('workout-log-exercise').nth(1)).toContainText('Straight-arm Pulldown');
+
+  active = await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null'));
+  expect(active.exercises.map((exercise: { exerciseId: string }) => exercise.exerciseId)).toEqual([
+    'lat-pulldown',
+    'straight-arm-pulldown'
+  ]);
+
+  await page.goto('/three-muscle-selector');
+  await page.getByTestId('select-three-region-back-partial').click();
+  await page.getByTestId('select-three-muscle-option-latissimus-dorsi').click();
+  await page.getByTestId('three-add-exercise-lat-pulldown').click();
+  await expect(page.getByTestId('three-active-workout-status')).toContainText('Lat Pulldown');
+  await expect(page.getByTestId('three-go-active-workout')).toBeVisible();
+
+  active = await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null'));
+  expect(active.exercises.map((exercise: { exerciseId: string }) => exercise.exerciseId)).toEqual([
+    'lat-pulldown',
+    'straight-arm-pulldown'
+  ]);
+
+  await page.getByTestId('three-go-active-workout').click();
+  await expect(page).toHaveURL(/\/workout-log$/);
+  await expect(page.getByTestId('workout-log-exercise')).toHaveCount(2);
+});
+
 test('three muscle selector groups the visible back muscle list by muscle id', async ({ page }) => {
   await page.goto('/three-muscle-selector');
   await page.getByTestId('select-three-region-back-partial').click();

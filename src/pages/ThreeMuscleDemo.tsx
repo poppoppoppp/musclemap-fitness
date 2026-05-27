@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -9,6 +9,11 @@ import { getMuscleById } from '../data/muscles';
 import { threeModelRegions, type ThreeModelRegion } from '../data/threeModelRegions';
 import { useAppStore } from '../store/useAppStore';
 import type { Exercise } from '../types/exercise';
+import {
+  addExerciseToExistingActiveWorkout,
+  readActiveWorkout,
+  startWorkoutWithExercise
+} from '../utils/activeWorkout';
 
 type PageMode = 'demo' | 'selector';
 
@@ -639,6 +644,35 @@ function SelectorResultPanel({
   selectedIsSimplifiedLatissimus: boolean;
   setSelectedMuscleId: (muscleId: string) => void;
 }) {
+  const navigate = useNavigate();
+  const [workoutStatus, setWorkoutStatus] = useState('');
+
+  useEffect(() => {
+    setWorkoutStatus('');
+  }, [selectedMuscleId]);
+
+  const handleAddExerciseToWorkout = (exercise: Exercise) => {
+    const activeWorkout = readActiveWorkout();
+
+    if (!activeWorkout) {
+      startWorkoutWithExercise(exercise.id);
+      navigate('/workout-log');
+      return;
+    }
+
+    const result = addExerciseToExistingActiveWorkout(exercise.id);
+    if (result.status === 'duplicate') {
+      setWorkoutStatus(`${exercise.nameEn} 已在当前训练中`);
+      return;
+    }
+
+    if (result.status === 'missing') {
+      startWorkoutWithExercise(exercise.id);
+    }
+
+    navigate('/workout-log');
+  };
+
   return (
     <div className="space-y-4">
       <section className="rounded-md border border-line bg-slate-900/70 p-4">
@@ -683,25 +717,58 @@ function SelectorResultPanel({
       {selectedMuscle && (
         <section className="rounded-md border border-line bg-slate-900/70 p-4">
           <h3 className="text-sm font-semibold text-white">相关动作</h3>
-          <div data-testid="three-related-exercises" className="mt-3 space-y-2">
+          <div data-testid="three-related-exercises" className="mt-3 space-y-3">
             {relatedExercises.length > 0 ? (
               relatedExercises.map(({ exercise, matchType }) => (
-                <Link
+                <article
                   key={exercise.id}
-                  to={`/exercises/${exercise.id}?muscleId=${selectedMuscle.id}`}
-                  data-testid={`three-related-exercise-link-${exercise.id}`}
-                  className="flex min-h-11 items-center justify-between gap-3 rounded-md border border-line bg-slate-950 px-3 py-2 text-sm text-white transition hover:border-cyan-500"
+                  data-testid={`three-related-exercise-card-${exercise.id}`}
+                  className="rounded-md border border-line bg-slate-950 p-3"
                 >
-                  <span>{exercise.name}</span>
-                  <span className="shrink-0 rounded bg-slate-800 px-2 py-1 text-xs text-slate-300">
-                    {matchType === 'primary' ? '主练' : '次要参与'}
-                  </span>
-                </Link>
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                      <p className="break-words text-sm font-semibold text-white">{exercise.name}</p>
+                      <p className="mt-1 break-words text-xs text-slate-400">{exercise.nameEn}</p>
+                    </div>
+                    <span className="w-fit shrink-0 rounded bg-slate-800 px-2 py-1 text-xs text-slate-300">
+                      {matchType === 'primary' ? '主练' : '次要参与'}
+                    </span>
+                  </div>
+                  <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                    <Link
+                      to={`/exercises/${exercise.id}?muscleId=${selectedMuscle.id}`}
+                      data-testid={`three-related-exercise-link-${exercise.id}`}
+                      className="inline-flex min-h-11 items-center justify-center rounded-md border border-line bg-slate-900 px-3 py-2 text-sm font-semibold text-slate-200 transition hover:border-cyan-500"
+                    >
+                      查看详情
+                    </Link>
+                    <button
+                      type="button"
+                      data-testid={`three-add-exercise-${exercise.id}`}
+                      onClick={() => handleAddExerciseToWorkout(exercise)}
+                      className="inline-flex min-h-11 items-center justify-center rounded-md border border-cyan-400 bg-cyan-400/10 px-3 py-2 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-400/20 focus:outline-none focus:ring-2 focus:ring-cyan-300"
+                    >
+                      加入训练
+                    </button>
+                  </div>
+                </article>
               ))
             ) : (
               <span className="text-sm text-slate-400">暂无相关动作</span>
             )}
           </div>
+          <p data-testid="three-active-workout-status" className="mt-3 min-h-6 text-sm text-cyan-100">
+            {workoutStatus}
+          </p>
+          {workoutStatus ? (
+            <Link
+              to="/workout-log"
+              data-testid="three-go-active-workout"
+              className="mt-2 inline-flex min-h-11 w-full items-center justify-center rounded-md border border-line bg-slate-900 px-3 py-2 text-sm font-semibold text-slate-200 transition hover:border-cyan-500"
+            >
+              去当前训练
+            </Link>
+          ) : null}
         </section>
       )}
 

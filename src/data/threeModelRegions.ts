@@ -1,6 +1,7 @@
 export type ThreeModelRegionId =
   | 'back-partial'
   | 'box-test'
+  | 'front-upper'
   | 'chest'
   | 'legs'
   | 'shoulders-arms'
@@ -48,6 +49,22 @@ const backPartialMappings: Record<string, string> = {
 
 const placeholderDescription = '暂未配置模型资源';
 
+const frontUpperMappings: Record<string, string> = {
+  Simplified_left_pectoralis_major: 'pectoralis-major',
+  Simplified_right_pectoralis_major: 'pectoralis-major',
+  Simplified_left_front_deltoid: 'anterior-deltoid',
+  Simplified_right_front_deltoid: 'anterior-deltoid',
+  Simplified_left_side_deltoid: 'lateral-deltoid',
+  Simplified_right_side_deltoid: 'lateral-deltoid',
+  Simplified_left_biceps: 'biceps-brachii',
+  Simplified_right_biceps: 'biceps-brachii',
+  Simplified_left_triceps: 'triceps-brachii',
+  Simplified_right_triceps: 'triceps-brachii',
+  Simplified_rectus_abdominis: 'rectus-abdominis',
+  Simplified_left_obliques: 'obliques',
+  Simplified_right_obliques: 'obliques'
+};
+
 export const threeModelRegions: ThreeModelRegion[] = [
   {
     id: 'back-partial',
@@ -76,6 +93,22 @@ export const threeModelRegions: ThreeModelRegion[] = [
     isExperimental: false,
     description: '用于验证 GLBLoader 管线，不代表真实人体或肌群结构。',
     mappings: {}
+  },
+  {
+    id: 'front-upper',
+    label: '正面上半身',
+    view: 'anterior',
+    isPrivateModel: false,
+    isConfigured: true,
+    isExperimental: true,
+    description:
+      '当前使用产品级简化 3D 示意区域和可点击 hotspot，让用户先通过 3D 入口选择胸、肩、手臂和核心训练部位；不是精确真实解剖模型，后续可替换为真实模型资源。',
+    limitations: [
+      '当前使用简化 3D 示意区域 / hotspot，不依赖真实模型文件',
+      '不是精确真实解剖模型，肌群位置用于训练部位入口而非解剖教学',
+      '后续可逐步替换为真实人体或肌群模型资源'
+    ],
+    mappings: frontUpperMappings
   },
   {
     id: 'chest',

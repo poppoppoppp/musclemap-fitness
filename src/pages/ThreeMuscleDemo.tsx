@@ -209,12 +209,11 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
     selectedMeshRef.current = null;
 
     const mount = mountRef.current;
-    if (!mount || !region.isConfigured || !region.modelPath) {
+    if (!mount || !region.isConfigured) {
       setLoadStatus('未配置');
       return undefined;
     }
 
-    const modelPath = region.modelPath;
     let disposed = false;
     let animationFrame = 0;
     let renderer: THREE.WebGLRenderer | null = null;
@@ -249,6 +248,101 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
     };
 
     const loadModel = async () => {
+      if (!region.modelPath && region.id === 'front-upper') {
+        setModelAvailable(true);
+        setLoadStatus('简化示意可用');
+
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(isSelector ? 0x0f172a : 0xf8fafc);
+
+        const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+        camera.position.set(0, 0.2, 4.2);
+
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        mount.appendChild(renderer.domElement);
+
+        controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.enablePan = false;
+        controls.minDistance = 2.4;
+        controls.maxDistance = 6;
+        controls.target.set(0, 0, 0);
+
+        scene.add(new THREE.AmbientLight(0xffffff, 1.35));
+        const keyLight = new THREE.DirectionalLight(0xffffff, 1.45);
+        keyLight.position.set(2, 3, 4);
+        scene.add(keyLight);
+
+        const raycaster = new THREE.Raycaster();
+        const pointer = new THREE.Vector2();
+
+        const updateSize = () => {
+          if (!renderer) {
+            return;
+          }
+
+          const { clientWidth, clientHeight } = mount;
+          const width = Math.max(clientWidth, 1);
+          const height = Math.max(clientHeight, 1);
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+          renderer.setSize(width, height, false);
+        };
+
+        const handlePointerDown = (event: PointerEvent) => {
+          if (!renderer) {
+            return;
+          }
+
+          const rect = renderer.domElement.getBoundingClientRect();
+          pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+          pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+          raycaster.setFromCamera(pointer, camera);
+
+          const intersections = raycaster.intersectObjects(
+            meshesRef.current.map((meshInfo) => meshInfo.mesh),
+            false
+          );
+          const selectedMesh = intersections[0]?.object;
+          const meshInfo = meshesRef.current.find((candidate) => candidate.mesh === selectedMesh);
+          if (meshInfo) {
+            highlightMesh(meshInfo);
+          }
+        };
+
+        renderer.domElement.addEventListener('pointerdown', handlePointerDown);
+        window.addEventListener('resize', updateSize);
+        removeListeners = () => {
+          renderer?.domElement.removeEventListener('pointerdown', handlePointerDown);
+          window.removeEventListener('resize', updateSize);
+        };
+
+        const simplifiedTargets = createSimplifiedFrontUpperTargets();
+        simplifiedTargets.forEach((target) => scene?.add(target.mesh));
+        meshesRef.current = simplifiedTargets;
+        setMeshCount(simplifiedTargets.length);
+        updateSize();
+        window.requestAnimationFrame(updateSize);
+
+        const animate = () => {
+          if (renderer && scene) {
+            controls?.update();
+            renderer.render(scene, camera);
+          }
+          animationFrame = window.requestAnimationFrame(animate);
+        };
+        animate();
+        return;
+      }
+
+      if (!region.modelPath) {
+        setLoadStatus('未配置');
+        return;
+      }
+
+      const modelPath = region.modelPath;
       setLoadStatus(region.isPrivateModel ? '检测本地模型' : '加载中');
 
       if (region.isPrivateModel) {
@@ -458,6 +552,11 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
           {isSelector && region.id === 'back-partial' && (
             <p data-testid="three-simplified-latissimus-note" className="mt-2 text-sm leading-6 text-amber-100">
               背阔肌当前使用简化 3D 示意区域；当前真实背部模型未包含背阔肌 mesh，后续可替换为真实解剖模型。
+            </p>
+          )}
+          {isSelector && region.id === 'front-upper' && (
+            <p data-testid="three-front-upper-note" className="mt-2 text-sm leading-6 text-amber-100">
+              正面上半身当前使用简化 3D 示意区域 / hotspot，不是精确真实解剖模型；当前目标是让用户能通过 3D 入口选择训练部位，后续可逐步替换为真实模型资源。
             </p>
           )}
         </div>
@@ -690,6 +789,7 @@ function SelectorResultPanel({
               {selectedMuscle.nameZh}
             </h3>
             <p className="mt-1 text-sm text-slate-400">{selectedMuscle.nameEn}</p>
+            <p className="mt-1 break-words font-mono text-xs text-cyan-100">muscleId: {selectedMuscle.id}</p>
             <div data-testid="three-selected-muscle-description" className="mt-3 space-y-2 text-sm leading-6 text-slate-300">
               <p>{selectedMuscle.description}</p>
               <p>{selectedMuscle.function}</p>
@@ -1020,6 +1120,10 @@ function RegionBadge({ region }: { region: ThreeModelRegion }) {
 }
 
 function getSelectorRegionLabel(region: ThreeModelRegion) {
+  if (region.id === 'front-upper') {
+    return '正面上半身';
+  }
+
   if (region.id === 'back-partial') {
     return '背部局部';
   }
@@ -1032,6 +1136,10 @@ function getSelectorRegionLabel(region: ThreeModelRegion) {
 }
 
 function getSelectorRegionMeta(region: ThreeModelRegion) {
+  if (region.id === 'front-upper') {
+    return '简化 3D 入口，覆盖胸、肩、手臂、核心';
+  }
+
   if (region.id === 'back-partial') {
     return '当前可选，覆盖部分背部肌群';
   }
@@ -1048,6 +1156,10 @@ function getSelectorRegionHeading(region: ThreeModelRegion) {
 }
 
 function getSelectorRegionDescription(region: ThreeModelRegion) {
+  if (region.id === 'front-upper') {
+    return '正面上半身使用简化 3D 示意区域，提供胸、肩、手臂和核心主要训练肌群的可点击入口。';
+  }
+
   if (region.id === 'back-partial') {
     return '当前背部局部模型可用于选择部分上背、肩胛周围和竖脊肌相关区域。';
   }
@@ -1122,6 +1234,114 @@ function createSimplifiedLatissimusTarget(name: string, side: -1 | 1): RegionMes
   mesh.name = name;
   mesh.position.set(0.5 * side, -0.08, 0.14);
   mesh.rotation.set(0, 0, -0.08 * side);
+  mesh.renderOrder = 2;
+
+  return { name, mesh };
+}
+
+function createSimplifiedFrontUpperTargets(): RegionMeshInfo[] {
+  return [
+    createFrontShapeTarget('Simplified_left_pectoralis_major', 0x38bdf8, [
+      [-0.08, 0.72],
+      [-0.56, 0.62],
+      [-0.68, 0.28],
+      [-0.16, 0.18]
+    ]),
+    createFrontShapeTarget('Simplified_right_pectoralis_major', 0x38bdf8, [
+      [0.08, 0.72],
+      [0.56, 0.62],
+      [0.68, 0.28],
+      [0.16, 0.18]
+    ]),
+    createFrontShapeTarget('Simplified_left_front_deltoid', 0xf59e0b, [
+      [-0.62, 0.76],
+      [-0.9, 0.56],
+      [-0.78, 0.24],
+      [-0.54, 0.34]
+    ]),
+    createFrontShapeTarget('Simplified_right_front_deltoid', 0xf59e0b, [
+      [0.62, 0.76],
+      [0.9, 0.56],
+      [0.78, 0.24],
+      [0.54, 0.34]
+    ]),
+    createFrontShapeTarget('Simplified_left_side_deltoid', 0xfacc15, [
+      [-0.88, 0.5],
+      [-1.06, 0.26],
+      [-0.9, 0.02],
+      [-0.76, 0.24]
+    ]),
+    createFrontShapeTarget('Simplified_right_side_deltoid', 0xfacc15, [
+      [0.88, 0.5],
+      [1.06, 0.26],
+      [0.9, 0.02],
+      [0.76, 0.24]
+    ]),
+    createFrontShapeTarget('Simplified_left_biceps', 0x22c55e, [
+      [-1.02, 0.0],
+      [-1.22, -0.08],
+      [-1.16, -0.64],
+      [-0.96, -0.56]
+    ]),
+    createFrontShapeTarget('Simplified_right_biceps', 0x22c55e, [
+      [1.02, 0.0],
+      [1.22, -0.08],
+      [1.16, -0.64],
+      [0.96, -0.56]
+    ]),
+    createFrontShapeTarget('Simplified_left_triceps', 0xa78bfa, [
+      [-0.82, 0.0],
+      [-0.98, -0.1],
+      [-0.92, -0.62],
+      [-0.74, -0.48]
+    ]),
+    createFrontShapeTarget('Simplified_right_triceps', 0xa78bfa, [
+      [0.82, 0.0],
+      [0.98, -0.1],
+      [0.92, -0.62],
+      [0.74, -0.48]
+    ]),
+    createFrontShapeTarget('Simplified_rectus_abdominis', 0xfb7185, [
+      [-0.22, 0.12],
+      [0.22, 0.12],
+      [0.24, -0.86],
+      [-0.24, -0.86]
+    ]),
+    createFrontShapeTarget('Simplified_left_obliques', 0x14b8a6, [
+      [-0.28, 0.12],
+      [-0.58, 0.02],
+      [-0.48, -0.82],
+      [-0.24, -0.72]
+    ]),
+    createFrontShapeTarget('Simplified_right_obliques', 0x14b8a6, [
+      [0.28, 0.12],
+      [0.58, 0.02],
+      [0.48, -0.82],
+      [0.24, -0.72]
+    ])
+  ];
+}
+
+function createFrontShapeTarget(name: string, color: number, points: number[][]): RegionMeshInfo {
+  const shape = new THREE.Shape();
+  const [firstPoint, ...restPoints] = points;
+  shape.moveTo(firstPoint[0], firstPoint[1]);
+  restPoints.forEach(([x, y]) => shape.lineTo(x, y));
+  shape.closePath();
+
+  const geometry = new THREE.ShapeGeometry(shape);
+  const material = new THREE.MeshBasicMaterial({
+    color,
+    opacity: 0.5,
+    transparent: true,
+    side: THREE.DoubleSide,
+    depthTest: true
+  });
+  material.userData.baseColor = material.color.getHex();
+
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.name = name;
+  mesh.position.set(0, -0.06, 0.12);
   mesh.renderOrder = 2;
 
   return { name, mesh };

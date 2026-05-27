@@ -240,6 +240,20 @@ export const muscles: Muscle[] = [
     mapRegionIds: []
   },
   {
+    id: 'obliques',
+    nameZh: '腹斜肌',
+    nameEn: 'Obliques',
+    bodyPart: '核心',
+    region: '腹部两侧',
+    description: '位于腹部两侧，参与躯干旋转、侧屈和抗旋转稳定。',
+    function: '帮助控制躯干旋转和侧向稳定，在侧桥、转体和单侧负重动作中提供核心支撑。',
+    trainingValue: '提升核心抗旋转能力，让推、拉和下肢复合动作中的躯干更稳定。',
+    commonMistakes: ['转体动作过快借惯性', '侧桥时髋部下沉', '只追求腹部酸胀忽略躯干控制'],
+    confusions: ['腹斜肌训练不等于大幅扭腰', '核心稳定训练通常比快速转体更适合新手'],
+    exerciseIds: ['side-plank', 'russian-twist', 'plank'],
+    mapRegionIds: []
+  },
+  {
     id: 'transverse-abdominis',
     nameZh: '腹横肌',
     nameEn: 'Transverse Abdominis',

@@ -631,6 +631,23 @@ export const exercises: Exercise[] = [
     tags: ['腿部', '徒手', '单侧']
   },
   {
+    id: 'standing-calf-raise',
+    name: '站姿提踵',
+    nameEn: 'Standing Calf Raise',
+    primaryMuscles: ['calves'],
+    secondaryMuscles: [],
+    equipment: ['自重', '哑铃'],
+    difficulty: 'beginner',
+    force: 'push',
+    mechanic: 'isolation',
+    category: 'strength',
+    steps: ['双脚与髋同宽站立，前脚掌稳定踩地。', '踮起脚跟到最高点，短暂停顿感受小腿收缩。', '控制脚跟下放到起点，保持身体稳定。'],
+    cues: ['动作全程保持脚踝轨迹稳定。', '顶峰停顿，不要用弹震代替发力。', '下放阶段同样保持控制。'],
+    commonMistakes: ['动作幅度过短', '身体前后晃动', '下放过快失去控制'],
+    alternatives: ['leg-press', 'lunge', 'squat'],
+    tags: ['腿部', '小腿', '自重']
+  },
+  {
     id: 'dumbbell-curl',
     name: '哑铃弯举',
     nameEn: 'Dumbbell Curl',

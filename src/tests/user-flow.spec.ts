@@ -59,7 +59,19 @@ test('three model region registry defines V0.10.0 regions and experimental back 
     ])
   );
 
-  for (const id of ['chest', 'legs', 'shoulders-arms', 'core']) {
+  const legs = threeModelRegions.find((region) => region.id === 'legs');
+  expect(legs).toMatchObject({
+    view: 'anterior',
+    isPrivateModel: false,
+    isConfigured: true,
+    isExperimental: true
+  });
+  expect(legs?.modelPath).toBeUndefined();
+  expect(new Set(Object.values(legs?.mappings ?? {}))).toEqual(
+    new Set(['gluteus-maximus', 'quadriceps', 'hamstrings', 'calves'])
+  );
+
+  for (const id of ['chest', 'shoulders-arms', 'core']) {
     const placeholder = threeModelRegions.find((region) => region.id === id);
     expect(placeholder).toMatchObject({
       isConfigured: false,
@@ -69,6 +81,93 @@ test('three model region registry defines V0.10.0 regions and experimental back 
     });
     expect(placeholder?.modelPath).toBeUndefined();
   }
+});
+
+test('three muscle selector exposes lower body simplified hotspots grouped by muscle id', async ({ page }) => {
+  await page.goto('/three-muscle-selector');
+  await page.getByTestId('select-three-region-legs').click();
+
+  await expect(page.getByTestId('three-muscle-canvas')).toBeVisible();
+  await expect(page.getByTestId('three-lower-body-note')).toBeVisible();
+  await expect(page.getByTestId('three-lower-body-note')).toContainText('3D');
+  await expect(page.getByTestId('three-lower-body-note')).toContainText('hotspot');
+
+  for (const muscleId of ['gluteus-maximus', 'quadriceps', 'hamstrings', 'calves']) {
+    await expect(page.getByTestId(`select-three-muscle-option-${muscleId}`)).toHaveCount(1);
+    await page.getByTestId(`select-three-muscle-option-${muscleId}`).click();
+    await expect(page.getByTestId(`select-three-muscle-option-${muscleId}`)).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.getByTestId('three-selected-muscle-id')).toContainText(muscleId);
+    await expect(page.getByTestId('three-selected-muscle-name')).toBeVisible();
+    await expect(page.getByTestId('three-selected-muscle-description')).toBeVisible();
+    await expect(page.getByTestId('three-related-exercises')).toBeVisible();
+    await expect(page.getByTestId('three-related-actions-link')).toBeVisible();
+    await expect(page.getByTestId('three-muscle-detail-link')).toBeVisible();
+    await expect(page.locator('[data-testid^="three-add-exercise-"]').first()).toBeVisible();
+  }
+});
+
+test('three muscle selector adds lower body exercises to active workout without duplicates', async ({ page }) => {
+  await page.goto('/three-muscle-selector');
+  await page.evaluate(() => {
+    window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
+  });
+  await page.reload();
+
+  await page.getByTestId('select-three-region-legs').click();
+  await page.getByTestId('select-three-muscle-option-gluteus-maximus').click();
+  await page.getByTestId('three-add-exercise-squat').click();
+  await expect(page).toHaveURL(/\/workout-log$/);
+  await expect(page.getByTestId('workout-log-exercise')).toHaveCount(1);
+  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('Squat');
+
+  await page.goto('/three-muscle-selector');
+  await page.getByTestId('select-three-region-legs').click();
+  await page.getByTestId('select-three-muscle-option-quadriceps').click();
+  await page.getByTestId('three-add-exercise-leg-extension').click();
+  await expect(page).toHaveURL(/\/workout-log$/);
+  await expect(page.getByTestId('workout-log-exercise')).toHaveCount(2);
+  await expect(page.getByTestId('workout-log-exercise').nth(1)).toContainText('Leg Extension');
+
+  let active = await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null'));
+  expect(active.exercises.map((exercise: { exerciseId: string }) => exercise.exerciseId)).toEqual(['squat', 'leg-extension']);
+
+  await page.goto('/three-muscle-selector');
+  await page.getByTestId('select-three-region-legs').click();
+  await page.getByTestId('select-three-muscle-option-gluteus-maximus').click();
+  await page.getByTestId('three-add-exercise-squat').click();
+  await expect(page.getByTestId('three-active-workout-status')).toContainText('Squat');
+
+  active = await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null'));
+  expect(active.exercises.map((exercise: { exerciseId: string }) => exercise.exerciseId)).toEqual(['squat', 'leg-extension']);
+});
+
+test('three muscle selector lower body actions can open exercise detail and workout log inputs on mobile', async ({
+  page
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/three-muscle-selector');
+  await page.evaluate(() => {
+    window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
+  });
+  await page.reload();
+
+  await page.getByTestId('select-three-region-legs').click();
+  await page.getByTestId('select-three-muscle-option-calves').click();
+  await page.getByTestId('three-related-exercise-link-standing-calf-raise').click();
+  await expect(page).toHaveURL(/\/exercises\/standing-calf-raise\?muscleId=calves$/);
+
+  await page.goto('/three-muscle-selector');
+  await page.getByTestId('select-three-region-legs').click();
+  await page.getByTestId('select-three-muscle-option-calves').click();
+  await page.getByTestId('three-add-exercise-standing-calf-raise').click();
+  await expect(page).toHaveURL(/\/workout-log$/);
+  await expect(page.getByTestId('workout-log-exercise')).toHaveCount(1);
+  await expect(page.getByTestId('set-weight-input').first()).toBeVisible();
+  await expect(page.getByTestId('set-reps-input').first()).toBeVisible();
+  await expect(page.getByTestId('exercise-notes-input').first()).toBeVisible();
+
+  const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+  expect(hasHorizontalOverflow).toBe(false);
 });
 
 test('three muscle selector presents a product entry for choosing training muscles', async ({ page }) => {
@@ -81,7 +180,8 @@ test('three muscle selector presents a product entry for choosing training muscl
   await expect(page.getByTestId('select-three-region-back-partial')).toContainText('背部局部');
   await expect(page.getByTestId('select-three-region-back-partial')).toContainText('当前可选');
   await expect(page.getByTestId('select-three-region-chest')).toContainText('胸部，暂未配置');
-  await expect(page.getByTestId('select-three-region-legs')).toContainText('腿部，暂未配置');
+  await expect(page.getByTestId('select-three-region-legs')).toContainText('臀腿');
+  await expect(page.getByTestId('select-three-region-legs')).toContainText('简化 3D 入口');
   await expect(page.getByTestId('select-three-region-shoulders-arms')).toContainText('肩臂，暂未配置');
   await expect(page.getByTestId('select-three-region-core')).toContainText('核心，暂未配置');
   await expect(page.getByTestId('select-three-region-box-test')).toContainText('GLB 管线测试，开发验证');
@@ -299,7 +399,7 @@ test('three muscle selector handles unmapped and unconfigured regions without fa
   await expect(page.getByTestId('three-related-exercises')).toHaveCount(0);
   await expect(page.getByTestId('three-muscle-detail-link')).toHaveCount(0);
 
-  for (const regionId of ['chest', 'legs', 'shoulders-arms', 'core']) {
+  for (const regionId of ['chest', 'shoulders-arms', 'core']) {
     await page.getByTestId(`select-three-region-${regionId}`).click();
     await expect(page.getByTestId('three-region-placeholder')).toContainText('该区域的 3D 肌群模型暂未配置');
     await expect(page.getByTestId('three-region-placeholder')).toContainText('后续扩展区域');
@@ -328,7 +428,7 @@ test('three muscle demo exposes registered model regions and placeholder fallbac
   await expect(page.getByTestId('select-three-region-back-partial')).toContainText('背部局部模型');
   await expect(page.getByTestId('select-three-region-box-test')).toContainText('GLB 管线测试');
   await expect(page.getByTestId('select-three-region-chest')).toContainText('胸部');
-  await expect(page.getByTestId('select-three-region-legs')).toContainText('腿部');
+  await expect(page.getByTestId('select-three-region-legs')).toContainText('臀腿');
   await expect(page.getByTestId('select-three-region-shoulders-arms')).toContainText('肩臂');
   await expect(page.getByTestId('select-three-region-core')).toContainText('核心');
 

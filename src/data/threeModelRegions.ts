@@ -65,6 +65,17 @@ const frontUpperMappings: Record<string, string> = {
   Simplified_right_obliques: 'obliques'
 };
 
+const lowerBodyMappings: Record<string, string> = {
+  Simplified_left_gluteus_maximus: 'gluteus-maximus',
+  Simplified_right_gluteus_maximus: 'gluteus-maximus',
+  Simplified_left_quadriceps: 'quadriceps',
+  Simplified_right_quadriceps: 'quadriceps',
+  Simplified_left_hamstrings: 'hamstrings',
+  Simplified_right_hamstrings: 'hamstrings',
+  Simplified_left_calves: 'calves',
+  Simplified_right_calves: 'calves'
+};
+
 export const threeModelRegions: ThreeModelRegion[] = [
   {
     id: 'back-partial',
@@ -122,13 +133,19 @@ export const threeModelRegions: ThreeModelRegion[] = [
   },
   {
     id: 'legs',
-    label: '腿部',
+    label: '臀腿',
     view: 'anterior',
     isPrivateModel: false,
-    isConfigured: false,
-    isExperimental: false,
-    description: placeholderDescription,
-    mappings: {}
+    isConfigured: true,
+    isExperimental: true,
+    description:
+      '当前使用产品级简化 3D 示意区域和 hotspot，让用户通过 3D 入口选择臀部、大腿前侧、大腿后侧和小腿主要训练部位；不是精确真实解剖模型。',
+    limitations: [
+      '当前使用简化 3D 示意区域 / hotspot，不依赖真实模型文件',
+      '不是精确真实解剖模型，肌群位置用于训练部位入口而非解剖教学',
+      '后续可逐步替换为真实人体或肌群模型资源'
+    ],
+    mappings: lowerBodyMappings
   },
   {
     id: 'shoulders-arms',

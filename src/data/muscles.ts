@@ -226,6 +226,20 @@ export const muscles: Muscle[] = [
     mapRegionIds: []
   },
   {
+    id: 'calves',
+    nameZh: '小腿三头肌',
+    nameEn: 'Calves',
+    bodyPart: '腿部',
+    region: '小腿后侧',
+    description: '位于小腿后侧，主要包括腓肠肌和比目鱼肌，是踝关节跖屈的主要肌群。',
+    function: '负责踮脚、跑跳和下肢蹬伸末端发力，并帮助站立和行走时稳定踝关节。',
+    trainingValue: '提升小腿力量和踝关节控制，让下肢训练、跑跳和日常步态更稳定。',
+    commonMistakes: ['动作幅度过短', '只靠弹震完成重复', '忽略顶峰收缩和下放控制'],
+    confusions: ['小腿训练不只看重量，完整活动范围和停顿同样重要', '膝盖伸直和屈膝的小腿训练刺激重点会有所不同'],
+    exerciseIds: ['standing-calf-raise'],
+    mapRegionIds: []
+  },
+  {
     id: 'rectus-abdominis',
     nameZh: '腹直肌',
     nameEn: 'Rectus Abdominis',

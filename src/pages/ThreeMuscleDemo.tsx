@@ -248,7 +248,7 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
     };
 
     const loadModel = async () => {
-      if (!region.modelPath && region.id === 'front-upper') {
+      if (!region.modelPath && (region.id === 'front-upper' || region.id === 'legs')) {
         setModelAvailable(true);
         setLoadStatus('简化示意可用');
 
@@ -319,7 +319,8 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
           window.removeEventListener('resize', updateSize);
         };
 
-        const simplifiedTargets = createSimplifiedFrontUpperTargets();
+        const simplifiedTargets =
+          region.id === 'legs' ? createSimplifiedLowerBodyTargets() : createSimplifiedFrontUpperTargets();
         simplifiedTargets.forEach((target) => scene?.add(target.mesh));
         meshesRef.current = simplifiedTargets;
         setMeshCount(simplifiedTargets.length);
@@ -557,6 +558,11 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
           {isSelector && region.id === 'front-upper' && (
             <p data-testid="three-front-upper-note" className="mt-2 text-sm leading-6 text-amber-100">
               正面上半身当前使用简化 3D 示意区域 / hotspot，不是精确真实解剖模型；当前目标是让用户能通过 3D 入口选择训练部位，后续可逐步替换为真实模型资源。
+            </p>
+          )}
+          {isSelector && region.id === 'legs' && (
+            <p data-testid="three-lower-body-note" className="mt-2 text-sm leading-6 text-amber-100">
+              臀腿区域当前使用简化 3D 示意区域 / hotspot，不是精确真实解剖模型；当前目标是让用户能通过 3D 入口选择主要下肢训练部位，后续可逐步替换为真实模型资源。
             </p>
           )}
         </div>
@@ -1128,6 +1134,10 @@ function getSelectorRegionLabel(region: ThreeModelRegion) {
     return '背部局部';
   }
 
+  if (region.id === 'legs') {
+    return '臀腿';
+  }
+
   if (region.id === 'box-test') {
     return 'GLB 管线测试，开发验证';
   }
@@ -1144,6 +1154,10 @@ function getSelectorRegionMeta(region: ThreeModelRegion) {
     return '当前可选，覆盖部分背部肌群';
   }
 
+  if (region.id === 'legs') {
+    return '简化 3D 入口，覆盖臀部、大腿前侧、大腿后侧、小腿';
+  }
+
   if (region.id === 'box-test') {
     return '不是人体模型';
   }
@@ -1152,6 +1166,10 @@ function getSelectorRegionMeta(region: ThreeModelRegion) {
 }
 
 function getSelectorRegionHeading(region: ThreeModelRegion) {
+  if (region.id === 'legs') {
+    return '臀腿';
+  }
+
   return region.id === 'back-partial' ? '背部局部' : region.label;
 }
 
@@ -1162,6 +1180,10 @@ function getSelectorRegionDescription(region: ThreeModelRegion) {
 
   if (region.id === 'back-partial') {
     return '当前背部局部模型可用于选择部分上背、肩胛周围和竖脊肌相关区域。';
+  }
+
+  if (region.id === 'legs') {
+    return '臀腿区域使用简化 3D 示意区域，提供臀大肌、股四头肌、腘绳肌和小腿三头肌的可点击入口。';
   }
 
   if (region.id === 'box-test') {
@@ -1322,6 +1344,67 @@ function createSimplifiedFrontUpperTargets(): RegionMeshInfo[] {
   ];
 }
 
+function createSimplifiedLowerBodyTargets(): RegionMeshInfo[] {
+  return [
+    createLowerBodyShapeTarget('Simplified_left_gluteus_maximus', 0xf97316, [
+      [-0.52, 0.74],
+      [-0.16, 0.7],
+      [-0.12, 0.36],
+      [-0.44, 0.26],
+      [-0.68, 0.44]
+    ]),
+    createLowerBodyShapeTarget('Simplified_right_gluteus_maximus', 0xf97316, [
+      [0.52, 0.74],
+      [0.16, 0.7],
+      [0.12, 0.36],
+      [0.44, 0.26],
+      [0.68, 0.44]
+    ]),
+    createLowerBodyShapeTarget('Simplified_left_quadriceps', 0x38bdf8, [
+      [-0.58, 0.28],
+      [-0.18, 0.3],
+      [-0.16, -0.68],
+      [-0.48, -0.72],
+      [-0.7, -0.18]
+    ]),
+    createLowerBodyShapeTarget('Simplified_right_quadriceps', 0x38bdf8, [
+      [0.58, 0.28],
+      [0.18, 0.3],
+      [0.16, -0.68],
+      [0.48, -0.72],
+      [0.7, -0.18]
+    ]),
+    createLowerBodyShapeTarget('Simplified_left_hamstrings', 0xa78bfa, [
+      [-0.14, 0.22],
+      [-0.02, 0.18],
+      [-0.04, -0.58],
+      [-0.14, -0.7],
+      [-0.24, -0.34]
+    ]),
+    createLowerBodyShapeTarget('Simplified_right_hamstrings', 0xa78bfa, [
+      [0.14, 0.22],
+      [0.02, 0.18],
+      [0.04, -0.58],
+      [0.14, -0.7],
+      [0.24, -0.34]
+    ]),
+    createLowerBodyShapeTarget('Simplified_left_calves', 0x22c55e, [
+      [-0.5, -0.76],
+      [-0.18, -0.74],
+      [-0.16, -1.46],
+      [-0.42, -1.54],
+      [-0.6, -1.12]
+    ]),
+    createLowerBodyShapeTarget('Simplified_right_calves', 0x22c55e, [
+      [0.5, -0.76],
+      [0.18, -0.74],
+      [0.16, -1.46],
+      [0.42, -1.54],
+      [0.6, -1.12]
+    ])
+  ];
+}
+
 function createFrontShapeTarget(name: string, color: number, points: number[][]): RegionMeshInfo {
   const shape = new THREE.Shape();
   const [firstPoint, ...restPoints] = points;
@@ -1345,6 +1428,12 @@ function createFrontShapeTarget(name: string, color: number, points: number[][])
   mesh.renderOrder = 2;
 
   return { name, mesh };
+}
+
+function createLowerBodyShapeTarget(name: string, color: number, points: number[][]): RegionMeshInfo {
+  const target = createFrontShapeTarget(name, color, points);
+  target.mesh.position.set(0, 0.22, 0.12);
+  return target;
 }
 
 function getRelatedExercises(muscleId: string): RelatedExercise[] {

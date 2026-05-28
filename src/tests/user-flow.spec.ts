@@ -511,7 +511,23 @@ test('three muscle demo shows local anatomy fallback when private model is missi
   await expect(page.getByTestId('three-region-limitations')).toContainText('当前模型未包含 latissimus-dorsi / 背阔肌');
   await expect(page.getByTestId('three-region-limitations')).toContainText('仅用于本地实验');
   await expect(page.getByTestId('three-region-limitations')).toContainText('不进入正式产品资源');
-  await expect(page.getByText(/未检测到模型文件|加载成功/)).toBeVisible();
+  await expect(page.getByTestId('region-model-experiment').getByText(/未检测到模型文件|加载成功/)).toBeVisible();
+});
+
+test('three muscle demo exposes upper body local model sandbox fallback', async ({ page }) => {
+  await page.goto('/three-muscle-demo');
+
+  await expect(page.getByTestId('upper-body-local-sandbox')).toBeVisible();
+  await expect(page.getByTestId('upper-body-local-title')).toContainText('上身真实模型实验区');
+  await expect(page.getByTestId('upper-body-local-path')).toContainText('/models/private/upper-body-local.glb');
+  await expect(page.getByTestId('upper-body-local-fallback')).toContainText(
+    '未检测到本地上身真实模型。请将实验 GLB 放入 public/models/private/upper-body-local.glb。该路径被 Git 忽略，不会提交或部署。'
+  );
+  await expect(page.getByTestId('upper-body-local-status')).toContainText('未检测到模型文件');
+  await expect(page.getByTestId('upper-body-local-mesh-count')).toContainText('0');
+  await expect(page.getByTestId('upper-body-local-selected-mesh')).toContainText('未选择');
+  await expect(page.getByTestId('upper-body-local-selected-muscle')).toContainText('未映射');
+  await expect(page.getByTestId('upper-body-local-mapping-note')).toContainText('没有手工 mapping');
 });
 
 test('three muscle demo bridges mapped mesh selections to muscle and exercise data', async ({ page }) => {

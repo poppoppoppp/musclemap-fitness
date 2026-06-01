@@ -1,3 +1,5 @@
+import { upperBodyLocalMeshMappings } from './upperBodyLocalMeshMappings';
+
 export type ThreeModelRegionId =
   | 'back-partial'
   | 'box-test'
@@ -50,6 +52,7 @@ const backPartialMappings: Record<string, string> = {
 const placeholderDescription = '暂未配置模型资源';
 
 const frontUpperMappings: Record<string, string> = {
+  ...upperBodyLocalMeshMappings,
   Simplified_left_pectoralis_major: 'pectoralis-major',
   Simplified_right_pectoralis_major: 'pectoralis-major',
   Simplified_left_front_deltoid: 'anterior-deltoid',

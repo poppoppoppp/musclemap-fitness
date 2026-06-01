@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 import { threeModelRegions } from '../data/threeModelRegions';
+import { upperBodyLocalMeshMappings } from '../data/upperBodyLocalMeshMappings';
 
 test('three model region registry defines V0.10.0 regions and experimental back mapping', () => {
   expect(threeModelRegions.map((region) => region.id)).toEqual([
@@ -200,7 +201,7 @@ test('three muscle selector exposes front upper body simplified hotspots grouped
   await expect(page.getByTestId('three-current-region-label')).toContainText('正面上半身');
   await expect(page.getByTestId('three-front-upper-note')).toContainText('简化 3D 示意区域');
   await expect(page.getByTestId('three-front-upper-note')).toContainText('不是精确真实解剖模型');
-  await expect(page.getByTestId('glb-load-status')).toContainText('简化示意可用');
+  await expect(page.getByTestId('glb-load-status')).toContainText(/简化示意可用|加载成功/, { timeout: 15000 });
 
   for (const muscleId of [
     'pectoralis-major',
@@ -222,6 +223,75 @@ test('three muscle selector exposes front upper body simplified hotspots grouped
     await expect(page.getByTestId('three-muscle-detail-link')).toBeVisible();
     await expect(page.locator('[data-testid^="three-add-exercise-"]').first()).toBeVisible();
   }
+});
+
+test('upper body local mesh mapping uses only V0.19 reported mesh names', () => {
+  expect(upperBodyLocalMeshMappings).toMatchObject({
+    right_clavicular_part_of_pectoralis_major: 'pectoralis-major',
+    left_clavicular_part_of_pectoralis_major: 'pectoralis-major',
+    right_sternocostal_part_of_pectoralis_major: 'pectoralis-major',
+    left_sternocostal_part_of_pectoralis_major: 'pectoralis-major',
+    right_abdominal_part_of_pectoralis_major: 'pectoralis-major',
+    left_abdominal_part_of_pectoralis_major: 'pectoralis-major',
+    right_clavicular_part_of_deltoid: 'anterior-deltoid',
+    left_clavicular_part_of_deltoid: 'anterior-deltoid',
+    right_acromial_part_of_deltoid: 'lateral-deltoid',
+    left_acromial_part_of_deltoid: 'lateral-deltoid',
+    right_short_head_of_biceps_brachii: 'biceps-brachii',
+    left_short_head_of_biceps_brachii: 'biceps-brachii',
+    right_long_head_of_biceps_brachii: 'biceps-brachii',
+    left_long_head_of_biceps_brachii: 'biceps-brachii',
+    right_lateral_head_of_triceps_brachii: 'triceps-brachii',
+    left_lateral_head_of_triceps_brachii: 'triceps-brachii',
+    right_long_head_of_triceps_brachii: 'triceps-brachii',
+    left_long_head_of_triceps_brachii: 'triceps-brachii',
+    right_medial_head_of_triceps_brachii: 'triceps-brachii',
+    left_medial_head_of_triceps_brachii: 'triceps-brachii',
+    right_external_oblique: 'obliques',
+    left_external_oblique: 'obliques'
+  });
+  expect(new Set(Object.values(upperBodyLocalMeshMappings))).toEqual(
+    new Set(['pectoralis-major', 'anterior-deltoid', 'lateral-deltoid', 'biceps-brachii', 'triceps-brachii', 'obliques'])
+  );
+  expect(Object.values(upperBodyLocalMeshMappings)).not.toContain('rectus-abdominis');
+});
+
+test('three muscle selector uses front upper local model and hotspot hybrid when local model exists', async ({ page }) => {
+  await page.goto('/three-muscle-selector');
+  await page.getByTestId('select-three-region-front-upper').click();
+
+  const status = page.getByTestId('three-front-upper-mode-status');
+  await expect(status).toContainText(/本地真实模型 \+ hotspot 兜底|简化 hotspot 模式/, { timeout: 15000 });
+
+  if ((await status.textContent())?.includes('本地真实模型')) {
+    await expect(page.getByTestId('glb-load-status')).toContainText('加载成功');
+    await expect(page.getByTestId('glb-mesh-count')).toContainText(/2[3-9]|3[0-9]/);
+    await page.getByTestId('select-three-muscle-option-pectoralis-major').click();
+    await expect(page.getByTestId('glb-selected-mesh-name')).toContainText('pectoralis_major');
+    await expect(page.getByTestId('three-selected-muscle-id')).toContainText('pectoralis-major');
+    await expect(page.getByTestId('three-mapping-source')).toContainText('real-mesh');
+  }
+
+  await page.getByTestId('select-three-muscle-option-rectus-abdominis').click();
+  await expect(page.getByTestId('three-selected-muscle-id')).toContainText('rectus-abdominis');
+  await expect(page.getByTestId('three-mapping-source')).toContainText('hotspot');
+});
+
+test('three muscle selector falls back to front upper hotspots when local model is missing', async ({ page }) => {
+  await page.route('**/models/private/upper-body-local.glb', async (route) => {
+    await route.fulfill({ status: 404, contentType: 'text/plain', body: 'missing in deployed environment' });
+  });
+
+  await page.goto('/three-muscle-selector');
+  await page.getByTestId('select-three-region-front-upper').click();
+
+  await expect(page.getByTestId('three-front-upper-mode-status')).toContainText('简化 hotspot 模式');
+  await expect(page.getByTestId('glb-load-status')).toContainText('简化示意可用');
+  await expect(page.getByTestId('select-three-muscle-option-pectoralis-major')).toHaveCount(1);
+  await expect(page.getByTestId('select-three-muscle-option-rectus-abdominis')).toHaveCount(1);
+  await page.getByTestId('select-three-muscle-option-rectus-abdominis').click();
+  await expect(page.getByTestId('three-selected-muscle-id')).toContainText('rectus-abdominis');
+  await expect(page.getByTestId('three-mapping-source')).toContainText('hotspot');
 });
 
 test('three muscle selector adds front upper body exercises to active workout without duplicates', async ({ page }) => {

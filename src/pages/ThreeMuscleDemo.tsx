@@ -7,6 +7,7 @@ import PageHeader from '../components/layout/PageHeader';
 import { exercises } from '../data/exercises';
 import { getMuscleById } from '../data/muscles';
 import { threeModelRegions, type ThreeModelRegion } from '../data/threeModelRegions';
+import { upperBodyLocalMeshMappings } from '../data/upperBodyLocalMeshMappings';
 import { useAppStore } from '../store/useAppStore';
 import type { Exercise } from '../types/exercise';
 import {
@@ -42,7 +43,6 @@ const SIMPLIFIED_LATISSIMUS_TARGETS = [
   'Simplified_left_latissimus_dorsi',
   'Simplified_right_latissimus_dorsi'
 ] as const;
-const upperBodyLocalMeshMappings: Record<string, string> = {};
 
 export default function ThreeMuscleDemo() {
   return <ThreeMuscleExperience mode="demo" />;
@@ -493,6 +493,7 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
   const [modelAvailable, setModelAvailable] = useState(false);
   const [meshCount, setMeshCount] = useState(0);
   const [selectedMeshName, setSelectedMeshName] = useState(UNSELECTED_MESH_LABEL);
+  const [frontUpperModeStatus, setFrontUpperModeStatus] = useState('');
   const isSelector = mode === 'selector';
 
   const selectedMuscleId =
@@ -504,6 +505,7 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
   );
   const hasSelectedMesh = selectedMeshName !== UNSELECTED_MESH_LABEL;
   const selectedIsSimplifiedLatissimus = isSimplifiedLatissimusTarget(selectedMeshName);
+  const selectedMappingSource = getSelectedMappingSource(selectedMeshName, selectedMuscleId);
   const mappedMeshEntries = useMemo(() => Object.entries(region.mappings), [region.mappings]);
   const muscleOptions = useMemo(() => getUniqueMuscleOptions(region.mappings), [region.mappings]);
 
@@ -560,6 +562,7 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
     setSelectedMeshName(UNSELECTED_MESH_LABEL);
     setMeshCount(0);
     setModelAvailable(false);
+    setFrontUpperModeStatus('');
     meshesRef.current = [];
     selectedMeshRef.current = null;
 
@@ -603,7 +606,29 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
     };
 
     const loadModel = async () => {
-      if (!region.modelPath && (region.id === 'front-upper' || region.id === 'legs')) {
+      let modelPath = region.modelPath;
+      let frontUpperHeadChecked = false;
+
+      if (region.id === 'front-upper') {
+        frontUpperHeadChecked = true;
+        setFrontUpperModeStatus('检测本地真实模型');
+        try {
+          const response = await fetch(UPPER_BODY_LOCAL_MODEL_PATH, { method: 'HEAD' });
+          const contentType = response.headers.get('content-type') ?? '';
+          if (response.ok && !contentType.includes('text/html')) {
+            modelPath = UPPER_BODY_LOCAL_MODEL_PATH;
+            setFrontUpperModeStatus('本地真实模型 + hotspot 兜底');
+          } else {
+            modelPath = undefined;
+            setFrontUpperModeStatus('简化 hotspot 模式');
+          }
+        } catch {
+          modelPath = undefined;
+          setFrontUpperModeStatus('简化 hotspot 模式');
+        }
+      }
+
+      if (!modelPath && (region.id === 'front-upper' || region.id === 'legs')) {
         setModelAvailable(true);
         setLoadStatus('简化示意可用');
 
@@ -693,15 +718,14 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
         return;
       }
 
-      if (!region.modelPath) {
+      if (!modelPath) {
         setLoadStatus('未配置');
         return;
       }
 
-      const modelPath = region.modelPath;
       setLoadStatus(region.isPrivateModel ? '检测本地模型' : '加载中');
 
-      if (region.isPrivateModel) {
+      if (region.isPrivateModel && !frontUpperHeadChecked) {
         try {
           const response = await fetch(modelPath, { method: 'HEAD' });
           const contentType = response.headers.get('content-type') ?? '';
@@ -841,6 +865,15 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
             simplifiedTargets.forEach((target) => scene?.add(target.mesh));
             loadedMeshes.unshift(...simplifiedTargets);
           }
+          if (region.id === 'front-upper') {
+            const realMappedMuscles = new Set(Object.values(upperBodyLocalMeshMappings));
+            const fallbackTargets = createSimplifiedFrontUpperTargets().filter((target) => {
+              const muscleId = region.mappings[target.name];
+              return !muscleId || !realMappedMuscles.has(muscleId);
+            });
+            fallbackTargets.forEach((target) => scene?.add(target.mesh));
+            loadedMeshes.push(...fallbackTargets);
+          }
           meshesRef.current = loadedMeshes;
           setMeshCount(loadedMeshes.length);
           setLoadStatus('加载成功');
@@ -850,6 +883,15 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
         undefined,
         () => {
           if (!disposed) {
+            if (region.id === 'front-upper' && scene) {
+              const simplifiedTargets = createSimplifiedFrontUpperTargets();
+              simplifiedTargets.forEach((target) => scene?.add(target.mesh));
+              meshesRef.current = simplifiedTargets;
+              setMeshCount(simplifiedTargets.length);
+              setFrontUpperModeStatus('简化 hotspot 模式');
+              setLoadStatus('简化示意可用');
+              return;
+            }
             setLoadStatus('加载失败');
             setModelAvailable(false);
           }
@@ -913,6 +955,11 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
           {isSelector && region.id === 'front-upper' && (
             <p data-testid="three-front-upper-note" className="mt-2 text-sm leading-6 text-amber-100">
               正面上半身当前使用简化 3D 示意区域 / hotspot，不是精确真实解剖模型；当前目标是让用户能通过 3D 入口选择训练部位，后续可逐步替换为真实模型资源。
+            </p>
+          )}
+          {isSelector && region.id === 'front-upper' && (
+            <p data-testid="three-front-upper-mode-status" className="mt-2 text-sm leading-6 text-cyan-100">
+              {frontUpperModeStatus || '检测本地真实模型'}
             </p>
           )}
           {isSelector && region.id === 'legs' && (
@@ -1057,6 +1104,7 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
             meshCount={meshCount}
             selectedMeshName={selectedMeshName}
             selectedMuscleId={selectedMuscleId}
+            selectedMappingSource={selectedMappingSource}
             selectedMuscle={selectedMuscle}
             relatedExercises={relatedExercises}
             hasSelectedMesh={hasSelectedMesh}
@@ -1070,6 +1118,7 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
             meshCount={meshCount}
             selectedMeshName={selectedMeshName}
             selectedMuscleId={selectedMuscleId}
+            selectedMappingSource={selectedMappingSource}
             selectedMuscle={selectedMuscle}
             relatedExercises={relatedExercises}
             mappedMuscleLabel={mappedMuscleLabel}
@@ -1087,6 +1136,7 @@ function SelectorResultPanel({
   meshCount,
   selectedMeshName,
   selectedMuscleId,
+  selectedMappingSource,
   selectedMuscle,
   relatedExercises,
   hasSelectedMesh,
@@ -1098,6 +1148,7 @@ function SelectorResultPanel({
   meshCount: number;
   selectedMeshName: string;
   selectedMuscleId: string | undefined;
+  selectedMappingSource: string;
   selectedMuscle: ReturnType<typeof getMuscleById>;
   relatedExercises: RelatedExercise[];
   hasSelectedMesh: boolean;
@@ -1279,6 +1330,7 @@ function SelectorResultPanel({
             meshCount={meshCount}
             selectedMeshName={selectedMeshName}
             selectedMuscleId={selectedMuscleId}
+            selectedMappingSource={selectedMappingSource}
             tone="dark"
           />
         </dl>
@@ -1293,6 +1345,7 @@ function DemoDebugPanel({
   meshCount,
   selectedMeshName,
   selectedMuscleId,
+  selectedMappingSource,
   selectedMuscle,
   relatedExercises,
   mappedMuscleLabel,
@@ -1303,6 +1356,7 @@ function DemoDebugPanel({
   meshCount: number;
   selectedMeshName: string;
   selectedMuscleId: string | undefined;
+  selectedMappingSource: string;
   selectedMuscle: ReturnType<typeof getMuscleById>;
   relatedExercises: RelatedExercise[];
   mappedMuscleLabel: string;
@@ -1316,6 +1370,7 @@ function DemoDebugPanel({
         meshCount={meshCount}
         selectedMeshName={selectedMeshName}
         selectedMuscleId={selectedMuscleId}
+        selectedMappingSource={selectedMappingSource}
       />
       <div>
         <dt className="text-slate-500">中文肌肉名</dt>
@@ -1401,6 +1456,7 @@ function DebugRows({
   meshCount,
   selectedMeshName,
   selectedMuscleId,
+  selectedMappingSource,
   tone = 'light'
 }: {
   region: ThreeModelRegion;
@@ -1408,6 +1464,7 @@ function DebugRows({
   meshCount: number;
   selectedMeshName: string;
   selectedMuscleId: string | undefined;
+  selectedMappingSource: string;
   tone?: 'light' | 'dark';
 }) {
   const valueClass = tone === 'dark' ? 'text-slate-100' : 'text-slate-950';
@@ -1460,8 +1517,34 @@ function DebugRows({
           {selectedMuscleId ?? UNMAPPED_LABEL}
         </dd>
       </div>
+      <div>
+        <dt className="text-slate-500">mapping source</dt>
+        <dd data-testid="three-mapping-source" className={`mt-1 font-mono text-xs ${valueClass}`}>
+          {selectedMappingSource}
+        </dd>
+      </div>
     </>
   );
+}
+
+function getSelectedMappingSource(selectedMeshName: string, selectedMuscleId: string | undefined) {
+  if (selectedMeshName === UNSELECTED_MESH_LABEL) {
+    return 'none';
+  }
+
+  if (!selectedMuscleId) {
+    return 'unmapped';
+  }
+
+  if (selectedMeshName.startsWith('Simplified_')) {
+    return 'hotspot';
+  }
+
+  if (upperBodyLocalMeshMappings[selectedMeshName]) {
+    return 'real-mesh';
+  }
+
+  return 'mapped-mesh';
 }
 
 function RegionBadge({ region }: { region: ThreeModelRegion }) {

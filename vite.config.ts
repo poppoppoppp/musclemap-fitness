@@ -1,6 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import { rmSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+let privateModelDir = '';
 
 export default defineConfig({
   plugins: [
@@ -34,6 +38,18 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest}']
       }
-    })
+    }),
+    {
+      name: 'exclude-private-models-from-build',
+      apply: 'build',
+      configResolved(config) {
+        privateModelDir = resolve(config.root, config.build.outDir, 'models/private');
+      },
+      closeBundle() {
+        if (privateModelDir) {
+          rmSync(privateModelDir, { recursive: true, force: true });
+        }
+      }
+    }
   ],
 });

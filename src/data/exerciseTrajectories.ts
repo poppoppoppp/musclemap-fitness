@@ -9,6 +9,7 @@ export type ExerciseTrajectory = {
   exerciseId: string;
   label: string;
   viewHint?: string;
+  directionLabel: string;
   targetMuscleIds: string[];
   secondaryMuscleIds?: string[];
   points: ExerciseTrajectoryPoint[];
@@ -20,6 +21,7 @@ export const exerciseTrajectories: ExerciseTrajectory[] = [
     exerciseId: 'lat-pulldown',
     label: '下拉路径示意',
     viewHint: '上方起点，下拉到锁骨附近',
+    directionLabel: '从头顶上方下拉到上胸',
     targetMuscleIds: ['latissimus-dorsi'],
     secondaryMuscleIds: ['teres-major', 'middle-lower-trapezius', 'rhomboids'],
     points: [
@@ -32,6 +34,7 @@ export const exerciseTrajectories: ExerciseTrajectory[] = [
     exerciseId: 'seated-row',
     label: '划船路径示意',
     viewHint: '前方伸展，向躯干拉回',
+    directionLabel: '从身体前方拉回到躯干',
     targetMuscleIds: ['rhomboids', 'latissimus-dorsi'],
     secondaryMuscleIds: ['middle-lower-trapezius', 'teres-major'],
     points: [
@@ -44,6 +47,7 @@ export const exerciseTrajectories: ExerciseTrajectory[] = [
     exerciseId: 'machine-chest-press',
     label: '推胸路径示意',
     viewHint: '胸前起点，向前推出',
+    directionLabel: '从胸前向正前方推出',
     targetMuscleIds: ['pectoralis-major'],
     secondaryMuscleIds: ['anterior-deltoid', 'triceps-brachii'],
     points: [
@@ -56,6 +60,7 @@ export const exerciseTrajectories: ExerciseTrajectory[] = [
     exerciseId: 'dumbbell-shoulder-press',
     label: '肩推路径示意',
     viewHint: '肩部起点，向上推起',
+    directionLabel: '从肩部向头顶上方推起',
     targetMuscleIds: ['anterior-deltoid', 'lateral-deltoid'],
     secondaryMuscleIds: ['triceps-brachii', 'upper-trapezius'],
     points: [
@@ -70,6 +75,7 @@ export const exerciseTrajectories: ExerciseTrajectory[] = [
     exerciseId: 'dumbbell-curl',
     label: '弯举路径示意',
     viewHint: '手臂下方，向肩部弯举',
+    directionLabel: '从手臂下方向肩部弯举',
     targetMuscleIds: ['biceps-brachii'],
     secondaryMuscleIds: ['brachialis'],
     points: [
@@ -82,6 +88,7 @@ export const exerciseTrajectories: ExerciseTrajectory[] = [
     exerciseId: 'squat',
     label: '下蹲路径示意',
     viewHint: '站立上方，下蹲，再起身',
+    directionLabel: '身体重心下蹲后再起身',
     targetMuscleIds: ['quadriceps', 'gluteus-maximus'],
     secondaryMuscleIds: ['hamstrings', 'erector-spinae'],
     points: [

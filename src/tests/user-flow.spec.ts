@@ -928,8 +928,13 @@ test('exercise detail shows simplified 3d trajectory for configured exercises', 
     await expect(trajectory).toContainText('协同肌群');
     await expect(trajectory).toContainText('当前为简化动作轨迹，不代表完整动作动画。');
     await expect(page.getByTestId('exercise-trajectory-path')).toBeVisible();
+    await expect(page.getByTestId('exercise-trajectory-reference')).toContainText('身体参照');
+    await expect(page.getByTestId('exercise-trajectory-direction-label')).toBeVisible();
     await expect(page.getByTestId('exercise-active-workout-entry')).toBeVisible();
   }
+
+  await page.goto('/exercises/lat-pulldown');
+  await expect(page.getByTestId('exercise-trajectory-direction-label')).toContainText('从头顶上方下拉到上胸');
 });
 
 test('exercise detail shows trajectory fallback without mobile overflow', async ({ page }) => {

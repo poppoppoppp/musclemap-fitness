@@ -34,10 +34,14 @@ export default function ExerciseTrajectoryViewer({ trajectory }: ExerciseTraject
       scene.add(keyLight);
 
       const points = trajectory.points.map((point) => new THREE.Vector3(point.x, point.y, point.z));
-      const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
-      const lineMaterial = new THREE.LineBasicMaterial({ color: 0x22d3ee, linewidth: 3 });
-      const line = new THREE.Line(lineGeometry, lineMaterial);
-      scene.add(line);
+      const path = new THREE.CatmullRomCurve3(points);
+      const pathGeometry = new THREE.TubeGeometry(path, 32, 0.026, 12, false);
+      const pathMaterial = new THREE.MeshStandardMaterial({
+        color: 0x22d3ee,
+        emissive: 0x083344,
+        roughness: 0.35
+      });
+      scene.add(new THREE.Mesh(pathGeometry, pathMaterial));
 
       points.forEach((point, index) => {
         const isStart = index === 0;
@@ -67,6 +71,8 @@ export default function ExerciseTrajectoryViewer({ trajectory }: ExerciseTraject
         scene.add(arrow);
       }
 
+      scene.add(createBodyReference(THREE));
+
       const grid = new THREE.GridHelper(2.2, 4, 0x334155, 0x1e293b);
       grid.position.y = -0.8;
       scene.add(grid);
@@ -86,8 +92,8 @@ export default function ExerciseTrajectoryViewer({ trajectory }: ExerciseTraject
 
       cleanupScene = () => {
         observer.disconnect();
-        lineGeometry.dispose();
-        lineMaterial.dispose();
+        pathGeometry.dispose();
+        pathMaterial.dispose();
         scene.traverse((object) => {
           if (object instanceof THREE.Mesh) {
             object.geometry.dispose();
@@ -124,14 +130,26 @@ export default function ExerciseTrajectoryViewer({ trajectory }: ExerciseTraject
         {trajectory.viewHint ? <p className="mt-2 text-sm leading-6 text-slate-300">{trajectory.viewHint}</p> : null}
       </div>
 
-      <div className="overflow-hidden rounded-md border border-slate-700 bg-slate-950/80">
+      <div className="relative overflow-hidden rounded-md border border-slate-700 bg-slate-950/80">
         <canvas ref={canvasRef} data-testid="exercise-trajectory-path" className="block h-64 w-full" aria-label={`${trajectory.label} 3D 轨迹`} />
+        <div
+          data-testid="exercise-trajectory-reference"
+          className="pointer-events-none absolute left-3 top-3 rounded-md border border-slate-600 bg-slate-950/80 px-2 py-1 text-xs text-slate-200"
+        >
+          身体参照：灰色躯干 / 肩线
+        </div>
+        <div
+          data-testid="exercise-trajectory-direction-label"
+          className="pointer-events-none absolute bottom-3 right-3 rounded-md bg-cyan-400 px-2 py-1 text-xs font-semibold text-slate-950"
+        >
+          {trajectory.directionLabel}
+        </div>
       </div>
 
       <dl className="grid gap-3 text-sm sm:grid-cols-3">
         <InfoItem title="起点" value={startLabel} />
         <InfoItem title="终点" value={endLabel} />
-        <InfoItem title="方向" value={trajectory.viewHint ?? `${startLabel} 到 ${endLabel}`} />
+        <InfoItem title="方向" value={trajectory.directionLabel} />
       </dl>
 
       <div className="space-y-3">
@@ -152,6 +170,43 @@ export default function ExerciseTrajectoryViewer({ trajectory }: ExerciseTraject
       </p>
     </div>
   );
+}
+
+function createBodyReference(THREE: typeof import('three')) {
+  const group = new THREE.Group();
+
+  const torso = new THREE.Mesh(
+    new THREE.CapsuleGeometry(0.18, 0.72, 8, 18),
+    new THREE.MeshStandardMaterial({
+      color: 0x64748b,
+      transparent: true,
+      opacity: 0.32,
+      roughness: 0.6
+    })
+  );
+  torso.position.set(0, -0.18, 0.34);
+  group.add(torso);
+
+  const shoulderBar = new THREE.Mesh(
+    new THREE.BoxGeometry(0.78, 0.045, 0.045),
+    new THREE.MeshStandardMaterial({
+      color: 0x94a3b8,
+      transparent: true,
+      opacity: 0.45,
+      roughness: 0.55
+    })
+  );
+  shoulderBar.position.set(0, 0.22, 0.34);
+  group.add(shoulderBar);
+
+  const topHandle = new THREE.Mesh(
+    new THREE.BoxGeometry(0.7, 0.035, 0.035),
+    new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.35 })
+  );
+  topHandle.position.set(0, 0.83, -0.2);
+  group.add(topHandle);
+
+  return group;
 }
 
 function InfoItem({ title, value }: { title: string; value: string }) {

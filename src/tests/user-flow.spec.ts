@@ -934,6 +934,9 @@ test('exercise detail shows simplified 3d trajectory for configured exercises', 
     await expect(page.getByTestId('exercise-trajectory-action-reference')).toContainText('起始姿态');
     await expect(page.getByTestId('exercise-trajectory-action-reference')).toContainText('结束姿态');
     await expect(page.getByTestId('exercise-trajectory-action-reference')).toContainText('手臂与横杆');
+    await expect(page.getByTestId('exercise-trajectory-pose-labels')).toContainText('左：起始姿态');
+    await expect(page.getByTestId('exercise-trajectory-pose-labels')).toContainText('右：结束姿态');
+    await expect(page.getByTestId('exercise-trajectory-pose-labels')).toContainText('下拉方向');
     await expect(page.getByTestId('exercise-active-workout-entry')).toBeVisible();
   }
 

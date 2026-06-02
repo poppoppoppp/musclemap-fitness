@@ -25,9 +25,9 @@ export default function ExerciseTrajectoryViewer({ trajectory }: ExerciseTraject
       renderer.setClearColor(0x020617, 0);
 
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
-      camera.position.set(0, 0.18, 4.4);
-      camera.lookAt(0, 0.05, 0);
+      const camera = new THREE.OrthographicCamera(-1.65, 1.65, 1.25, -1.25, 0.1, 100);
+      camera.position.set(0, 0.04, 5);
+      camera.lookAt(0, 0.04, 0);
 
       scene.add(new THREE.AmbientLight(0xffffff, 1.4));
       const keyLight = new THREE.DirectionalLight(0xffffff, 1.6);
@@ -39,7 +39,7 @@ export default function ExerciseTrajectoryViewer({ trajectory }: ExerciseTraject
 
       const points = trajectory.points.map((point) => new THREE.Vector3(point.x, point.y, point.z));
       const path = new THREE.CatmullRomCurve3(points);
-      const pathGeometry = new THREE.TubeGeometry(path, 48, 0.035, 14, false);
+      const pathGeometry = new THREE.TubeGeometry(path, 48, 0.026, 14, false);
       const pathMaterial = new THREE.MeshStandardMaterial({
         color: 0x22d3ee,
         emissive: 0x083344,
@@ -78,16 +78,15 @@ export default function ExerciseTrajectoryViewer({ trajectory }: ExerciseTraject
         scene.add(arrow);
       }
 
-      const grid = new THREE.GridHelper(2.2, 4, 0x334155, 0x1e293b);
-      grid.position.y = -0.8;
-      grid.position.z = -0.35;
-      scene.add(grid);
-
       const resize = () => {
         const width = Math.max(300, canvas.clientWidth);
-        const height = Math.max(360, canvas.clientHeight);
+        const height = Math.max(420, canvas.clientHeight);
         renderer.setSize(width, height, false);
-        camera.aspect = width / height;
+        const aspect = width / height;
+        camera.left = -1.35 * aspect;
+        camera.right = 1.35 * aspect;
+        camera.top = 1.35;
+        camera.bottom = -1.35;
         camera.updateProjectionMatrix();
         renderer.render(scene, camera);
       };
@@ -137,7 +136,7 @@ export default function ExerciseTrajectoryViewer({ trajectory }: ExerciseTraject
       </div>
 
       <div className="relative overflow-hidden rounded-md border border-slate-700 bg-slate-950/80">
-        <canvas ref={canvasRef} data-testid="exercise-trajectory-path" className="block h-[360px] w-full sm:h-[420px]" aria-label={`${trajectory.label} 3D 动作示意`} />
+        <canvas ref={canvasRef} data-testid="exercise-trajectory-path" className="block h-[420px] w-full sm:h-[460px]" aria-label={`${trajectory.label} 3D 动作示意`} />
         <div
           data-testid="exercise-trajectory-reference"
           className="pointer-events-none absolute left-3 top-3 rounded-md border border-slate-600 bg-slate-950/80 px-2 py-1 text-xs text-slate-200"
@@ -155,6 +154,14 @@ export default function ExerciseTrajectoryViewer({ trajectory }: ExerciseTraject
           className="pointer-events-none absolute bottom-3 right-3 rounded-md bg-cyan-400 px-2 py-1 text-xs font-semibold text-slate-950"
         >
           {trajectory.directionLabel}
+        </div>
+        <div
+          data-testid="exercise-trajectory-pose-labels"
+          className="pointer-events-none absolute inset-x-3 bottom-3 grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-center text-xs font-semibold"
+        >
+          <span className="rounded-md border border-sky-300/40 bg-sky-300/15 px-2 py-1 text-sky-100">左：起始姿态</span>
+          <span className="rounded-md bg-cyan-300 px-2 py-1 text-slate-950">下拉方向</span>
+          <span className="rounded-md border border-lime-300/40 bg-lime-300/15 px-2 py-1 text-lime-100">右：结束姿态</span>
         </div>
       </div>
 
@@ -211,69 +218,88 @@ function createLatPulldownAction(THREE: typeof import('three')) {
   });
   const handleMaterial = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.35 });
 
-  const pelvis = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.08, 0.2), bodyMaterial);
-  pelvis.position.set(0, -0.62, 0.28);
-  group.add(pelvis);
+  const startPose = createLatPulldownPose(THREE, -0.72, ghostMaterial, bodyMaterial, handleMaterial, 'start');
+  const endPose = createLatPulldownPose(THREE, 0.72, activeMaterial, bodyMaterial, handleMaterial, 'end');
+  group.add(startPose);
+  group.add(endPose);
 
-  const torso = new THREE.Mesh(
-    new THREE.CapsuleGeometry(0.24, 0.82, 10, 22),
-    bodyMaterial
+  const divider = new THREE.Mesh(
+    new THREE.BoxGeometry(0.018, 2.2, 0.02),
+    new THREE.MeshStandardMaterial({ color: 0x334155, transparent: true, opacity: 0.8, roughness: 0.5 })
   );
-  torso.position.set(0, -0.2, 0.26);
-  group.add(torso);
-
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.14, 24, 16), bodyMaterial);
-  head.position.set(0, 0.55, 0.24);
-  group.add(head);
-
-  const shoulderBar = new THREE.Mesh(
-    new THREE.BoxGeometry(0.86, 0.055, 0.055),
-    bodyMaterial
-  );
-  shoulderBar.position.set(0, 0.2, 0.25);
-  group.add(shoulderBar);
-
-  const topHandle = new THREE.Mesh(
-    new THREE.BoxGeometry(0.95, 0.045, 0.055),
-    handleMaterial
-  );
-  topHandle.position.set(0, 0.9, 0.02);
-  group.add(topHandle);
-
-  addArmPose(THREE, group, [-0.36, 0.2, 0.26], [-0.46, 0.55, 0.12], [-0.42, 0.88, 0.02], ghostMaterial);
-  addArmPose(THREE, group, [0.36, 0.2, 0.26], [0.46, 0.55, 0.12], [0.42, 0.88, 0.02], ghostMaterial);
-  addArmPose(THREE, group, [-0.36, 0.2, 0.26], [-0.55, 0.02, 0.18], [-0.33, -0.08, 0.16], activeMaterial);
-  addArmPose(THREE, group, [0.36, 0.2, 0.26], [0.55, 0.02, 0.18], [0.33, -0.08, 0.16], activeMaterial);
-
-  const endHandle = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.05, 0.055), activeMaterial);
-  endHandle.position.set(0, -0.08, 0.16);
-  group.add(endHandle);
-
-  const cable = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.01, 1.0, 10), handleMaterial);
-  cable.position.set(0, 0.42, 0.02);
-  group.add(cable);
-
-  const seat = new THREE.Mesh(
-    new THREE.BoxGeometry(0.7, 0.06, 0.42),
-    new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.55 })
-  );
-  seat.position.set(0, -0.82, 0.28);
-  group.add(seat);
+  divider.position.set(0, 0, -0.15);
+  group.add(divider);
 
   const arrow = new THREE.Mesh(
-    new THREE.ConeGeometry(0.09, 0.24, 24),
+    new THREE.ConeGeometry(0.075, 0.2, 24),
     new THREE.MeshStandardMaterial({ color: 0x22d3ee, emissive: 0x083344, roughness: 0.35 })
   );
-  arrow.position.set(0, 0.18, -0.18);
+  arrow.position.set(0, -0.06, 0.02);
   arrow.rotation.x = Math.PI;
   group.add(arrow);
 
   const arrowShaft = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.025, 0.025, 0.66, 16),
+    new THREE.CylinderGeometry(0.022, 0.022, 0.48, 16),
     new THREE.MeshStandardMaterial({ color: 0x22d3ee, emissive: 0x083344, roughness: 0.35 })
   );
-  arrowShaft.position.set(0, 0.43, -0.18);
+  arrowShaft.position.set(0, 0.18, 0.02);
   group.add(arrowShaft);
+
+  return group;
+}
+
+function createLatPulldownPose(
+  THREE: typeof import('three'),
+  xOffset: number,
+  armMaterial: import('three').Material,
+  bodyMaterial: import('three').Material,
+  handleMaterial: import('three').Material,
+  pose: 'start' | 'end'
+) {
+  const group = new THREE.Group();
+  const z = 0.2;
+
+  const pelvis = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.08, 0.18), bodyMaterial);
+  pelvis.position.set(xOffset, -0.62, z);
+  group.add(pelvis);
+
+  const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.2, 0.76, 10, 22), bodyMaterial);
+  torso.position.set(xOffset, -0.2, z);
+  group.add(torso);
+
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.13, 24, 16), bodyMaterial);
+  head.position.set(xOffset, 0.52, z);
+  group.add(head);
+
+  const shoulderBar = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.055, 0.055), bodyMaterial);
+  shoulderBar.position.set(xOffset, 0.18, z);
+  group.add(shoulderBar);
+
+  const seat = new THREE.Mesh(
+    new THREE.BoxGeometry(0.58, 0.06, 0.34),
+    new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.55 })
+  );
+  seat.position.set(xOffset, -0.82, z);
+  group.add(seat);
+
+  const topHandle = new THREE.Mesh(new THREE.BoxGeometry(0.74, 0.05, 0.055), pose === 'start' ? armMaterial : handleMaterial);
+  topHandle.position.set(xOffset, 0.9, z);
+  group.add(topHandle);
+
+  const cable = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, 0.86, 10), handleMaterial);
+  cable.position.set(xOffset, 0.48, z);
+  group.add(cable);
+
+  if (pose === 'start') {
+    addArmPose(THREE, group, [xOffset - 0.28, 0.18, z], [xOffset - 0.36, 0.55, z], [xOffset - 0.34, 0.88, z], armMaterial);
+    addArmPose(THREE, group, [xOffset + 0.28, 0.18, z], [xOffset + 0.36, 0.55, z], [xOffset + 0.34, 0.88, z], armMaterial);
+  } else {
+    addArmPose(THREE, group, [xOffset - 0.28, 0.18, z], [xOffset - 0.44, -0.02, z], [xOffset - 0.28, -0.13, z], armMaterial);
+    addArmPose(THREE, group, [xOffset + 0.28, 0.18, z], [xOffset + 0.44, -0.02, z], [xOffset + 0.28, -0.13, z], armMaterial);
+    const endHandle = new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.055, 0.055), armMaterial);
+    endHandle.position.set(xOffset, -0.13, z);
+    group.add(endHandle);
+  }
 
   return group;
 }

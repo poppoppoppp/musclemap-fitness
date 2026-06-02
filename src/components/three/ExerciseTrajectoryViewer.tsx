@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { getMuscleById } from '../../data/muscles';
 import type { ExerciseTrajectory } from '../../data/exerciseTrajectories';
 
@@ -6,8 +6,49 @@ type ExerciseTrajectoryViewerProps = {
   trajectory: ExerciseTrajectory;
 };
 
+type PlaybackState = 'idle' | 'playing' | 'paused' | 'finished';
+
+const DEFAULT_PLAYBACK_DURATION_MS = 2000;
+
 export default function ExerciseTrajectoryViewer({ trajectory }: ExerciseTrajectoryViewerProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const progressRef = useRef(0);
+  const playbackStartRef = useRef(0);
+  const [playbackState, setPlaybackState] = useState<PlaybackState>('idle');
+  const [playbackProgress, setPlaybackProgress] = useState(0);
+  const durationMs = trajectory.durationMs ?? DEFAULT_PLAYBACK_DURATION_MS;
+  const phaseLabels = useMemo(() => getPhaseLabels(trajectory), [trajectory]);
+
+  useEffect(() => {
+    progressRef.current = playbackProgress;
+  }, [playbackProgress]);
+
+  useEffect(() => {
+    setPlaybackState('idle');
+    setPlaybackProgress(0);
+    progressRef.current = 0;
+  }, [trajectory.exerciseId]);
+
+  useEffect(() => {
+    if (playbackState !== 'playing') return;
+
+    let animationFrameId = 0;
+    const tick = (now: number) => {
+      const nextProgress = Math.min((now - playbackStartRef.current) / durationMs, 1);
+      progressRef.current = nextProgress;
+      setPlaybackProgress(nextProgress);
+
+      if (nextProgress >= 1) {
+        setPlaybackState('finished');
+        return;
+      }
+
+      animationFrameId = requestAnimationFrame(tick);
+    };
+
+    animationFrameId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [durationMs, playbackState]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -49,6 +90,28 @@ export default function ExerciseTrajectoryViewer({ trajectory }: ExerciseTraject
 
       const actionReference = createActionReference(THREE, trajectory.exerciseId);
       scene.add(actionReference);
+
+      const animatedMarker = new THREE.Mesh(
+        new THREE.SphereGeometry(0.105, 32, 20),
+        new THREE.MeshStandardMaterial({
+          color: 0xf97316,
+          emissive: 0x7c2d12,
+          roughness: 0.25
+        })
+      );
+      animatedMarker.position.copy(path.getPointAt(progressRef.current));
+      scene.add(animatedMarker);
+
+      const markerHalo = new THREE.Mesh(
+        new THREE.SphereGeometry(0.16, 32, 20),
+        new THREE.MeshBasicMaterial({
+          color: 0xfbbf24,
+          transparent: true,
+          opacity: 0.22
+        })
+      );
+      markerHalo.position.copy(animatedMarker.position);
+      scene.add(markerHalo);
 
       points.forEach((point, index) => {
         const isStart = index === 0;
@@ -95,7 +158,23 @@ export default function ExerciseTrajectoryViewer({ trajectory }: ExerciseTraject
       observer.observe(canvas);
       resize();
 
+      let sceneFrameId = 0;
+      let lastRenderedProgress = Number.NaN;
+      const renderScene = () => {
+        const currentProgress = Math.min(Math.max(progressRef.current, 0), 1);
+        if (currentProgress !== lastRenderedProgress) {
+          const currentPoint = path.getPointAt(currentProgress);
+          animatedMarker.position.copy(currentPoint);
+          markerHalo.position.copy(currentPoint);
+          renderer.render(scene, camera);
+          lastRenderedProgress = currentProgress;
+        }
+        sceneFrameId = requestAnimationFrame(renderScene);
+      };
+      renderScene();
+
       cleanupScene = () => {
+        cancelAnimationFrame(sceneFrameId);
         observer.disconnect();
         pathGeometry.dispose();
         pathMaterial.dispose();
@@ -126,9 +205,24 @@ export default function ExerciseTrajectoryViewer({ trajectory }: ExerciseTraject
 
   const startLabel = trajectory.points[0]?.label ?? '起点';
   const endLabel = trajectory.points[trajectory.points.length - 1]?.label ?? '终点';
+  const currentPhase = getCurrentPhaseLabel(playbackProgress, phaseLabels);
+  const playbackButtonLabel = playbackState === 'playing' ? '暂停' : playbackState === 'finished' ? '重新播放' : '播放轨迹';
+
+  const handlePlaybackClick = () => {
+    if (playbackState === 'playing') {
+      setPlaybackState('paused');
+      return;
+    }
+
+    const nextProgress = playbackState === 'finished' ? 0 : playbackProgress;
+    progressRef.current = nextProgress;
+    setPlaybackProgress(nextProgress);
+    playbackStartRef.current = performance.now() - nextProgress * durationMs;
+    setPlaybackState('playing');
+  };
 
   return (
-    <div data-testid="exercise-trajectory-module" className="space-y-4">
+    <div data-testid="exercise-trajectory-module" data-playback-progress={playbackProgress.toFixed(2)} className="space-y-4">
       <div>
         <p className="text-xs font-semibold uppercase tracking-wide text-cyan-200">3D 动作轨迹</p>
         <h2 className="mt-1 text-lg font-semibold text-white">{trajectory.label}</h2>
@@ -165,6 +259,26 @@ export default function ExerciseTrajectoryViewer({ trajectory }: ExerciseTraject
         </div>
       </div>
 
+      <div className="grid gap-3 sm:grid-cols-[auto_1fr] sm:items-center">
+        <button
+          type="button"
+          data-testid="exercise-trajectory-playback-button"
+          className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-cyan-300 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-200 sm:w-fit"
+          onClick={handlePlaybackClick}
+        >
+          {playbackButtonLabel}
+        </button>
+        <div className="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm">
+          <p className="font-semibold text-white">
+            当前阶段：
+            <span data-testid="exercise-trajectory-current-phase" className="text-cyan-100">
+              {currentPhase}
+            </span>
+          </p>
+          <p className="mt-1 text-slate-300">marker 沿起点、中间点、终点移动，用于展示动作方向。</p>
+        </div>
+      </div>
+
       <dl className="grid gap-3 text-sm sm:grid-cols-3">
         <InfoItem title="起点" value={startLabel} />
         <InfoItem title="终点" value={endLabel} />
@@ -189,6 +303,20 @@ export default function ExerciseTrajectoryViewer({ trajectory }: ExerciseTraject
       </p>
     </div>
   );
+}
+
+function getPhaseLabels(trajectory: ExerciseTrajectory) {
+  if (trajectory.phaseLabels?.length) return trajectory.phaseLabels;
+
+  const startLabel = trajectory.points[0]?.label ?? '起始位置';
+  const endLabel = trajectory.points[trajectory.points.length - 1]?.label ?? '结束位置';
+  return [`起始位置：${startLabel}`, '发力阶段', `结束位置：${endLabel}`];
+}
+
+function getCurrentPhaseLabel(progress: number, labels: string[]) {
+  if (progress <= 0.02) return labels[0] ?? '起始位置';
+  if (progress >= 0.98) return labels[2] ?? labels[labels.length - 1] ?? '结束位置';
+  return labels[1] ?? '发力阶段';
 }
 
 function createActionReference(THREE: typeof import('three'), exerciseId: string) {

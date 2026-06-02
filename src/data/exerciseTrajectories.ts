@@ -13,6 +13,8 @@ export type ExerciseTrajectory = {
   targetMuscleIds: string[];
   secondaryMuscleIds?: string[];
   points: ExerciseTrajectoryPoint[];
+  durationMs?: number;
+  phaseLabels?: string[];
   cues?: string[];
 };
 

@@ -944,11 +944,43 @@ test('exercise detail shows simplified 3d trajectory for configured exercises', 
   await expect(page.getByTestId('exercise-trajectory-direction-label')).toContainText('从头顶上方下拉到上胸');
 });
 
+test('exercise trajectory playback moves through phases with play pause and replay controls', async ({ page }) => {
+  await page.goto('/exercises/lat-pulldown');
+
+  const trajectory = page.getByTestId('exercise-trajectory-module');
+  const playbackButton = page.getByTestId('exercise-trajectory-playback-button');
+  const phase = page.getByTestId('exercise-trajectory-current-phase');
+
+  await expect(playbackButton).toContainText('播放轨迹');
+  await expect(phase).toContainText('起始位置');
+  await expect(trajectory).toHaveAttribute('data-playback-progress', '0.00');
+
+  await playbackButton.click();
+  await expect(playbackButton).toContainText('暂停');
+  await expect(phase).toContainText('发力阶段');
+  await expect
+    .poll(async () => Number((await trajectory.getAttribute('data-playback-progress')) ?? '0'), {
+      message: 'trajectory playback progress should advance after play'
+    })
+    .toBeGreaterThan(0.15);
+
+  await playbackButton.click();
+  await expect(playbackButton).toContainText('播放轨迹');
+
+  await playbackButton.click();
+  await expect(playbackButton).toContainText('暂停');
+  await expect(phase).toContainText(/发力阶段|结束位置/);
+
+  await expect(playbackButton).toContainText('重新播放', { timeout: 3000 });
+  await expect(phase).toContainText('结束位置');
+});
+
 test('exercise detail shows trajectory fallback without mobile overflow', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/exercises/plank');
 
   await expect(page.getByTestId('exercise-trajectory-fallback')).toContainText('该动作暂未配置 3D 动作轨迹');
+  await expect(page.getByTestId('exercise-trajectory-playback-button')).toHaveCount(0);
   await expect(page.getByTestId('exercise-active-workout-entry')).toBeVisible();
 
   const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);

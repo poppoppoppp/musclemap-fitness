@@ -4,7 +4,9 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import EmptyState from '../components/ui/EmptyState';
+import ExerciseTrajectoryViewer from '../components/three/ExerciseTrajectoryViewer';
 import { exercises, getExerciseById } from '../data/exercises';
+import { getExerciseTrajectoryByExerciseId } from '../data/exerciseTrajectories';
 import { getMuscleById } from '../data/muscles';
 import type { ActiveWorkout } from '../types/activeWorkout';
 import type { Exercise } from '../types/exercise';
@@ -50,6 +52,7 @@ export default function ExerciseDetail() {
   const contextualAlternatives = getContextualAlternatives(exercise, currentMuscleId);
   const hasFewAlternatives = contextualAlternatives.length < 3;
   const isInActiveWorkout = activeWorkout ? isExerciseInActiveWorkout(activeWorkout, exercise.id) : false;
+  const trajectory = getExerciseTrajectoryByExerciseId(exercise.id);
 
   const handleStartWorkoutWithExercise = () => {
     startWorkoutWithExercise(exercise.id);
@@ -80,15 +83,29 @@ export default function ExerciseDetail() {
     <div>
       <PageHeader title={exercise.name} description={exercise.nameEn} backTo="/exercises" />
       <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-        <Card>
-          <dl className="grid gap-4 text-sm">
-            <Meta title="主练肌群" values={exercise.primaryMuscles.map(formatMuscle)} />
-            <Meta title="次要肌群" values={exercise.secondaryMuscles.map(formatMuscle)} />
-            <Meta title="器械" values={exercise.equipment} />
-            <Meta title="难度" values={[difficultyLabel(exercise.difficulty)]} />
-            <Meta title="类型" values={[exercise.mechanic === 'compound' ? '复合动作' : '孤立动作', exercise.force]} />
-          </dl>
-        </Card>
+        <div className="space-y-4">
+          <Card>
+            <dl className="grid gap-4 text-sm">
+              <Meta title="主练肌群" values={exercise.primaryMuscles.map(formatMuscle)} />
+              <Meta title="次要肌群" values={exercise.secondaryMuscles.map(formatMuscle)} />
+              <Meta title="器械" values={exercise.equipment} />
+              <Meta title="难度" values={[difficultyLabel(exercise.difficulty)]} />
+              <Meta title="类型" values={[exercise.mechanic === 'compound' ? '复合动作' : '孤立动作', exercise.force]} />
+            </dl>
+          </Card>
+
+          <Card>
+            {trajectory ? (
+              <ExerciseTrajectoryViewer trajectory={trajectory} />
+            ) : (
+              <div data-testid="exercise-trajectory-fallback" className="space-y-2">
+                <p className="text-xs font-semibold uppercase tracking-wide text-cyan-200">3D 动作轨迹</p>
+                <h2 className="text-lg font-semibold text-white">该动作暂未配置 3D 动作轨迹</h2>
+                <p className="text-sm leading-6 text-slate-300">原动作详情和加入当前训练功能仍可正常使用。</p>
+              </div>
+            )}
+          </Card>
+        </div>
 
         <div className="space-y-4">
           <DetailList title="动作步骤" items={exercise.steps} ordered />

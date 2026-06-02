@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 
+import { exerciseTrajectories } from '../data/exerciseTrajectories';
 import { threeModelRegions } from '../data/threeModelRegions';
 import { upperBodyLocalMeshMappings } from '../data/upperBodyLocalMeshMappings';
 
@@ -894,6 +895,52 @@ test('exercise detail removes misleading alternative relationships', async ({ pa
 
   await page.goto('/exercises/prone-w-raise?muscleId=middle-lower-trapezius');
   await expect(page.getByTestId('contextual-alternatives')).not.toContainText('Superman');
+});
+
+test('exercise trajectory config covers the V0.21 first batch of existing exercise ids', () => {
+  expect(exerciseTrajectories.map((trajectory) => trajectory.exerciseId)).toEqual([
+    'lat-pulldown',
+    'seated-row',
+    'machine-chest-press',
+    'dumbbell-shoulder-press',
+    'dumbbell-curl',
+    'squat'
+  ]);
+
+  for (const trajectory of exerciseTrajectories) {
+    expect(trajectory.points.length).toBeGreaterThanOrEqual(2);
+    expect(trajectory.points.length).toBeLessThanOrEqual(4);
+    expect(trajectory.targetMuscleIds.length).toBeGreaterThan(0);
+  }
+});
+
+test('exercise detail shows simplified 3d trajectory for configured exercises', async ({ page }) => {
+  for (const exerciseId of ['lat-pulldown', 'machine-chest-press', 'squat']) {
+    await page.goto(`/exercises/${exerciseId}`);
+
+    const trajectory = page.getByTestId('exercise-trajectory-module');
+    await expect(trajectory).toBeVisible();
+    await expect(trajectory).toContainText('3D 动作轨迹');
+    await expect(trajectory).toContainText('起点');
+    await expect(trajectory).toContainText('终点');
+    await expect(trajectory).toContainText('方向');
+    await expect(trajectory).toContainText('目标肌群');
+    await expect(trajectory).toContainText('协同肌群');
+    await expect(trajectory).toContainText('当前为简化动作轨迹，不代表完整动作动画。');
+    await expect(page.getByTestId('exercise-trajectory-path')).toBeVisible();
+    await expect(page.getByTestId('exercise-active-workout-entry')).toBeVisible();
+  }
+});
+
+test('exercise detail shows trajectory fallback without mobile overflow', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/exercises/plank');
+
+  await expect(page.getByTestId('exercise-trajectory-fallback')).toContainText('该动作暂未配置 3D 动作轨迹');
+  await expect(page.getByTestId('exercise-active-workout-entry')).toBeVisible();
+
+  const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+  expect(hasHorizontalOverflow).toBe(false);
 });
 
 test('exercise detail can start an active workout with the current exercise', async ({ page }) => {

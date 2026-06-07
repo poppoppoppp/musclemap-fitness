@@ -175,36 +175,49 @@ test('three muscle selector presents a product entry for choosing training muscl
   await expect(page.getByRole('heading', { name: '3D 肌群选择' })).toBeVisible();
   await expect(page.getByText('选择肌群，查看动作，加入当前训练。')).toBeVisible();
   await expect(page.getByTestId('three-region-selector')).toBeVisible();
-  await expect(page.getByTestId('select-three-region-front-upper')).toContainText('正面上半身');
-  await expect(page.getByTestId('select-three-region-back-partial')).toContainText('背部局部');
-  await expect(page.getByTestId('select-three-region-back-partial')).toContainText('当前可选');
-  await expect(page.getByTestId('select-three-region-chest')).toContainText('胸部，暂未配置');
-  await expect(page.getByTestId('select-three-region-legs')).toContainText('臀腿');
-  await expect(page.getByTestId('select-three-region-legs')).toContainText('真实模型优先');
-  await expect(page.getByTestId('select-three-region-shoulders-arms')).toContainText('肩臂，暂未配置');
-  await expect(page.getByTestId('select-three-region-core')).toContainText('核心，暂未配置');
-  await expect(page.getByTestId('select-three-region-box-test')).toContainText('GLB 管线测试，开发验证');
+  await expect(page.getByTestId('select-three-region-chest')).toContainText('胸部');
+  await expect(page.getByTestId('select-three-region-shoulders-arms')).toContainText('肩部');
+  await expect(page.getByTestId('select-three-region-back-partial')).toContainText('背部');
+  await expect(page.getByTestId('select-three-region-legs')).toContainText('腿部');
+  await expect(page.getByTestId('select-three-region-arms')).toContainText('手臂');
+  await expect(page.getByTestId('select-three-region-core')).toContainText('核心');
+  await expect(page.getByTestId('select-three-region-front-upper')).toHaveCount(0);
+  await expect(page.getByTestId('select-three-region-box-test')).toHaveCount(0);
+  await expect(page.getByTestId('three-region-selector')).not.toContainText('暂未配置');
+  await expect(page.getByTestId('three-region-selector')).not.toContainText('GLB 管线');
 
-  await expect(page.getByTestId('three-current-region-label')).toContainText('背部局部');
+  await expect(page.getByTestId('three-current-region-label')).toContainText('背部');
   await expect(page.getByText('mesh.name')).not.toBeVisible();
 });
 
 test('three muscle selector exposes front upper body simplified hotspots grouped by muscle id', async ({ page }) => {
   await page.goto('/three-muscle-selector');
-  await page.getByTestId('select-three-region-front-upper').click();
+  await page.getByTestId('select-three-region-chest').click();
 
-  await expect(page.getByTestId('three-current-region-label')).toContainText('正面上半身');
+  await expect(page.getByTestId('three-current-region-label')).toContainText('胸部');
   await expect(page.getByTestId('glb-load-status')).toContainText(/简化示意可用|加载成功/, { timeout: 15000 });
 
-  for (const muscleId of [
-    'pectoralis-major',
-    'anterior-deltoid',
-    'lateral-deltoid',
-    'biceps-brachii',
-    'triceps-brachii',
-    'rectus-abdominis',
-    'obliques'
-  ]) {
+  for (const muscleId of ['pectoralis-major']) {
+    await expect(page.getByTestId(`select-three-muscle-option-${muscleId}`)).toHaveCount(1);
+  }
+  await expect(page.getByTestId('select-three-muscle-option-biceps-brachii')).toHaveCount(0);
+  await expect(page.getByTestId('select-three-muscle-option-rectus-abdominis')).toHaveCount(0);
+
+  await page.getByTestId('select-three-region-shoulders-arms').click();
+  await expect(page.getByTestId('three-current-region-label')).toContainText('肩部');
+  for (const muscleId of ['anterior-deltoid', 'lateral-deltoid']) {
+    await expect(page.getByTestId(`select-three-muscle-option-${muscleId}`)).toHaveCount(1);
+  }
+
+  await page.getByTestId('select-three-region-arms').click();
+  await expect(page.getByTestId('three-current-region-label')).toContainText('手臂');
+  for (const muscleId of ['biceps-brachii', 'triceps-brachii']) {
+    await expect(page.getByTestId(`select-three-muscle-option-${muscleId}`)).toHaveCount(1);
+  }
+
+  await page.getByTestId('select-three-region-core').click();
+  await expect(page.getByTestId('three-current-region-label')).toContainText('核心');
+  for (const muscleId of ['rectus-abdominis', 'obliques']) {
     await expect(page.getByTestId(`select-three-muscle-option-${muscleId}`)).toHaveCount(1);
     await page.getByTestId(`select-three-muscle-option-${muscleId}`).click();
     await expect(page.getByTestId(`select-three-muscle-option-${muscleId}`)).toHaveAttribute('aria-pressed', 'true');
@@ -251,7 +264,7 @@ test('upper body local mesh mapping uses only V0.19 reported mesh names', () => 
 
 test('three muscle selector uses front upper local model and hotspot hybrid when local model exists', async ({ page }) => {
   await page.goto('/three-muscle-selector');
-  await page.getByTestId('select-three-region-front-upper').click();
+  await page.getByTestId('select-three-region-chest').click();
 
   await expect(page.getByTestId('glb-load-status')).toContainText(/简化示意可用|加载成功/, { timeout: 15000 });
 
@@ -264,6 +277,7 @@ test('three muscle selector uses front upper local model and hotspot hybrid when
     await expect(page.getByTestId('three-mapping-source')).toContainText('real-mesh');
   }
 
+  await page.getByTestId('select-three-region-core').click();
   await page.getByTestId('select-three-muscle-option-rectus-abdominis').click();
   await expect(page.getByTestId('three-selected-muscle-id')).toContainText('rectus-abdominis');
   await expect(page.getByTestId('three-mapping-source')).toContainText('hotspot');
@@ -275,10 +289,11 @@ test('three muscle selector falls back to front upper hotspots when local model 
   });
 
   await page.goto('/three-muscle-selector');
-  await page.getByTestId('select-three-region-front-upper').click();
+  await page.getByTestId('select-three-region-chest').click();
 
   await expect(page.getByTestId('glb-load-status')).toContainText('简化示意可用');
   await expect(page.getByTestId('select-three-muscle-option-pectoralis-major')).toHaveCount(1);
+  await page.getByTestId('select-three-region-core').click();
   await expect(page.getByTestId('select-three-muscle-option-rectus-abdominis')).toHaveCount(1);
   await page.getByTestId('select-three-muscle-option-rectus-abdominis').click();
   await expect(page.getByTestId('three-selected-muscle-id')).toContainText('rectus-abdominis');
@@ -292,7 +307,7 @@ test('three muscle selector adds front upper body exercises to active workout wi
   });
   await page.reload();
 
-  await page.getByTestId('select-three-region-front-upper').click();
+  await page.getByTestId('select-three-region-chest').click();
   await page.getByTestId('select-three-muscle-option-pectoralis-major').click();
   await page.getByTestId('three-add-exercise-push-up').click();
   await expect(page).toHaveURL(/\/workout-log$/);
@@ -300,7 +315,7 @@ test('three muscle selector adds front upper body exercises to active workout wi
   await expect(page.getByTestId('workout-log-exercise').first()).toContainText('Push-up');
 
   await page.goto('/three-muscle-selector');
-  await page.getByTestId('select-three-region-front-upper').click();
+  await page.getByTestId('select-three-region-arms').click();
   await page.getByTestId('select-three-muscle-option-biceps-brachii').click();
   await page.getByTestId('three-add-exercise-dumbbell-curl').click();
   await expect(page).toHaveURL(/\/workout-log$/);
@@ -311,7 +326,7 @@ test('three muscle selector adds front upper body exercises to active workout wi
   expect(active.exercises.map((exercise: { exerciseId: string }) => exercise.exerciseId)).toEqual(['push-up', 'dumbbell-curl']);
 
   await page.goto('/three-muscle-selector');
-  await page.getByTestId('select-three-region-front-upper').click();
+  await page.getByTestId('select-three-region-chest').click();
   await page.getByTestId('select-three-muscle-option-pectoralis-major').click();
   await page.getByTestId('three-add-exercise-push-up').click();
   await expect(page.getByTestId('three-active-workout-status')).toContainText('Push-up');
@@ -447,21 +462,16 @@ test('three muscle selector groups the visible back muscle list by muscle id', a
 
 test('three muscle selector handles unmapped and unconfigured regions without fake data', async ({ page }) => {
   await page.goto('/three-muscle-selector');
-  await page.getByTestId('select-three-region-box-test').click();
 
-  await expect(page.getByTestId('three-current-region-label')).toContainText('GLB 管线测试');
-  await expect(page.getByTestId('glb-load-status')).toContainText('加载成功');
-  await page.getByTestId('select-glb-test-mesh').click();
-  await expect(page.getByTestId('three-selected-unmapped-state')).toContainText('该部位暂未配置为可训练肌群');
-  await expect(page.getByTestId('three-selected-unmapped-state')).toContainText('未映射');
-  await expect(page.getByTestId('three-related-exercises')).toHaveCount(0);
-  await expect(page.getByTestId('three-muscle-detail-link')).toHaveCount(0);
+  await expect(page.getByTestId('select-three-region-box-test')).toHaveCount(0);
+  await expect(page.getByTestId('select-three-region-front-upper')).toHaveCount(0);
+  await expect(page.getByTestId('three-region-selector')).not.toContainText('暂未配置');
+  await expect(page.getByTestId('three-region-selector')).not.toContainText('GLB 管线测试');
 
-  for (const regionId of ['chest', 'shoulders-arms', 'core']) {
+  for (const regionId of ['chest', 'shoulders-arms', 'arms', 'core']) {
     await page.getByTestId(`select-three-region-${regionId}`).click();
-    await expect(page.getByTestId('three-region-placeholder')).toContainText('该区域的 3D 肌群模型暂未配置');
-    await expect(page.getByTestId('three-region-placeholder')).toContainText('后续扩展区域');
-    await expect(page.getByTestId('three-related-exercises')).toHaveCount(0);
+    await expect(page.getByTestId('three-region-placeholder')).toHaveCount(0);
+    await expect(page.locator('[data-testid^="select-three-muscle-option-"]')).not.toHaveCount(0);
   }
 });
 

@@ -34,7 +34,19 @@ type MuscleOption = {
   meshNames: string[];
 };
 
+type SelectorTrainingAreaId = 'chest' | 'shoulders' | 'back' | 'legs' | 'arms' | 'core';
+
+type SelectorTrainingArea = {
+  id: SelectorTrainingAreaId;
+  label: string;
+  description: string;
+  regionId: ThreeModelRegion['id'];
+  muscleIds: string[];
+  testId: string;
+};
+
 const DEFAULT_REGION_ID = 'back-partial';
+const DEFAULT_SELECTOR_AREA_ID: SelectorTrainingAreaId = 'back';
 const UNSELECTED_MESH_LABEL = '未选择';
 const UNMAPPED_LABEL = '未映射';
 const UPPER_BODY_LOCAL_MODEL_PATH = '/models/private/upper-body-local.glb';
@@ -46,15 +58,71 @@ const SIMPLIFIED_LATISSIMUS_TARGETS = [
   'Simplified_right_latissimus_dorsi'
 ] as const;
 
+const selectorTrainingAreas: SelectorTrainingArea[] = [
+  {
+    id: 'chest',
+    label: '胸部',
+    description: '胸大肌',
+    regionId: 'front-upper',
+    muscleIds: ['pectoralis-major'],
+    testId: 'select-three-region-chest'
+  },
+  {
+    id: 'shoulders',
+    label: '肩部',
+    description: '前三角、中束三角',
+    regionId: 'front-upper',
+    muscleIds: ['anterior-deltoid', 'lateral-deltoid'],
+    testId: 'select-three-region-shoulders-arms'
+  },
+  {
+    id: 'back',
+    label: '背部',
+    description: '背阔、菱形、斜方、竖脊',
+    regionId: 'back-partial',
+    muscleIds: ['latissimus-dorsi', 'rhomboids', 'middle-lower-trapezius', 'teres-major', 'rear-deltoid', 'erector-spinae'],
+    testId: 'select-three-region-back-partial'
+  },
+  {
+    id: 'legs',
+    label: '腿部',
+    description: '臀腿、小腿',
+    regionId: 'legs',
+    muscleIds: ['gluteus-maximus', 'quadriceps', 'hamstrings', 'calves'],
+    testId: 'select-three-region-legs'
+  },
+  {
+    id: 'arms',
+    label: '手臂',
+    description: '肱二头、肱三头',
+    regionId: 'front-upper',
+    muscleIds: ['biceps-brachii', 'triceps-brachii'],
+    testId: 'select-three-region-arms'
+  },
+  {
+    id: 'core',
+    label: '核心',
+    description: '腹直肌、腹斜肌',
+    regionId: 'front-upper',
+    muscleIds: ['rectus-abdominis', 'obliques'],
+    testId: 'select-three-region-core'
+  }
+];
+
 export default function ThreeMuscleDemo() {
   return <ThreeMuscleExperience mode="demo" />;
 }
 
 export function ThreeMuscleExperience({ mode }: { mode: PageMode }) {
   const [selectedRegionId, setSelectedRegionId] = useState(DEFAULT_REGION_ID);
+  const [selectedAreaId, setSelectedAreaId] = useState<SelectorTrainingAreaId>(DEFAULT_SELECTOR_AREA_ID);
+  const selectedArea = useMemo(
+    () => selectorTrainingAreas.find((area) => area.id === selectedAreaId) ?? selectorTrainingAreas[0],
+    [selectedAreaId]
+  );
   const selectedRegion = useMemo(
-    () => threeModelRegions.find((region) => region.id === selectedRegionId) ?? threeModelRegions[0],
-    [selectedRegionId]
+    () => threeModelRegions.find((region) => region.id === (mode === 'selector' ? selectedArea.regionId : selectedRegionId)) ?? threeModelRegions[0],
+    [mode, selectedArea.regionId, selectedRegionId]
   );
   const isSelector = mode === 'selector';
 
@@ -72,7 +140,13 @@ export function ThreeMuscleExperience({ mode }: { mode: PageMode }) {
       {isSelector ? (
         <section className="rounded-lg border border-line bg-panel p-4">
           <h2 className="text-base font-semibold text-white">选择区域</h2>
-          <RegionSelector selectedRegion={selectedRegion} onSelect={setSelectedRegionId} mode={mode} />
+          <RegionSelector
+            selectedRegion={selectedRegion}
+            selectedArea={selectedArea}
+            onSelect={setSelectedRegionId}
+            onSelectArea={setSelectedAreaId}
+            mode={mode}
+          />
         </section>
       ) : (
         <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
@@ -81,7 +155,12 @@ export function ThreeMuscleExperience({ mode }: { mode: PageMode }) {
         </section>
       )}
 
-      <RegionModelExperience key={`${mode}-${selectedRegion.id}`} region={selectedRegion} mode={mode} />
+      <RegionModelExperience
+        key={`${mode}-${selectedRegion.id}-${isSelector ? selectedArea.id : 'demo'}`}
+        region={selectedRegion}
+        mode={mode}
+        selectedArea={isSelector ? selectedArea : undefined}
+      />
       {!isSelector && <UpperBodyLocalSandbox />}
     </div>
   );
@@ -89,14 +168,42 @@ export function ThreeMuscleExperience({ mode }: { mode: PageMode }) {
 
 function RegionSelector({
   selectedRegion,
+  selectedArea,
   onSelect,
+  onSelectArea,
   mode
 }: {
   selectedRegion: ThreeModelRegion;
+  selectedArea?: SelectorTrainingArea;
   onSelect: (regionId: string) => void;
+  onSelectArea?: (areaId: SelectorTrainingAreaId) => void;
   mode: PageMode;
 }) {
   const isSelector = mode === 'selector';
+
+  if (isSelector) {
+    return (
+      <div data-testid="three-region-selector" className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-3">
+        {selectorTrainingAreas.map((area) => {
+          const selected = selectedArea?.id === area.id;
+          return (
+            <button
+              key={area.id}
+              type="button"
+              data-testid={area.testId}
+              onClick={() => onSelectArea?.(area.id)}
+              className={`rounded-md border px-3 py-3 text-left text-sm font-medium transition ${
+                selected ? 'border-cyan-400 bg-cyan-400/10 text-white' : 'border-line bg-slate-900/70 text-slate-200 hover:border-cyan-500/70'
+              }`}
+            >
+              <span className="block text-base text-white">{area.label}</span>
+              <span className="mt-1 block text-xs font-normal text-slate-400">{area.description}</span>
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
 
   return (
     <div data-testid="three-region-selector" className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
@@ -483,7 +590,15 @@ function UpperBodyLocalSandbox() {
   );
 }
 
-function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mode: PageMode }) {
+function RegionModelExperience({
+  region,
+  mode,
+  selectedArea
+}: {
+  region: ThreeModelRegion;
+  mode: PageMode;
+  selectedArea?: SelectorTrainingArea;
+}) {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const meshesRef = useRef<RegionMeshInfo[]>([]);
   const selectedMeshRef = useRef<THREE.Mesh | null>(null);
@@ -505,6 +620,11 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
   const selectedMappingSource = getSelectedMappingSource(selectedMeshName, selectedMuscleId);
   const mappedMeshEntries = useMemo(() => Object.entries(region.mappings), [region.mappings]);
   const muscleOptions = useMemo(() => getUniqueMuscleOptions(region.mappings), [region.mappings]);
+  const visibleMuscleOptions = useMemo(() => {
+    if (!selectedArea) return muscleOptions;
+    const allowedMuscles = new Set(selectedArea.muscleIds);
+    return muscleOptions.filter((option) => allowedMuscles.has(option.muscleId));
+  }, [muscleOptions, selectedArea]);
 
   const resetMeshHighlight = (mesh: THREE.Mesh) => {
     const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
@@ -939,11 +1059,11 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
               data-testid="three-current-region-label"
               className={isSelector ? 'text-lg font-semibold text-white' : 'text-lg font-semibold text-slate-950'}
             >
-              {isSelector ? getSelectorRegionHeading(region) : region.label}
+              {isSelector ? selectedArea?.label ?? getSelectorRegionHeading(region) : region.label}
             </h2>
           </div>
           <p className={`mt-1 text-sm leading-6 ${isSelector ? 'text-slate-300' : 'text-slate-600'}`}>
-            {isSelector ? getSelectorRegionDescription(region) : region.description}
+            {isSelector ? getSelectorAreaDescription(selectedArea, region) : region.description}
           </p>
         </div>
 
@@ -1018,14 +1138,14 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
           </button>
         )}
 
-        {isSelector && muscleOptions.length > 0 && (
+        {isSelector && visibleMuscleOptions.length > 0 && (
           <div
             className="mt-4 rounded-md border border-line bg-slate-900/70 p-3"
           >
-            <h3 className="text-sm font-semibold text-white">可选择的背部局部肌群</h3>
+            <h3 className="text-sm font-semibold text-white">可选择的{selectedArea?.label ?? getSelectorRegionHeading(region)}肌群</h3>
             <p className="mt-1 text-xs leading-5 text-slate-400">也可以直接点下面的肌群。</p>
             <div data-testid="three-muscle-options" className="mt-2 grid gap-2 sm:grid-cols-2">
-              {muscleOptions.map((option) => {
+              {visibleMuscleOptions.map((option) => {
                 const muscle = getMuscleById(option.muscleId);
                 const selected = selectedMuscleId === option.muscleId;
 
@@ -1541,6 +1661,17 @@ function getSelectorRegionHeading(region: ThreeModelRegion) {
   }
 
   return region.id === 'back-partial' ? '背部局部' : region.label;
+}
+
+function getSelectorAreaDescription(area: SelectorTrainingArea | undefined, region: ThreeModelRegion) {
+  if (!area) return getSelectorRegionDescription(region);
+
+  if (area.id === 'chest') return '点击胸部相关肌群，选择推类训练动作。';
+  if (area.id === 'shoulders') return '点击肩部肌群，选择推举、侧平举等训练动作。';
+  if (area.id === 'back') return '点击背部肌群，选择下拉、划船和肩胛控制动作。';
+  if (area.id === 'legs') return '点击腿部和臀部肌群，选择深蹲、腿举、腿屈伸和小腿动作。';
+  if (area.id === 'arms') return '点击手臂肌群，选择弯举、臂屈伸等训练动作。';
+  return '点击核心肌群，选择腹部和躯干稳定训练动作。';
 }
 
 function getSelectorRegionDescription(region: ThreeModelRegion) {

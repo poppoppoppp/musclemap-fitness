@@ -389,6 +389,9 @@ function UpperBodyLocalSandbox() {
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
         renderer.setSize(width, height, false);
+        renderer.domElement.style.width = '100%';
+        renderer.domElement.style.height = '100%';
+        renderer.domElement.style.display = 'block';
       };
 
       const handlePointerDown = (event: PointerEvent) => {
@@ -768,6 +771,8 @@ function RegionModelExperience({
         controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.enablePan = false;
+        controls.enableRotate = !isSelector;
+        controls.enableZoom = !isSelector;
         controls.minDistance = 2.4;
         controls.maxDistance = 6;
         controls.target.set(0, 0, 0);
@@ -791,6 +796,9 @@ function RegionModelExperience({
           camera.aspect = width / height;
           camera.updateProjectionMatrix();
           renderer.setSize(width, height, false);
+          renderer.domElement.style.width = '100%';
+          renderer.domElement.style.height = '100%';
+          renderer.domElement.style.display = 'block';
         };
 
         const handlePointerDown = (event: PointerEvent) => {
@@ -887,6 +895,8 @@ function RegionModelExperience({
       controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.enablePan = false;
+      controls.enableRotate = !isSelector;
+      controls.enableZoom = !isSelector;
       controls.minDistance = region.view === 'test' ? 1.5 : 0.5;
       controls.maxDistance = region.view === 'test' ? 6 : 12;
       controls.target.set(0, 0, 0);
@@ -910,6 +920,9 @@ function RegionModelExperience({
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
         renderer.setSize(width, height, false);
+        renderer.domElement.style.width = '100%';
+        renderer.domElement.style.height = '100%';
+        renderer.domElement.style.display = 'block';
       };
 
       const handlePointerDown = (event: PointerEvent) => {
@@ -1114,7 +1127,7 @@ function RegionModelExperience({
           data-testid="three-muscle-canvas"
           className={
             region.isConfigured && modelAvailable
-              ? `h-[320px] w-full touch-none rounded-md border sm:h-[420px] ${
+              ? `h-[320px] w-full overflow-hidden touch-none rounded-md border sm:h-[420px] ${
                   isSelector ? 'border-line bg-slate-950' : 'border-slate-100 bg-slate-50'
                 }`
               : 'hidden'

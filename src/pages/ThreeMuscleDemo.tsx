@@ -827,6 +827,7 @@ function RegionModelExperience({
         meshesRef.current = simplifiedTargets;
         setMeshCount(simplifiedTargets.length);
         updateSize();
+        fitCameraToMeshes(camera, controls, simplifiedTargets, mount);
         window.requestAnimationFrame(updateSize);
 
         const animate = () => {
@@ -1000,18 +1001,21 @@ function RegionModelExperience({
           setMeshCount(loadedMeshes.length);
           setLoadStatus('加载成功');
           updateSize();
+          fitCameraToMeshes(camera, controls, loadedMeshes, mount);
           window.requestAnimationFrame(updateSize);
         },
         undefined,
         () => {
           if (!disposed) {
-            if ((region.id === 'front-upper' || region.id === 'legs') && scene) {
+            if ((region.id === 'front-upper' || region.id === 'legs') && scene && controls) {
               const simplifiedTargets =
                 region.id === 'legs' ? createSimplifiedLowerBodyTargets() : createSimplifiedFrontUpperTargets();
               simplifiedTargets.forEach((target) => scene?.add(target.mesh));
               meshesRef.current = simplifiedTargets;
               setMeshCount(simplifiedTargets.length);
               setLoadStatus('简化示意可用');
+              updateSize();
+              fitCameraToMeshes(camera, controls, simplifiedTargets, mount);
               return;
             }
             setLoadStatus('加载失败');
@@ -1919,6 +1923,42 @@ function createLowerBodyShapeTarget(name: string, color: number, points: number[
   const target = createFrontShapeTarget(name, color, points);
   target.mesh.position.set(0, 0.22, 0.12);
   return target;
+}
+
+function fitCameraToMeshes(
+  camera: THREE.PerspectiveCamera,
+  controls: OrbitControls,
+  meshInfos: RegionMeshInfo[],
+  mount: HTMLDivElement
+) {
+  const box = new THREE.Box3();
+  meshInfos.forEach((meshInfo) => {
+    meshInfo.mesh.updateWorldMatrix(true, false);
+    box.expandByObject(meshInfo.mesh);
+  });
+
+  if (box.isEmpty()) return;
+
+  const size = box.getSize(new THREE.Vector3());
+  const center = box.getCenter(new THREE.Vector3());
+  const width = Math.max(mount.clientWidth, 1);
+  const height = Math.max(mount.clientHeight, 1);
+  const aspect = width / height;
+  const verticalFov = THREE.MathUtils.degToRad(camera.fov);
+  const horizontalFov = 2 * Math.atan(Math.tan(verticalFov / 2) * aspect);
+  const distanceForHeight = size.y / 2 / Math.tan(verticalFov / 2);
+  const distanceForWidth = size.x / 2 / Math.tan(horizontalFov / 2);
+  const distance = Math.max(distanceForHeight, distanceForWidth, 1.2) * 1.85;
+
+  camera.position.set(center.x, center.y, center.z + distance);
+  camera.near = Math.max(distance / 100, 0.01);
+  camera.far = Math.max(distance + size.z * 4, 100);
+  camera.updateProjectionMatrix();
+
+  controls.target.copy(center);
+  controls.minDistance = Math.max(distance * 0.35, 0.2);
+  controls.maxDistance = Math.max(distance * 3, 6);
+  controls.update();
 }
 
 function getRelatedExercises(muscleId: string): RelatedExercise[] {

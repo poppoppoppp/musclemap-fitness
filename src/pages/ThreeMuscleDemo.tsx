@@ -5,6 +5,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import PageHeader from '../components/layout/PageHeader';
 import { exercises } from '../data/exercises';
+import { lowerBodyLocalMeshMappings } from '../data/lowerBodyLocalMeshMappings';
 import { getMuscleById } from '../data/muscles';
 import { threeModelRegions, type ThreeModelRegion } from '../data/threeModelRegions';
 import { upperBodyLocalMeshMappings } from '../data/upperBodyLocalMeshMappings';
@@ -38,6 +39,7 @@ const UNSELECTED_MESH_LABEL = '未选择';
 const UNMAPPED_LABEL = '未映射';
 const UPPER_BODY_LOCAL_MODEL_PATH = '/models/private/upper-body-local.glb';
 const UPPER_BODY_LOCAL_MODEL_PUBLIC_PATH = 'public/models/private/upper-body-local.glb';
+const LOWER_BODY_LOCAL_MODEL_PATH = '/models/private/lower-body-local.glb';
 const MAX_RELATED_EXERCISES = 6;
 const SIMPLIFIED_LATISSIMUS_TARGETS = [
   'Simplified_left_latissimus_dorsi',
@@ -628,6 +630,16 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
         }
       }
 
+      if (region.id === 'legs') {
+        try {
+          const response = await fetch(LOWER_BODY_LOCAL_MODEL_PATH, { method: 'HEAD' });
+          const contentType = response.headers.get('content-type') ?? '';
+          modelPath = response.ok && !contentType.includes('text/html') ? LOWER_BODY_LOCAL_MODEL_PATH : undefined;
+        } catch {
+          modelPath = undefined;
+        }
+      }
+
       if (!modelPath && (region.id === 'front-upper' || region.id === 'legs')) {
         setModelAvailable(true);
         setLoadStatus('简化示意可用');
@@ -883,8 +895,9 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
         undefined,
         () => {
           if (!disposed) {
-            if (region.id === 'front-upper' && scene) {
-              const simplifiedTargets = createSimplifiedFrontUpperTargets();
+            if ((region.id === 'front-upper' || region.id === 'legs') && scene) {
+              const simplifiedTargets =
+                region.id === 'legs' ? createSimplifiedLowerBodyTargets() : createSimplifiedFrontUpperTargets();
               simplifiedTargets.forEach((target) => scene?.add(target.mesh));
               meshesRef.current = simplifiedTargets;
               setMeshCount(simplifiedTargets.length);
@@ -964,7 +977,7 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
           )}
           {isSelector && region.id === 'legs' && (
             <p data-testid="three-lower-body-note" className="mt-2 text-sm leading-6 text-amber-100">
-              臀腿区域当前使用简化 3D 示意区域 / hotspot，不是精确真实解剖模型；当前目标是让用户能通过 3D 入口选择主要下肢训练部位，后续可逐步替换为真实模型资源。
+              臀腿区域优先使用本地 BodyParts3D 真实肌肉模型；如果手机或部署环境缺少 private GLB，会自动回退到简化 hotspot。
             </p>
           )}
         </div>
@@ -1544,6 +1557,10 @@ function getSelectedMappingSource(selectedMeshName: string, selectedMuscleId: st
     return 'real-mesh';
   }
 
+  if (lowerBodyLocalMeshMappings[selectedMeshName]) {
+    return 'real-mesh';
+  }
+
   return 'mapped-mesh';
 }
 
@@ -1593,7 +1610,7 @@ function getSelectorRegionMeta(region: ThreeModelRegion) {
   }
 
   if (region.id === 'legs') {
-    return '简化 3D 入口，覆盖臀部、大腿前侧、大腿后侧、小腿';
+    return '真实模型优先，覆盖臀部、大腿前侧、大腿后侧、小腿';
   }
 
   if (region.id === 'box-test') {
@@ -1621,7 +1638,7 @@ function getSelectorRegionDescription(region: ThreeModelRegion) {
   }
 
   if (region.id === 'legs') {
-    return '臀腿区域使用简化 3D 示意区域，提供臀大肌、股四头肌、腘绳肌和小腿三头肌的可点击入口。';
+    return '臀腿区域优先使用本地真实肌肉模型，提供臀大肌、股四头肌、腘绳肌和小腿三头肌的可点击入口。';
   }
 
   if (region.id === 'box-test') {

@@ -1,4 +1,5 @@
 import { upperBodyLocalMeshMappings } from './upperBodyLocalMeshMappings';
+import { lowerBodyLocalMeshMappings } from './lowerBodyLocalMeshMappings';
 
 export type ThreeModelRegionId =
   | 'back-partial'
@@ -69,6 +70,7 @@ const frontUpperMappings: Record<string, string> = {
 };
 
 const lowerBodyMappings: Record<string, string> = {
+  ...lowerBodyLocalMeshMappings,
   Simplified_left_gluteus_maximus: 'gluteus-maximus',
   Simplified_right_gluteus_maximus: 'gluteus-maximus',
   Simplified_left_quadriceps: 'quadriceps',
@@ -138,15 +140,16 @@ export const threeModelRegions: ThreeModelRegion[] = [
     id: 'legs',
     label: '臀腿',
     view: 'anterior',
-    isPrivateModel: false,
+    modelPath: '/models/private/lower-body-local.glb',
+    isPrivateModel: true,
     isConfigured: true,
     isExperimental: true,
     description:
-      '当前使用产品级简化 3D 示意区域和 hotspot，让用户通过 3D 入口选择臀部、大腿前侧、大腿后侧和小腿主要训练部位；不是精确真实解剖模型。',
+      '有本地 lower-body-local.glb 时使用 BodyParts3D 臀腿真实肌肉 mesh；缺少本地模型时自动回退到简化 hotspot。',
     limitations: [
-      '当前使用简化 3D 示意区域 / hotspot，不依赖真实模型文件',
-      '不是精确真实解剖模型，肌群位置用于训练部位入口而非解剖教学',
-      '后续可逐步替换为真实人体或肌群模型资源'
+      '本地 lower-body-local.glb 来源于 BodyParts3D OBJ，仅用于本地自用',
+      '模型文件位于 public/models/private/，被 Git 忽略，不进入正式 build',
+      '缺少本地模型时自动回退到简化 hotspot，保证手机自用主流程不断'
     ],
     mappings: lowerBodyMappings
   },

@@ -64,11 +64,11 @@ test('three model region registry defines V0.10.0 regions and experimental back 
   const legs = threeModelRegions.find((region) => region.id === 'legs');
   expect(legs).toMatchObject({
     view: 'anterior',
-    isPrivateModel: false,
+    modelPath: '/models/private/lower-body-local.glb',
+    isPrivateModel: true,
     isConfigured: true,
     isExperimental: true
   });
-  expect(legs?.modelPath).toBeUndefined();
   expect(new Set(Object.values(legs?.mappings ?? {}))).toEqual(
     new Set(['gluteus-maximus', 'quadriceps', 'hamstrings', 'calves'])
   );
@@ -85,7 +85,7 @@ test('three model region registry defines V0.10.0 regions and experimental back 
   }
 });
 
-test('three muscle selector exposes lower body simplified hotspots grouped by muscle id', async ({ page }) => {
+test('three muscle selector exposes lower body real model or hotspot fallback grouped by muscle id', async ({ page }) => {
   await page.goto('/three-muscle-selector');
   await page.getByTestId('select-three-region-legs').click();
 
@@ -183,7 +183,7 @@ test('three muscle selector presents a product entry for choosing training muscl
   await expect(page.getByTestId('select-three-region-back-partial')).toContainText('当前可选');
   await expect(page.getByTestId('select-three-region-chest')).toContainText('胸部，暂未配置');
   await expect(page.getByTestId('select-three-region-legs')).toContainText('臀腿');
-  await expect(page.getByTestId('select-three-region-legs')).toContainText('简化 3D 入口');
+  await expect(page.getByTestId('select-three-region-legs')).toContainText('真实模型优先');
   await expect(page.getByTestId('select-three-region-shoulders-arms')).toContainText('肩臂，暂未配置');
   await expect(page.getByTestId('select-three-region-core')).toContainText('核心，暂未配置');
   await expect(page.getByTestId('select-three-region-box-test')).toContainText('GLB 管线测试，开发验证');

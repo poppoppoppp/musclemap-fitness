@@ -90,12 +90,11 @@ export const threeModelRegions: ThreeModelRegion[] = [
     isPrivateModel: true,
     isConfigured: true,
     isExperimental: true,
-    description: '该模型仅用于本地真实模型实验，用于验证 mesh 点击、高亮和映射。',
+    description: '该模型用于真实背部 3D 肌群选择，支持 mesh 点击、高亮和映射。',
     limitations: [
       '当前模型未包含 latissimus-dorsi / 背阔肌真实 mesh',
       '背阔肌当前使用简化 3D 示意区域补充选择入口',
-      '仅用于本地实验',
-      '不进入正式产品资源'
+      '模型来源为 BodyParts3D，随 App 发布时需要保留署名'
     ],
     mappings: backPartialMappings
   },
@@ -147,8 +146,8 @@ export const threeModelRegions: ThreeModelRegion[] = [
     description:
       '有本地 lower-body-local.glb 时使用 BodyParts3D 臀腿真实肌肉 mesh；缺少本地模型时自动回退到简化 hotspot。',
     limitations: [
-      '本地 lower-body-local.glb 来源于 BodyParts3D OBJ，仅用于本地自用',
-      '模型文件位于 public/models/private/，被 Git 忽略，不进入正式 build',
+      'lower-body-local.glb 来源于 BodyParts3D OBJ',
+      '模型文件随 App 发布时需要保留 BodyParts3D 署名',
       '缺少本地模型时自动回退到简化 hotspot，保证手机自用主流程不断'
     ],
     mappings: lowerBodyMappings

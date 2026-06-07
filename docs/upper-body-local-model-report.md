@@ -4,7 +4,9 @@ Experiment date: 2026-05-28
 
 ## Scope
 
-Local-only validation for a real upper-body anatomy model. The generated model is an experiment asset only and must stay out of Git, push, and deployment.
+Local-only validation for a real upper-body anatomy model.
+
+V0.21 update: this report records the original experiment policy. The current phone/PWA self-use release policy is defined in `docs/model-sources.md`: generated release GLB files under `public/models/private/` may be committed and deployed with BodyParts3D attribution, while raw source archives and extracted model sources remain ignored under `local-models/`.
 
 No formal product mapping was added. No `/three-muscle-selector` integration was changed.
 
@@ -134,5 +136,5 @@ Current limitations:
 - No rectus abdominis mesh was found in the downloaded BodyParts3D text lists.
 - GLB `meshes[].name` values are generic; current readability depends on node/object names.
 - BodyParts3D OBJ parts are anatomy elements, not a polished fitness-product asset.
-- The generated GLB is local-only and ignored by Git.
+- Superseded by V0.21 release policy: the generated release GLB may be committed and deployed with BodyParts3D attribution; raw source assets remain ignored.
 - No formal mapping has been added to app code.

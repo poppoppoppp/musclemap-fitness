@@ -10,6 +10,9 @@ export default function AppShell({ children }: AppShellProps) {
     <div className="min-h-screen bg-base text-slate-100">
       <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-4 pb-[calc(6rem+env(safe-area-inset-bottom))] pt-5 sm:px-6 lg:px-8">
         <main className="flex-1">{children}</main>
+        <footer className="mt-8 border-t border-line pt-4 text-xs leading-5 text-slate-500">
+          3D anatomy model data: BodyParts3D, (c) The Database Center for Life Science, licensed under CC BY 4.0.
+        </footer>
       </div>
       <BottomNav />
     </div>

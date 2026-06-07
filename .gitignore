@@ -5,7 +5,11 @@ playwright-report
 .env
 .DS_Store
 local-models/
-public/models/private/
+public/models/private/*
+!public/models/private/
+!public/models/private/local-anatomy.glb
+!public/models/private/upper-body-local.glb
+!public/models/private/lower-body-local.glb
 *.blend
 *.fbx
 *.obj

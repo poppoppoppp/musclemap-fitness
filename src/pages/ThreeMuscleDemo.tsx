@@ -509,7 +509,7 @@ function UpperBodyLocalSandbox() {
           上身真实模型实验区
         </h2>
         <p className="mt-1 text-sm leading-6 text-slate-600">
-          本区域只用于本机验证真实上身 GLB 的加载、mesh 点击、mesh.name 读取和 muscleId 映射潜力，不是正式产品资源。
+          本区域用于验证真实上身 GLB 的加载、mesh 点击、mesh.name 读取和 muscleId 映射潜力。
         </p>
         <p data-testid="upper-body-local-path" className="mt-2 break-words font-mono text-xs text-slate-600">
           {UPPER_BODY_LOCAL_MODEL_PATH}
@@ -520,8 +520,8 @@ function UpperBodyLocalSandbox() {
             data-testid="upper-body-local-fallback"
             className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950"
           >
-            未检测到本地上身真实模型。请将实验 GLB 放入 {UPPER_BODY_LOCAL_MODEL_PUBLIC_PATH}
-            。该路径被 Git 忽略，不会提交或部署。
+            未检测到上身真实模型。请将成品 GLB 放入 {UPPER_BODY_LOCAL_MODEL_PUBLIC_PATH}
+            。原始模型仍保留本地忽略，成品 GLB 会随 App 发布。
           </div>
         )}
 
@@ -1098,10 +1098,10 @@ function RegionModelExperience({
             <p className="font-medium">{region.isPrivateModel ? '未检测到模型文件。' : '模型文件暂不可用。'}</p>
             <p className="mt-2">
               {region.isPrivateModel
-                ? `本地实验模型应放在 ${region.modelPath}。缺失时页面会保留说明和映射入口，不会白屏。`
+                ? `发布模型应放在 ${region.modelPath}。缺失时页面会保留说明和映射入口，不会白屏。`
                 : `请检查模型路径 ${region.modelPath}。`}
             </p>
-            {region.isPrivateModel && <p className="mt-2">该目录已被 Git 忽略，真实模型不会进入提交。</p>}
+            {region.isPrivateModel && <p className="mt-2">成品 GLB 会随 App 发布；原始模型文件仍保留本地忽略。</p>}
           </div>
         )}
 

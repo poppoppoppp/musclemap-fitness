@@ -506,8 +506,8 @@ test('three muscle demo exposes registered model regions and placeholder fallbac
   await expect(page.getByTestId('three-current-region-private')).toContainText('private');
   await expect(page.getByTestId('three-current-region-experimental')).toContainText('experimental');
   await expect(page.getByTestId('three-region-limitations')).toContainText('当前模型未包含 latissimus-dorsi / 背阔肌');
-  await expect(page.getByTestId('three-region-limitations')).toContainText('仅用于本地实验');
-  await expect(page.getByTestId('three-region-limitations')).toContainText('不进入正式产品资源');
+  await expect(page.getByTestId('three-region-limitations')).toContainText('模型来源为 BodyParts3D');
+  await expect(page.getByTestId('three-region-limitations')).toContainText('随 App 发布时需要保留署名');
   await expect(page.getByTestId('three-selected-muscle-id')).toContainText('未映射');
 
   await page.getByTestId('select-three-region-chest').click();
@@ -577,8 +577,8 @@ test('three muscle demo shows local anatomy fallback when private model is missi
   await expect(page.getByTestId('three-current-region-label')).toContainText('背部局部模型');
   await expect(page.getByTestId('three-current-region-path')).toContainText('/models/private/local-anatomy.glb');
   await expect(page.getByTestId('three-region-limitations')).toContainText('当前模型未包含 latissimus-dorsi / 背阔肌');
-  await expect(page.getByTestId('three-region-limitations')).toContainText('仅用于本地实验');
-  await expect(page.getByTestId('three-region-limitations')).toContainText('不进入正式产品资源');
+  await expect(page.getByTestId('three-region-limitations')).toContainText('模型来源为 BodyParts3D');
+  await expect(page.getByTestId('three-region-limitations')).toContainText('随 App 发布时需要保留署名');
   await expect(page.getByTestId('region-model-experiment').getByText(/未检测到模型文件|加载成功/)).toBeVisible();
 });
 
@@ -591,7 +591,7 @@ test('three muscle demo exposes upper body local model sandbox state', async ({ 
   const upperBodyFallback = page.getByTestId('upper-body-local-fallback');
   if ((await upperBodyFallback.count()) > 0) {
     await expect(upperBodyFallback).toContainText(
-      '未检测到本地上身真实模型。请将实验 GLB 放入 public/models/private/upper-body-local.glb。该路径被 Git 忽略，不会提交或部署。'
+      '未检测到上身真实模型。请将成品 GLB 放入 public/models/private/upper-body-local.glb。原始模型仍保留本地忽略，成品 GLB 会随 App 发布。'
     );
   }
   await expect(page.getByTestId('upper-body-local-status')).toContainText(/未检测到模型文件|加载成功/, { timeout: 15000 });

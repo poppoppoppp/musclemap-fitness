@@ -1,36 +1,73 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Card from '../components/ui/Card';
+import { readActiveWorkout } from '../utils/activeWorkout';
+import type { ActiveWorkout } from '../types/activeWorkout';
 
-const entries = [
-  { to: '/three-muscle-selector', title: '3D 肌群选择', description: '选择想练的身体部位，从 3D 模型进入肌群和动作。' },
-  { to: '/muscle-map', title: '肌群地图', description: '从背面人体图认识目标肌群。' },
-  { to: '/exercises', title: '动作库', description: '按肌群、器械和关键词查找动作。' },
-  { to: '/plan-builder', title: '训练计划生成器', description: 'V0.2 开放，当前为占位入口。' },
-  { to: '/workout-log', title: '训练记录', description: 'V0.3 开放，当前为占位入口。' },
-  { to: '/data-management', title: '数据备份与恢复', description: '导出或覆盖恢复当前浏览器中的本地训练数据。' }
+const secondaryEntries = [
+  { to: '/exercises', title: '动作库', description: '按肌群和器械查动作' },
+  { to: '/workout-history', title: '训练历史', description: '查看已归档训练' },
+  { to: '/data-management', title: '数据备份', description: '导出本地 JSON' },
+  { to: '/plan-builder', title: '训练计划', description: '生成训练安排' }
 ];
 
 export default function Dashboard() {
+  const [activeWorkout, setActiveWorkout] = useState<ActiveWorkout | null>(null);
+
+  useEffect(() => {
+    setActiveWorkout(readActiveWorkout());
+  }, []);
+
   return (
-    <div className="space-y-6">
-      <section className="rounded-lg border border-line bg-panel p-5">
+    <div className="space-y-4">
+      <section className="rounded-lg border border-line bg-panel p-4">
         <p className="text-sm font-semibold text-accent">MuscleMap Fitness</p>
-        <h1 className="mt-3 text-3xl font-bold text-white">从肌群理解动作，从动作建立训练计划</h1>
-        <p className="mt-3 text-sm leading-6 text-slate-300">
-          面向健身新手和进阶者的肌群认知工具。V0.1 先打通背部肌群、动作推荐和动作详情。
-        </p>
+        <h1 className="mt-2 text-2xl font-bold text-white">今天练什么</h1>
+        <div className="mt-4 grid gap-3">
+          {activeWorkout ? (
+            <HomeAction to="/workout-log" title="继续当前训练" description={`${activeWorkout.exercises.length} 个动作进行中`} primary />
+          ) : (
+            <HomeAction to="/three-muscle-selector" title="3D 选肌群" description="点肌肉，选动作，加入训练" primary />
+          )}
+          <HomeAction to="/workout-log" title="开始记录" description="直接进入训练记录" />
+          <HomeAction to="/three-muscle-selector" title="3D 肌群选择" description="从真实模型选择训练部位" />
+        </div>
       </section>
 
       <div className="grid gap-3 sm:grid-cols-2">
-        {entries.map((entry) => (
+        {secondaryEntries.map((entry) => (
           <Link key={entry.to} to={entry.to} aria-label={entry.title}>
             <Card className="h-full transition hover:border-accent">
-              <h2 className="text-lg font-semibold text-white">{entry.title}</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-400">{entry.description}</p>
+              <h2 className="text-base font-semibold text-white">{entry.title}</h2>
+              <p className="mt-1 text-sm text-slate-400">{entry.description}</p>
             </Card>
           </Link>
         ))}
       </div>
     </div>
+  );
+}
+
+function HomeAction({
+  to,
+  title,
+  description,
+  primary = false
+}: {
+  to: string;
+  title: string;
+  description: string;
+  primary?: boolean;
+}) {
+  return (
+    <Link
+      to={to}
+      className={`block rounded-md border px-4 py-3 transition ${
+        primary ? 'border-accent bg-accent text-slate-950' : 'border-line bg-slate-950 text-white hover:border-accent'
+      }`}
+    >
+      <span className={`block text-base font-semibold ${primary ? 'text-slate-950' : 'text-white'}`}>{title}</span>
+      <span className={`mt-1 block text-sm ${primary ? 'text-slate-800' : 'text-slate-300'}`}>{description}</span>
+    </Link>
   );
 }

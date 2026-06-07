@@ -64,17 +64,14 @@ export function ThreeMuscleExperience({ mode }: { mode: PageMode }) {
         title={isSelector ? '3D 肌群选择' : '3D 肌群模型技术预研'}
         description={
           isSelector
-            ? '选择想练的身体部位，点击 3D 模型中的肌群，查看肌群说明和相关动作。'
+            ? '选择肌群，查看动作，加入当前训练。'
             : '该页面为实验 Demo，不影响正式肌群地图。当前模型区域由本地注册表管理，用于验证 GLB 加载、mesh 点击、高亮和映射。'
         }
       />
 
       {isSelector ? (
         <section className="rounded-lg border border-line bg-panel p-4">
-          <h2 className="text-base font-semibold text-white">选择训练部位</h2>
-          <p className="mt-2 text-sm leading-6 text-slate-300">
-            先选择身体区域，再在模型里点选想练的肌群。当前版本只覆盖部分背部局部肌群，不代表完整全身 3D 人体已经完成。
-          </p>
+          <h2 className="text-base font-semibold text-white">选择区域</h2>
           <RegionSelector selectedRegion={selectedRegion} onSelect={setSelectedRegionId} mode={mode} />
         </section>
       ) : (
@@ -495,7 +492,6 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
   const [modelAvailable, setModelAvailable] = useState(false);
   const [meshCount, setMeshCount] = useState(0);
   const [selectedMeshName, setSelectedMeshName] = useState(UNSELECTED_MESH_LABEL);
-  const [frontUpperModeStatus, setFrontUpperModeStatus] = useState('');
   const isSelector = mode === 'selector';
 
   const selectedMuscleId =
@@ -506,7 +502,6 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
     [selectedMuscleId]
   );
   const hasSelectedMesh = selectedMeshName !== UNSELECTED_MESH_LABEL;
-  const selectedIsSimplifiedLatissimus = isSimplifiedLatissimusTarget(selectedMeshName);
   const selectedMappingSource = getSelectedMappingSource(selectedMeshName, selectedMuscleId);
   const mappedMeshEntries = useMemo(() => Object.entries(region.mappings), [region.mappings]);
   const muscleOptions = useMemo(() => getUniqueMuscleOptions(region.mappings), [region.mappings]);
@@ -564,7 +559,6 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
     setSelectedMeshName(UNSELECTED_MESH_LABEL);
     setMeshCount(0);
     setModelAvailable(false);
-    setFrontUpperModeStatus('');
     meshesRef.current = [];
     selectedMeshRef.current = null;
 
@@ -613,20 +607,16 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
 
       if (region.id === 'front-upper') {
         frontUpperHeadChecked = true;
-        setFrontUpperModeStatus('检测本地真实模型');
         try {
           const response = await fetch(UPPER_BODY_LOCAL_MODEL_PATH, { method: 'HEAD' });
           const contentType = response.headers.get('content-type') ?? '';
           if (response.ok && !contentType.includes('text/html')) {
             modelPath = UPPER_BODY_LOCAL_MODEL_PATH;
-            setFrontUpperModeStatus('本地真实模型 + hotspot 兜底');
           } else {
             modelPath = undefined;
-            setFrontUpperModeStatus('简化 hotspot 模式');
           }
         } catch {
           modelPath = undefined;
-          setFrontUpperModeStatus('简化 hotspot 模式');
         }
       }
 
@@ -901,7 +891,6 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
               simplifiedTargets.forEach((target) => scene?.add(target.mesh));
               meshesRef.current = simplifiedTargets;
               setMeshCount(simplifiedTargets.length);
-              setFrontUpperModeStatus('简化 hotspot 模式');
               setLoadStatus('简化示意可用');
               return;
             }
@@ -952,34 +941,10 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
             >
               {isSelector ? getSelectorRegionHeading(region) : region.label}
             </h2>
-            {isSelector && <RegionBadge region={region} />}
           </div>
           <p className={`mt-1 text-sm leading-6 ${isSelector ? 'text-slate-300' : 'text-slate-600'}`}>
             {isSelector ? getSelectorRegionDescription(region) : region.description}
           </p>
-          {isSelector && region.isConfigured && (
-            <p className="mt-2 text-sm text-cyan-200">点击模型中的肌肉区域，查看它能怎么练。</p>
-          )}
-          {isSelector && region.id === 'back-partial' && (
-            <p data-testid="three-simplified-latissimus-note" className="mt-2 text-sm leading-6 text-amber-100">
-              背阔肌当前使用简化 3D 示意区域；当前真实背部模型未包含背阔肌 mesh，后续可替换为真实解剖模型。
-            </p>
-          )}
-          {isSelector && region.id === 'front-upper' && (
-            <p data-testid="three-front-upper-note" className="mt-2 text-sm leading-6 text-amber-100">
-              正面上半身当前使用简化 3D 示意区域 / hotspot，不是精确真实解剖模型；当前目标是让用户能通过 3D 入口选择训练部位，后续可逐步替换为真实模型资源。
-            </p>
-          )}
-          {isSelector && region.id === 'front-upper' && (
-            <p data-testid="three-front-upper-mode-status" className="mt-2 text-sm leading-6 text-cyan-100">
-              {frontUpperModeStatus || '检测本地真实模型'}
-            </p>
-          )}
-          {isSelector && region.id === 'legs' && (
-            <p data-testid="three-lower-body-note" className="mt-2 text-sm leading-6 text-amber-100">
-              臀腿区域优先使用本地 BodyParts3D 真实肌肉模型；如果手机或部署环境缺少 private GLB，会自动回退到简化 hotspot。
-            </p>
-          )}
         </div>
 
         {!region.isConfigured && (
@@ -1058,7 +1023,7 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
             className="mt-4 rounded-md border border-line bg-slate-900/70 p-3"
           >
             <h3 className="text-sm font-semibold text-white">可选择的背部局部肌群</h3>
-            <p className="mt-1 text-xs leading-5 text-slate-400">3D 模型是主入口；这里按肌群合并左右侧 mesh 和简化区域，作为辅助选择。</p>
+            <p className="mt-1 text-xs leading-5 text-slate-400">也可以直接点下面的肌群。</p>
             <div data-testid="three-muscle-options" className="mt-2 grid gap-2 sm:grid-cols-2">
               {muscleOptions.map((option) => {
                 const muscle = getMuscleById(option.muscleId);
@@ -1121,7 +1086,6 @@ function RegionModelExperience({ region, mode }: { region: ThreeModelRegion; mod
             selectedMuscle={selectedMuscle}
             relatedExercises={relatedExercises}
             hasSelectedMesh={hasSelectedMesh}
-            selectedIsSimplifiedLatissimus={selectedIsSimplifiedLatissimus}
             setSelectedMuscleId={setSelectedMuscleId}
           />
         ) : (
@@ -1153,7 +1117,6 @@ function SelectorResultPanel({
   selectedMuscle,
   relatedExercises,
   hasSelectedMesh,
-  selectedIsSimplifiedLatissimus,
   setSelectedMuscleId
 }: {
   region: ThreeModelRegion;
@@ -1165,7 +1128,6 @@ function SelectorResultPanel({
   selectedMuscle: ReturnType<typeof getMuscleById>;
   relatedExercises: RelatedExercise[];
   hasSelectedMesh: boolean;
-  selectedIsSimplifiedLatissimus: boolean;
   setSelectedMuscleId: (muscleId: string) => void;
 }) {
   const navigate = useNavigate();
@@ -1199,6 +1161,13 @@ function SelectorResultPanel({
 
   return (
     <div className="space-y-4">
+      <div className="sr-only" aria-hidden="true">
+        <span data-testid="glb-load-status">{loadStatus}</span>
+        <span data-testid="glb-mesh-count">{meshCount}</span>
+        <span data-testid="glb-selected-mesh-name">{selectedMeshName}</span>
+        <span data-testid="three-selected-muscle-id">{selectedMuscleId ?? UNMAPPED_LABEL}</span>
+        <span data-testid="three-mapping-source">{selectedMappingSource}</span>
+      </div>
       <section className="rounded-md border border-line bg-slate-900/70 p-4">
         <p className="text-xs font-semibold uppercase tracking-wide text-cyan-200">当前选择</p>
         {!hasSelectedMesh && (
@@ -1214,19 +1183,10 @@ function SelectorResultPanel({
               {selectedMuscle.nameZh}
             </h3>
             <p className="mt-1 text-sm text-slate-400">{selectedMuscle.nameEn}</p>
-            <p className="mt-1 break-words font-mono text-xs text-cyan-100">muscleId: {selectedMuscle.id}</p>
             <div data-testid="three-selected-muscle-description" className="mt-3 space-y-2 text-sm leading-6 text-slate-300">
               <p>{selectedMuscle.description}</p>
               <p>{selectedMuscle.function}</p>
             </div>
-            {selectedIsSimplifiedLatissimus && (
-              <p
-                data-testid="three-simplified-selection-note"
-                className="mt-3 rounded-md border border-amber-400/40 bg-amber-400/10 p-3 text-sm leading-6 text-amber-100"
-              >
-                当前选择的是背阔肌简化 3D 示意区域，不是当前真实模型 mesh。
-              </p>
-            )}
           </div>
         )}
 
@@ -1319,35 +1279,6 @@ function SelectorResultPanel({
         </div>
       )}
 
-      <section className="rounded-md border border-line bg-slate-900/70 p-4">
-        <h3 className="text-sm font-semibold text-white">模型范围</h3>
-        <div data-testid="three-region-limitations" className="mt-2 text-sm leading-6 text-slate-300">
-          {region.limitations?.length ? (
-            <ul className="list-disc space-y-1 pl-5">
-              {getSelectorLimitations(region).map((limitation) => (
-                <li key={limitation}>{limitation}</li>
-              ))}
-            </ul>
-          ) : (
-            <p>{region.id === 'box-test' ? '不是人体模型，也不是正式肌群选择资源。' : '暂无额外限制。'}</p>
-          )}
-        </div>
-      </section>
-
-      <details className="rounded-md border border-line bg-slate-900/70 p-4 text-sm text-slate-300">
-        <summary className="cursor-pointer font-semibold text-white">调试信息</summary>
-        <dl className="mt-3 space-y-3">
-          <DebugRows
-            region={region}
-            loadStatus={loadStatus}
-            meshCount={meshCount}
-            selectedMeshName={selectedMeshName}
-            selectedMuscleId={selectedMuscleId}
-            selectedMappingSource={selectedMappingSource}
-            tone="dark"
-          />
-        </dl>
-      </details>
     </div>
   );
 }
@@ -1564,22 +1495,6 @@ function getSelectedMappingSource(selectedMeshName: string, selectedMuscleId: st
   return 'mapped-mesh';
 }
 
-function RegionBadge({ region }: { region: ThreeModelRegion }) {
-  if (!region.isConfigured) {
-    return <span className="rounded bg-slate-800 px-2 py-1 text-xs text-slate-300">暂未配置</span>;
-  }
-
-  if (region.id === 'box-test') {
-    return <span className="rounded bg-violet-500/20 px-2 py-1 text-xs text-violet-100">开发验证</span>;
-  }
-
-  if (region.isExperimental) {
-    return <span className="rounded bg-amber-500/20 px-2 py-1 text-xs text-amber-100">实验模型</span>;
-  }
-
-  return <span className="rounded bg-cyan-500/20 px-2 py-1 text-xs text-cyan-100">可用</span>;
-}
-
 function getSelectorRegionLabel(region: ThreeModelRegion) {
   if (region.id === 'front-upper') {
     return '正面上半身';
@@ -1646,22 +1561,6 @@ function getSelectorRegionDescription(region: ThreeModelRegion) {
   }
 
   return '该区域会在后续版本补齐 3D 肌群模型和可点击映射。';
-}
-
-function getSelectorLimitations(region: ThreeModelRegion) {
-  if (region.id === 'back-partial') {
-    return [
-      '当前背部局部实验模型未包含背阔肌真实 mesh',
-      '背阔肌当前使用简化 3D 示意区域，后续可替换为真实解剖模型',
-      '当前模型仅覆盖部分背部肌群'
-    ];
-  }
-
-  return region.limitations ?? [];
-}
-
-function isSimplifiedLatissimusTarget(meshName: string) {
-  return SIMPLIFIED_LATISSIMUS_TARGETS.some((targetName) => targetName === meshName);
 }
 
 function getUniqueMuscleOptions(mappings: Record<string, string>): MuscleOption[] {

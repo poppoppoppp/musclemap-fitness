@@ -82,17 +82,15 @@ export default function ExerciseDetail() {
   return (
     <div>
       <PageHeader title={exercise.name} description={exercise.nameEn} backTo="/exercises" />
-      <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="space-y-4">
-          <Card>
-            <dl className="grid gap-4 text-sm">
-              <Meta title="主练肌群" values={exercise.primaryMuscles.map(formatMuscle)} />
-              <Meta title="次要肌群" values={exercise.secondaryMuscles.map(formatMuscle)} />
-              <Meta title="器械" values={exercise.equipment} />
-              <Meta title="难度" values={[difficultyLabel(exercise.difficulty)]} />
-              <Meta title="类型" values={[exercise.mechanic === 'compound' ? '复合动作' : '孤立动作', exercise.force]} />
-            </dl>
-          </Card>
+          <WorkoutEntryCard
+            activeWorkout={activeWorkout}
+            isInActiveWorkout={isInActiveWorkout}
+            workoutStatus={workoutStatus}
+            onStart={handleStartWorkoutWithExercise}
+            onAdd={handleAddToActiveWorkout}
+          />
 
           <Card>
             {trajectory ? (
@@ -105,41 +103,20 @@ export default function ExerciseDetail() {
               </div>
             )}
           </Card>
+
+          <DetailList title="动作步骤" items={exercise.steps} ordered />
+          <DetailList title="发力提示" items={exercise.cues} />
         </div>
 
         <div className="space-y-4">
-          <DetailList title="动作步骤" items={exercise.steps} ordered />
-          <DetailList title="发力提示" items={exercise.cues} />
           <DetailList title="常见错误" items={exercise.commonMistakes} />
           <Card>
-            <div data-testid="exercise-active-workout-entry" className="space-y-3">
-              <div>
-                <h2 className="text-lg font-semibold text-white">当前训练</h2>
-                <p className="mt-2 text-sm text-slate-300">{activeWorkout ? '当前训练进行中' : '当前无进行中的训练'}</p>
-                {isInActiveWorkout ? <p className="mt-1 text-sm text-cyan-100">该动作已在当前训练中</p> : null}
-              </div>
-              {activeWorkout ? (
-                <div className="grid gap-2 sm:grid-cols-2">
-                  <Button type="button" className="min-h-11" onClick={handleAddToActiveWorkout} data-testid="add-exercise-to-active-workout">
-                    加入当前训练
-                  </Button>
-                  <Link
-                    to="/workout-log"
-                    data-testid="go-to-active-workout"
-                    className="inline-flex min-h-11 items-center justify-center rounded-md border border-line bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:border-accent hover:text-accent"
-                  >
-                    去记录页
-                  </Link>
-                </div>
-              ) : (
-                <Button type="button" className="min-h-11 w-full sm:w-fit" onClick={handleStartWorkoutWithExercise} data-testid="start-workout-with-exercise">
-                  开始训练并加入本动作
-                </Button>
-              )}
-              <p data-testid="exercise-active-workout-status" className="min-h-6 text-sm text-cyan-100">
-                {workoutStatus}
-              </p>
-            </div>
+            <dl className="grid gap-4 text-sm">
+              <Meta title="主练肌群" values={exercise.primaryMuscles.map(formatMuscle)} />
+              <Meta title="次要肌群" values={exercise.secondaryMuscles.map(formatMuscle)} />
+              <Meta title="器械" values={exercise.equipment} />
+              <Meta title="难度" values={[difficultyLabel(exercise.difficulty)]} />
+            </dl>
           </Card>
           <Card>
             <h2 className="text-lg font-semibold text-white">替代动作</h2>
@@ -161,6 +138,54 @@ export default function ExerciseDetail() {
         </div>
       </div>
     </div>
+  );
+}
+
+function WorkoutEntryCard({
+  activeWorkout,
+  isInActiveWorkout,
+  workoutStatus,
+  onStart,
+  onAdd
+}: {
+  activeWorkout: ActiveWorkout | null;
+  isInActiveWorkout: boolean;
+  workoutStatus: string;
+  onStart: () => void;
+  onAdd: () => void;
+}) {
+  return (
+    <Card className="border-cyan-400/50">
+      <div data-testid="exercise-active-workout-entry" className="space-y-3">
+        <div>
+          <h2 className="text-lg font-semibold text-white">加入训练</h2>
+          <p className="mt-1 text-sm text-slate-300">
+            {activeWorkout ? (isInActiveWorkout ? '该动作已在当前训练中' : '当前训练进行中') : '从这个动作开始一组训练'}
+          </p>
+        </div>
+        {activeWorkout ? (
+          <div className="grid gap-2 sm:grid-cols-2">
+            <Button type="button" className="min-h-11" onClick={onAdd} data-testid="add-exercise-to-active-workout">
+              加入当前训练
+            </Button>
+            <Link
+              to="/workout-log"
+              data-testid="go-to-active-workout"
+              className="inline-flex min-h-11 items-center justify-center rounded-md border border-line bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:border-accent hover:text-accent"
+            >
+              去记录
+            </Link>
+          </div>
+        ) : (
+          <Button type="button" className="min-h-11 w-full sm:w-fit" onClick={onStart} data-testid="start-workout-with-exercise">
+            开始训练
+          </Button>
+        )}
+        <p data-testid="exercise-active-workout-status" className="min-h-6 text-sm text-cyan-100">
+          {workoutStatus}
+        </p>
+      </div>
+    </Card>
   );
 }
 

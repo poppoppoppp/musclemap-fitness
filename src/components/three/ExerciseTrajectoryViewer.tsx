@@ -232,30 +232,10 @@ export default function ExerciseTrajectoryViewer({ trajectory }: ExerciseTraject
       <div className="relative overflow-hidden rounded-md border border-slate-700 bg-slate-950/80">
         <canvas ref={canvasRef} data-testid="exercise-trajectory-path" className="block h-[420px] w-full sm:h-[460px]" aria-label={`${trajectory.label} 3D 动作示意`} />
         <div
-          data-testid="exercise-trajectory-reference"
-          className="pointer-events-none absolute left-3 top-3 rounded-md border border-slate-600 bg-slate-950/80 px-2 py-1 text-xs text-slate-200"
-        >
-          身体参照：躯干 / 肩线 / 手臂
-        </div>
-        <div
-          data-testid="exercise-trajectory-action-reference"
-          className="pointer-events-none absolute left-3 top-12 max-w-[12rem] rounded-md border border-cyan-300/40 bg-slate-950/85 px-2 py-1 text-xs leading-5 text-cyan-100"
-        >
-          3D 动作示意：起始姿态、结束姿态、手臂与横杆
-        </div>
-        <div
           data-testid="exercise-trajectory-direction-label"
           className="pointer-events-none absolute bottom-3 right-3 rounded-md bg-cyan-400 px-2 py-1 text-xs font-semibold text-slate-950"
         >
           {trajectory.directionLabel}
-        </div>
-        <div
-          data-testid="exercise-trajectory-pose-labels"
-          className="pointer-events-none absolute inset-x-3 bottom-3 grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-center text-xs font-semibold"
-        >
-          <span className="rounded-md border border-sky-300/40 bg-sky-300/15 px-2 py-1 text-sky-100">左：起始姿态</span>
-          <span className="rounded-md bg-cyan-300 px-2 py-1 text-slate-950">下拉方向</span>
-          <span className="rounded-md border border-lime-300/40 bg-lime-300/15 px-2 py-1 text-lime-100">右：结束姿态</span>
         </div>
       </div>
 

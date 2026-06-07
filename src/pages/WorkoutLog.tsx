@@ -159,20 +159,17 @@ export default function WorkoutLog() {
 
   return (
     <div className="pb-32 lg:pb-0">
-      <PageHeader title="训练记录" description="开始当前训练，记录动作、重量、次数和训练备注。" />
+      <PageHeader title="训练记录" />
 
       <div className="grid gap-4 lg:grid-cols-[360px_minmax(0,1fr)]">
-        <div className="space-y-4">
+        <div className="order-2 space-y-4 lg:order-1">
+          {activeWorkout ? (
           <Card>
             <h2 className="text-lg font-semibold text-white">当前训练</h2>
-            {activeWorkout ? (
               <div data-testid="active-workout-card" className="mt-4 space-y-3 text-sm text-slate-300">
-                <div className="rounded-md border border-cyan-300/40 bg-cyan-950/30 p-3">
-                  <p className="font-semibold text-cyan-100">进行中</p>
-                  <p className="mt-2">开始时间：{formatDateTime(activeWorkout.startedAt)}</p>
-                  <p>训练日期：{activeWorkout.trainingDate}</p>
-                  <p>动作数量：{summary.exerciseCount}</p>
-                  <p>有效组数：{summary.validSetCount}</p>
+                <div className="rounded-md border border-cyan-300/40 bg-cyan-950/30 p-3 text-cyan-100">
+                  <p className="font-semibold">进行中</p>
+                  <p className="mt-1">{summary.exerciseCount} 个动作 · {summary.validSetCount} 个有效组</p>
                 </div>
                 <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
                   <Button type="button" className="min-h-11" onClick={handleEndWorkout} data-testid="end-active-workout">
@@ -183,15 +180,8 @@ export default function WorkoutLog() {
                   </Button>
                 </div>
               </div>
-            ) : (
-              <div data-testid="active-workout-empty" className="mt-4 space-y-3">
-                <p className="text-sm leading-6 text-slate-300">当前无进行中的训练。开始训练后，可以添加动作并持续记录。</p>
-                <Button type="button" className="min-h-11 w-full" onClick={handleStartWorkout} data-testid="start-active-workout">
-                  开始训练
-                </Button>
-              </div>
-            )}
           </Card>
+          ) : null}
 
           <Card>
             <h2 className="text-lg font-semibold text-white">手动添加动作</h2>
@@ -268,7 +258,7 @@ export default function WorkoutLog() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="order-1 lg:order-2">
           <div className="flex flex-col gap-2 border-b border-line pb-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <h2 className="text-xl font-semibold text-white">本次训练</h2>
@@ -287,9 +277,14 @@ export default function WorkoutLog() {
 
           <div className="mt-4 space-y-4">
             {!activeWorkout ? (
-              <p className="rounded-md border border-dashed border-line px-4 py-6 text-sm text-slate-300">当前还没有开始训练。</p>
+              <div data-testid="active-workout-empty" className="rounded-md border border-dashed border-line px-4 py-6 text-sm text-slate-300">
+                <p>还没有开始训练。</p>
+                <Button type="button" className="mt-4 min-h-11 w-full sm:w-fit" onClick={handleStartWorkout} data-testid="start-active-workout">
+                  开始训练
+                </Button>
+              </div>
             ) : activeWorkout.exercises.length === 0 ? (
-              <p className="rounded-md border border-dashed border-line px-4 py-6 text-sm text-slate-300">当前训练还没有动作，请先添加一个动作。</p>
+              <p className="rounded-md border border-dashed border-line px-4 py-6 text-sm text-slate-300">还没有动作。去 3D 肌群选择或手动添加一个动作。</p>
             ) : (
               activeWorkout.exercises.map((exercise) => (
                 <WorkoutExerciseEditor
@@ -486,12 +481,6 @@ function formatDisplayWorkoutSet(set: WorkoutSet) {
   }
 
   return `第 ${set.setIndex} 组：${set.reps} 次`;
-}
-
-function formatDateTime(value: string) {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-  return date.toLocaleString('zh-CN');
 }
 
 function isWorkoutLog(value: unknown): value is WorkoutLog {

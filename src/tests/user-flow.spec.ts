@@ -90,9 +90,6 @@ test('three muscle selector exposes lower body real model or hotspot fallback gr
   await page.getByTestId('select-three-region-legs').click();
 
   await expect(page.getByTestId('three-muscle-canvas')).toBeVisible();
-  await expect(page.getByTestId('three-lower-body-note')).toBeVisible();
-  await expect(page.getByTestId('three-lower-body-note')).toContainText('3D');
-  await expect(page.getByTestId('three-lower-body-note')).toContainText('hotspot');
 
   for (const muscleId of ['gluteus-maximus', 'quadriceps', 'hamstrings', 'calves']) {
     await expect(page.getByTestId(`select-three-muscle-option-${muscleId}`)).toHaveCount(1);
@@ -176,7 +173,7 @@ test('three muscle selector presents a product entry for choosing training muscl
   await page.goto('/three-muscle-selector');
 
   await expect(page.getByRole('heading', { name: '3D 肌群选择' })).toBeVisible();
-  await expect(page.getByText('选择想练的身体部位')).toBeVisible();
+  await expect(page.getByText('选择肌群，查看动作，加入当前训练。')).toBeVisible();
   await expect(page.getByTestId('three-region-selector')).toBeVisible();
   await expect(page.getByTestId('select-three-region-front-upper')).toContainText('正面上半身');
   await expect(page.getByTestId('select-three-region-back-partial')).toContainText('背部局部');
@@ -189,9 +186,6 @@ test('three muscle selector presents a product entry for choosing training muscl
   await expect(page.getByTestId('select-three-region-box-test')).toContainText('GLB 管线测试，开发验证');
 
   await expect(page.getByTestId('three-current-region-label')).toContainText('背部局部');
-  await expect(page.getByTestId('three-region-limitations')).toContainText('当前背部局部实验模型未包含背阔肌');
-  await expect(page.getByTestId('three-region-limitations')).toContainText('当前模型仅覆盖部分背部肌群');
-  await expect(page.getByText('点击模型中的肌肉区域，查看它能怎么练。')).toBeVisible();
   await expect(page.getByText('mesh.name')).not.toBeVisible();
 });
 
@@ -200,8 +194,6 @@ test('three muscle selector exposes front upper body simplified hotspots grouped
   await page.getByTestId('select-three-region-front-upper').click();
 
   await expect(page.getByTestId('three-current-region-label')).toContainText('正面上半身');
-  await expect(page.getByTestId('three-front-upper-note')).toContainText('简化 3D 示意区域');
-  await expect(page.getByTestId('three-front-upper-note')).toContainText('不是精确真实解剖模型');
   await expect(page.getByTestId('glb-load-status')).toContainText(/简化示意可用|加载成功/, { timeout: 15000 });
 
   for (const muscleId of [
@@ -261,10 +253,9 @@ test('three muscle selector uses front upper local model and hotspot hybrid when
   await page.goto('/three-muscle-selector');
   await page.getByTestId('select-three-region-front-upper').click();
 
-  const status = page.getByTestId('three-front-upper-mode-status');
-  await expect(status).toContainText(/本地真实模型 \+ hotspot 兜底|简化 hotspot 模式/, { timeout: 15000 });
+  await expect(page.getByTestId('glb-load-status')).toContainText(/简化示意可用|加载成功/, { timeout: 15000 });
 
-  if ((await status.textContent())?.includes('本地真实模型')) {
+  if ((await page.getByTestId('glb-load-status').textContent())?.includes('加载成功')) {
     await expect(page.getByTestId('glb-load-status')).toContainText('加载成功');
     await expect(page.getByTestId('glb-mesh-count')).toContainText(/2[3-9]|3[0-9]/);
     await page.getByTestId('select-three-muscle-option-pectoralis-major').click();
@@ -286,7 +277,6 @@ test('three muscle selector falls back to front upper hotspots when local model 
   await page.goto('/three-muscle-selector');
   await page.getByTestId('select-three-region-front-upper').click();
 
-  await expect(page.getByTestId('three-front-upper-mode-status')).toContainText('简化 hotspot 模式');
   await expect(page.getByTestId('glb-load-status')).toContainText('简化示意可用');
   await expect(page.getByTestId('select-three-muscle-option-pectoralis-major')).toHaveCount(1);
   await expect(page.getByTestId('select-three-muscle-option-rectus-abdominis')).toHaveCount(1);
@@ -356,7 +346,6 @@ test('three muscle selector exposes simplified latissimus dorsi 3d targets', asy
   await page.goto('/three-muscle-selector');
   await page.getByTestId('select-three-region-back-partial').click();
 
-  await expect(page.getByTestId('three-simplified-latissimus-note')).toContainText('简化 3D 示意区域');
   await expect(page.getByTestId('select-three-muscle-option-latissimus-dorsi')).toContainText('背阔肌');
   await expect(page.getByTestId('select-three-mapped-mesh-Simplified_left_latissimus_dorsi')).toHaveCount(0);
   await expect(page.getByTestId('select-three-mapped-mesh-Simplified_right_latissimus_dorsi')).toHaveCount(0);
@@ -366,7 +355,6 @@ test('three muscle selector exposes simplified latissimus dorsi 3d targets', asy
   await expect(page.getByTestId('three-selected-muscle-id')).toContainText('latissimus-dorsi');
   await expect(page.getByTestId('three-selected-muscle-name')).toContainText('背阔肌');
   await expect(page.getByTestId('three-selected-muscle-description')).toContainText('肩关节伸展、内收、内旋');
-  await expect(page.getByTestId('three-simplified-selection-note')).toContainText('不是当前真实模型 mesh');
   await expect(page.getByTestId('three-related-exercises')).toContainText('高位下拉');
 
   await page.getByTestId('three-related-exercise-link-lat-pulldown').click();
@@ -462,7 +450,6 @@ test('three muscle selector handles unmapped and unconfigured regions without fa
   await page.getByTestId('select-three-region-box-test').click();
 
   await expect(page.getByTestId('three-current-region-label')).toContainText('GLB 管线测试');
-  await expect(page.getByTestId('three-region-limitations')).toContainText('不是人体模型，也不是正式肌群选择资源。');
   await expect(page.getByTestId('glb-load-status')).toContainText('加载成功');
   await page.getByTestId('select-glb-test-mesh').click();
   await expect(page.getByTestId('three-selected-unmapped-state')).toContainText('该部位暂未配置为可训练肌群');
@@ -597,7 +584,7 @@ test('three muscle demo exposes upper body local model sandbox state', async ({ 
       '未检测到本地上身真实模型。请将实验 GLB 放入 public/models/private/upper-body-local.glb。该路径被 Git 忽略，不会提交或部署。'
     );
   }
-  await expect(page.getByTestId('upper-body-local-status')).toContainText(/未检测到模型文件|加载成功/);
+  await expect(page.getByTestId('upper-body-local-status')).toContainText(/未检测到模型文件|加载成功/, { timeout: 15000 });
   await expect(page.getByTestId('upper-body-local-mesh-count')).toContainText(/0|[1-9]/);
   await expect(page.getByTestId('upper-body-local-selected-mesh')).toContainText('未选择');
   await expect(page.getByTestId('upper-body-local-selected-muscle')).toContainText('未映射');
@@ -928,15 +915,7 @@ test('exercise detail shows simplified 3d trajectory for configured exercises', 
     await expect(trajectory).toContainText('协同肌群');
     await expect(trajectory).toContainText('当前为简化动作轨迹，不代表完整动作动画。');
     await expect(page.getByTestId('exercise-trajectory-path')).toBeVisible();
-    await expect(page.getByTestId('exercise-trajectory-reference')).toContainText('身体参照');
     await expect(page.getByTestId('exercise-trajectory-direction-label')).toBeVisible();
-    await expect(page.getByTestId('exercise-trajectory-action-reference')).toContainText('3D 动作示意');
-    await expect(page.getByTestId('exercise-trajectory-action-reference')).toContainText('起始姿态');
-    await expect(page.getByTestId('exercise-trajectory-action-reference')).toContainText('结束姿态');
-    await expect(page.getByTestId('exercise-trajectory-action-reference')).toContainText('手臂与横杆');
-    await expect(page.getByTestId('exercise-trajectory-pose-labels')).toContainText('左：起始姿态');
-    await expect(page.getByTestId('exercise-trajectory-pose-labels')).toContainText('右：结束姿态');
-    await expect(page.getByTestId('exercise-trajectory-pose-labels')).toContainText('下拉方向');
     await expect(page.getByTestId('exercise-active-workout-entry')).toBeVisible();
   }
 
@@ -995,7 +974,7 @@ test('exercise detail can start an active workout with the current exercise', as
   });
 
   await page.goto('/exercises/lat-pulldown');
-  await expect(page.getByTestId('exercise-active-workout-entry')).toContainText('当前无进行中的训练');
+  await expect(page.getByTestId('exercise-active-workout-entry')).toContainText('从这个动作开始一组训练');
   await expect(page.getByTestId('start-workout-with-exercise')).toBeVisible();
 
   await page.getByTestId('start-workout-with-exercise').click();
@@ -1333,7 +1312,7 @@ test('workout log active workout flow persists edits archives and clears', async
   });
   await page.reload();
 
-  await expect(page.getByTestId('active-workout-empty')).toContainText('当前无进行中的训练');
+  await expect(page.getByTestId('active-workout-empty')).toContainText('开始训练');
   await page.getByTestId('start-active-workout').click();
   await expect(page.getByTestId('active-workout-card')).toContainText('进行中');
 
@@ -1532,7 +1511,7 @@ test('data management exports current local backup data', async ({ page }) => {
   });
 
   await page.goto('/');
-  await page.getByRole('link', { name: '数据备份与恢复' }).click();
+  await page.getByRole('link', { name: '数据备份' }).click();
   await expect(page).toHaveURL(/\/data-management$/);
   await expect(page.getByText('进行中的训练不会导出，请先结束训练后再备份。')).toBeVisible();
   await expect(page.getByRole('heading', { name: '数据备份与恢复' })).toBeVisible();

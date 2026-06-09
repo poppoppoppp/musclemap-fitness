@@ -93,7 +93,7 @@ export default function DataManagement() {
   };
 
   const statusClass =
-    statusKind === 'error' ? 'text-rose-200' : statusKind === 'success' ? 'text-cyan-100' : 'text-slate-300';
+    statusKind === 'error' ? 'text-[#ff9f9f]' : statusKind === 'success' ? 'text-[#8fdcff]' : 'text-[#a1a1a6]';
 
   return (
     <div className="pb-32 lg:pb-0">
@@ -108,13 +108,13 @@ export default function DataManagement() {
               <SummaryItem label="训练记录数量" value={`${currentSummary.workoutLogCount} 条`} testId="backup-workout-log-count" />
               <SummaryItem label="最近训练记录" value={currentSummary.hasLatestWorkoutLog ? '有' : '无'} testId="backup-latest-log-status" />
             </div>
-            {emptyExportNotice ? <p className="mt-4 text-sm leading-6 text-amber-100">{emptyExportNotice}</p> : null}
+            {emptyExportNotice ? <p className="mt-4 text-sm leading-6 text-[#ffd60a]">{emptyExportNotice}</p> : null}
           </Card>
 
           <Card>
             <h2 className="text-lg font-semibold text-white">导出备份</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-300">导出文件只包含最近生成计划、训练记录列表和最近训练记录。</p>
-            <p className="mt-2 text-sm leading-6 text-amber-100">进行中的训练不会导出，请先结束训练后再备份。</p>
+            <p className="mt-2 text-sm leading-6 text-[#a1a1a6]">导出文件只包含最近生成计划、训练记录列表和最近训练记录。</p>
+            <p className="mt-2 text-sm leading-6 text-[#ffd60a]">进行中的训练不会导出，请先结束训练后再备份。</p>
             <Button type="button" className="mt-4 min-h-11 w-full sm:w-fit" data-testid="export-backup-json" onClick={handleExport}>
               导出为 JSON
             </Button>
@@ -122,15 +122,15 @@ export default function DataManagement() {
 
           <Card>
             <h2 className="text-lg font-semibold text-white">导入恢复</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-300">V0.6 只支持覆盖导入。确认前不会写入当前本地数据。</p>
-            <label className="mt-4 grid gap-2 text-sm font-medium text-slate-300">
+            <p className="mt-2 text-sm leading-6 text-[#a1a1a6]">V0.6 只支持覆盖导入。确认前不会写入当前本地数据。</p>
+            <label className="mt-4 grid gap-2 text-sm font-medium text-[#a1a1a6]">
               选择 JSON 文件
               <input
                 data-testid="import-backup-file"
                 type="file"
                 accept="application/json,.json"
                 onChange={handleImportFile}
-                className="min-h-11 w-full rounded-md border border-line bg-slate-950 px-3 py-2 text-sm text-white file:mr-3 file:rounded-md file:border-0 file:bg-slate-800 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white"
+                className="min-h-11 w-full rounded-xl border border-white/[0.12] bg-black/40 px-3 py-2 text-sm text-[#f5f5f7] file:mr-3 file:rounded-full file:border-0 file:bg-[#2c2c2e] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-[#f5f5f7] focus:outline-none focus:ring-2 focus:ring-accent/[0.45]"
               />
             </label>
           </Card>
@@ -140,12 +140,12 @@ export default function DataManagement() {
           <Card>
             <h2 className="text-lg font-semibold text-white">导入摘要</h2>
             {pendingSummary ? (
-              <div data-testid="import-summary" className="mt-4 space-y-3 text-sm text-slate-300">
+              <div data-testid="import-summary" className="mt-4 space-y-3 text-sm text-[#a1a1a6]">
                 <p>导出时间：{formatDateTime(pendingSummary.exportedAt)}</p>
                 <p>最近计划：{pendingSummary.hasLatestGeneratedPlan ? '有' : '无'}</p>
                 <p>训练记录：{pendingSummary.workoutLogCount} 条</p>
                 <p>最近训练记录：{pendingSummary.hasLatestWorkoutLog ? '有' : '无'}</p>
-                <div className="rounded-md border border-amber-300/40 bg-amber-950/30 p-3 text-amber-100">
+                <div className="rounded-2xl border border-[#ffd60a]/30 bg-[#ffd60a]/10 p-4 text-[#ffe680]">
                   导入后将覆盖当前浏览器中的本地计划和训练记录。
                 </div>
                 <Button type="button" className="min-h-11 w-full" data-testid="confirm-overwrite-import" onClick={handleConfirmImport}>
@@ -153,7 +153,7 @@ export default function DataManagement() {
                 </Button>
               </div>
             ) : (
-              <p className="mt-3 text-sm leading-6 text-slate-300">选择并校验有效备份文件后，会在这里显示导入摘要。</p>
+              <p className="mt-3 text-sm leading-6 text-[#a1a1a6]">选择并校验有效备份文件后，会在这里显示导入摘要。</p>
             )}
           </Card>
 
@@ -171,8 +171,8 @@ export default function DataManagement() {
 
 function SummaryItem({ label, value, testId }: { label: string; value: string; testId: string }) {
   return (
-    <div className="rounded-md border border-line bg-slate-950 p-3">
-      <p className="text-sm text-slate-400">{label}</p>
+    <div className="rounded-2xl border border-white/10 bg-black/[0.35] p-4">
+      <p className="text-sm text-[#86868b]">{label}</p>
       <p data-testid={testId} className="mt-2 text-xl font-semibold text-white">
         {value}
       </p>

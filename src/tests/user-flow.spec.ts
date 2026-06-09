@@ -4,6 +4,88 @@ import { exerciseTrajectories } from '../data/exerciseTrajectories';
 import { threeModelRegions } from '../data/threeModelRegions';
 import { upperBodyLocalMeshMappings } from '../data/upperBodyLocalMeshMappings';
 
+test('homepage presents playful training map without redundant main links', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      'musclemap.latestGeneratedPlan.v0.2',
+      JSON.stringify({
+        id: 'plan-home',
+        name: '增肌四分化计划',
+        input: {
+          goal: 'hypertrophy',
+          daysPerWeek: 4,
+          level: 'intermediate',
+          availableEquipment: 'fullGym',
+          focusBodyParts: ['back']
+        },
+        createdAt: '2026-06-07T00:00:00.000Z',
+        days: [
+          {
+            id: 'back-day',
+            name: '背部日',
+            focus: '背部',
+            items: [{ exerciseId: 'lat-pulldown', sets: 3, repRange: '8-12', restSeconds: 90, targetMuscles: ['latissimus-dorsi'] }]
+          }
+        ]
+      })
+    );
+    window.localStorage.setItem(
+      'musclemap.workoutLogs.v0.3',
+      JSON.stringify([
+        {
+          id: 'home-log',
+          date: '2026-06-07',
+          exercises: [
+            { id: 'exercise-1', exerciseId: 'lat-pulldown', order: 0, sets: [{ id: 'set-1', setIndex: 1, weight: 45, reps: 10, completed: true }] },
+            { id: 'exercise-2', exerciseId: 'seated-row', order: 1, sets: [{ id: 'set-2', setIndex: 1, reps: 12, completed: true }] }
+          ],
+          createdAt: '2026-06-07T10:00:00.000Z'
+        }
+      ])
+    );
+    window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
+  });
+
+  await page.setViewportSize({ width: 430, height: 932 });
+  await page.goto('/');
+
+  const main = page.locator('main');
+  await expect(page.getByRole('heading', { name: '今天点亮哪块肌肉？' })).toBeVisible();
+  await expect(main.getByRole('link', { name: '3D 选肌群', exact: true })).toHaveAttribute('href', '/three-muscle-selector?area=chest');
+  await expect(main.getByRole('link', { name: /开始记录/ })).toHaveAttribute('href', '/workout-log');
+  await expect(page.getByTestId('dashboard-recent-plan')).toContainText('增肌四分化计划');
+  await expect(page.getByTestId('dashboard-recent-plan')).toContainText('今天可执行：背部日');
+  await expect(page.getByTestId('dashboard-recent-workout')).toContainText('2026-06-07');
+  await expect(page.getByTestId('dashboard-recent-workout')).toContainText('2 个动作');
+  await expect(page.getByTestId('dashboard-recent-workout')).toContainText('2 组');
+  await expect(main.getByRole('link', { name: '动作库' })).toHaveCount(0);
+  await expect(main.getByRole('link', { name: '训练计划' })).toHaveCount(0);
+
+  const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+  expect(hasHorizontalOverflow).toBe(false);
+});
+
+test('homepage muscle map shortcuts open the matching 3d selector area', async ({ page }) => {
+  const cases = [
+    { label: '胸', area: 'chest', expected: '胸部' },
+    { label: '背', area: 'back', expected: '背部' },
+    { label: '肩', area: 'shoulders', expected: '肩部' },
+    { label: '腿', area: 'legs', expected: '腿部' },
+    { label: '手臂', area: 'arms', expected: '手臂' },
+    { label: '核心', area: 'core', expected: '核心' }
+  ];
+
+  for (const item of cases) {
+    await page.goto('/');
+    await expect(page.getByTestId(`dashboard-muscle-shortcut-${item.area}`)).toHaveAttribute('href', `/three-muscle-selector?area=${item.area}`);
+    await page.getByTestId(`dashboard-muscle-shortcut-${item.area}`).hover();
+    await expect(page.getByTestId(`dashboard-muscle-shortcut-${item.area}`)).toHaveAttribute('aria-current', 'true');
+    await page.getByTestId(`dashboard-muscle-shortcut-${item.area}`).click();
+    await expect(page).toHaveURL(new RegExp(`/three-muscle-selector\\?area=${item.area}$`));
+    await expect(page.getByTestId('three-current-region-label')).toContainText(item.expected);
+  }
+});
+
 test('three model region registry defines V0.10.0 regions and experimental back mapping', () => {
   expect(threeModelRegions.map((region) => region.id)).toEqual([
     'back-partial',
@@ -517,8 +599,7 @@ test('three muscle demo exposes registered model regions and placeholder fallbac
 });
 
 test('user can discover latissimus dorsi and open lat pulldown detail', async ({ page }) => {
-  await page.goto('/');
-  await page.getByRole('link', { name: '肌群地图' }).first().click();
+  await page.goto('/muscle-map');
   await expect(page.getByRole('heading', { name: '肌群地图' })).toBeVisible();
   await expect(page.getByRole('button', { name: '背面视图' })).toBeVisible();
   await expect(page.getByText('背面视图包含背部肌群，也包含肩后侧相关肌群，例如后束三角肌。')).toBeVisible();
@@ -1521,7 +1602,7 @@ test('data management exports current local backup data', async ({ page }) => {
   });
 
   await page.goto('/');
-  await page.getByRole('link', { name: '数据备份' }).click();
+  await page.getByRole('link', { name: '我的' }).click();
   await expect(page).toHaveURL(/\/data-management$/);
   await expect(page.getByText('进行中的训练不会导出，请先结束训练后再备份。')).toBeVisible();
   await expect(page.getByRole('heading', { name: '数据备份与恢复' })).toBeVisible();

@@ -166,8 +166,8 @@ export default function WorkoutLog() {
           {activeWorkout ? (
           <Card>
             <h2 className="text-lg font-semibold text-white">当前训练</h2>
-              <div data-testid="active-workout-card" className="mt-4 space-y-3 text-sm text-slate-300">
-                <div className="rounded-md border border-cyan-300/40 bg-cyan-950/30 p-3 text-cyan-100">
+              <div data-testid="active-workout-card" className="mt-4 space-y-3 text-sm text-[#a1a1a6]">
+                <div className="rounded-2xl border border-accent/30 bg-accent/10 p-4 text-[#d6eaff]">
                   <p className="font-semibold">进行中</p>
                   <p className="mt-1">{summary.exerciseCount} 个动作 · {summary.validSetCount} 个有效组</p>
                 </div>
@@ -186,7 +186,7 @@ export default function WorkoutLog() {
           <Card>
             <h2 className="text-lg font-semibold text-white">手动添加动作</h2>
             <div className="mt-4 space-y-3">
-              <label className="block text-sm font-medium text-slate-300" htmlFor="manual-exercise-select">
+              <label className="block text-sm font-medium text-[#a1a1a6]" htmlFor="manual-exercise-select">
                 动作
               </label>
               <select
@@ -194,7 +194,7 @@ export default function WorkoutLog() {
                 data-testid="manual-exercise-select"
                 value={selectedExerciseId}
                 onChange={(event) => setSelectedExerciseId(event.target.value)}
-                className="min-h-11 w-full rounded-md border border-line bg-slate-950 px-3 py-2 text-sm text-white"
+                className="min-h-11 w-full rounded-xl border border-white/[0.12] bg-black/40 px-3 py-2 text-sm text-[#f5f5f7] outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/[0.45]"
               >
                 {exercises.map((exercise) => (
                   <option key={exercise.id} value={exercise.id}>
@@ -205,7 +205,7 @@ export default function WorkoutLog() {
               <Button type="button" variant="secondary" className="min-h-11 w-full" onClick={handleAddManualExercise} data-testid="add-manual-exercise">
                 添加动作
               </Button>
-              {!activeWorkout ? <p className="text-sm leading-6 text-slate-400">请先开始训练，再把动作加入当前训练。</p> : null}
+              {!activeWorkout ? <p className="text-sm leading-6 text-[#86868b]">请先开始训练，再把动作加入当前训练。</p> : null}
             </div>
           </Card>
 
@@ -214,10 +214,10 @@ export default function WorkoutLog() {
               <h2 className="text-lg font-semibold text-white">从最近计划开始训练</h2>
               {recentPlan && recentPlan.days.length > 0 ? (
                 <div className="mt-4 space-y-3">
-                  <p className="text-sm font-medium text-slate-300">{recentPlan.name}</p>
+                  <p className="text-sm font-medium text-[#a1a1a6]">{recentPlan.name}</p>
                   <div className="space-y-3">
                     {recentPlan.days.map((day) => (
-                      <div key={day.id} className="rounded-md border border-line bg-slate-950 p-3 text-sm text-slate-300" data-testid="latest-plan-day">
+                      <div key={day.id} className="rounded-2xl border border-white/10 bg-black/[0.35] p-4 text-sm text-[#a1a1a6]" data-testid="latest-plan-day">
                         <p className="font-semibold text-white">{day.name}</p>
                         <p className="mt-1">训练重点：{day.focus}</p>
                         <p className="mt-1">动作数量：{day.items.length}</p>
@@ -235,7 +235,7 @@ export default function WorkoutLog() {
                   </div>
                 </div>
               ) : (
-                <p className="mt-3 text-sm leading-6 text-slate-300">暂无最近计划，可先去训练计划页生成计划。</p>
+                <p className="mt-3 text-sm leading-6 text-[#a1a1a6]">暂无最近计划，可先去训练计划页生成计划。</p>
               )}
             </div>
           </Card>
@@ -246,11 +246,11 @@ export default function WorkoutLog() {
             <div className="flex flex-col gap-3">
               <div>
                 <h2 className="text-lg font-semibold text-white">训练历史</h2>
-                <p className="mt-2 text-sm leading-6 text-slate-300">查看已保存的全部训练记录。</p>
+                <p className="mt-2 text-sm leading-6 text-[#a1a1a6]">查看已保存的全部训练记录。</p>
               </div>
               <Link
                 to="/workout-history"
-                className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-slate-800 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-accent"
+                className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#2c2c2e] px-5 py-2 text-sm font-semibold text-[#f5f5f7] transition hover:bg-[#3a3a3c] focus:outline-none focus:ring-2 focus:ring-accent"
               >
                 查看训练历史
               </Link>
@@ -259,10 +259,10 @@ export default function WorkoutLog() {
         </div>
 
         <Card className="order-1 lg:order-2">
-          <div className="flex flex-col gap-2 border-b border-line pb-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-col gap-2 border-b border-white/10 pb-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <h2 className="text-xl font-semibold text-white">本次训练</h2>
-              <p className="mt-1 text-sm text-slate-400">{activeWorkout ? activeWorkout.trainingDate : '尚未开始'}</p>
+              <p className="mt-1 text-sm text-[#86868b]">{activeWorkout ? activeWorkout.trainingDate : '尚未开始'}</p>
             </div>
             {activeWorkout ? (
               <Button type="button" className="hidden min-h-11 sm:inline-flex" onClick={handleEndWorkout}>
@@ -271,20 +271,20 @@ export default function WorkoutLog() {
             ) : null}
           </div>
 
-          <p data-testid="save-status" className="mt-3 min-h-6 text-sm text-cyan-100">
+          <p data-testid="save-status" className="mt-3 min-h-6 text-sm text-[#2997ff]">
             {status}
           </p>
 
           <div className="mt-4 space-y-4">
             {!activeWorkout ? (
-              <div data-testid="active-workout-empty" className="rounded-md border border-dashed border-line px-4 py-6 text-sm text-slate-300">
+              <div data-testid="active-workout-empty" className="rounded-[18px] border border-dashed border-white/[0.16] bg-black/20 px-4 py-6 text-sm text-[#a1a1a6]">
                 <p>还没有开始训练。</p>
                 <Button type="button" className="mt-4 min-h-11 w-full sm:w-fit" onClick={handleStartWorkout} data-testid="start-active-workout">
                   开始训练
                 </Button>
               </div>
             ) : activeWorkout.exercises.length === 0 ? (
-              <p className="rounded-md border border-dashed border-line px-4 py-6 text-sm text-slate-300">还没有动作。去 3D 肌群选择或手动添加一个动作。</p>
+              <p className="rounded-[18px] border border-dashed border-white/[0.16] bg-black/20 px-4 py-6 text-sm text-[#a1a1a6]">还没有动作。去 3D 肌群选择或手动添加一个动作。</p>
             ) : (
               activeWorkout.exercises.map((exercise) => (
                 <WorkoutExerciseEditor
@@ -301,7 +301,7 @@ export default function WorkoutLog() {
           </div>
 
           {activeWorkout ? (
-            <div className="mt-6 border-t border-line pt-4 sm:hidden">
+            <div className="mt-6 border-t border-white/10 pt-4 sm:hidden">
               <Button type="button" className="min-h-11 w-full" onClick={handleEndWorkout} data-testid="end-active-workout-bottom">
                 结束训练
               </Button>
@@ -331,13 +331,13 @@ function WorkoutExerciseEditor({
   const detail = getExerciseById(exercise.exerciseId);
 
   return (
-    <article data-testid="workout-log-exercise" className="rounded-md border border-line bg-slate-950 p-3">
+    <article data-testid="workout-log-exercise" className="rounded-[18px] border border-white/10 bg-black/[0.35] p-4">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h3 className="font-semibold text-white">{detail?.nameEn ?? exercise.exerciseId}</h3>
-          <p className="text-sm text-slate-400">{detail?.name ?? exercise.exerciseId}</p>
+          <p className="text-sm text-[#86868b]">{detail?.name ?? exercise.exerciseId}</p>
           {exercise.planned ? (
-            <p className="mt-2 text-sm text-cyan-100">
+            <p className="mt-2 text-sm text-[#2997ff]">
               计划建议：{exercise.planned.sets ?? exercise.sets.length} 组，{exercise.planned.repRange ?? '-'} 次，休息 {exercise.planned.restSeconds ?? '-'} 秒
               {exercise.planned.note ? `，${exercise.planned.note}` : ''}
             </p>
@@ -350,9 +350,9 @@ function WorkoutExerciseEditor({
 
       <div className="mt-4 space-y-3">
         {exercise.sets.map((set) => (
-          <div key={set.id} data-testid="workout-set-row" className="grid gap-2 rounded-md bg-slate-900 p-3 sm:grid-cols-[64px_1fr_1fr_auto] sm:items-end">
-            <div className="text-sm font-medium text-slate-300">第 {set.setIndex} 组</div>
-            <label className="grid gap-1 text-sm text-slate-300">
+          <div key={set.id} data-testid="workout-set-row" className="grid gap-2 rounded-2xl bg-[#2c2c2e] p-3 sm:grid-cols-[64px_1fr_1fr_auto] sm:items-end">
+            <div className="text-sm font-medium text-[#a1a1a6]">第 {set.setIndex} 组</div>
+            <label className="grid gap-1 text-sm text-[#a1a1a6]">
               重量
               <input
                 data-testid="set-weight-input"
@@ -362,10 +362,10 @@ function WorkoutExerciseEditor({
                 step="0.5"
                 value={set.weight ?? ''}
                 onChange={(event) => onSetChange(exercise.id, set.id, 'weight', event.target.value)}
-                className="min-h-11 w-full rounded-md border border-line bg-slate-950 px-3 py-2 text-base text-white"
+                className="min-h-11 w-full rounded-xl border border-white/[0.12] bg-black/40 px-3 py-2 text-base text-[#f5f5f7] outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/[0.45]"
               />
             </label>
-            <label className="grid gap-1 text-sm text-slate-300">
+            <label className="grid gap-1 text-sm text-[#a1a1a6]">
               次数
               <input
                 data-testid="set-reps-input"
@@ -375,7 +375,7 @@ function WorkoutExerciseEditor({
                 step="1"
                 value={set.reps ?? ''}
                 onChange={(event) => onSetChange(exercise.id, set.id, 'reps', event.target.value)}
-                className="min-h-11 w-full rounded-md border border-line bg-slate-950 px-3 py-2 text-base text-white"
+                className="min-h-11 w-full rounded-xl border border-white/[0.12] bg-black/40 px-3 py-2 text-base text-[#f5f5f7] outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/[0.45]"
               />
             </label>
             <Button type="button" variant="ghost" className="min-h-11" onClick={() => onDeleteSet(exercise.id, set.id)} data-testid="delete-set">
@@ -389,13 +389,13 @@ function WorkoutExerciseEditor({
         <Button type="button" variant="secondary" className="min-h-11 w-full sm:w-fit" onClick={() => onAddSet(exercise.id)} data-testid="add-set">
           新增一组
         </Button>
-        <label className="grid gap-1 text-sm text-slate-300">
+        <label className="grid gap-1 text-sm text-[#a1a1a6]">
           动作备注
           <textarea
             data-testid="exercise-notes-input"
             value={exercise.notes ?? ''}
             onChange={(event) => onNotesChange(exercise.id, event.target.value)}
-            className="min-h-20 w-full rounded-md border border-line bg-slate-950 px-3 py-2 text-sm text-white"
+            className="min-h-20 w-full rounded-xl border border-white/[0.12] bg-black/40 px-3 py-2 text-sm text-[#f5f5f7] outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/[0.45]"
           />
         </label>
       </div>
@@ -408,7 +408,7 @@ function LatestWorkoutLog({ log }: { log: WorkoutLog | null }) {
     return (
       <Card>
         <h2 className="text-lg font-semibold text-white">最近一次训练</h2>
-        <p className="mt-3 text-sm text-slate-300">暂无已保存的训练记录。</p>
+        <p className="mt-3 text-sm text-[#a1a1a6]">暂无已保存的训练记录。</p>
       </Card>
     );
   }
@@ -419,23 +419,23 @@ function LatestWorkoutLog({ log }: { log: WorkoutLog | null }) {
     <Card>
       <div data-testid="latest-workout-log">
         <h2 className="text-lg font-semibold text-white">最近一次训练</h2>
-        <p className="mt-1 text-sm text-slate-400">{log.date}</p>
+        <p className="mt-1 text-sm text-[#86868b]">{log.date}</p>
         {displayableExercises.length > 0 ? (
           <div className="mt-3 space-y-3">
             {displayableExercises.map((item) => {
               const exercise = getExerciseById(item.exerciseId);
               return (
-                <div key={item.id} className="rounded-md bg-slate-950 p-3 text-sm text-slate-300">
+                <div key={item.id} className="rounded-2xl bg-black/[0.35] p-4 text-sm text-[#a1a1a6]">
                   <p className="font-semibold text-white">{exercise?.nameEn ?? item.exerciseId}</p>
                   <p className="mt-1">{exercise?.name ?? item.exerciseId}</p>
                   <p className="mt-1">{item.sets.map(formatDisplayWorkoutSet).join(' / ')}</p>
-                  {item.notes ? <p className="mt-1 text-cyan-100">{item.notes}</p> : null}
+                  {item.notes ? <p className="mt-1 text-[#2997ff]">{item.notes}</p> : null}
                 </div>
               );
             })}
           </div>
         ) : (
-          <p className="mt-3 text-sm text-slate-300">暂无可展示的训练记录。</p>
+          <p className="mt-3 text-sm text-[#a1a1a6]">暂无可展示的训练记录。</p>
         )}
       </div>
     </Card>

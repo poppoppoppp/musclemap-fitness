@@ -215,7 +215,7 @@ export const muscles: Muscle[] = [
     id: 'gluteus-maximus',
     nameZh: '臀大肌',
     nameEn: 'Gluteus Maximus',
-    bodyPart: '臀腿',
+    bodyPart: '腿部',
     region: '髋后侧',
     description: '位于髋部后侧，是髋伸展的主要肌群。',
     function: '负责髋关节伸展和下肢发力，在深蹲、弓步蹲和硬拉中参与明显。',

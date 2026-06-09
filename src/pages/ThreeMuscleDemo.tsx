@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -114,8 +114,11 @@ export default function ThreeMuscleDemo() {
 }
 
 export function ThreeMuscleExperience({ mode }: { mode: PageMode }) {
+  const [searchParams] = useSearchParams();
   const [selectedRegionId, setSelectedRegionId] = useState(DEFAULT_REGION_ID);
-  const [selectedAreaId, setSelectedAreaId] = useState<SelectorTrainingAreaId>(DEFAULT_SELECTOR_AREA_ID);
+  const [selectedAreaId, setSelectedAreaId] = useState<SelectorTrainingAreaId>(() =>
+    getInitialSelectorAreaId(searchParams.get('area'))
+  );
   const selectedArea = useMemo(
     () => selectorTrainingAreas.find((area) => area.id === selectedAreaId) ?? selectorTrainingAreas[0],
     [selectedAreaId]
@@ -164,6 +167,10 @@ export function ThreeMuscleExperience({ mode }: { mode: PageMode }) {
       {!isSelector && <UpperBodyLocalSandbox />}
     </div>
   );
+}
+
+function getInitialSelectorAreaId(value: string | null): SelectorTrainingAreaId {
+  return selectorTrainingAreas.some((area) => area.id === value) ? (value as SelectorTrainingAreaId) : DEFAULT_SELECTOR_AREA_ID;
 }
 
 function RegionSelector({

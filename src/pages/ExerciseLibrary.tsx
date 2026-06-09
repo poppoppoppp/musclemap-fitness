@@ -17,7 +17,7 @@ export default function ExerciseLibrary() {
   const filteredExercises = filterExercises(exercises, { query, muscleId, equipment });
 
   return (
-    <div>
+    <div className="pb-24 lg:pb-0">
       <PageHeader title="动作库" description="搜索动作，或按涉及肌群和器械筛选。V0.1 内置背部相关动作。" />
       <ExerciseFilter
         query={query}
@@ -27,7 +27,7 @@ export default function ExerciseLibrary() {
         onMuscleChange={setMuscleId}
         onEquipmentChange={setEquipment}
       />
-      <div className="mt-4 text-sm text-slate-400">共 {filteredExercises.length} 个动作</div>
+      <div className="mt-4 text-sm font-medium text-[#86868b]">共 {filteredExercises.length} 个动作</div>
       {filteredExercises.length > 0 ? (
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {filteredExercises.map((exercise) => (

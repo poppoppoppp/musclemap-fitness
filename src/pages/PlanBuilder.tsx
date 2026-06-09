@@ -60,14 +60,14 @@ export default function PlanBuilder() {
   };
 
   return (
-    <div className="pb-24 lg:pb-0">
+    <div className="space-y-5 pb-24 lg:pb-0">
       <PageHeader title="训练计划生成器" description="根据目标、训练水平和器械条件生成基础训练安排。" />
 
-      <div className="mb-4 rounded-lg border border-cyan-400/30 bg-cyan-950/20 px-4 py-3 text-sm leading-6 text-cyan-100">
+      <div className="rounded-[18px] border border-white/10 bg-[#1d1d1f] px-5 py-4 text-sm leading-6 text-[#a1a1a6]">
         当前计划由本地规则生成，仅作为基础训练安排参考，不替代专业教练指导。
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[360px_minmax(0,1fr)]">
+      <div className="grid gap-5 lg:grid-cols-[360px_minmax(0,1fr)]">
         <Card className="h-fit">
           <h2 className="text-lg font-semibold text-white">计划条件</h2>
           <div className="mt-4 space-y-4">
@@ -102,11 +102,11 @@ export default function PlanBuilder() {
                 {focusBodyPartOptions.map((option) => (
                   <label
                     key={option.value}
-                    className="flex min-h-10 items-center gap-2 rounded-md border border-line bg-slate-950 px-3 py-2 text-sm text-slate-200"
+                    className="flex min-h-11 items-center gap-2 rounded-xl border border-white/[0.12] bg-black/40 px-3 py-2 text-sm text-[#f5f5f7] transition hover:border-white/20"
                   >
                     <input
                       type="checkbox"
-                      className="h-4 w-4 accent-cyan-300"
+                      className="h-4 w-4 accent-accent"
                       checked={input.focusBodyParts.includes(option.value)}
                       onChange={() => toggleFocus(option.value)}
                     />
@@ -180,20 +180,20 @@ function PlanResult({ plan }: { plan: GeneratedPlan | null }) {
                     <div
                       key={item.exerciseId}
                       data-testid="generated-plan-item"
-                      className="rounded-md border border-line bg-slate-950 p-3"
+                      className="rounded-2xl border border-white/10 bg-black/[0.35] p-4"
                     >
                       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                         <Link to={`/exercises/${exercise.id}`} className="font-semibold text-white hover:text-accent">
                           {exercise.name}
                         </Link>
                         <div className="flex flex-wrap gap-2 text-xs text-slate-300">
-                          <span className="rounded bg-slate-900 px-2 py-1">{item.sets} 组</span>
-                          <span className="rounded bg-slate-900 px-2 py-1">{item.repRange}</span>
-                          <span className="rounded bg-slate-900 px-2 py-1">休息 {item.restSeconds} 秒</span>
+                          <span className="rounded-full bg-white/[0.08] px-3 py-1">{item.sets} 组</span>
+                          <span className="rounded-full bg-white/[0.08] px-3 py-1">{item.repRange}</span>
+                          <span className="rounded-full bg-white/[0.08] px-3 py-1">休息 {item.restSeconds} 秒</span>
                         </div>
                       </div>
                       <p className="mt-2 text-sm text-slate-400">主要刺激：{item.targetMuscles.map(formatMuscle).join('、')}</p>
-                      {item.note ? <p className="mt-2 text-sm text-cyan-100">{item.note}</p> : null}
+                      {item.note ? <p className="mt-2 text-sm text-[#2997ff]">{item.note}</p> : null}
                     </div>
                   );
                 })}

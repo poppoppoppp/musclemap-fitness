@@ -4,10 +4,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        base: '#070b12',
-        panel: '#101827',
-        line: '#223044',
-        accent: '#38d5c7'
+        base: '#000000',
+        panel: '#1d1d1f',
+        line: '#3a3a3c',
+        accent: '#0071e3'
       }
     }
   },

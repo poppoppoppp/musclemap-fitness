@@ -3,6 +3,57 @@ import { expect, test } from '@playwright/test';
 import { exerciseTrajectories } from '../data/exerciseTrajectories';
 import { threeModelRegions } from '../data/threeModelRegions';
 import { upperBodyLocalMeshMappings } from '../data/upperBodyLocalMeshMappings';
+import type { WorkoutLog } from '../types/workout';
+import {
+  calculateWorkoutExerciseCount,
+  calculateWorkoutSetCount,
+  calculateWorkoutVolume,
+  estimateWorkoutCalories,
+  getWorkedMusclesFromWorkout,
+  normalizeMuscleId
+} from '../utils/workoutSummary';
+
+test('workout summary utilities calculate report metrics and normalized muscles', () => {
+  const workout: WorkoutLog = {
+    id: 'summary-unit',
+    date: '2026-06-10',
+    durationSeconds: 1860,
+    exercises: [
+      {
+        id: 'exercise-a',
+        exerciseId: 'barbell-bench-press',
+        order: 0,
+        sets: [
+          { id: 'set-a1', setIndex: 1, weight: 20, reps: 18, completed: true },
+          { id: 'set-a2', setIndex: 2, weight: 40, reps: 12, completed: true },
+          { id: 'set-a3', setIndex: 3, weight: 60, completed: true }
+        ]
+      },
+      {
+        id: 'exercise-b',
+        exerciseId: 'lat-pulldown',
+        order: 1,
+        sets: [{ id: 'set-b1', setIndex: 1, weight: 50, reps: 10, completed: true }]
+      }
+    ],
+    createdAt: '2026-06-10T09:00:00.000Z'
+  };
+
+  expect(calculateWorkoutVolume(workout)).toBe(1340);
+  expect(calculateWorkoutSetCount(workout)).toBe(4);
+  expect(calculateWorkoutExerciseCount(workout)).toBe(2);
+  expect(estimateWorkoutCalories(workout)).toBe(186);
+  expect(normalizeMuscleId('pectoralis-major')).toBe('chest');
+  expect(normalizeMuscleId('latissimus-dorsi')).toBe('back');
+
+  const worked = getWorkedMusclesFromWorkout(workout, [
+    { id: 'barbell-bench-press', primaryMuscles: ['pectoralis-major'], secondaryMuscles: ['triceps-brachii'] },
+    { id: 'lat-pulldown', primaryMuscles: ['latissimus-dorsi'], secondaryMuscles: ['biceps-brachii', 'pectoralis-major'] }
+  ]);
+
+  expect(worked.primary).toEqual(['chest', 'back']);
+  expect(worked.secondary).toEqual(['triceps', 'biceps']);
+});
 
 test('homepage presents playful training map without redundant main links', async ({ page }) => {
   await page.addInitScript(() => {
@@ -850,6 +901,12 @@ test('workout history opens a read only workout log detail page', async ({ page 
                 { id: 'set-3', setIndex: 3, reps: 12, completed: true },
                 { id: 'set-4', setIndex: 4, completed: true }
               ]
+            },
+            {
+              id: 'detail-exercise-2',
+              exerciseId: 'barbell-bench-press',
+              order: 1,
+              sets: [{ id: 'set-5', setIndex: 1, weight: 20, reps: 10, completed: true }]
             }
           ],
           createdAt: '2026-05-25T09:00:00.000Z'
@@ -865,15 +922,25 @@ test('workout history opens a read only workout log detail page', async ({ page 
   await expect(page.getByRole('heading', { name: '训练详情' })).toBeVisible();
   await expect(page.getByTestId('workout-log-detail')).toContainText('2026-05-25');
   await expect(page.getByTestId('workout-log-detail')).toContainText('45 分钟');
-  await expect(page.getByTestId('workout-log-detail')).toContainText('plan-v08');
+  await expect(page.getByTestId('workout-summary-card')).toContainText('270 kcal');
+  await expect(page.getByTestId('workout-summary-card')).toContainText('625 kg');
+  await expect(page.getByTestId('workout-summary-card')).toContainText('5 组');
+  await expect(page.getByTestId('workout-summary-card')).toContainText('2 个动作');
+  await expect(page.getByTestId('workout-summary-card')).toContainText('来源：计划训练');
+  await expect(page.getByTestId('workout-muscle-back')).toHaveAttribute('data-highlight', 'primary');
+  await expect(page.getByTestId('workout-muscle-chest').first()).toHaveAttribute('data-highlight', 'primary');
+  await expect(page.getByTestId('workout-muscle-triceps').first()).toHaveAttribute('data-highlight', 'secondary');
   await expect(page.getByTestId('workout-log-detail')).toContainText('Keep tempo controlled');
-  await expect(page.getByTestId('workout-detail-exercise')).toContainText('高位下拉');
-  await expect(page.getByTestId('workout-detail-exercise')).toContainText('Lat Pulldown');
-  await expect(page.getByTestId('workout-detail-exercise')).toContainText('No swinging');
-  await expect(page.getByTestId('workout-detail-exercise')).toContainText('组数：3 组');
-  await expect(page.getByTestId('workout-detail-exercise')).toContainText('第 1 组：42.5kg x 10 次');
-  await expect(page.getByTestId('workout-detail-exercise')).toContainText('第 2 组：35kg');
-  await expect(page.getByTestId('workout-detail-exercise')).toContainText('第 3 组：12 次');
+  const firstExercise = page.getByTestId('workout-detail-exercise').first();
+  await expect(firstExercise).toContainText('高位下拉');
+  await expect(firstExercise).toContainText('Lat Pulldown');
+  await expect(firstExercise).toContainText('No swinging');
+  await expect(firstExercise).toContainText('4 组');
+  await expect(firstExercise).toContainText('背');
+  await expect(page.getByTestId('workout-set-pill').first()).toContainText('1');
+  await expect(page.getByTestId('workout-set-pill').first()).toContainText('42.5kg × 10');
+  await expect(firstExercise).toContainText('自重 × 12');
+  await expect(page.getByRole('link', { name: '返回训练历史' })).toHaveAttribute('href', '/workout-history');
   await expect(page.locator('input, textarea')).toHaveCount(0);
 });
 
@@ -898,7 +965,7 @@ test('workout history detail handles missing logs and unknown exercises without 
   await page.goto('/workout-history/unknown-exercise-log');
   await expect(page.getByTestId('workout-detail-exercise')).toContainText('未知动作');
   await expect(page.getByTestId('workout-detail-exercise')).toContainText('not-real-exercise');
-  await expect(page.getByTestId('workout-detail-exercise')).toContainText('第 1 组：9 次');
+  await expect(page.getByTestId('workout-detail-exercise')).toContainText('自重 × 9');
 });
 
 test('workout history has an entry from workout log and does not overflow at 390px mobile width', async ({ page }) => {

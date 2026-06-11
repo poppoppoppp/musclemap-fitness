@@ -11,7 +11,7 @@ export default function AppShell({ children }: AppShellProps) {
       <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-4 pb-[calc(6rem+env(safe-area-inset-bottom))] pt-5 sm:px-6 lg:px-8">
         <main className="flex-1">{children}</main>
         <footer className="mt-8 border-t border-white/10 pt-4 text-xs leading-5 text-[#86868b]">
-          3D anatomy model data: BodyParts3D, (c) The Database Center for Life Science, licensed under CC BY 4.0.
+          MuscleMap Fitness 使用本地浏览器数据保存训练记录。肌群示意仅用于训练教育参考。
         </footer>
       </div>
       <BottomNav />

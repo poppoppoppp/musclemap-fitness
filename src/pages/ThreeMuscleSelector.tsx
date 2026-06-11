@@ -1,5 +1,5 @@
-import { ThreeMuscleExperience } from './ThreeMuscleDemo';
+import TwoDMuscleSelector from './TwoDMuscleSelector';
 
 export default function ThreeMuscleSelector() {
-  return <ThreeMuscleExperience mode="selector" />;
+  return <TwoDMuscleSelector />;
 }

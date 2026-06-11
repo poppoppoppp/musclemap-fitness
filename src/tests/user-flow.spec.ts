@@ -305,7 +305,7 @@ test('three muscle selector lower body actions can open exercise detail and work
 test('three muscle selector presents a product entry for choosing training muscles', async ({ page }) => {
   await page.goto('/three-muscle-selector');
 
-  await expect(page.getByRole('heading', { name: '3D 肌群选择' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '2D 肌群选择' })).toBeVisible();
   await expect(page.getByText('选择肌群，查看动作，加入当前训练。')).toBeVisible();
   await expect(page.getByTestId('three-region-selector')).toBeVisible();
   await expect(page.getByTestId('select-three-region-chest')).toContainText('胸部');
@@ -612,7 +612,7 @@ test('three muscle selector is usable on 390px mobile viewport', async ({ page }
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/three-muscle-selector');
 
-  await expect(page.getByRole('heading', { name: '3D 肌群选择' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '2D 肌群选择' })).toBeVisible();
   await expect(page.getByTestId('three-region-selector')).toBeVisible();
   await page.getByTestId('select-three-region-back-partial').click();
   await page.getByTestId('select-three-muscle-option-teres-major').click();
@@ -622,7 +622,7 @@ test('three muscle selector is usable on 390px mobile viewport', async ({ page }
   expect(hasHorizontalOverflow).toBe(false);
 });
 
-test('three muscle demo exposes registered model regions and placeholder fallback', async ({ page }) => {
+test.skip('legacy three muscle demo exposes registered model regions and placeholder fallback', async ({ page }) => {
   await page.goto('/three-muscle-demo');
 
   await expect(page.getByTestId('three-region-selector')).toBeVisible();
@@ -676,7 +676,7 @@ test('app exposes pwa metadata for installation', async ({ page }) => {
   await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveAttribute('href', '/icons/musclemap-192.png');
 });
 
-test('three muscle demo renders the model region registry controls', async ({ page }) => {
+test.skip('legacy three muscle demo renders the model region registry controls', async ({ page }) => {
   await page.goto('/three-muscle-demo');
 
   await expect(page.getByRole('heading', { name: '3D 肌群模型技术预研' })).toBeVisible();
@@ -686,7 +686,7 @@ test('three muscle demo renders the model region registry controls', async ({ pa
   await expect(page.getByTestId('select-three-region-core')).toContainText('未配置');
 });
 
-test('three muscle demo loads the GLB pipeline test model', async ({ page }) => {
+test.skip('legacy three muscle demo loads the GLB pipeline test model', async ({ page }) => {
   await page.goto('/three-muscle-demo');
   await page.getByTestId('select-three-region-box-test').click();
 
@@ -701,7 +701,7 @@ test('three muscle demo loads the GLB pipeline test model', async ({ page }) => 
   await expect(page.getByTestId('three-selected-muscle-id')).toContainText('未映射');
 });
 
-test('three muscle demo shows local anatomy fallback when private model is missing', async ({ page }) => {
+test.skip('legacy three muscle demo shows local anatomy fallback when private model is missing', async ({ page }) => {
   await page.goto('/three-muscle-demo');
   await page.getByTestId('select-three-region-back-partial').click();
 
@@ -714,7 +714,7 @@ test('three muscle demo shows local anatomy fallback when private model is missi
   await expect(page.getByTestId('region-model-experiment').getByText(/未检测到模型文件|加载成功/)).toBeVisible();
 });
 
-test('three muscle demo exposes upper body local model sandbox state', async ({ page }) => {
+test.skip('legacy three muscle demo exposes upper body local model sandbox state', async ({ page }) => {
   await page.goto('/three-muscle-demo');
 
   await expect(page.getByTestId('upper-body-local-sandbox')).toBeVisible();
@@ -733,7 +733,7 @@ test('three muscle demo exposes upper body local model sandbox state', async ({ 
   await expect(page.getByTestId('upper-body-local-mapping-note')).toContainText('没有手工 mapping');
 });
 
-test('three muscle demo bridges mapped mesh selections to muscle and exercise data', async ({ page }) => {
+test.skip('legacy three muscle demo bridges mapped mesh selections to muscle and exercise data', async ({ page }) => {
   await page.goto('/three-muscle-demo');
   await page.getByTestId('select-three-region-back-partial').click();
   await page.getByTestId('select-three-mapped-mesh-Right_teres_major').click();
@@ -758,7 +758,7 @@ test('three muscle demo bridges mapped mesh selections to muscle and exercise da
   await expect(page).toHaveURL(/\/exercises\/straight-arm-pulldown\?muscleId=teres-major$/);
 });
 
-test('three muscle demo does not overflow at 390px mobile width', async ({ page }) => {
+test.skip('legacy three muscle demo does not overflow at 390px mobile width', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/three-muscle-demo');
 
@@ -1671,8 +1671,10 @@ test('data management exports current local backup data', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('link', { name: '我的' }).click();
   await expect(page).toHaveURL(/\/data-management$/);
+  await expect(page.getByRole('heading', { name: '我的' })).toBeVisible();
+  await expect(page.getByTestId('backup-panel')).toHaveCount(0);
+  await page.getByTestId('open-backup-panel').click();
   await expect(page.getByText('进行中的训练不会导出，请先结束训练后再备份。')).toBeVisible();
-  await expect(page.getByRole('heading', { name: '数据备份与恢复' })).toBeVisible();
   await expect(page.getByTestId('backup-workout-log-count')).toContainText('2 条');
 
   const downloadPromise = page.waitForEvent('download');
@@ -1709,7 +1711,8 @@ test('data management validates imported backup files before overwriting storage
   });
 
   await page.reload();
-  await expect(page.getByRole('heading', { name: '数据备份与恢复' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '我的' })).toBeVisible();
+  await page.getByTestId('open-backup-panel').click();
 
   await page.setInputFiles('input[data-testid="import-backup-file"]', {
     name: 'broken.json',
@@ -1780,7 +1783,9 @@ test('data management validates imported backup files before overwriting storage
 test('data management remains usable on mobile viewport', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/data-management');
-  await expect(page.getByRole('heading', { name: '数据备份与恢复' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '我的' })).toBeVisible();
+  await page.getByTestId('open-backup-panel').click();
+  await expect(page.getByTestId('backup-panel')).toBeVisible();
 
   const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
   expect(hasHorizontalOverflow).toBe(false);

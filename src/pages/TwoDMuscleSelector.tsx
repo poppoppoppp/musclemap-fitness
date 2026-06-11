@@ -110,9 +110,9 @@ export default function TwoDMuscleSelector() {
     <div className="pb-32 lg:pb-0">
       <PageHeader title="2D 肌群选择" description="选择肌群，查看动作，加入当前训练。" />
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)]">
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.02fr)_minmax(300px,0.78fr)]">
         <div className="space-y-4">
-          <section data-testid="three-region-selector" className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+          <section data-testid="three-region-selector" className="grid grid-cols-3 gap-2 rounded-[24px] border border-white/[0.08] bg-[#1c1c1e] p-2 sm:grid-cols-6">
             {muscleGroups.map((group) => (
               <button
                 key={group.id}
@@ -120,10 +120,10 @@ export default function TwoDMuscleSelector() {
                 data-testid={`select-three-region-${group.id}`}
                 aria-pressed={selectedGroupId === group.id}
                 className={[
-                  'min-h-11 rounded-2xl border px-3 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-accent',
+                  'min-h-11 rounded-[18px] border px-3 py-2 text-sm font-semibold transition active:scale-[0.985] focus:outline-none focus:ring-2 focus:ring-accent',
                   selectedGroupId === group.id
-                    ? 'border-[#2997ff] bg-[#2997ff] text-white'
-                    : 'border-white/10 bg-[#1d1d1f] text-[#a1a1a6] hover:border-[#2997ff]/60 hover:text-white'
+                    ? 'border-[#0a84ff] bg-[#0a84ff] text-white'
+                    : 'border-transparent bg-transparent text-[#a1a1a6] hover:bg-white/[0.06] hover:text-white'
                 ].join(' ')}
                 onClick={() => handleSelectGroup(group)}
               >
@@ -132,7 +132,7 @@ export default function TwoDMuscleSelector() {
             ))}
           </section>
 
-          <section className="rounded-[22px] border border-white/10 bg-[#1d1d1f] p-4">
+          <section className="rounded-[28px] border border-white/[0.08] bg-[linear-gradient(180deg,#1f1f22_0%,#171719_100%)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
             <div className="mb-3 flex items-center justify-between gap-3">
               <div>
                 <p className="text-sm text-[#86868b]">当前区域</p>
@@ -140,7 +140,7 @@ export default function TwoDMuscleSelector() {
                   {selectedGroup.label}
                 </h2>
               </div>
-              <span data-testid="glb-load-status" className="rounded-full bg-white/[0.08] px-3 py-1 text-xs font-semibold text-[#8fb3d9]">
+              <span data-testid="glb-load-status" className="rounded-full bg-white/[0.07] px-3 py-1 text-xs font-semibold text-[#8fb3d9]">
                 2D 简化示意可用
               </span>
             </div>
@@ -161,7 +161,7 @@ export default function TwoDMuscleSelector() {
                 data-testid={`select-three-muscle-option-${muscle.id}`}
                 aria-pressed={selectedMuscleId === muscle.id}
                 className={[
-                  'rounded-full border px-3 py-2 text-xs font-semibold transition focus:outline-none focus:ring-2 focus:ring-accent',
+                  'rounded-full border px-3 py-2 text-xs font-semibold transition active:scale-[0.985] focus:outline-none focus:ring-2 focus:ring-accent',
                   selectedMuscleId === muscle.id
                     ? 'border-[#2997ff] bg-[#2997ff]/20 text-[#8fdcff]'
                     : 'border-white/10 bg-[#1d1d1f] text-[#a1a1a6] hover:border-[#2997ff]/60 hover:text-white'
@@ -176,7 +176,7 @@ export default function TwoDMuscleSelector() {
 
         <aside className="space-y-4">
           {selectedMuscle ? (
-            <section className="rounded-[22px] border border-white/10 bg-[#1d1d1f] p-5">
+            <section className="rounded-[28px] border border-white/[0.08] bg-[linear-gradient(180deg,#1f1f22_0%,#171719_100%)] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
               <p className="text-sm font-semibold text-[#8fb3d9]">当前选择</p>
               <h2 data-testid="three-selected-muscle-name" className="mt-2 text-2xl font-semibold text-white">
                 {selectedMuscle.nameZh}
@@ -205,7 +205,7 @@ export default function TwoDMuscleSelector() {
             </section>
           ) : null}
 
-          <section className="rounded-[22px] border border-white/10 bg-[#1d1d1f] p-5">
+          <section className="rounded-[28px] border border-white/[0.08] bg-[linear-gradient(180deg,#1f1f22_0%,#171719_100%)] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
             <h2 className="text-lg font-semibold text-white">相关动作</h2>
             <div data-testid="three-related-exercises" className="mt-4 space-y-3">
               {selectedMuscle && relatedExercises.length > 0 ? (

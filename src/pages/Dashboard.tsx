@@ -143,8 +143,8 @@ export default function Dashboard() {
         </header>
 
         <section
-          aria-label="3D 选肌群"
-          className="rounded-[2rem] border border-blue-300/45 bg-gradient-to-br from-slate-900/90 via-[#101a2c]/95 to-violet-950/40 p-4 shadow-[0_0_44px_rgba(48,99,255,0.26)]"
+          aria-label="2D 选肌群"
+          className="rounded-[28px] border border-white/[0.08] bg-[linear-gradient(180deg,#1f1f22_0%,#151517_100%)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
         >
           <div className="relative min-h-[330px] overflow-hidden rounded-[1.6rem] bg-[radial-gradient(circle_at_50%_48%,rgba(62,113,255,0.2),transparent_38%)] sm:min-h-[410px]">
             <div className="absolute inset-8 rounded-full border border-blue-300/10" />
@@ -165,7 +165,7 @@ export default function Dashboard() {
               data-testid="dashboard-selected-muscle-link"
               className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-white/10 bg-slate-950/80 px-4 py-2 text-sm font-semibold text-blue-100 backdrop-blur transition hover:border-blue-300/70 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
-              3D 选肌群
+              2D 选肌群
             </Link>
           </div>
         </section>
@@ -316,7 +316,7 @@ function MuscleShortcut({
     <Link
       to={`/three-muscle-selector?area=${area}`}
       data-testid={`dashboard-muscle-shortcut-${area}`}
-      aria-label={`${label} 3D 选肌群`}
+      aria-label={`${label} 2D 选肌群`}
       aria-current={selected ? 'true' : undefined}
       onFocus={onSelect}
       onMouseEnter={onSelect}

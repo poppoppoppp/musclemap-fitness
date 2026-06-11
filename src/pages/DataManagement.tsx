@@ -100,7 +100,7 @@ export default function DataManagement() {
     <div className="pb-32 lg:pb-0">
       <PageHeader title="我的" description="管理本机保存的训练记录、计划和本地备份。" />
 
-      <div className="space-y-4">
+      <div className="mx-auto max-w-3xl space-y-4">
         <Card>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -110,7 +110,7 @@ export default function DataManagement() {
             <Button
               type="button"
               variant="secondary"
-              className="min-h-11 w-full sm:w-fit"
+              className="min-h-12 w-full sm:w-fit"
               data-testid="open-backup-panel"
               aria-expanded={backupOpen}
               onClick={() => setBackupOpen((open) => !open)}
@@ -128,7 +128,7 @@ export default function DataManagement() {
         </Card>
 
         {backupOpen ? (
-          <div data-testid="backup-panel" className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
+          <div data-testid="backup-panel" className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
             <div className="space-y-4">
               <Card>
                 <h2 className="text-lg font-semibold text-white">导出备份</h2>
@@ -149,7 +149,7 @@ export default function DataManagement() {
                     type="file"
                     accept="application/json,.json"
                     onChange={handleImportFile}
-                    className="min-h-11 w-full rounded-xl border border-white/[0.12] bg-black/40 px-3 py-2 text-sm text-[#f5f5f7] file:mr-3 file:rounded-full file:border-0 file:bg-[#2c2c2e] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-[#f5f5f7] focus:outline-none focus:ring-2 focus:ring-accent/[0.45]"
+                    className="min-h-11 w-full rounded-[14px] border border-white/[0.08] bg-[#111113] px-3.5 py-2 text-sm text-[#f5f5f7] file:mr-3 file:rounded-full file:border-0 file:bg-[#2c2c2e] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-[#f5f5f7] focus:outline-none focus:ring-2 focus:ring-[#0a84ff]/[0.32]"
                   />
                 </label>
               </Card>

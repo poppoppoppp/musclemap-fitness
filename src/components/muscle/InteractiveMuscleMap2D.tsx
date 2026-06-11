@@ -190,7 +190,7 @@ export const interactive2DMuscleIds = regions.map((region) => region.id);
 
 export default function InteractiveMuscleMap2D({ selectedMuscleId, onSelectMuscle }: InteractiveMuscleMap2DProps) {
   return (
-    <div data-testid="three-muscle-canvas" className="relative grid grid-cols-2 gap-3 rounded-[18px] border border-white/10 bg-black/[0.24] p-3">
+    <div data-testid="three-muscle-canvas" className="relative grid grid-cols-2 gap-3 rounded-[24px] border border-white/[0.07] bg-black/[0.22] p-3">
       <button
         type="button"
         aria-label="左背阔肌"

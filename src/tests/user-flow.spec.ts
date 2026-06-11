@@ -102,7 +102,7 @@ test('homepage presents playful training map without redundant main links', asyn
 
   const main = page.locator('main');
   await expect(page.getByRole('heading', { name: '今天点亮哪块肌肉？' })).toBeVisible();
-  await expect(main.getByRole('link', { name: '3D 选肌群', exact: true })).toHaveAttribute('href', '/three-muscle-selector?area=chest');
+  await expect(main.getByRole('link', { name: '2D 选肌群', exact: true })).toHaveAttribute('href', '/three-muscle-selector?area=chest');
   await expect(main.getByRole('link', { name: /开始记录/ })).toHaveAttribute('href', '/workout-log');
   await expect(page.getByTestId('dashboard-recent-plan')).toContainText('增肌四分化计划');
   await expect(page.getByTestId('dashboard-recent-plan')).toContainText('今天可执行：背部日');

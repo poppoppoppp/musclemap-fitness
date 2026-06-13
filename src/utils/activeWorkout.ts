@@ -136,14 +136,34 @@ export function updateActiveWorkoutSet(
   key: 'weight' | 'reps',
   value: string
 ): ActiveWorkout {
-  return updateExercise(workout, activeExerciseId, (exercise) => ({
-    ...exercise,
-    sets: exercise.sets.map((set) => (set.id === setId ? updateSetValue(set, key, value) : set))
-  }));
+  return updateExercise(workout, activeExerciseId, (exercise) => {
+    const nextExercise = {
+      ...exercise,
+      sets: exercise.sets.map((set) => (set.id === setId ? updateSetValue(set, key, value) : set))
+    };
+
+    if (nextExercise.startedAt || nextExercise.endedAt || !hasAnyDisplayableSetValue(nextExercise)) return nextExercise;
+
+    return {
+      ...nextExercise,
+      startedAt: new Date().toISOString()
+    };
+  });
 }
 
 export function updateActiveWorkoutExerciseNotes(workout: ActiveWorkout, activeExerciseId: string, notes: string): ActiveWorkout {
   return updateExercise(workout, activeExerciseId, (exercise) => ({ ...exercise, notes }));
+}
+
+export function endActiveWorkoutExercise(workout: ActiveWorkout, activeExerciseId: string, endedAt = new Date()): ActiveWorkout {
+  return updateExercise(workout, activeExerciseId, (exercise) => {
+    if (!exercise.startedAt || exercise.endedAt) return exercise;
+
+    return {
+      ...exercise,
+      endedAt: endedAt.toISOString()
+    };
+  });
 }
 
 export function getLocalDateKeyFromDate(date: Date): string {
@@ -259,6 +279,10 @@ function createActiveWorkoutExercise(exerciseId: string, order: number, source: 
 
 function reindexSets(sets: ActiveWorkoutSet[]) {
   return sets.map((set, index) => ({ ...set, setIndex: index + 1 }));
+}
+
+function hasAnyDisplayableSetValue(exercise: ActiveWorkoutExercise) {
+  return exercise.sets.some((set) => set.weight !== undefined || set.reps !== undefined);
 }
 
 function touch(workout: ActiveWorkout): ActiveWorkout {

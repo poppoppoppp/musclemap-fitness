@@ -13,6 +13,7 @@ import {
   clearActiveWorkout,
   createActiveWorkoutFromPlanDay,
   createManualActiveWorkout,
+  endActiveWorkoutExercise,
   readActiveWorkout,
   removeExerciseFromActiveWorkout,
   removeSetFromActiveWorkoutExercise,
@@ -38,6 +39,7 @@ export default function WorkoutLog() {
   const [selectedExerciseId, setSelectedExerciseId] = useState(exercises[0]?.id ?? '');
   const [latestLog, setLatestLog] = useState<WorkoutLog | null>(null);
   const [status, setStatus] = useState('');
+  const [timerNowMs, setTimerNowMs] = useState(() => Date.now());
 
   useEffect(() => {
     setActiveWorkout(readActiveWorkout());
@@ -46,6 +48,14 @@ export default function WorkoutLog() {
     const latest = readStorage<WorkoutLog | null>(LATEST_WORKOUT_LOG_KEY, null);
     setLatestLog(isWorkoutLog(latest) ? latest : null);
   }, []);
+
+  useEffect(() => {
+    const hasRunningExerciseTimer = activeWorkout?.exercises.some((exercise) => exercise.startedAt && !exercise.endedAt) ?? false;
+    if (!hasRunningExerciseTimer) return;
+
+    const intervalId = window.setInterval(() => setTimerNowMs(Date.now()), 1000);
+    return () => window.clearInterval(intervalId);
+  }, [activeWorkout]);
 
   const summary = useMemo(() => {
     if (!activeWorkout) return { exerciseCount: 0, validSetCount: 0 };
@@ -125,6 +135,11 @@ export default function WorkoutLog() {
   const handleNotesChange = (activeExerciseId: string, notes: string) => {
     if (!activeWorkout) return;
     persistActiveWorkout(updateActiveWorkoutExerciseNotes(activeWorkout, activeExerciseId, notes));
+  };
+
+  const handleEndCurrentExercise = (activeExerciseId: string) => {
+    if (!activeWorkout) return;
+    persistActiveWorkout(endActiveWorkoutExercise(activeWorkout, activeExerciseId));
   };
 
   const handleEndWorkout = () => {
@@ -295,6 +310,8 @@ export default function WorkoutLog() {
                   onSetChange={handleSetChange}
                   onNotesChange={handleNotesChange}
                   onDeleteExercise={handleDeleteExercise}
+                  onEndCurrentExercise={handleEndCurrentExercise}
+                  nowMs={timerNowMs}
                 />
               ))
             )}
@@ -319,7 +336,9 @@ function WorkoutExerciseEditor({
   onDeleteSet,
   onSetChange,
   onNotesChange,
-  onDeleteExercise
+  onDeleteExercise,
+  onEndCurrentExercise,
+  nowMs
 }: {
   exercise: ActiveWorkoutExercise;
   onAddSet: (exerciseId: string) => void;
@@ -327,14 +346,31 @@ function WorkoutExerciseEditor({
   onSetChange: (exerciseId: string, setId: string, key: 'weight' | 'reps', value: string) => void;
   onNotesChange: (exerciseId: string, notes: string) => void;
   onDeleteExercise: (exerciseId: string) => void;
+  onEndCurrentExercise: (exerciseId: string) => void;
+  nowMs: number;
 }) {
   const detail = getExerciseById(exercise.exerciseId);
+  const timer = getExerciseTimerState(exercise, nowMs);
 
   return (
     <article data-testid="workout-log-exercise" className="rounded-[18px] border border-white/10 bg-black/[0.35] p-4">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h3 className="font-semibold text-white">{detail?.nameEn ?? exercise.exerciseId}</h3>
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <h3 className="font-semibold text-white">{detail?.nameEn ?? exercise.exerciseId}</h3>
+            {timer ? (
+              <span
+                data-testid="current-exercise-timer"
+                className={`rounded-full border px-3 py-1 text-xs font-bold tabular-nums ${
+                  timer.isEnded
+                    ? 'border-white/[0.12] bg-white/[0.06] text-[#a1a1a6]'
+                    : 'border-[#2997ff]/35 bg-[#2997ff]/15 text-[#8fd0ff]'
+                }`}
+              >
+                {timer.isEnded ? '用时' : '当前动作'} {timer.label}
+              </span>
+            ) : null}
+          </div>
           <p className="text-sm text-[#86868b]">{detail?.name ?? exercise.exerciseId}</p>
           {exercise.planned ? (
             <p className="mt-2 text-sm text-[#2997ff]">
@@ -389,6 +425,17 @@ function WorkoutExerciseEditor({
         <Button type="button" variant="secondary" className="min-h-11 w-full sm:w-fit" onClick={() => onAddSet(exercise.id)} data-testid="add-set">
           新增一组
         </Button>
+        {timer && !timer.isEnded ? (
+          <Button
+            type="button"
+            variant="secondary"
+            className="min-h-11 w-full border-[#2997ff]/25 bg-[#0f1d2f] text-[#8fd0ff] sm:w-fit"
+            onClick={() => onEndCurrentExercise(exercise.id)}
+            data-testid="end-current-exercise"
+          >
+            当前动作结束
+          </Button>
+        ) : null}
         <label className="grid gap-1 text-sm text-[#a1a1a6]">
           动作备注
           <textarea
@@ -481,6 +528,30 @@ function formatDisplayWorkoutSet(set: WorkoutSet) {
   }
 
   return `第 ${set.setIndex} 组：${set.reps} 次`;
+}
+
+function getExerciseTimerState(exercise: ActiveWorkoutExercise, nowMs: number) {
+  if (!exercise.startedAt) return null;
+
+  const startedAtMs = new Date(exercise.startedAt).getTime();
+  const endedAtMs = exercise.endedAt ? new Date(exercise.endedAt).getTime() : nowMs;
+  if (!Number.isFinite(startedAtMs) || !Number.isFinite(endedAtMs)) return null;
+
+  return {
+    isEnded: Boolean(exercise.endedAt),
+    label: formatElapsedSeconds(Math.max(0, Math.floor((endedAtMs - startedAtMs) / 1000)))
+  };
+}
+
+function formatElapsedSeconds(totalSeconds: number) {
+  const safeSeconds = Math.max(0, Math.floor(totalSeconds));
+  const hours = Math.floor(safeSeconds / 3600);
+  const minutes = Math.floor((safeSeconds % 3600) / 60);
+  const seconds = safeSeconds % 60;
+  const paddedMinutes = hours > 0 ? String(minutes).padStart(2, '0') : String(minutes);
+  const paddedSeconds = String(seconds).padStart(2, '0');
+
+  return hours > 0 ? `${hours}:${paddedMinutes}:${paddedSeconds}` : `${paddedMinutes}:${paddedSeconds}`;
 }
 
 function isWorkoutLog(value: unknown): value is WorkoutLog {

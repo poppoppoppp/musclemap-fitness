@@ -20,6 +20,8 @@ export interface ActiveWorkoutExercise {
   exerciseId: string;
   order: number;
   source: ActiveWorkoutSource;
+  startedAt?: string;
+  endedAt?: string;
   planned?: {
     sets?: number;
     repRange?: string;

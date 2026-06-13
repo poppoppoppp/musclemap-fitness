@@ -171,7 +171,8 @@ test('homepage muscle map shortcuts open the matching 3d selector area', async (
 });
 
 function parseTimerValue(value: string) {
-  const parts = value.split(':').map((part) => Number(part));
+  const match = value.match(/(\d{1,2}:)?\d{1,2}:\d{2}/);
+  const parts = (match?.[0] ?? value).split(':').map((part) => Number(part));
   if (parts.length === 2) return parts[0] * 60 + parts[1];
   if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
   return 0;
@@ -1534,6 +1535,48 @@ test('workout log active workout flow persists edits archives and clears', async
   await expect(page.getByTestId('latest-workout-log')).toContainText('Lat Pulldown');
   await expect(page.getByTestId('latest-workout-log')).toContainText('42.5kg');
   await expect(page.getByTestId('latest-workout-log')).toContainText('controlled first working set');
+});
+
+test('workout log tracks current exercise elapsed time after first set entry', async ({ page }) => {
+  await page.goto('/workout-log');
+  await page.evaluate(() => {
+    window.localStorage.removeItem('musclemap.latestGeneratedPlan.v0.2');
+    window.localStorage.removeItem('musclemap.workoutLogs.v0.3');
+    window.localStorage.removeItem('musclemap.latestWorkoutLog.v0.3');
+    window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
+  });
+  await page.reload();
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.getByTestId('start-active-workout').click();
+  await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
+  await page.getByTestId('add-manual-exercise').click();
+
+  const exercise = page.getByTestId('workout-log-exercise').first();
+  await expect(exercise.getByTestId('current-exercise-timer')).toHaveCount(0);
+  await exercise.getByTestId('set-weight-input').fill('42.5');
+
+  const timer = exercise.getByTestId('current-exercise-timer');
+  await expect(timer).toBeVisible();
+  await expect(exercise.getByTestId('end-current-exercise')).toBeVisible();
+
+  const firstValue = parseTimerValue((await timer.textContent()) ?? '');
+  await page.waitForTimeout(1100);
+  const secondValue = parseTimerValue((await timer.textContent()) ?? '');
+  expect(secondValue).toBeGreaterThanOrEqual(firstValue);
+
+  await exercise.getByTestId('end-current-exercise').click();
+  await expect(timer).toContainText('用时');
+
+  const endedValue = parseTimerValue((await timer.textContent()) ?? '');
+  await page.waitForTimeout(1100);
+  expect(parseTimerValue((await timer.textContent()) ?? '')).toBe(endedValue);
+
+  await page.reload();
+  const reloadedExercise = page.getByTestId('workout-log-exercise').first();
+  await expect(reloadedExercise.getByTestId('current-exercise-timer')).toContainText('用时');
+  await expect(reloadedExercise.getByTestId('end-current-exercise')).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
 });
 
 test('workout log rejects empty active workout before archiving', async ({ page }) => {

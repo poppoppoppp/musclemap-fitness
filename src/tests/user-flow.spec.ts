@@ -116,6 +116,39 @@ test('homepage presents playful training map without redundant main links', asyn
   expect(hasHorizontalOverflow).toBe(false);
 });
 
+test('homepage shows elapsed timer for active workout', async ({ page }) => {
+  await page.addInitScript(() => {
+    const startedAt = new Date(Date.now() - 125_000).toISOString();
+    window.localStorage.setItem(
+      'musclemap.activeWorkout.v0.7',
+      JSON.stringify({
+        id: 'active-home-timer',
+        status: 'active',
+        startedAt,
+        trainingDate: '2026-06-13',
+        source: 'manual',
+        exercises: [],
+        createdAt: startedAt,
+        updatedAt: startedAt
+      })
+    );
+  });
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+
+  const timer = page.getByTestId('dashboard-active-workout-timer');
+  await expect(timer).toBeVisible();
+
+  const firstValue = parseTimerValue((await timer.textContent()) ?? '');
+  await page.waitForTimeout(1100);
+  const secondValue = parseTimerValue((await timer.textContent()) ?? '');
+
+  expect(firstValue).toBeGreaterThanOrEqual(120);
+  expect(secondValue).toBeGreaterThan(firstValue);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
+});
+
 test('homepage muscle map shortcuts open the matching 3d selector area', async ({ page }) => {
   const cases = [
     { label: '胸', area: 'chest', expected: '胸部' },
@@ -136,6 +169,13 @@ test('homepage muscle map shortcuts open the matching 3d selector area', async (
     await expect(page.getByTestId('three-current-region-label')).toContainText(item.expected);
   }
 });
+
+function parseTimerValue(value: string) {
+  const parts = value.split(':').map((part) => Number(part));
+  if (parts.length === 2) return parts[0] * 60 + parts[1];
+  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  return 0;
+}
 
 test('three model region registry defines V0.10.0 regions and experimental back mapping', () => {
   expect(threeModelRegions.map((region) => region.id)).toEqual([

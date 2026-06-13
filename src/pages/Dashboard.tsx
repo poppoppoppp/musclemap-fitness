@@ -108,6 +108,30 @@ export default function Dashboard() {
     );
     return `${activeWorkout.exercises.length} 个动作 · ${validSetCount} 个有效组`;
   }, [activeWorkout]);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+
+  useEffect(() => {
+    if (!activeWorkout) {
+      setElapsedSeconds(0);
+      return;
+    }
+
+    const startedAtMs = new Date(activeWorkout.startedAt).getTime();
+    if (!Number.isFinite(startedAtMs)) {
+      setElapsedSeconds(0);
+      return;
+    }
+
+    const updateElapsed = () => {
+      setElapsedSeconds(Math.max(0, Math.floor((Date.now() - startedAtMs) / 1000)));
+    };
+
+    updateElapsed();
+    const intervalId = window.setInterval(updateElapsed, 1000);
+    return () => window.clearInterval(intervalId);
+  }, [activeWorkout]);
+
+  const activeElapsedLabel = activeWorkout ? formatElapsedSeconds(elapsedSeconds) : null;
 
   const nextPlanDay = recentPlan?.days[0] ?? null;
   const selectedShortcut = muscleShortcuts.find((item) => item.area === selectedArea) ?? muscleShortcuts[0];
@@ -176,6 +200,15 @@ export default function Dashboard() {
         >
           <DumbbellIcon className="h-8 w-8" />
           {activeWorkout ? '继续训练' : '开始记录'}
+          {activeElapsedLabel ? (
+            <span
+              data-testid="dashboard-active-workout-timer"
+              aria-label={`当前训练用时 ${activeElapsedLabel}`}
+              className="rounded-full border border-white/20 bg-black/18 px-3 py-1 text-sm font-bold tabular-nums text-blue-50 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
+            >
+              {activeElapsedLabel}
+            </span>
+          ) : null}
         </Link>
         {activeSummary ? <p className="-mt-3 text-center text-sm font-medium text-blue-100">{activeSummary}</p> : null}
 
@@ -486,4 +519,15 @@ function isGeneratedPlan(value: unknown): value is GeneratedPlan {
 
 function isDisplayableNumber(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value);
+}
+
+function formatElapsedSeconds(totalSeconds: number) {
+  const safeSeconds = Math.max(0, Math.floor(totalSeconds));
+  const hours = Math.floor(safeSeconds / 3600);
+  const minutes = Math.floor((safeSeconds % 3600) / 60);
+  const seconds = safeSeconds % 60;
+  const paddedMinutes = hours > 0 ? String(minutes).padStart(2, '0') : String(minutes);
+  const paddedSeconds = String(seconds).padStart(2, '0');
+
+  return hours > 0 ? `${hours}:${paddedMinutes}:${paddedSeconds}` : `${paddedMinutes}:${paddedSeconds}`;
 }

@@ -10,9 +10,9 @@ export default function ExerciseMeta({ exercise, selectedMuscleFilter = '' }: Ex
   const matchLabel = getMatchLabel(exercise, selectedMuscleFilter);
 
   return (
-    <div className="space-y-2 text-xs text-slate-300">
+    <div className="space-y-2 text-xs text-app-muted">
       {matchLabel ? (
-        <span className="inline-flex min-h-7 items-center rounded-full border border-accent/70 bg-accent/15 px-2.5 py-1 font-semibold text-accent">
+        <span className="inline-flex min-h-7 items-center rounded-full border border-app-accent/70 bg-app-accent/15 px-2.5 py-1 font-semibold text-app-accent">
           {matchLabel}
         </span>
       ) : null}
@@ -27,7 +27,7 @@ export default function ExerciseMeta({ exercise, selectedMuscleFilter = '' }: Ex
 function MetaRow({ label, values }: { label: string; values: string[] }) {
   return (
     <div>
-      <span className="mr-2 text-slate-500">{label}</span>
+      <span className="mr-2 text-app-muted">{label}</span>
       <span>{values.join('、')}</span>
     </div>
   );

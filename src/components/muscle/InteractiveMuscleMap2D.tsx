@@ -181,16 +181,16 @@ const regions: MuscleRegion[] = [
   }
 ];
 
-const baseFill = '#303744';
-const selectedFill = '#5b7cff';
-const relatedFill = '#8fb3d9';
-const stroke = '#d7e1ec';
+const baseFill = 'var(--app-surface-raised)';
+const selectedFill = 'var(--app-blue)';
+const relatedFill = 'var(--app-subtle)';
+const stroke = 'var(--app-line)';
 
 export const interactive2DMuscleIds = regions.map((region) => region.id);
 
 export default function InteractiveMuscleMap2D({ selectedMuscleId, onSelectMuscle }: InteractiveMuscleMap2DProps) {
   return (
-    <div data-testid="three-muscle-canvas" className="relative grid grid-cols-2 gap-3 rounded-[24px] border border-white/[0.07] bg-black/[0.22] p-3">
+    <div data-testid="three-muscle-canvas" className="relative grid grid-cols-2 gap-3 rounded-[24px] border border-app-line bg-app-surfaceMuted p-3">
       <button
         type="button"
         aria-label="左背阔肌"
@@ -218,7 +218,7 @@ function Figure({
 
   return (
     <figure className="min-w-0">
-      <figcaption className="mb-1 text-center text-xs font-semibold text-[#9aa8ba]">{title}</figcaption>
+      <figcaption className="mb-1 text-center text-xs font-semibold text-app-muted">{title}</figcaption>
       <svg viewBox="0 0 220 360" role="img" aria-label={`${title} 2D 肌群选择图`} className="mx-auto h-auto w-full max-w-[180px]">
         <BodyShell back={view === 'back'} />
         <g stroke={stroke} strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
@@ -236,7 +236,7 @@ function Figure({
                 data-testid={region.testId ?? `muscle-region-${region.id}`}
                 data-muscle-id={region.id}
                 fill={fill}
-                className="cursor-pointer transition hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2997ff]"
+                className="cursor-pointer transition hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-app-accent"
                 opacity={selected ? 1 : 0.78}
                 onClick={() => onSelectMuscle(region.id)}
                 onKeyDown={(event: KeyboardEvent<SVGGElement>) => {
@@ -269,18 +269,18 @@ function isRelatedShoulder(regionId: string, selectedMuscleId: string) {
 function BodyShell({ back = false }: { back?: boolean }) {
   return (
     <g stroke={stroke} strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" opacity="0.72">
-      <path d="M91 46c1-18 10-30 19-30s18 12 19 30c1 17-7 30-19 30S90 63 91 46Z" fill="#eef3f8" />
-      <path d="M98 74h24l5 15c-11 9-23 9-34 0Z" fill="#242a33" />
+      <path d="M91 46c1-18 10-30 19-30s18 12 19 30c1 17-7 30-19 30S90 63 91 46Z" fill="var(--app-surface)" />
+      <path d="M98 74h24l5 15c-11 9-23 9-34 0Z" fill="var(--app-surface-raised)" />
       <path
         d={
           back
             ? 'M91 45c7-13 31-13 38 0l-3-18c-11-12-25-12-36 0Z'
             : 'M88 42c5-20 39-22 45 0-5-9-13-10-21-4-7-6-15-5-24 4Z'
         }
-        fill="#242a33"
+        fill="var(--app-surface-raised)"
       />
-      <path d="M20 190c5 18 11 33 18 47 8-1 14-6 18-15l-8-43c-9 9-19 12-28 11Z" fill="#242a33" />
-      <path d="M200 190c-5 18-11 33-18 47-8-1-14-6-18-15l8-43c9 9 19 12 28 11Z" fill="#242a33" />
+      <path d="M20 190c5 18 11 33 18 47 8-1 14-6 18-15l-8-43c-9 9-19 12-28 11Z" fill="var(--app-surface-raised)" />
+      <path d="M200 190c-5 18-11 33-18 47-8-1-14-6-18-15l8-43c9 9 19 12 28 11Z" fill="var(--app-surface-raised)" />
       <path d="M61 82c-23 9-38 30-45 62M159 82c23 9 38 30 45 62" fill="none" opacity="0.55" />
       <path d="M54 218c-6 43-5 88 1 136M166 218c6 43 5 88-1 136" fill="none" opacity="0.55" />
       <path d="M42 351h40M138 351h40" fill="none" opacity="0.55" />
@@ -290,7 +290,7 @@ function BodyShell({ back = false }: { back?: boolean }) {
 
 function MuscleCuts({ back = false }: { back?: boolean }) {
   return (
-    <g className="pointer-events-none" fill="none" stroke="#eef3f8" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.15" opacity="0.74">
+    <g className="pointer-events-none" fill="none" stroke="var(--app-surface)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.15" opacity="0.74">
       {back ? (
         <>
           <path d="M110 90v132M82 102c16 21 25 44 28 70M138 102c-16 21-25 44-28 70" />

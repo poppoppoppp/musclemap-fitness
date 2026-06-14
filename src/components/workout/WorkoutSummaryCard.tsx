@@ -8,6 +8,7 @@ import {
   getDurationMinutes,
   getWorkedMusclesFromWorkout
 } from '../../utils/workoutSummary';
+import MetricTile from '../ui/MetricTile';
 import WorkoutMuscleMap2D from './WorkoutMuscleMap2D';
 
 type WorkoutSummaryCardProps = {
@@ -26,39 +27,30 @@ export default function WorkoutSummaryCard({ workout, exercises }: WorkoutSummar
   return (
     <section
       data-testid="workout-summary-card"
-      className="rounded-[22px] border border-white/10 bg-[#1c1c1f] p-5 text-white shadow-[0_18px_60px_rgba(0,0,0,0.22)]"
+      className="rounded-2xl border border-app-line bg-app-surface p-5 text-app-text shadow-[0_6px_16px_rgba(17,24,39,0.05)]"
     >
       <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
         <div>
-          <p className="text-sm font-medium text-[#94a3b8]">训练日期</p>
+          <p className="text-sm font-medium text-app-muted">训练日期</p>
           <p className="mt-2 break-words text-2xl font-semibold tracking-tight">{workout.date}</p>
-          <p className="mt-3 text-sm text-[#94a3b8]">总耗时</p>
-          <p className="mt-1 text-xl font-semibold text-[#2997ff]">{durationMinutes} 分钟</p>
-          <p className="mt-3 text-sm text-[#94a3b8]">{formatSource(workout)}</p>
-          {workout.notes ? <p className="mt-3 break-words text-sm leading-6 text-[#cbd5e1]">{workout.notes}</p> : null}
+          <p className="mt-3 text-sm text-app-muted">总耗时</p>
+          <p className="mt-1 text-xl font-semibold text-app-accent">{durationMinutes} 分钟</p>
+          <p className="mt-3 text-sm text-app-muted">{formatSource(workout)}</p>
+          {workout.notes ? <p className="mt-3 break-words text-sm leading-6 text-app-muted">{workout.notes}</p> : null}
         </div>
 
-        <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4 md:w-[360px] md:grid-cols-2">
-          <Metric label="消耗热量" value={`${calories} kcal`} />
-          <Metric label="总训练容量" value={`${formatNumber(volume)} kg`} />
-          <Metric label="总组数" value={`${setCount} 组`} />
-          <Metric label="动作数量" value={`${exerciseCount} 个动作`} />
-        </dl>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 md:w-[360px] md:grid-cols-2">
+          <MetricTile label="消耗热量" value={`${calories} kcal`} />
+          <MetricTile label="总训练容量" value={`${formatNumber(volume)} kg`} />
+          <MetricTile label="总组数" value={`${setCount} 组`} tone="accent" />
+          <MetricTile label="动作数量" value={`${exerciseCount} 个动作`} />
+        </div>
       </div>
 
-      <div className="mt-5 border-t border-white/10 pt-5">
+      <div className="mt-5 border-t border-app-line pt-5">
         <WorkoutMuscleMap2D primaryMuscles={workedMuscles.primary} secondaryMuscles={workedMuscles.secondary} />
       </div>
     </section>
-  );
-}
-
-function Metric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-2xl border border-white/10 bg-black/30 p-3">
-      <dt className="text-xs font-medium text-[#94a3b8]">{label}</dt>
-      <dd className="mt-2 break-words text-xl font-semibold leading-tight text-[#f5f5f7]">{value}</dd>
-    </div>
   );
 }
 

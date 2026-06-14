@@ -1,6 +1,7 @@
 import type { Exercise } from '../../types/exercise';
 import type { WorkoutLog, WorkoutLogExercise, WorkoutSet } from '../../types/workout';
 import { normalizeMuscleId } from '../../utils/workoutSummary';
+import Badge from '../ui/Badge';
 
 type WorkoutExerciseDetailListProps = {
   workout: WorkoutLog;
@@ -27,8 +28,8 @@ export default function WorkoutExerciseDetailList({ workout, exercises }: Workou
 
   if (workoutExercises.length === 0) {
     return (
-      <section className="rounded-[22px] border border-white/10 bg-[#1c1c1f] p-5">
-        <p className="text-sm text-[#94a3b8]">这次训练没有动作数据。</p>
+      <section className="rounded-2xl border border-app-line bg-app-surface p-5">
+        <p className="text-sm text-app-muted">这次训练没有动作数据。</p>
       </section>
     );
   }
@@ -49,38 +50,38 @@ function WorkoutExerciseReport({ workoutExercise, exercise }: { workoutExercise:
   return (
     <article
       data-testid="workout-detail-exercise"
-      className="min-w-0 rounded-[22px] border border-white/10 bg-[#1c1c1f] p-5 text-white shadow-[0_16px_50px_rgba(0,0,0,0.18)]"
+      className="min-w-0 rounded-2xl border border-app-line bg-app-surface p-5 text-app-text shadow-[0_6px_16px_rgba(17,24,39,0.05)]"
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <h2 className="break-words text-2xl font-semibold tracking-tight">{exercise?.name ?? '未知动作'}</h2>
-          <p className="mt-1 break-words text-sm text-[#94a3b8]">{exercise?.nameEn ?? workoutExercise.exerciseId}</p>
+          <p className="mt-1 break-words text-sm text-app-muted">{exercise?.nameEn ?? workoutExercise.exerciseId}</p>
         </div>
-        <p className="w-fit rounded-full bg-[#2997ff]/[0.15] px-3 py-1 text-sm font-semibold text-[#8fdcff]">{sets.length} 组</p>
+        <Badge tone="accent" className="text-sm">{sets.length} 组</Badge>
       </div>
 
       {muscleTags.length > 0 ? (
         <div className="mt-4 flex flex-wrap gap-2">
           {muscleTags.map((tag) => (
-            <span key={`${tag.kind}-${tag.label}`} className={tag.kind === 'primary' ? 'rounded-full bg-[#2997ff]/[0.18] px-3 py-1 text-xs font-semibold text-[#8fdcff]' : 'rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-[#cbd5e1]'}>
+            <Badge key={`${tag.kind}-${tag.label}`} tone={tag.kind === 'primary' ? 'accent' : 'neutral'}>
               {tag.label}
-            </span>
+            </Badge>
           ))}
         </div>
       ) : null}
 
-      {workoutExercise.notes ? <p className="mt-4 break-words text-sm leading-6 text-[#cbd5e1]">{workoutExercise.notes}</p> : null}
+      {workoutExercise.notes ? <p className="mt-4 break-words text-sm leading-6 text-app-muted">{workoutExercise.notes}</p> : null}
 
       <div className="mt-5 grid gap-2 min-[420px]:grid-cols-2">
         {sets.length > 0 ? (
           sets.map((set, index) => (
-            <div key={set.id} data-testid="workout-set-pill" className="grid min-h-12 grid-cols-[2rem_minmax(0,1fr)] items-center gap-2 rounded-2xl border border-white/10 bg-black/30 px-3 py-2 text-sm">
-              <span className="text-center font-semibold text-[#94a3b8]">{isFiniteSetIndex(set.setIndex) ? set.setIndex : index + 1}</span>
-              <span className="min-w-0 break-words font-semibold text-[#f5f5f7]">{formatSet(set)}</span>
+            <div key={set.id} data-testid="workout-set-pill" className="grid min-h-12 grid-cols-[2rem_minmax(0,1fr)] items-center gap-2 rounded-2xl border border-app-line bg-app-surfaceMuted px-3 py-2 text-sm">
+              <span className="text-center font-semibold text-app-muted">{isFiniteSetIndex(set.setIndex) ? set.setIndex : index + 1}</span>
+              <span className="min-w-0 break-words font-semibold text-app-text">{formatSet(set)}</span>
             </div>
           ))
         ) : (
-          <p className="rounded-2xl border border-dashed border-white/[0.15] bg-black/20 px-4 py-3 text-sm text-[#94a3b8]">暂无组数据</p>
+          <p className="rounded-2xl border border-dashed border-app-line bg-app-surfaceMuted px-4 py-3 text-sm text-app-muted">暂无组数据</p>
         )}
       </div>
     </article>

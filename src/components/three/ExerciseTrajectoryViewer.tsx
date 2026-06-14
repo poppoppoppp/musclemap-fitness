@@ -224,16 +224,16 @@ export default function ExerciseTrajectoryViewer({ trajectory }: ExerciseTraject
   return (
     <div data-testid="exercise-trajectory-module" data-playback-progress={playbackProgress.toFixed(2)} className="space-y-4">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-cyan-200">3D 动作轨迹</p>
-        <h2 className="mt-1 text-lg font-semibold text-white">{trajectory.label}</h2>
-        {trajectory.viewHint ? <p className="mt-2 text-sm leading-6 text-slate-300">{trajectory.viewHint}</p> : null}
+        <p className="text-xs font-semibold uppercase tracking-wide text-app-accent">3D 动作轨迹</p>
+        <h2 className="mt-1 text-lg font-semibold text-app-text">{trajectory.label}</h2>
+        {trajectory.viewHint ? <p className="mt-2 text-sm leading-6 text-app-muted">{trajectory.viewHint}</p> : null}
       </div>
 
-      <div className="relative overflow-hidden rounded-md border border-slate-700 bg-slate-950/80">
+      <div className="relative overflow-hidden rounded-md border border-app-line bg-app-surfaceMuted/80">
         <canvas ref={canvasRef} data-testid="exercise-trajectory-path" className="block h-[420px] w-full sm:h-[460px]" aria-label={`${trajectory.label} 3D 动作示意`} />
         <div
           data-testid="exercise-trajectory-direction-label"
-          className="pointer-events-none absolute bottom-3 right-3 rounded-md bg-cyan-400 px-2 py-1 text-xs font-semibold text-slate-950"
+          className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-app-accent px-2 py-1 text-xs font-semibold text-white"
         >
           {trajectory.directionLabel}
         </div>
@@ -243,19 +243,19 @@ export default function ExerciseTrajectoryViewer({ trajectory }: ExerciseTraject
         <button
           type="button"
           data-testid="exercise-trajectory-playback-button"
-          className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-cyan-300 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-200 sm:w-fit"
+          className="inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-app-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-app-accentHover sm:w-fit"
           onClick={handlePlaybackClick}
         >
           {playbackButtonLabel}
         </button>
-        <div className="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm">
-          <p className="font-semibold text-white">
+        <div className="rounded-xl border border-app-line bg-app-surfaceMuted px-3 py-2 text-sm">
+          <p className="font-semibold text-app-text">
             当前阶段：
-            <span data-testid="exercise-trajectory-current-phase" className="text-cyan-100">
+            <span data-testid="exercise-trajectory-current-phase" className="text-app-accent">
               {currentPhase}
             </span>
           </p>
-          <p className="mt-1 text-slate-300">marker 沿起点、中间点、终点移动，用于展示动作方向。</p>
+          <p className="mt-1 text-app-muted">marker 沿起点、中间点、终点移动，用于展示动作方向。</p>
         </div>
       </div>
 
@@ -271,14 +271,14 @@ export default function ExerciseTrajectoryViewer({ trajectory }: ExerciseTraject
       </div>
 
       {trajectory.cues?.length ? (
-        <ul className="list-disc space-y-1 pl-5 text-sm leading-6 text-slate-300">
+        <ul className="list-disc space-y-1 pl-5 text-sm leading-6 text-app-muted">
           {trajectory.cues.map((cue) => (
             <li key={cue}>{cue}</li>
           ))}
         </ul>
       ) : null}
 
-      <p className="rounded-md border border-amber-300/30 bg-amber-300/10 px-3 py-2 text-sm leading-6 text-amber-100">
+      <p className="rounded-md border border-amber-300/30 bg-amber-300/10 px-3 py-2 text-sm leading-6 text-app-warning">
         当前为简化动作轨迹，不代表完整动作动画。
       </p>
     </div>
@@ -469,9 +469,9 @@ function addLimb(
 
 function InfoItem({ title, value }: { title: string; value: string }) {
   return (
-    <div className="rounded-md bg-slate-950 px-3 py-2">
-      <dt className="font-semibold text-white">{title}</dt>
-      <dd className="mt-1 text-slate-300">{value}</dd>
+    <div className="rounded-md bg-app-surfaceMuted px-3 py-2">
+      <dt className="font-semibold text-app-text">{title}</dt>
+      <dd className="mt-1 text-app-muted">{value}</dd>
     </div>
   );
 }
@@ -479,16 +479,16 @@ function InfoItem({ title, value }: { title: string; value: string }) {
 function TagGroup({ title, ids, emptyText }: { title: string; ids: string[]; emptyText?: string }) {
   return (
     <div>
-      <h3 className="text-sm font-semibold text-white">{title}</h3>
+      <h3 className="text-sm font-semibold text-app-text">{title}</h3>
       <div className="mt-2 flex flex-wrap gap-2">
         {ids.length ? (
           ids.map((id) => (
-            <span key={id} className="rounded-md bg-slate-950 px-2 py-1 text-sm text-slate-300">
+            <span key={id} className="rounded-full bg-app-surfaceMuted px-2 py-1 text-sm text-app-muted">
               {getMuscleById(id)?.nameZh ?? id}
             </span>
           ))
         ) : (
-          <span className="text-sm text-slate-400">{emptyText}</span>
+          <span className="text-sm text-app-muted">{emptyText}</span>
         )}
       </div>
     </div>

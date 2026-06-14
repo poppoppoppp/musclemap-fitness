@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/layout/PageHeader';
 import Button from '../components/ui/Button';
+import Badge from '../components/ui/Badge';
 import Card from '../components/ui/Card';
 import EmptyState from '../components/ui/EmptyState';
+import Notice from '../components/ui/Notice';
 import Select from '../components/ui/Select';
 import { getExerciseById } from '../data/exercises';
 import { getMuscleById } from '../data/muscles';
@@ -63,13 +65,11 @@ export default function PlanBuilder() {
     <div className="space-y-5 pb-24 lg:pb-0">
       <PageHeader title="训练计划生成器" description="根据目标、训练水平和器械条件生成基础训练安排。" />
 
-      <div className="rounded-[18px] border border-white/10 bg-[#1d1d1f] px-5 py-4 text-sm leading-6 text-[#a1a1a6]">
-        当前计划由本地规则生成，仅作为基础训练安排参考，不替代专业教练指导。
-      </div>
+      <Notice>当前计划由本地规则生成，仅作为基础训练安排参考，不替代专业教练指导。</Notice>
 
       <div className="grid gap-5 lg:grid-cols-[360px_minmax(0,1fr)]">
         <Card className="h-fit">
-          <h2 className="text-lg font-semibold text-white">计划条件</h2>
+            <h2 className="text-lg font-semibold text-app-text">计划条件</h2>
           <div className="mt-4 space-y-4">
             <Select
               label="训练目标"
@@ -97,12 +97,12 @@ export default function PlanBuilder() {
             />
 
             <fieldset>
-              <legend className="mb-2 text-sm font-medium text-slate-300">重点肌群</legend>
+              <legend className="mb-2 text-sm font-medium text-app-muted">重点肌群</legend>
               <div className="grid grid-cols-2 gap-2">
                 {focusBodyPartOptions.map((option) => (
                   <label
                     key={option.value}
-                    className="flex min-h-11 items-center gap-2 rounded-xl border border-white/[0.12] bg-black/40 px-3 py-2 text-sm text-[#f5f5f7] transition hover:border-white/20"
+                    className="flex min-h-11 items-center gap-2 rounded-xl border border-app-line bg-app-surface px-3 py-2 text-sm text-app-text transition hover:border-app-accent/35"
                   >
                     <input
                       type="checkbox"
@@ -150,12 +150,12 @@ function PlanResult({ plan }: { plan: GeneratedPlan | null }) {
       <Card>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-sm font-semibold text-accent">最近生成计划</p>
-            <h2 className="mt-1 text-2xl font-bold text-white">{plan.name}</h2>
+            <p className="text-sm font-semibold text-app-accent">最近生成计划</p>
+            <h2 className="mt-1 text-2xl font-semibold text-app-text">{plan.name}</h2>
           </div>
-          <p className="text-sm text-slate-400">{new Date(plan.createdAt).toLocaleString('zh-CN')}</p>
+          <p className="text-sm text-app-muted">{new Date(plan.createdAt).toLocaleString('zh-CN')}</p>
         </div>
-        <p className="mt-3 text-sm text-slate-300">
+        <p className="mt-3 text-sm leading-6 text-app-muted">
           {labelOf(planGoalOptions, plan.input.goal)} / 每周 {plan.input.daysPerWeek} 天 / {labelOf(trainingLevelOptions, plan.input.level)} /{' '}
           {labelOf(equipmentCategoryOptions, plan.input.availableEquipment)}
         </p>
@@ -165,10 +165,10 @@ function PlanResult({ plan }: { plan: GeneratedPlan | null }) {
         <Card key={day.id} className="space-y-4">
           <article data-testid="generated-workout-day">
             <div data-testid={`workout-day-${day.id.replace(/-\d+$/, '')}`}>
-              <div className="border-b border-line pb-3">
-                <h3 className="text-xl font-semibold text-white">{day.name}</h3>
-                <p className="mt-1 text-sm text-slate-300">训练重点：{day.focus}</p>
-                {day.notice ? <p className="mt-2 text-sm text-amber-200">{day.notice}</p> : null}
+              <div className="border-b border-app-line pb-3">
+                <h3 className="text-xl font-semibold text-app-text">{day.name}</h3>
+                <p className="mt-1 text-sm leading-6 text-app-muted">训练重点：{day.focus}</p>
+                {day.notice ? <Notice tone="warning" className="mt-2">{day.notice}</Notice> : null}
               </div>
 
               <div className="mt-4 grid gap-3">
@@ -180,20 +180,20 @@ function PlanResult({ plan }: { plan: GeneratedPlan | null }) {
                     <div
                       key={item.exerciseId}
                       data-testid="generated-plan-item"
-                      className="rounded-2xl border border-white/10 bg-black/[0.35] p-4"
+                      className="rounded-xl border border-app-line bg-app-surfaceMuted p-4"
                     >
                       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                        <Link to={`/exercises/${exercise.id}`} className="font-semibold text-white hover:text-accent">
+                        <Link to={`/exercises/${exercise.id}`} className="font-semibold text-app-text hover:text-app-accent">
                           {exercise.name}
                         </Link>
-                        <div className="flex flex-wrap gap-2 text-xs text-slate-300">
-                          <span className="rounded-full bg-white/[0.08] px-3 py-1">{item.sets} 组</span>
-                          <span className="rounded-full bg-white/[0.08] px-3 py-1">{item.repRange}</span>
-                          <span className="rounded-full bg-white/[0.08] px-3 py-1">休息 {item.restSeconds} 秒</span>
+                        <div className="flex flex-wrap gap-2 text-xs text-app-muted">
+                          <Badge>{item.sets} 组</Badge>
+                          <Badge>{item.repRange}</Badge>
+                          <Badge>休息 {item.restSeconds} 秒</Badge>
                         </div>
                       </div>
-                      <p className="mt-2 text-sm text-slate-400">主要刺激：{item.targetMuscles.map(formatMuscle).join('、')}</p>
-                      {item.note ? <p className="mt-2 text-sm text-[#2997ff]">{item.note}</p> : null}
+                      <p className="mt-2 text-sm text-app-muted">主要刺激：{item.targetMuscles.map(formatMuscle).join('、')}</p>
+                      {item.note ? <p className="mt-2 text-sm leading-6 text-app-accent">{item.note}</p> : null}
                     </div>
                   );
                 })}

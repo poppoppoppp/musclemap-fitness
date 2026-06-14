@@ -112,7 +112,7 @@ export default function TwoDMuscleSelector() {
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1.02fr)_minmax(300px,0.78fr)]">
         <div className="space-y-4">
-          <section data-testid="three-region-selector" className="grid grid-cols-3 gap-2 rounded-[24px] border border-white/[0.08] bg-[#1c1c1e] p-2 sm:grid-cols-6">
+          <section data-testid="three-region-selector" className="grid grid-cols-3 gap-2 rounded-2xl border border-app-line bg-app-surface p-2 sm:grid-cols-6">
             {muscleGroups.map((group) => (
               <button
                 key={group.id}
@@ -120,10 +120,10 @@ export default function TwoDMuscleSelector() {
                 data-testid={`select-three-region-${group.id}`}
                 aria-pressed={selectedGroupId === group.id}
                 className={[
-                  'min-h-11 rounded-[18px] border px-3 py-2 text-sm font-semibold transition active:scale-[0.985] focus:outline-none focus:ring-2 focus:ring-accent',
+                  'min-h-11 rounded-[18px] border px-3 py-2 text-sm font-semibold transition active:scale-[0.985] focus:outline-none focus:ring-2 focus:ring-app-accent',
                   selectedGroupId === group.id
-                    ? 'border-[#0a84ff] bg-[#0a84ff] text-white'
-                    : 'border-transparent bg-transparent text-[#a1a1a6] hover:bg-white/[0.06] hover:text-white'
+                    ? 'border-app-accent bg-app-accent text-white'
+                    : 'border-transparent bg-transparent text-app-muted hover:bg-app-surfaceMuted hover:text-app-text'
                 ].join(' ')}
                 onClick={() => handleSelectGroup(group)}
               >
@@ -132,15 +132,15 @@ export default function TwoDMuscleSelector() {
             ))}
           </section>
 
-          <section className="rounded-[28px] border border-white/[0.08] bg-[linear-gradient(180deg,#1f1f22_0%,#171719_100%)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+          <section className="rounded-2xl border border-app-line bg-app-surface p-4 shadow-[0_6px_16px_rgba(17,24,39,0.05)]">
             <div className="mb-3 flex items-center justify-between gap-3">
               <div>
-                <p className="text-sm text-[#86868b]">当前区域</p>
-                <h2 data-testid="three-current-region-label" className="text-lg font-semibold text-white">
+                <p className="text-sm text-app-muted">当前区域</p>
+                <h2 data-testid="three-current-region-label" className="text-lg font-semibold text-app-text">
                   {selectedGroup.label}
                 </h2>
               </div>
-              <span data-testid="glb-load-status" className="rounded-full bg-white/[0.07] px-3 py-1 text-xs font-semibold text-[#8fb3d9]">
+              <span data-testid="glb-load-status" className="rounded-full bg-app-accentSoft px-3 py-1 text-xs font-semibold text-app-accent">
                 2D 简化示意可用
               </span>
             </div>
@@ -161,10 +161,10 @@ export default function TwoDMuscleSelector() {
                 data-testid={`select-three-muscle-option-${muscle.id}`}
                 aria-pressed={selectedMuscleId === muscle.id}
                 className={[
-                  'rounded-full border px-3 py-2 text-xs font-semibold transition active:scale-[0.985] focus:outline-none focus:ring-2 focus:ring-accent',
+                  'rounded-full border px-3 py-2 text-xs font-semibold transition active:scale-[0.985] focus:outline-none focus:ring-2 focus:ring-app-accent',
                   selectedMuscleId === muscle.id
-                    ? 'border-[#2997ff] bg-[#2997ff]/20 text-[#8fdcff]'
-                    : 'border-white/10 bg-[#1d1d1f] text-[#a1a1a6] hover:border-[#2997ff]/60 hover:text-white'
+                    ? 'border-app-accent bg-app-accentSoft text-app-accent'
+                    : 'border-app-line bg-app-surface text-app-muted hover:border-app-accent/60 hover:text-app-text'
                 ].join(' ')}
                 onClick={() => handleSelectMuscle(muscle.id)}
               >
@@ -176,13 +176,13 @@ export default function TwoDMuscleSelector() {
 
         <aside className="space-y-4">
           {selectedMuscle ? (
-            <section className="rounded-[28px] border border-white/[0.08] bg-[linear-gradient(180deg,#1f1f22_0%,#171719_100%)] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
-              <p className="text-sm font-semibold text-[#8fb3d9]">当前选择</p>
-              <h2 data-testid="three-selected-muscle-name" className="mt-2 text-2xl font-semibold text-white">
+            <section className="rounded-2xl border border-app-line bg-app-surface p-5 shadow-[0_6px_16px_rgba(17,24,39,0.05)]">
+              <p className="text-sm font-semibold text-app-accent">当前选择</p>
+              <h2 data-testid="three-selected-muscle-name" className="mt-2 text-2xl font-semibold text-app-text">
                 {selectedMuscle.nameZh}
               </h2>
-              <p className="mt-1 text-sm text-[#86868b]">{selectedMuscle.nameEn}</p>
-              <div data-testid="three-selected-muscle-description" className="mt-4 space-y-2 text-sm leading-6 text-[#a1a1a6]">
+              <p className="mt-1 text-sm text-app-muted">{selectedMuscle.nameEn}</p>
+              <div data-testid="three-selected-muscle-description" className="mt-4 space-y-2 text-sm leading-6 text-app-muted">
                 <p>{selectedMuscle.description}</p>
                 <p>{selectedMuscle.function}</p>
               </div>
@@ -190,7 +190,7 @@ export default function TwoDMuscleSelector() {
                 to="/muscle-map"
                 data-testid="three-related-actions-link"
                 onClick={() => setGlobalSelectedMuscleId(selectedMuscle.id)}
-                className="mt-3 inline-flex min-h-11 w-full items-center justify-center rounded-full border border-white/10 bg-[#2c2c2e] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#3a3a3c]"
+                className="mt-3 inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-app-line bg-app-surface px-4 py-2 text-sm font-semibold text-app-text transition hover:bg-app-surfaceMuted"
               >
                 查看相关动作
               </Link>
@@ -198,29 +198,29 @@ export default function TwoDMuscleSelector() {
                 to="/muscle-map"
                 data-testid="three-muscle-detail-link"
                 onClick={() => setGlobalSelectedMuscleId(selectedMuscle.id)}
-                className="mt-2 inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#2997ff]/50 bg-[#2997ff]/10 px-4 py-2 text-sm font-semibold text-[#8fdcff] transition hover:bg-[#2997ff]/20"
+                className="mt-2 inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-app-accent/35 bg-app-accentSoft px-4 py-2 text-sm font-semibold text-app-accent transition hover:bg-app-accentSoft"
               >
                 查看肌肉详情
               </Link>
             </section>
           ) : null}
 
-          <section className="rounded-[28px] border border-white/[0.08] bg-[linear-gradient(180deg,#1f1f22_0%,#171719_100%)] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
-            <h2 className="text-lg font-semibold text-white">相关动作</h2>
+          <section className="rounded-2xl border border-app-line bg-app-surface p-5 shadow-[0_6px_16px_rgba(17,24,39,0.05)]">
+            <h2 className="text-lg font-semibold text-app-text">相关动作</h2>
             <div data-testid="three-related-exercises" className="mt-4 space-y-3">
               {selectedMuscle && relatedExercises.length > 0 ? (
                 relatedExercises.map(({ exercise, matchType }) => (
                   <article
                     key={exercise.id}
                     data-testid={`three-related-exercise-card-${exercise.id}`}
-                    className="rounded-2xl border border-white/10 bg-black/[0.32] p-3"
+                    className="rounded-2xl border border-app-line bg-app-surfaceMuted p-3"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="break-words text-sm font-semibold text-white">{exercise.name}</p>
-                        <p className="mt-1 break-words text-xs text-[#86868b]">{exercise.nameEn}</p>
+                        <p className="break-words text-sm font-semibold text-app-text">{exercise.name}</p>
+                        <p className="mt-1 break-words text-xs text-app-muted">{exercise.nameEn}</p>
                       </div>
-                      <span className="shrink-0 rounded-full bg-white/[0.08] px-2 py-1 text-xs text-[#a1a1a6]">
+                      <span className="shrink-0 rounded-full bg-app-surfaceMuted px-2 py-1 text-xs text-app-muted">
                         {matchType === 'primary' ? '主练' : '协同'}
                       </span>
                     </div>
@@ -228,7 +228,7 @@ export default function TwoDMuscleSelector() {
                       <Link
                         to={`/exercises/${exercise.id}?muscleId=${selectedMuscle.id}`}
                         data-testid={`three-related-exercise-link-${exercise.id}`}
-                        className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 bg-[#2c2c2e] px-3 py-2 text-sm font-semibold text-white transition hover:bg-[#3a3a3c]"
+                        className="inline-flex min-h-11 items-center justify-center rounded-full border border-app-line bg-app-surfaceMuted px-3 py-2 text-sm font-semibold text-app-text transition hover:bg-app-surface"
                       >
                         查看详情
                       </Link>
@@ -236,7 +236,7 @@ export default function TwoDMuscleSelector() {
                         type="button"
                         data-testid={`three-add-exercise-${exercise.id}`}
                         onClick={() => handleAddExerciseToWorkout(exercise)}
-                        className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#2997ff]/50 bg-[#2997ff] px-3 py-2 text-sm font-semibold text-white transition hover:bg-[#147ce5] focus:outline-none focus:ring-2 focus:ring-accent"
+                        className="inline-flex min-h-11 items-center justify-center rounded-full border border-app-accent/35 bg-app-accent px-3 py-2 text-sm font-semibold text-white transition hover:bg-app-accentHover focus:outline-none focus:ring-2 focus:ring-app-accent"
                       >
                         加入训练
                       </button>
@@ -244,17 +244,17 @@ export default function TwoDMuscleSelector() {
                   </article>
                 ))
               ) : (
-                <p className="text-sm text-[#a1a1a6]">暂无相关动作</p>
+                <p className="text-sm text-app-muted">暂无相关动作</p>
               )}
             </div>
-            <p data-testid="three-active-workout-status" className="mt-3 min-h-6 text-sm text-[#8fdcff]">
+            <p data-testid="three-active-workout-status" className="mt-3 min-h-6 text-sm text-app-accent">
               {workoutStatus}
             </p>
             {workoutStatus ? (
               <Link
                 to="/workout-log"
                 data-testid="three-go-active-workout"
-                className="mt-2 inline-flex min-h-11 w-full items-center justify-center rounded-full border border-white/10 bg-[#2c2c2e] px-3 py-2 text-sm font-semibold text-white transition hover:bg-[#3a3a3c]"
+                className="mt-2 inline-flex min-h-11 w-full items-center justify-center rounded-full border border-app-line bg-app-surfaceMuted px-3 py-2 text-sm font-semibold text-app-text transition hover:bg-app-surface"
               >
                 去当前训练
               </Link>

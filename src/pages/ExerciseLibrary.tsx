@@ -27,7 +27,7 @@ export default function ExerciseLibrary() {
         onMuscleChange={setMuscleId}
         onEquipmentChange={setEquipment}
       />
-      <div className="mt-4 text-sm font-medium text-[#86868b]">共 {filteredExercises.length} 个动作</div>
+      <div className="mt-4 text-sm font-medium text-app-muted">共 {filteredExercises.length} 个动作</div>
       {filteredExercises.length > 0 ? (
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {filteredExercises.map((exercise) => (

@@ -2,6 +2,10 @@ import { type ChangeEvent, useMemo, useState } from 'react';
 import PageHeader from '../components/layout/PageHeader';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
+import FormField from '../components/ui/FormField';
+import MetricTile from '../components/ui/MetricTile';
+import Notice from '../components/ui/Notice';
+import SectionHeader from '../components/ui/SectionHeader';
 import type { BackupSummary, MuscleMapBackupFile } from '../types/backup';
 import {
   applyBackupData,
@@ -94,90 +98,87 @@ export default function DataManagement() {
   };
 
   const statusClass =
-    statusKind === 'error' ? 'text-[#ff9f9f]' : statusKind === 'success' ? 'text-[#8fdcff]' : 'text-[#a1a1a6]';
+    statusKind === 'error' ? 'text-app-danger' : statusKind === 'success' ? 'text-app-success' : 'text-app-muted';
 
   return (
     <div className="pb-32 lg:pb-0">
       <PageHeader title="我的" description="管理本机保存的训练记录、计划和本地备份。" />
 
       <div className="mx-auto max-w-3xl space-y-4">
-        <Card>
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h2 className="text-xl font-semibold text-white">本地数据</h2>
-              <p className="mt-2 text-sm leading-6 text-[#a1a1a6]">训练记录和计划都保存在当前浏览器中。</p>
-            </div>
+        <Card padding="lg">
+          <SectionHeader
+            title="本地数据"
+            description="训练记录和计划都保存在当前浏览器中。"
+            action={
             <Button
               type="button"
               variant="secondary"
-              className="min-h-12 w-full sm:w-fit"
+              size="lg"
+              fullWidth
+              className="sm:w-fit"
               data-testid="open-backup-panel"
               aria-expanded={backupOpen}
               onClick={() => setBackupOpen((open) => !open)}
             >
               备份
             </Button>
-          </div>
+            }
+          />
 
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
-            <SummaryItem label="最近生成计划" value={currentSummary.hasLatestGeneratedPlan ? '有' : '无'} testId="backup-plan-status" />
-            <SummaryItem label="训练记录数量" value={`${currentSummary.workoutLogCount} 条`} testId="backup-workout-log-count" />
-            <SummaryItem label="最近训练记录" value={currentSummary.hasLatestWorkoutLog ? '有' : '无'} testId="backup-latest-log-status" />
+            <MetricTile label="最近生成计划" value={currentSummary.hasLatestGeneratedPlan ? '有' : '无'} testId="backup-plan-status" tone={currentSummary.hasLatestGeneratedPlan ? 'success' : 'neutral'} />
+            <MetricTile label="训练记录数量" value={`${currentSummary.workoutLogCount} 条`} testId="backup-workout-log-count" />
+            <MetricTile label="最近训练记录" value={currentSummary.hasLatestWorkoutLog ? '有' : '无'} testId="backup-latest-log-status" tone={currentSummary.hasLatestWorkoutLog ? 'success' : 'neutral'} />
           </div>
-          {emptyExportNotice ? <p className="mt-4 text-sm leading-6 text-[#ffd60a]">{emptyExportNotice}</p> : null}
+          {emptyExportNotice ? <Notice tone="warning" className="mt-4">{emptyExportNotice}</Notice> : null}
         </Card>
 
         {backupOpen ? (
           <div data-testid="backup-panel" className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
             <div className="space-y-4">
               <Card>
-                <h2 className="text-lg font-semibold text-white">导出备份</h2>
-                <p className="mt-2 text-sm leading-6 text-[#a1a1a6]">导出文件包含最近生成计划、训练记录列表和最近训练记录。</p>
-                <p className="mt-2 text-sm leading-6 text-[#ffd60a]">进行中的训练不会导出，请先结束训练后再备份。</p>
-                <Button type="button" className="mt-4 min-h-11 w-full sm:w-fit" data-testid="export-backup-json" onClick={handleExport}>
+                <SectionHeader title="导出备份" description="导出文件包含最近生成计划、训练记录列表和最近训练记录。" />
+                <Notice tone="warning" className="mt-3">进行中的训练不会导出，请先结束训练后再备份。</Notice>
+                <Button type="button" className="mt-4 sm:w-fit" fullWidth data-testid="export-backup-json" onClick={handleExport}>
                   导出为 JSON
                 </Button>
               </Card>
 
               <Card>
-                <h2 className="text-lg font-semibold text-white">导入恢复</h2>
-                <p className="mt-2 text-sm leading-6 text-[#a1a1a6]">当前只支持覆盖导入。确认前不会写入当前本地数据。</p>
-                <label className="mt-4 grid gap-2 text-sm font-medium text-[#a1a1a6]">
-                  选择 JSON 文件
+                <SectionHeader title="导入恢复" description="当前只支持覆盖导入。确认前不会写入当前本地数据。" />
+                <FormField label="选择 JSON 文件" className="mt-4">
                   <input
                     data-testid="import-backup-file"
                     type="file"
                     accept="application/json,.json"
                     onChange={handleImportFile}
-                    className="min-h-11 w-full rounded-[14px] border border-white/[0.08] bg-[#111113] px-3.5 py-2 text-sm text-[#f5f5f7] file:mr-3 file:rounded-full file:border-0 file:bg-[#2c2c2e] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-[#f5f5f7] focus:outline-none focus:ring-2 focus:ring-[#0a84ff]/[0.32]"
+                    className="min-h-11 w-full rounded-[14px] border border-app-line bg-app-surface px-3.5 py-2 text-sm text-app-text file:mr-3 file:rounded-full file:border-0 file:bg-app-surfaceMuted file:px-4 file:py-2 file:text-sm file:font-semibold file:text-app-text focus:outline-none focus:ring-2 focus:ring-app-accent/20"
                   />
-                </label>
+                </FormField>
               </Card>
             </div>
 
             <aside className="space-y-4">
               <Card>
-                <h2 className="text-lg font-semibold text-white">导入摘要</h2>
+                <h2 className="text-lg font-semibold text-app-text">导入摘要</h2>
                 {pendingSummary ? (
-                  <div data-testid="import-summary" className="mt-4 space-y-3 text-sm text-[#a1a1a6]">
+                  <div data-testid="import-summary" className="mt-4 space-y-3 text-sm text-app-muted">
                     <p>导出时间：{formatDateTime(pendingSummary.exportedAt)}</p>
                     <p>最近计划：{pendingSummary.hasLatestGeneratedPlan ? '有' : '无'}</p>
                     <p>训练记录：{pendingSummary.workoutLogCount} 条</p>
                     <p>最近训练记录：{pendingSummary.hasLatestWorkoutLog ? '有' : '无'}</p>
-                    <div className="rounded-2xl border border-[#ffd60a]/30 bg-[#ffd60a]/10 p-4 text-[#ffe680]">
-                      导入后将覆盖当前浏览器中的本地计划和训练记录。
-                    </div>
-                    <Button type="button" className="min-h-11 w-full" data-testid="confirm-overwrite-import" onClick={handleConfirmImport}>
+                    <Notice tone="warning">导入后将覆盖当前浏览器中的本地计划和训练记录。</Notice>
+                    <Button type="button" fullWidth data-testid="confirm-overwrite-import" onClick={handleConfirmImport}>
                       确认覆盖当前本地数据
                     </Button>
                   </div>
                 ) : (
-                  <p className="mt-3 text-sm leading-6 text-[#a1a1a6]">选择并校验有效备份文件后，会在这里显示导入摘要。</p>
+                  <p className="mt-3 text-sm leading-6 text-app-muted">选择并校验有效备份文件后，会在这里显示导入摘要。</p>
                 )}
               </Card>
 
               <Card>
-                <h2 className="text-lg font-semibold text-white">状态</h2>
+                <h2 className="text-lg font-semibold text-app-text">状态</h2>
                 <p data-testid="backup-status" className={`mt-3 min-h-6 text-sm leading-6 ${statusClass}`}>
                   {status || '暂无操作。'}
                 </p>
@@ -186,17 +187,6 @@ export default function DataManagement() {
           </div>
         ) : null}
       </div>
-    </div>
-  );
-}
-
-function SummaryItem({ label, value, testId }: { label: string; value: string; testId: string }) {
-  return (
-    <div className="rounded-2xl border border-white/10 bg-black/[0.35] p-4">
-      <p className="text-sm text-[#86868b]">{label}</p>
-      <p data-testid={testId} className="mt-2 text-xl font-semibold text-white">
-        {value}
-      </p>
     </div>
   );
 }

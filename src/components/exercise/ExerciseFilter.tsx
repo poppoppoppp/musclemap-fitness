@@ -21,7 +21,7 @@ export default function ExerciseFilter({
   onEquipmentChange
 }: ExerciseFilterProps) {
   return (
-    <div className="rounded-[18px] border border-white/10 bg-[#1d1d1f] p-5">
+    <div className="rounded-2xl border border-app-line bg-app-surface p-5">
       <div className="grid gap-3 md:grid-cols-[1.2fr_1fr_1fr]">
         <SearchInput label="搜索动作" value={query} placeholder="输入划船、下拉、背阔肌..." onChange={onQueryChange} />
         <Select
@@ -37,7 +37,7 @@ export default function ExerciseFilter({
           options={[{ value: '', label: '全部器械' }, ...equipmentOptions.map((item) => ({ value: item, label: item }))]}
         />
       </div>
-      <p className="mt-3 text-xs leading-5 text-[#86868b]">
+      <p className="mt-3 text-xs leading-5 text-app-muted">
         结果包含主练该肌群的动作，也包含该肌群作为次要参与的动作。
       </p>
     </div>

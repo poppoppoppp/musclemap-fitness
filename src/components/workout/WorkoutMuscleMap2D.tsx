@@ -15,13 +15,13 @@ type MuscleFigureProps = {
   };
 };
 
-const primaryFill = '#5b7cff';
-const secondaryFill = '#8fb3d9';
-const inactiveFill = '#3b4350';
-const quietFill = '#242a33';
-const skinFill = '#eef3f8';
-const muscleStroke = '#d7e1ec';
-const quietStroke = '#9aa8ba';
+const primaryFill = 'var(--app-blue)';
+const secondaryFill = 'var(--app-subtle)';
+const inactiveFill = 'var(--app-surface-raised)';
+const quietFill = 'var(--app-surface-raised)';
+const skinFill = 'var(--app-surface)';
+const muscleStroke = 'var(--app-line)';
+const quietStroke = 'var(--app-subtle)';
 
 export default function WorkoutMuscleMap2D({ primaryMuscles, secondaryMuscles = [] }: WorkoutMuscleMap2DProps) {
   const primary = new Set(primaryMuscles.map(normalizeMuscleId));
@@ -50,11 +50,11 @@ export default function WorkoutMuscleMap2D({ primaryMuscles, secondaryMuscles = 
   return (
     <div className="grid grid-cols-2 gap-2" data-testid="workout-muscle-map-2d">
       <figure className="min-w-0 px-1">
-        <figcaption className="mb-1 text-center text-xs font-semibold text-[#9aa8ba]">正面</figcaption>
+        <figcaption className="mb-1 text-center text-xs font-semibold text-app-muted">正面</figcaption>
         <FrontMuscleFigure muscleProps={muscleProps} />
       </figure>
       <figure className="min-w-0 px-1">
-        <figcaption className="mb-1 text-center text-xs font-semibold text-[#9aa8ba]">背面</figcaption>
+        <figcaption className="mb-1 text-center text-xs font-semibold text-app-muted">背面</figcaption>
         <BackMuscleFigure muscleProps={muscleProps} />
       </figure>
     </div>
@@ -172,7 +172,7 @@ function HeadAndNeck({ back = false }: { back?: boolean }) {
 
 function MuscleCutsFront() {
   return (
-    <g fill="none" stroke="#eef3f8" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" opacity="0.8">
+    <g fill="none" stroke="var(--app-surface)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" opacity="0.8">
       <path d="M110 96v132M67 122c25 10 61 10 86 0M86 164h48M84 194h52M82 218c19 10 37 10 56 0" />
       <path d="M39 132c9 9 15 23 18 42M181 132c-9 9-15 23-18 42" />
       <path d="M75 239c11 16 18 45 20 87M145 239c-11 16-18 45-20 87" />
@@ -183,7 +183,7 @@ function MuscleCutsFront() {
 
 function MuscleCutsBack() {
   return (
-    <g fill="none" stroke="#eef3f8" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" opacity="0.78">
+    <g fill="none" stroke="var(--app-surface)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" opacity="0.78">
       <path d="M110 90v132M82 102c16 21 25 44 28 70M138 102c-16 21-25 44-28 70" />
       <path d="M72 124c14 11 25 23 32 38M148 124c-14 11-25 23-32 38" />
       <path d="M81 224c16 12 42 12 58 0M74 252c20 10 52 10 72 0" />

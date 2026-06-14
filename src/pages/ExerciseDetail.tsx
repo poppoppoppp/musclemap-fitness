@@ -97,9 +97,9 @@ export default function ExerciseDetail() {
               <ExerciseTrajectoryViewer trajectory={trajectory} />
             ) : (
               <div data-testid="exercise-trajectory-fallback" className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-wide text-cyan-200">3D 动作轨迹</p>
-                <h2 className="text-lg font-semibold text-white">该动作暂未配置 3D 动作轨迹</h2>
-                <p className="text-sm leading-6 text-slate-300">原动作详情和加入当前训练功能仍可正常使用。</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-app-accent">3D 动作轨迹</p>
+                <h2 className="text-lg font-semibold text-app-text">该动作暂未配置 3D 动作轨迹</h2>
+                <p className="text-sm leading-6 text-app-muted">原动作详情和加入当前训练功能仍可正常使用。</p>
               </div>
             )}
           </Card>
@@ -119,21 +119,21 @@ export default function ExerciseDetail() {
             </dl>
           </Card>
           <Card>
-            <h2 className="text-lg font-semibold text-white">替代动作</h2>
+            <h2 className="text-lg font-semibold text-app-text">替代动作</h2>
             <div data-testid="contextual-alternatives" className="mt-3 flex flex-wrap gap-2">
               {contextualAlternatives.map((alternative) => (
                 <Link
                   key={alternative.exercise.id}
                   to={`/exercises/${alternative.exercise.id}?muscleId=${currentMuscleId}`}
                   data-testid={`alternative-link-${alternative.exercise.id}`}
-                  className="inline-flex flex-col gap-1 rounded-md border border-line bg-slate-950 px-3 py-2 text-sm hover:border-accent hover:text-accent"
+                  className="inline-flex flex-col gap-1 rounded-xl border border-app-line bg-app-surfaceMuted px-3 py-2 text-sm hover:border-app-accent hover:text-app-accent"
                 >
                   <span>{alternative.exercise.name}</span>
-                  <span className="text-xs text-slate-400">{alternative.matchType === 'primary' ? '主练匹配' : '次要参与'}</span>
+                  <span className="text-xs text-app-muted">{alternative.matchType === 'primary' ? '主练匹配' : '次要参与'}</span>
                 </Link>
               ))}
             </div>
-            {hasFewAlternatives ? <p className="mt-3 text-sm text-slate-300">当前肌群的替代动作较少，可到动作库查看更多相关动作。</p> : null}
+            {hasFewAlternatives ? <p className="mt-3 text-sm text-app-muted">当前肌群的替代动作较少，可到动作库查看更多相关动作。</p> : null}
           </Card>
         </div>
       </div>
@@ -155,11 +155,11 @@ function WorkoutEntryCard({
   onAdd: () => void;
 }) {
   return (
-    <Card className="border-cyan-400/50">
+    <Card className="border-app-accent/25">
       <div data-testid="exercise-active-workout-entry" className="space-y-3">
         <div>
-          <h2 className="text-lg font-semibold text-white">加入训练</h2>
-          <p className="mt-1 text-sm text-slate-300">
+          <h2 className="text-lg font-semibold text-app-text">加入训练</h2>
+          <p className="mt-1 text-sm text-app-muted">
             {activeWorkout ? (isInActiveWorkout ? '该动作已在当前训练中' : '当前训练进行中') : '从这个动作开始一组训练'}
           </p>
         </div>
@@ -171,7 +171,7 @@ function WorkoutEntryCard({
             <Link
               to="/workout-log"
               data-testid="go-to-active-workout"
-              className="inline-flex min-h-11 items-center justify-center rounded-md border border-line bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:border-accent hover:text-accent"
+              className="inline-flex min-h-11 items-center justify-center rounded-md border border-app-line bg-app-surfaceMuted px-4 py-2 text-sm font-semibold text-app-text transition hover:border-app-accent hover:text-app-accent"
             >
               去记录
             </Link>
@@ -181,7 +181,7 @@ function WorkoutEntryCard({
             开始训练
           </Button>
         )}
-        <p data-testid="exercise-active-workout-status" className="min-h-6 text-sm text-cyan-100">
+        <p data-testid="exercise-active-workout-status" className="min-h-6 text-sm text-app-accent">
           {workoutStatus}
         </p>
       </div>
@@ -192,10 +192,10 @@ function WorkoutEntryCard({
 function Meta({ title, values }: { title: string; values: string[] }) {
   return (
     <div>
-      <dt className="font-semibold text-white">{title}</dt>
+      <dt className="font-semibold text-app-text">{title}</dt>
       <dd className="mt-2 flex flex-wrap gap-2">
         {values.map((value) => (
-          <span key={value} className="rounded-md bg-slate-950 px-2 py-1 text-slate-300">
+          <span key={value} className="rounded-full bg-app-surfaceMuted px-2 py-1 text-app-muted">
             {value}
           </span>
         ))}
@@ -225,8 +225,8 @@ function DetailList({ title, items, ordered = false }: { title: string; items: s
   const ListTag = ordered ? 'ol' : 'ul';
   return (
     <Card>
-      <h2 className="text-lg font-semibold text-white">{title}</h2>
-      <ListTag className={`mt-3 space-y-2 text-sm leading-6 text-slate-300 ${ordered ? 'list-decimal' : 'list-disc'} pl-5`}>
+      <h2 className="text-lg font-semibold text-app-text">{title}</h2>
+      <ListTag className={`mt-3 space-y-2 text-sm leading-6 text-app-muted ${ordered ? 'list-decimal' : 'list-disc'} pl-5`}>
         {items.map((item) => (
           <li key={item}>{item}</li>
         ))}

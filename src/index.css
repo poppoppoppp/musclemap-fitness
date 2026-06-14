@@ -3,14 +3,23 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
-  background: #000;
+  color-scheme: light;
+  background: #f5f7fa;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
-  --app-bg: #000;
-  --app-surface: #1c1c1e;
-  --app-surface-raised: #242426;
-  --app-line: rgba(255, 255, 255, 0.1);
-  --app-blue: #0a84ff;
+  --app-bg: #f5f7fa;
+  --app-surface: #ffffff;
+  --app-surface-raised: #f8fafc;
+  --app-line: #e1e6ed;
+  --app-blue: #1677ff;
+  --app-accent-soft: #eaf2ff;
+  --app-success: #16a34a;
+  --app-success-soft: #eaf7ee;
+  --app-warning: #f97316;
+  --app-warning-soft: #fff4e8;
+  --app-danger: #dc2626;
+  --app-text: #111827;
+  --app-muted: #667085;
+  --app-subtle: #98a2b3;
 }
 
 * {
@@ -18,7 +27,7 @@
 }
 
 html {
-  background: #000;
+  background: #f5f7fa;
 }
 
 body {
@@ -26,10 +35,8 @@ body {
   min-width: 320px;
   min-height: 100vh;
   min-height: 100dvh;
-  background:
-    radial-gradient(circle at 50% -18%, rgba(10, 132, 255, 0.16), transparent 28rem),
-    linear-gradient(180deg, #030304 0%, #000 48%);
-  color: #f5f5f7;
+  background: linear-gradient(180deg, #f7f8fa 0%, #eef2f6 100%);
+  color: #111827;
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
   font-feature-settings: "kern";
@@ -51,31 +58,31 @@ select {
 input,
 textarea,
 select {
-  color: #f5f5f7 !important;
-  -webkit-text-fill-color: #f5f5f7 !important;
-  caret-color: #0071e3;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  caret-color: #1677ff;
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: #86868b;
+  color: #667085;
   opacity: 1;
 }
 
 input:-webkit-autofill,
 textarea:-webkit-autofill,
 select:-webkit-autofill {
-  -webkit-text-fill-color: #f5f5f7;
-  caret-color: #0071e3;
+  -webkit-text-fill-color: #111827;
+  caret-color: #1677ff;
   transition: background-color 9999s ease-in-out 0s;
 }
 
 ::selection {
-  background: rgba(10, 132, 255, 0.35);
+  background: rgba(22, 119, 255, 0.18);
 }
 
 * {
-  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+  scrollbar-color: rgba(102, 112, 133, 0.35) transparent;
 }
 
 ::-webkit-scrollbar {
@@ -87,8 +94,8 @@ select:-webkit-autofill {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.18);
-  border: 3px solid #000;
+  background: rgba(102, 112, 133, 0.3);
+  border: 3px solid #f5f7fa;
   border-radius: 999px;
 }
 

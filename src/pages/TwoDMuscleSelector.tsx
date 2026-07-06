@@ -88,8 +88,8 @@ export default function TwoDMuscleSelector() {
     const activeWorkout = readActiveWorkout();
 
     if (!activeWorkout) {
-      startWorkoutWithExercise(exercise.id);
-      navigate('/workout-log');
+      const workout = startWorkoutWithExercise(exercise.id);
+      navigate(getWorkoutLogTarget(getLatestActiveExerciseId(workout)));
       return;
     }
 
@@ -100,10 +100,12 @@ export default function TwoDMuscleSelector() {
     }
 
     if (result.status === 'missing') {
-      startWorkoutWithExercise(exercise.id);
+      const workout = startWorkoutWithExercise(exercise.id);
+      navigate(getWorkoutLogTarget(getLatestActiveExerciseId(workout)));
+      return;
     }
 
-    navigate('/workout-log');
+    navigate(getWorkoutLogTarget(getLatestActiveExerciseId(result.workout)));
   };
 
   return (
@@ -281,4 +283,12 @@ function getRelatedExercises(muscleId: string): RelatedExercise[] {
 function getLegacyRegionName(muscleId: string) {
   if (muscleId === 'latissimus-dorsi') return 'Simplified_left_latissimus_dorsi';
   return `2D-${muscleId}`;
+}
+
+function getLatestActiveExerciseId(workout: ReturnType<typeof readActiveWorkout>) {
+  return workout?.exercises.at(-1)?.id;
+}
+
+function getWorkoutLogTarget(activeExerciseId: string | undefined) {
+  return activeExerciseId ? `/workout-log?focusExercise=${encodeURIComponent(activeExerciseId)}` : '/workout-log';
 }

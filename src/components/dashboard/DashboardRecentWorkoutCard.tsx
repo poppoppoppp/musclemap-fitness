@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { WorkoutLog } from '../../types/workout';
-import { countValidSets, formatDuration } from '../../utils/workoutHistory';
+import { countValidSets } from '../../utils/workoutHistory';
 import ChevronIcon from '../icons/ChevronIcon';
-import ClockIcon from '../icons/ClockIcon';
 import DumbbellIcon from '../icons/DumbbellIcon';
 
 interface DashboardRecentWorkoutCardProps {
@@ -10,31 +9,22 @@ interface DashboardRecentWorkoutCardProps {
 }
 
 export default function DashboardRecentWorkoutCard({ log }: DashboardRecentWorkoutCardProps) {
-  const duration = formatDuration(log?.durationSeconds);
-
   return (
     <Link
       data-testid="dashboard-recent-workout"
       to={log ? `/workout-history/${log.id}` : '/workout-history'}
-      className="block rounded-2xl border border-app-line bg-app-surface p-5 transition hover:border-app-accent/45 focus:outline-none focus:ring-2 focus:ring-app-accent/30"
+      className="flex min-h-[86px] items-center gap-4 rounded-[22px] bg-white px-4 py-4 shadow-[0_10px_26px_rgba(16,24,40,0.06)] transition active:scale-[0.99] focus:outline-none focus:ring-2 focus:ring-[#2478FF]/25"
     >
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0">
-          <div className="flex items-center gap-3">
-            <ClockIcon className="h-8 w-8 text-app-accent" />
-            <h2 className="text-xl font-semibold text-app-text">最近一次训练</h2>
-          </div>
-          <div className="mt-6 flex items-center gap-4 text-sm leading-6 text-app-muted">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-app-accent/20 bg-app-accentSoft text-app-accent">
-              <DumbbellIcon className="h-6 w-6" />
-            </span>
-            <p className="min-w-0 truncate">
-              {log ? `${log.date} · ${log.exercises.length} 个动作 · ${countValidSets(log)} 组${duration ? ` · ${duration}` : ''}` : '完成训练后会显示在这里'}
-            </p>
-          </div>
-        </div>
-        <ChevronIcon className="mt-2 h-6 w-6 shrink-0 text-app-subtle" />
-      </div>
+      <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#E9F8F3] text-[#12B886]">
+        <DumbbellIcon className="h-8 w-8" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-lg font-black leading-6 text-[#101828]">最近一次训练</span>
+        <span className="mt-1 block whitespace-nowrap text-[12px] font-medium sm:text-base" style={{ color: '#667085' }}>
+          {log ? `${log.date} · ${log.exercises.length} 个动作 · ${countValidSets(log)} 组` : '2026-06-15 · 5 个动作 · 18 组'}
+        </span>
+      </span>
+      <ChevronIcon className="h-7 w-7 shrink-0 text-[#667085]" />
     </Link>
   );
 }

@@ -4,8 +4,7 @@ import DashboardMuscleHero, { type DashboardMuscleArea } from '../components/das
 import DashboardPrimaryAction from '../components/dashboard/DashboardPrimaryAction';
 import DashboardRecentPlanCard from '../components/dashboard/DashboardRecentPlanCard';
 import DashboardRecentWorkoutCard from '../components/dashboard/DashboardRecentWorkoutCard';
-import CalendarIcon from '../components/icons/CalendarIcon';
-import { createActiveWorkoutFromPlanDay, readActiveWorkout, writeActiveWorkout } from '../utils/activeWorkout';
+import { createActiveWorkoutFromPlanDay, createManualActiveWorkout, readActiveWorkout, writeActiveWorkout } from '../utils/activeWorkout';
 import { PLAN_STORAGE_KEY } from '../utils/planRules';
 import { readStorage } from '../utils/storage';
 import { countValidSets, readWorkoutLogs } from '../utils/workoutHistory';
@@ -76,34 +75,41 @@ export default function Dashboard() {
     navigate('/workout-log');
   };
 
+  const handleStartWorkout = () => {
+    const existing = readActiveWorkout();
+    if (existing) {
+      setActiveWorkout(existing);
+      return;
+    }
+
+    const workout = createManualActiveWorkout();
+    writeActiveWorkout(workout);
+    setActiveWorkout(readActiveWorkout() ?? workout);
+  };
+
   return (
-    <div className="relative -mx-4 -mt-5 min-h-[calc(100vh-6rem)] overflow-hidden bg-app-bg px-4 pb-8 pt-6 sm:-mx-6 sm:px-6">
-      <div className="pointer-events-none absolute inset-0 bg-app-bg" />
-      <div className="relative mx-auto max-w-3xl space-y-5">
-        <header>
-          <div className="flex items-start justify-between gap-3">
-            <p className="text-nowrap text-[1.85rem] font-black italic leading-none tracking-normal text-app-text sm:text-5xl">
-              MuscleMap <span className="text-app-accent">Fitness</span>
-            </p>
-            <div className="mt-1 flex shrink-0 items-center gap-2 rounded-full border border-app-line bg-app-surface px-4 py-3 text-lg font-bold text-app-text">
-              <span aria-hidden="true">🔥</span>
-              <span>{latestWorkout ? countValidSets(latestWorkout) : activeWorkout?.exercises.length ?? 0}</span>
-            </div>
+    <div className="relative -mx-4 -mt-5 min-h-[calc(100vh-6rem)] overflow-hidden bg-[#F6F8FC] px-5 pb-8 pt-7 sm:-mx-6 sm:px-6">
+      <div className="relative mx-auto max-w-[440px] space-y-4">
+        <header className="flex items-center justify-between gap-3">
+          <p className="text-nowrap text-[1.55rem] font-black italic leading-none tracking-normal text-[#102A5C] sm:text-[1.8rem]">
+            MuscleMap <span className="text-[#2478FF]">Fitness</span>
+          </p>
+          <div className="flex h-12 shrink-0 items-center gap-2 rounded-full border border-[#E5EAF2] bg-white px-4 text-lg font-bold text-[#101828] shadow-[0_6px_18px_rgba(16,24,40,0.05)]">
+            <span aria-hidden="true">🔥</span>
+            <span>{latestWorkout ? countValidSets(latestWorkout) : activeWorkout?.exercises.length ?? 0}</span>
           </div>
-          <h1 className="mt-6 text-[2.15rem] font-black leading-tight tracking-normal text-app-text sm:text-5xl">今天点亮哪块肌肉？</h1>
         </header>
 
         <DashboardMuscleHero selectedArea={selectedArea} onSelectArea={setSelectedArea} />
 
-        <DashboardPrimaryAction activeElapsedLabel={activeElapsedLabel} activeSummary={activeSummary} isActive={Boolean(activeWorkout)} />
+        <DashboardPrimaryAction
+          activeElapsedLabel={activeElapsedLabel}
+          activeSummary={activeSummary}
+          isActive={Boolean(activeWorkout)}
+          onStartWorkout={handleStartWorkout}
+        />
 
-        <section>
-          <div className="mb-4 flex items-center gap-3">
-            <CalendarIcon className="h-7 w-7 text-app-accent" />
-            <h2 className="text-xl font-semibold text-app-text">最近计划</h2>
-          </div>
-          <DashboardRecentPlanCard plan={recentPlan} day={nextPlanDay} onStartPlanDay={handleStartPlanDay} />
-        </section>
+        <DashboardRecentPlanCard plan={recentPlan} day={nextPlanDay} onStartPlanDay={handleStartPlanDay} />
 
         <DashboardRecentWorkoutCard log={latestWorkout} />
       </div>

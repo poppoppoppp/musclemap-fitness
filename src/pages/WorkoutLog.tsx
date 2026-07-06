@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import PageHeader from '../components/layout/PageHeader';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
@@ -34,12 +34,14 @@ const archiveMessages: Record<ActiveWorkoutArchiveError, string> = {
 };
 
 export default function WorkoutLog() {
+  const [searchParams] = useSearchParams();
   const [activeWorkout, setActiveWorkout] = useState<ActiveWorkout | null>(null);
   const [recentPlan, setRecentPlan] = useState<GeneratedPlan | null>(null);
   const [selectedExerciseId, setSelectedExerciseId] = useState(exercises[0]?.id ?? '');
   const [latestLog, setLatestLog] = useState<WorkoutLog | null>(null);
   const [status, setStatus] = useState('');
   const [timerNowMs, setTimerNowMs] = useState(() => Date.now());
+  const [exerciseCollapseOverrides, setExerciseCollapseOverrides] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     setActiveWorkout(readActiveWorkout());
@@ -56,6 +58,20 @@ export default function WorkoutLog() {
     const intervalId = window.setInterval(() => setTimerNowMs(Date.now()), 1000);
     return () => window.clearInterval(intervalId);
   }, [activeWorkout]);
+
+  useEffect(() => {
+    const focusedExerciseId = searchParams.get('focusExercise');
+    if (!activeWorkout || !focusedExerciseId) return;
+
+    const timeoutId = window.setTimeout(() => {
+      document.getElementById(getActiveExerciseElementId(focusedExerciseId))?.scrollIntoView({
+        block: 'center',
+        behavior: 'smooth'
+      });
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [activeWorkout, searchParams]);
 
   const summary = useMemo(() => {
     if (!activeWorkout) return { exerciseCount: 0, validSetCount: 0 };
@@ -115,6 +131,10 @@ export default function WorkoutLog() {
   const handleDeleteExercise = (activeExerciseId: string) => {
     if (!activeWorkout) return;
     persistActiveWorkout(removeExerciseFromActiveWorkout(activeWorkout, activeExerciseId));
+    setExerciseCollapseOverrides((current) => {
+      const { [activeExerciseId]: _removed, ...rest } = current;
+      return rest;
+    });
   };
 
   const handleAddSet = (activeExerciseId: string) => {
@@ -140,6 +160,13 @@ export default function WorkoutLog() {
   const handleEndCurrentExercise = (activeExerciseId: string) => {
     if (!activeWorkout) return;
     persistActiveWorkout(endActiveWorkoutExercise(activeWorkout, activeExerciseId));
+    setExerciseCollapseOverrides((current) => ({ ...current, [activeExerciseId]: true }));
+  };
+
+  const handleToggleExerciseCollapse = (activeExerciseId: string) => {
+    const exercise = activeWorkout?.exercises.find((item) => item.id === activeExerciseId);
+    const isCurrentlyCollapsed = exerciseCollapseOverrides[activeExerciseId] ?? Boolean(exercise?.endedAt);
+    setExerciseCollapseOverrides((current) => ({ ...current, [activeExerciseId]: !isCurrentlyCollapsed }));
   };
 
   const handleEndWorkout = () => {
@@ -311,6 +338,8 @@ export default function WorkoutLog() {
                   onNotesChange={handleNotesChange}
                   onDeleteExercise={handleDeleteExercise}
                   onEndCurrentExercise={handleEndCurrentExercise}
+                  isCollapsed={exerciseCollapseOverrides[exercise.id] ?? Boolean(exercise.endedAt)}
+                  onToggleCollapsed={handleToggleExerciseCollapse}
                   nowMs={timerNowMs}
                 />
               ))
@@ -338,6 +367,8 @@ function WorkoutExerciseEditor({
   onNotesChange,
   onDeleteExercise,
   onEndCurrentExercise,
+  isCollapsed,
+  onToggleCollapsed,
   nowMs
 }: {
   exercise: ActiveWorkoutExercise;
@@ -347,13 +378,20 @@ function WorkoutExerciseEditor({
   onNotesChange: (exerciseId: string, notes: string) => void;
   onDeleteExercise: (exerciseId: string) => void;
   onEndCurrentExercise: (exerciseId: string) => void;
+  isCollapsed: boolean;
+  onToggleCollapsed: (exerciseId: string) => void;
   nowMs: number;
 }) {
   const detail = getExerciseById(exercise.exerciseId);
   const timer = getExerciseTimerState(exercise, nowMs);
 
   return (
-    <article data-testid="workout-log-exercise" className="rounded-2xl border border-app-line bg-app-surfaceMuted p-4">
+    <article
+      id={getActiveExerciseElementId(exercise.id)}
+      data-testid="workout-log-exercise"
+      data-active-exercise-id={exercise.id}
+      className="rounded-2xl border border-app-line bg-app-surfaceMuted p-4"
+    >
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
@@ -372,80 +410,95 @@ function WorkoutExerciseEditor({
             ) : null}
           </div>
           <p className="text-sm text-app-muted">{detail?.name ?? exercise.exerciseId}</p>
-          {exercise.planned ? (
+          {!isCollapsed && exercise.planned ? (
             <p className="mt-2 text-sm leading-6 text-app-accent">
               计划建议：{exercise.planned.sets ?? exercise.sets.length} 组，{exercise.planned.repRange ?? '-'} 次，休息 {exercise.planned.restSeconds ?? '-'} 秒
               {exercise.planned.note ? `，${exercise.planned.note}` : ''}
             </p>
           ) : null}
         </div>
-        <Button type="button" variant="ghost" className="min-h-11" onClick={() => onDeleteExercise(exercise.id)} data-testid="delete-workout-exercise">
-          删除动作
-        </Button>
-      </div>
-
-      <div className="mt-4 space-y-3">
-        {exercise.sets.map((set) => (
-          <div key={set.id} data-testid="workout-set-row" className="grid gap-2 rounded-2xl border border-app-line bg-app-surface p-3 sm:grid-cols-[64px_1fr_1fr_auto] sm:items-end">
-            <div className="text-sm font-medium text-app-muted">第 {set.setIndex} 组</div>
-            <label className="grid gap-1 text-sm text-app-muted">
-              重量
-              <input
-                data-testid="set-weight-input"
-                type="number"
-                inputMode="decimal"
-                min="0"
-                step="0.5"
-                value={set.weight ?? ''}
-                onChange={(event) => onSetChange(exercise.id, set.id, 'weight', event.target.value)}
-                className="min-h-11 w-full rounded-xl border border-app-line bg-app-surfaceMuted px-3 py-2 text-base text-app-text outline-none transition focus:border-app-accent focus:ring-2 focus:ring-app-accent/20"
-              />
-            </label>
-            <label className="grid gap-1 text-sm text-app-muted">
-              次数
-              <input
-                data-testid="set-reps-input"
-                type="number"
-                inputMode="numeric"
-                min="0"
-                step="1"
-                value={set.reps ?? ''}
-                onChange={(event) => onSetChange(exercise.id, set.id, 'reps', event.target.value)}
-                className="min-h-11 w-full rounded-xl border border-app-line bg-app-surfaceMuted px-3 py-2 text-base text-app-text outline-none transition focus:border-app-accent focus:ring-2 focus:ring-app-accent/20"
-              />
-            </label>
-            <Button type="button" variant="ghost" className="min-h-11" onClick={() => onDeleteSet(exercise.id, set.id)} data-testid="delete-set">
-              删除
-            </Button>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-3 flex flex-col gap-3">
-        <Button type="button" variant="secondary" className="min-h-11 w-full sm:w-fit" onClick={() => onAddSet(exercise.id)} data-testid="add-set">
-          新增一组
-        </Button>
-        {timer && !timer.isEnded ? (
-          <Button
+        <div className="flex shrink-0 items-center gap-2">
+          <button
             type="button"
-            variant="secondary"
-            className="min-h-11 w-full border-app-accent/25 bg-app-accentSoft text-app-accent sm:w-fit"
-            onClick={() => onEndCurrentExercise(exercise.id)}
-            data-testid="end-current-exercise"
+            className="min-h-9 rounded-full border border-app-line bg-app-surface px-4 py-1.5 text-sm font-semibold text-app-muted transition hover:border-app-accent/45 hover:text-app-accent focus:outline-none focus:ring-2 focus:ring-app-accent/25"
+            onClick={() => onToggleCollapsed(exercise.id)}
+            data-testid="toggle-workout-exercise-collapse"
+            aria-expanded={!isCollapsed}
           >
-            当前动作结束
+            {isCollapsed ? '展开' : '收起'}
+          </button>
+          <Button type="button" variant="ghost" className="min-h-11" onClick={() => onDeleteExercise(exercise.id)} data-testid="delete-workout-exercise">
+            删除动作
           </Button>
-        ) : null}
-        <label className="grid gap-1 text-sm text-app-muted">
-          动作备注
-          <textarea
-            data-testid="exercise-notes-input"
-            value={exercise.notes ?? ''}
-            onChange={(event) => onNotesChange(exercise.id, event.target.value)}
-            className="min-h-20 w-full rounded-xl border border-app-line bg-app-surfaceMuted px-3 py-2 text-sm text-app-text outline-none transition focus:border-app-accent focus:ring-2 focus:ring-app-accent/20"
-          />
-        </label>
+        </div>
       </div>
+
+      {!isCollapsed ? (
+        <>
+          <div className="mt-4 space-y-3">
+            {exercise.sets.map((set) => (
+              <div key={set.id} data-testid="workout-set-row" className="grid gap-2 rounded-2xl border border-app-line bg-app-surface p-3 sm:grid-cols-[64px_1fr_1fr_auto] sm:items-end">
+                <div className="text-sm font-medium text-app-muted">第 {set.setIndex} 组</div>
+                <label className="grid gap-1 text-sm text-app-muted">
+                  重量
+                  <input
+                    data-testid="set-weight-input"
+                    type="number"
+                    inputMode="decimal"
+                    min="0"
+                    step="0.5"
+                    value={set.weight ?? ''}
+                    onChange={(event) => onSetChange(exercise.id, set.id, 'weight', event.target.value)}
+                    className="min-h-11 w-full rounded-xl border border-app-line bg-app-surfaceMuted px-3 py-2 text-base text-app-text outline-none transition focus:border-app-accent focus:ring-2 focus:ring-app-accent/20"
+                  />
+                </label>
+                <label className="grid gap-1 text-sm text-app-muted">
+                  次数
+                  <input
+                    data-testid="set-reps-input"
+                    type="number"
+                    inputMode="numeric"
+                    min="0"
+                    step="1"
+                    value={set.reps ?? ''}
+                    onChange={(event) => onSetChange(exercise.id, set.id, 'reps', event.target.value)}
+                    className="min-h-11 w-full rounded-xl border border-app-line bg-app-surfaceMuted px-3 py-2 text-base text-app-text outline-none transition focus:border-app-accent focus:ring-2 focus:ring-app-accent/20"
+                  />
+                </label>
+                <Button type="button" variant="ghost" className="min-h-11" onClick={() => onDeleteSet(exercise.id, set.id)} data-testid="delete-set">
+                  删除
+                </Button>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-3 flex flex-col gap-3">
+            <Button type="button" variant="secondary" className="min-h-11 w-full sm:w-fit" onClick={() => onAddSet(exercise.id)} data-testid="add-set">
+              新增一组
+            </Button>
+            {timer && !timer.isEnded ? (
+              <Button
+                type="button"
+                variant="secondary"
+                className="min-h-11 w-full border-app-accent/25 bg-app-accentSoft text-app-accent sm:w-fit"
+                onClick={() => onEndCurrentExercise(exercise.id)}
+                data-testid="end-current-exercise"
+              >
+                当前动作结束
+              </Button>
+            ) : null}
+            <label className="grid gap-1 text-sm text-app-muted">
+              动作备注
+              <textarea
+                data-testid="exercise-notes-input"
+                value={exercise.notes ?? ''}
+                onChange={(event) => onNotesChange(exercise.id, event.target.value)}
+                className="min-h-20 w-full rounded-xl border border-app-line bg-app-surfaceMuted px-3 py-2 text-sm text-app-text outline-none transition focus:border-app-accent focus:ring-2 focus:ring-app-accent/20"
+              />
+            </label>
+          </div>
+        </>
+      ) : null}
     </article>
   );
 }
@@ -541,6 +594,10 @@ function getExerciseTimerState(exercise: ActiveWorkoutExercise, nowMs: number) {
     isEnded: Boolean(exercise.endedAt),
     label: formatElapsedSeconds(Math.max(0, Math.floor((endedAtMs - startedAtMs) / 1000)))
   };
+}
+
+function getActiveExerciseElementId(activeExerciseId: string) {
+  return `active-exercise-${activeExerciseId}`;
 }
 
 function formatElapsedSeconds(totalSeconds: number) {

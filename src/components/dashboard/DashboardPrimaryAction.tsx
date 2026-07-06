@@ -5,16 +5,18 @@ interface DashboardPrimaryActionProps {
   activeElapsedLabel: string | null;
   activeSummary: string | null;
   isActive: boolean;
+  onStartWorkout: () => void;
 }
 
-export default function DashboardPrimaryAction({ activeElapsedLabel, activeSummary, isActive }: DashboardPrimaryActionProps) {
+export default function DashboardPrimaryAction({ activeElapsedLabel, activeSummary, isActive, onStartWorkout }: DashboardPrimaryActionProps) {
   return (
     <div>
       <Link
         to="/workout-log"
-        className="flex min-h-16 items-center justify-center gap-4 rounded-2xl bg-app-accent px-6 py-4 text-xl font-bold text-white shadow-[0_10px_24px_rgba(22,119,255,0.22)] transition hover:bg-app-accentHover active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-app-accent/30"
+        onClick={onStartWorkout}
+        className="flex min-h-[58px] items-center justify-center gap-4 rounded-[18px] bg-[#2478FF] px-6 py-4 text-xl font-black text-white shadow-[0_12px_26px_rgba(36,120,255,0.26)] transition hover:bg-[#1768EA] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#2478FF]/30"
       >
-        <DumbbellIcon className="h-8 w-8" />
+        <DumbbellIcon className="h-7 w-7" />
         {isActive ? '继续训练' : '开始记录'}
         {activeElapsedLabel ? (
           <span

@@ -7,14 +7,14 @@ import WorkoutIcon from '../icons/WorkoutIcon';
 const navItems = [
   { to: '/', label: '首页', icon: HomeIcon },
   { to: '/plan-builder', label: '计划', icon: PlanIcon },
-  { to: '/workout-log', label: '训练', icon: WorkoutIcon },
+  { to: '/workout-log', label: '统计', icon: WorkoutIcon },
   { to: '/data-management', label: '我的', icon: UserIcon }
 ];
 
 export default function BottomNav() {
   return (
-    <nav className="pointer-events-none fixed inset-x-0 bottom-0 z-20 px-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
-      <div className="pointer-events-auto mx-auto grid h-[68px] max-w-xl grid-cols-4 gap-1 rounded-2xl border border-app-line bg-app-surface/95 p-1.5 shadow-[0_8px_24px_rgba(17,24,39,0.1)] backdrop-blur-xl">
+    <nav className="pointer-events-none fixed inset-x-0 bottom-0 z-20 px-5 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+      <div className="pointer-events-auto mx-auto grid h-[76px] max-w-[430px] grid-cols-4 gap-1 rounded-[24px] border border-[#E5EAF2] bg-white p-2 shadow-[0_12px_32px_rgba(16,24,40,0.12)]">
         {navItems.map((item) => {
           const Icon = item.icon;
           return (
@@ -23,8 +23,8 @@ export default function BottomNav() {
               to={item.to}
               className={({ isActive }) =>
                 [
-                  'flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl px-2 py-1 text-xs font-semibold transition duration-200 active:scale-[0.98]',
-                  isActive ? 'bg-app-accentSoft text-app-accent' : 'text-app-muted hover:bg-app-surfaceMuted hover:text-app-text'
+                  'flex min-h-[60px] flex-col items-center justify-center gap-1 rounded-2xl px-2 py-1 text-sm font-bold transition duration-200 active:scale-[0.98]',
+                  isActive ? 'bg-[#EAF2FF] text-[#2478FF]' : 'text-[#667085] hover:bg-[#F6F8FC] hover:text-[#101828]'
                 ].join(' ')
               }
             >

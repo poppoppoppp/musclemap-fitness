@@ -1,0 +1,14 @@
+node_modules
+dist
+test-results
+playwright-report
+local-models
+*.blend
+*.fbx
+*.obj
+*.stl
+*.vtk
+*.dae
+*.ply
+*.usd
+*.usdz

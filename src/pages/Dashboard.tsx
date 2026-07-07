@@ -1,32 +1,27 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import DashboardMuscleHero, { type DashboardMuscleArea } from '../components/dashboard/DashboardMuscleHero';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import DashboardMusicPlayer from '../components/dashboard/DashboardMusicPlayer';
 import DashboardPrimaryAction from '../components/dashboard/DashboardPrimaryAction';
 import DashboardRecentPlanCard from '../components/dashboard/DashboardRecentPlanCard';
 import DashboardRecentWorkoutCard from '../components/dashboard/DashboardRecentWorkoutCard';
-import { createActiveWorkoutFromPlanDay, createManualActiveWorkout, readActiveWorkout, writeActiveWorkout } from '../utils/activeWorkout';
-import { PLAN_STORAGE_KEY } from '../utils/planRules';
-import { readStorage } from '../utils/storage';
-import { countValidSets, readWorkoutLogs } from '../utils/workoutHistory';
+import UserIcon from '../components/icons/UserIcon';
 import type { ActiveWorkout } from '../types/activeWorkout';
 import type { GeneratedPlan, WorkoutLog } from '../types/workout';
+import { createActiveWorkoutFromPlanDay, createManualActiveWorkout, readActiveWorkout, writeActiveWorkout } from '../utils/activeWorkout';
+import { getDashboardPlanProgress, getDashboardWorkoutSummary } from '../utils/dashboard';
+import { PLAN_STORAGE_KEY } from '../utils/planRules';
+import { readStorage } from '../utils/storage';
+import { readWorkoutLogs } from '../utils/workoutHistory';
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [activeWorkout, setActiveWorkout] = useState<ActiveWorkout | null>(null);
-  const [recentPlan, setRecentPlan] = useState<GeneratedPlan | null>(null);
-  const [latestWorkout, setLatestWorkout] = useState<WorkoutLog | null>(null);
-  const [selectedArea, setSelectedArea] = useState<DashboardMuscleArea>('chest');
-  const [elapsedSeconds, setElapsedSeconds] = useState(0);
-
-  useEffect(() => {
-    setActiveWorkout(readActiveWorkout());
-
+  const [activeWorkout, setActiveWorkout] = useState<ActiveWorkout | null>(() => readActiveWorkout());
+  const [recentPlan] = useState<GeneratedPlan | null>(() => {
     const plan = readStorage<GeneratedPlan | null>(PLAN_STORAGE_KEY, null);
-    setRecentPlan(isGeneratedPlan(plan) ? plan : null);
-
-    setLatestWorkout(readWorkoutLogs()[0] ?? null);
-  }, []);
+    return isGeneratedPlan(plan) ? plan : null;
+  });
+  const [workoutLogs] = useState<WorkoutLog[]>(() => readWorkoutLogs());
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
   useEffect(() => {
     if (!activeWorkout) {
@@ -35,47 +30,28 @@ export default function Dashboard() {
     }
 
     const startedAtMs = new Date(activeWorkout.startedAt).getTime();
-    if (!Number.isFinite(startedAtMs)) {
-      setElapsedSeconds(0);
-      return;
-    }
+    if (!Number.isFinite(startedAtMs)) return;
 
-    const updateElapsed = () => {
-      setElapsedSeconds(Math.max(0, Math.floor((Date.now() - startedAtMs) / 1000)));
-    };
-
+    const updateElapsed = () => setElapsedSeconds(Math.max(0, Math.floor((Date.now() - startedAtMs) / 1000)));
     updateElapsed();
     const intervalId = window.setInterval(updateElapsed, 1000);
     return () => window.clearInterval(intervalId);
   }, [activeWorkout]);
 
-  const activeSummary = useMemo(() => {
-    if (!activeWorkout) return null;
-    const validSetCount = activeWorkout.exercises.reduce(
-      (count, exercise) =>
-        count + exercise.sets.filter((set) => isDisplayableNumber(set.weight) || isDisplayableNumber(set.reps)).length,
-      0
-    );
-    return `${activeWorkout.exercises.length} 个动作 · ${validSetCount} 个有效组`;
-  }, [activeWorkout]);
-
+  const latestWorkout = workoutLogs[0] ?? null;
+  const workoutSummary = latestWorkout ? getDashboardWorkoutSummary(latestWorkout, recentPlan) : null;
+  const planProgress = recentPlan ? getDashboardPlanProgress(recentPlan, workoutLogs) : null;
+  const activeSummary = activeWorkout ? `${activeWorkout.exercises.length} 个动作已加入` : null;
   const activeElapsedLabel = activeWorkout ? formatElapsedSeconds(elapsedSeconds) : null;
-  const nextPlanDay = recentPlan?.days[0] ?? null;
 
   const handleStartPlanDay = () => {
-    if (!recentPlan || !nextPlanDay) return;
-
+    if (!recentPlan || !planProgress?.nextDay) return;
     const existing = readActiveWorkout();
-    if (existing) {
-      navigate('/workout-log');
-      return;
-    }
-
-    writeActiveWorkout(createActiveWorkoutFromPlanDay(recentPlan, nextPlanDay));
+    if (!existing) writeActiveWorkout(createActiveWorkoutFromPlanDay(recentPlan, planProgress.nextDay));
     navigate('/workout-log');
   };
 
-  const handleStartWorkout = () => {
+  const handleStartTraining = () => {
     const existing = readActiveWorkout();
     if (existing) {
       setActiveWorkout(existing);
@@ -84,34 +60,40 @@ export default function Dashboard() {
 
     const workout = createManualActiveWorkout();
     writeActiveWorkout(workout);
-    setActiveWorkout(readActiveWorkout() ?? workout);
+    setActiveWorkout(workout);
   };
 
   return (
-    <div className="relative -mx-4 -mt-5 min-h-[calc(100vh-6rem)] overflow-hidden bg-[#F6F8FC] px-5 pb-8 pt-7 sm:-mx-6 sm:px-6">
-      <div className="relative mx-auto max-w-[440px] space-y-4">
-        <header className="flex items-center justify-between gap-3">
-          <p className="text-nowrap text-[1.55rem] font-black italic leading-none tracking-normal text-[#102A5C] sm:text-[1.8rem]">
-            MuscleMap <span className="text-[#2478FF]">Fitness</span>
-          </p>
-          <div className="flex h-12 shrink-0 items-center gap-2 rounded-full border border-[#E5EAF2] bg-white px-4 text-lg font-bold text-[#101828] shadow-[0_6px_18px_rgba(16,24,40,0.05)]">
-            <span aria-hidden="true">🔥</span>
-            <span>{latestWorkout ? countValidSets(latestWorkout) : activeWorkout?.exercises.length ?? 0}</span>
-          </div>
+    <div className="relative -mx-4 -mt-5 min-h-[calc(100vh-5rem)] overflow-hidden bg-[#080a08] px-4 pb-8 pt-6 text-white sm:-mx-6 sm:px-6">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-[radial-gradient(circle_at_72%_0%,rgba(190,242,48,0.10),transparent_42%)]" />
+      <div className="relative mx-auto max-w-[440px] space-y-7">
+        <header className="flex min-h-14 items-center justify-between gap-4">
+          <h1 className="text-[1.75rem] font-black tracking-[-0.035em] text-white">
+            Muscle<span className="text-lime-300">Map</span>
+          </h1>
+          <Link
+            to="/data-management"
+            aria-label="打开我的"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-zinc-300 transition hover:border-lime-300/40 hover:text-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/70"
+          >
+            <UserIcon className="h-5 w-5" />
+          </Link>
         </header>
-
-        <DashboardMuscleHero selectedArea={selectedArea} onSelectArea={setSelectedArea} />
 
         <DashboardPrimaryAction
           activeElapsedLabel={activeElapsedLabel}
           activeSummary={activeSummary}
           isActive={Boolean(activeWorkout)}
-          onStartWorkout={handleStartWorkout}
+          onStartWorkout={handleStartTraining}
         />
-
-        <DashboardRecentPlanCard plan={recentPlan} day={nextPlanDay} onStartPlanDay={handleStartPlanDay} />
-
-        <DashboardRecentWorkoutCard log={latestWorkout} />
+        <DashboardRecentWorkoutCard log={latestWorkout} summary={workoutSummary} />
+        <DashboardRecentPlanCard
+          day={planProgress?.nextDay ?? null}
+          onStartPlanDay={handleStartPlanDay}
+          percentage={planProgress?.percentage ?? 0}
+          plan={recentPlan}
+        />
+        <DashboardMusicPlayer />
       </div>
     </div>
   );
@@ -123,10 +105,6 @@ function isGeneratedPlan(value: unknown): value is GeneratedPlan {
   return typeof plan.id === 'string' && typeof plan.name === 'string' && Array.isArray(plan.days);
 }
 
-function isDisplayableNumber(value: unknown): value is number {
-  return typeof value === 'number' && Number.isFinite(value);
-}
-
 function formatElapsedSeconds(totalSeconds: number) {
   const safeSeconds = Math.max(0, Math.floor(totalSeconds));
   const hours = Math.floor(safeSeconds / 3600);
@@ -134,6 +112,5 @@ function formatElapsedSeconds(totalSeconds: number) {
   const seconds = safeSeconds % 60;
   const paddedMinutes = hours > 0 ? String(minutes).padStart(2, '0') : String(minutes);
   const paddedSeconds = String(seconds).padStart(2, '0');
-
   return hours > 0 ? `${hours}:${paddedMinutes}:${paddedSeconds}` : `${paddedMinutes}:${paddedSeconds}`;
 }

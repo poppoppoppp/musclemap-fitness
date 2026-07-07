@@ -2,9 +2,10 @@ import type { BackupSummary, MuscleMapBackupData, MuscleMapBackupFile } from '..
 import type { GeneratedPlan, WorkoutLog, WorkoutLogExercise, WorkoutSet } from '../types/workout';
 import { PLAN_STORAGE_KEY } from './planRules';
 import { readStorage } from './storage';
+import { BODY_SNAPSHOTS_KEY, isBodySnapshot, readBodySnapshots } from './bodySnapshots';
 
 export const BACKUP_APP_NAME = 'MuscleMap Fitness';
-export const BACKUP_EXPORT_VERSION = 1;
+export const BACKUP_EXPORT_VERSION = 2;
 export const WORKOUT_LOGS_KEY = 'musclemap.workoutLogs.v0.3';
 export const LATEST_WORKOUT_LOG_KEY = 'musclemap.latestWorkoutLog.v0.3';
 
@@ -13,14 +14,16 @@ export type BackupValidationError =
   | 'missing-fields'
   | 'wrong-app'
   | 'unsupported-version'
-  | 'damaged-workout-logs';
+  | 'damaged-workout-logs'
+  | 'damaged-body-snapshots';
 
 export const backupErrorMessages: Record<BackupValidationError, string> = {
   'invalid-json': '文件内容不是有效 JSON。',
   'missing-fields': '备份文件缺少必要字段。',
   'wrong-app': '这不是 MuscleMap Fitness 的导出文件。',
   'unsupported-version': '当前版本不支持该备份文件。',
-  'damaged-workout-logs': '备份文件中的训练记录结构损坏。'
+  'damaged-workout-logs': '备份文件中的训练记录结构损坏。',
+  'damaged-body-snapshots': '备份文件中的身体记录结构损坏。'
 };
 
 type ValidationResult = { ok: true; backup: MuscleMapBackupFile; summary: BackupSummary } | { ok: false; error: BackupValidationError };
@@ -29,11 +32,13 @@ export function readCurrentBackupData(): MuscleMapBackupData {
   const latestGeneratedPlan = readStorage<GeneratedPlan | null>(PLAN_STORAGE_KEY, null);
   const workoutLogs = readStorage<WorkoutLog[]>(WORKOUT_LOGS_KEY, []);
   const latestWorkoutLog = readStorage<WorkoutLog | null>(LATEST_WORKOUT_LOG_KEY, null);
+  const bodySnapshots = readBodySnapshots();
 
   return {
     latestGeneratedPlan: isGeneratedPlan(latestGeneratedPlan) ? latestGeneratedPlan : null,
     workoutLogs: Array.isArray(workoutLogs) ? workoutLogs.filter(isWorkoutLog) : [],
-    latestWorkoutLog: isWorkoutLog(latestWorkoutLog) ? latestWorkoutLog : null
+    latestWorkoutLog: isWorkoutLog(latestWorkoutLog) ? latestWorkoutLog : null,
+    bodySnapshots
   };
 }
 
@@ -51,6 +56,7 @@ export function summarizeBackupData(data: MuscleMapBackupData, exportedAt?: stri
     hasLatestGeneratedPlan: data.latestGeneratedPlan !== null,
     workoutLogCount: data.workoutLogs.length,
     hasLatestWorkoutLog: data.latestWorkoutLog !== null,
+    bodySnapshotCount: data.bodySnapshots.length,
     exportedAt
   };
 }
@@ -71,7 +77,7 @@ export function validateBackupText(text: string): ValidationResult {
   }
 
   if (parsed.app !== BACKUP_APP_NAME) return { ok: false, error: 'wrong-app' };
-  if (parsed.exportVersion !== BACKUP_EXPORT_VERSION) return { ok: false, error: 'unsupported-version' };
+  if (parsed.exportVersion !== 1 && parsed.exportVersion !== BACKUP_EXPORT_VERSION) return { ok: false, error: 'unsupported-version' };
   if (typeof parsed.exportedAt !== 'string' || !isPlainObject(parsed.data)) return { ok: false, error: 'missing-fields' };
 
   const data = parsed.data;
@@ -91,14 +97,20 @@ export function validateBackupText(text: string): ValidationResult {
     return { ok: false, error: 'damaged-workout-logs' };
   }
 
+  const bodySnapshots = parsed.exportVersion === 1 ? [] : data.bodySnapshots;
+  if (!Array.isArray(bodySnapshots) || !bodySnapshots.every(isBodySnapshot)) {
+    return { ok: false, error: 'damaged-body-snapshots' };
+  }
+
   const backup: MuscleMapBackupFile = {
     app: BACKUP_APP_NAME,
-    exportVersion: BACKUP_EXPORT_VERSION,
+    exportVersion: parsed.exportVersion,
     exportedAt: parsed.exportedAt,
     data: {
       latestGeneratedPlan: data.latestGeneratedPlan,
       workoutLogs: data.workoutLogs,
-      latestWorkoutLog: data.latestWorkoutLog
+      latestWorkoutLog: data.latestWorkoutLog,
+      bodySnapshots
     }
   };
 
@@ -120,6 +132,8 @@ export function applyBackupData(data: MuscleMapBackupData): boolean {
     } else {
       window.localStorage.setItem(LATEST_WORKOUT_LOG_KEY, JSON.stringify(data.latestWorkoutLog));
     }
+
+    window.localStorage.setItem(BODY_SNAPSHOTS_KEY, JSON.stringify(data.bodySnapshots));
 
     return true;
   } catch {

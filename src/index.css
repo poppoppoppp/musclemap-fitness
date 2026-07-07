@@ -77,6 +77,22 @@ select:-webkit-autofill {
   transition: background-color 9999s ease-in-out 0s;
 }
 
+.profile-dark input {
+  color: #e4e4e7 !important;
+  -webkit-text-fill-color: #e4e4e7 !important;
+  caret-color: #bef264;
+}
+
+.template-dark input {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #bef264;
+}
+
+.template-dark input::placeholder {
+  color: #71717a;
+}
+
 ::selection {
   background: rgba(22, 119, 255, 0.18);
 }

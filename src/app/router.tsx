@@ -5,6 +5,7 @@ import Dashboard from '../pages/Dashboard';
 import ExerciseDetail from '../pages/ExerciseDetail';
 import ExerciseLibrary from '../pages/ExerciseLibrary';
 import MuscleMap from '../pages/MuscleMap';
+import NewTrainingTemplate from '../pages/NewTrainingTemplate';
 import PlanBuilder from '../pages/PlanBuilder';
 import TwoDMuscleSelector from '../pages/TwoDMuscleSelector';
 import WorkoutHistory from '../pages/WorkoutHistory';
@@ -21,6 +22,7 @@ export const router = createBrowserRouter([
       { path: 'exercises', element: <ExerciseLibrary /> },
       { path: 'exercises/:exerciseId', element: <ExerciseDetail /> },
       { path: 'plan-builder', element: <PlanBuilder /> },
+      { path: 'templates/new', element: <NewTrainingTemplate /> },
       { path: 'data-management', element: <DataManagement /> },
       { path: 'three-muscle-selector', element: <TwoDMuscleSelector /> },
       { path: 'three-muscle-demo', element: <TwoDMuscleSelector /> },

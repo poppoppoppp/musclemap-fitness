@@ -17,3 +17,7 @@
 | Templates: storage model and creation flow | completed |
 | Templates: dark template list and empty state | completed |
 | Templates: mobile visual QA, build, and E2E | completed |
+| Homepage recent workout carousel: design and plan | completed |
+| Homepage recent workout carousel: implementation | completed |
+| Homepage NetEase playlist player: design and plan | completed |
+| Homepage NetEase playlist player: implementation | completed |

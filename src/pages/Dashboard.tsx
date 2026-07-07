@@ -38,8 +38,10 @@ export default function Dashboard() {
     return () => window.clearInterval(intervalId);
   }, [activeWorkout]);
 
-  const latestWorkout = workoutLogs[0] ?? null;
-  const workoutSummary = latestWorkout ? getDashboardWorkoutSummary(latestWorkout, recentPlan) : null;
+  const recentWorkouts = workoutLogs.slice(0, 5).map((log) => ({
+    log,
+    summary: getDashboardWorkoutSummary(log, recentPlan)
+  }));
   const planProgress = recentPlan ? getDashboardPlanProgress(recentPlan, workoutLogs) : null;
   const activeSummary = activeWorkout ? `${activeWorkout.exercises.length} 个动作已加入` : null;
   const activeElapsedLabel = activeWorkout ? formatElapsedSeconds(elapsedSeconds) : null;
@@ -86,7 +88,7 @@ export default function Dashboard() {
           isActive={Boolean(activeWorkout)}
           onStartWorkout={handleStartTraining}
         />
-        <DashboardRecentWorkoutCard log={latestWorkout} summary={workoutSummary} />
+        <DashboardRecentWorkoutCard workouts={recentWorkouts} />
         <DashboardRecentPlanCard
           day={planProgress?.nextDay ?? null}
           onStartPlanDay={handleStartPlanDay}

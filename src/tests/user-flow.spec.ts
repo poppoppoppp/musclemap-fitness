@@ -161,7 +161,7 @@ test('training entry homepage presents stored workout plan and music states', as
   await expect(page.getByTestId('dashboard-recent-workout')).toContainText('2 组');
   await expect(page.getByTestId('dashboard-music-player')).toContainText('导入歌单后，训练时可快速播放音乐');
   await page.getByRole('button', { name: '导入歌单' }).click();
-  await expect(page.getByRole('status')).toContainText('后续支持从网易云导入歌单');
+  await expect(page.getByPlaceholder('粘贴网易云歌单链接或 ID')).toBeVisible();
   await expect(page.getByRole('link', { name: '记录', exact: true })).toHaveAttribute('href', '/workout-log');
   await expect(page.getByRole('link', { name: '动作库', exact: true })).toHaveAttribute('href', '/exercises');
 
@@ -184,7 +184,7 @@ test('training entry homepage teaches empty states without fabricated data', asy
   await expect(page.getByTestId('dashboard-recent-plan')).toContainText('还没有训练计划');
   await expect(page.getByTestId('dashboard-recent-plan')).toContainText('选择计划');
   await expect(page.getByTestId('dashboard-music-player')).toContainText('导入歌单后，训练时可快速播放音乐');
-  await expect(page.getByTestId('dashboard-music-player').getByRole('button', { name: '播放' })).toBeDisabled();
+  await expect(page.getByTestId('dashboard-music-player').getByRole('button', { name: '导入歌单' })).toBeVisible();
 
   await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
   const navBox = await page.locator('nav').boundingBox();
@@ -192,6 +192,75 @@ test('training entry homepage teaches empty states without fabricated data', asy
   expect(navBox).not.toBeNull();
   expect(musicBox).not.toBeNull();
   expect(musicBox!.y + musicBox!.height).toBeLessThanOrEqual(navBox!.y);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
+});
+
+test('homepage recent workouts carousel shows and selects the five newest logs', async ({ page }) => {
+  await page.addInitScript(() => {
+    const logs = Array.from({ length: 6 }, (_, index) => ({
+      id: `carousel-log-${index + 1}`,
+      date: `2026-07-0${6 - index}`,
+      durationSeconds: (30 - index) * 60,
+      exercises: [
+        {
+          id: `carousel-exercise-${index + 1}`,
+          exerciseId: 'lat-pulldown',
+          order: 0,
+          sets: [{ id: `carousel-set-${index + 1}`, setIndex: 1, reps: 10, completed: true }]
+        }
+      ],
+      createdAt: `2026-07-0${6 - index}T10:00:00.000Z`
+    }));
+    window.localStorage.setItem('musclemap.workoutLogs.v0.3', JSON.stringify(logs));
+    window.localStorage.removeItem('musclemap.latestGeneratedPlan.v0.2');
+  });
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+
+  const slides = page.getByTestId('dashboard-recent-workout-slide');
+  await expect(slides).toHaveCount(5);
+  await expect(slides.first()).toHaveAttribute('href', '/workout-history/carousel-log-1');
+  await expect(slides.first()).toHaveAttribute('data-selected', 'true');
+  await expect(page.getByTestId('dashboard-workout-position')).toHaveText('1/5');
+  await expect(page.getByText('2026-07-01')).toHaveCount(0);
+
+  await page.getByRole('button', { name: '查看第 3 次训练' }).click();
+  await expect(slides.nth(2)).toHaveAttribute('data-selected', 'true');
+  await expect(page.getByTestId('dashboard-workout-position')).toHaveText('3/5');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
+});
+
+test('homepage imports persists replaces and removes a NetEase playlist player', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.evaluate(() => window.localStorage.removeItem('musclemap.neteasePlaylist.v1'));
+  await page.reload();
+
+  await page.getByRole('button', { name: '导入歌单' }).click();
+  const input = page.getByPlaceholder('粘贴网易云歌单链接或 ID');
+  await input.fill('https://example.com/playlist?id=19723756');
+  await page.getByRole('button', { name: '确认导入' }).click();
+  await expect(page.getByRole('alert')).toHaveText('请输入有效的网易云歌单链接或 ID');
+
+  await input.fill('分享歌单 https://music.163.com/#/playlist?id=19723756');
+  await page.getByRole('button', { name: '确认导入' }).click();
+  const player = page.locator('iframe[title="网易云歌单播放器"]');
+  await expect(player).toHaveAttribute('src', 'https://music.163.com/outchain/player?type=0&id=19723756&auto=0&height=430');
+  await expect(page.getByText('已导入网易云歌单')).toBeVisible();
+  expect(await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.neteasePlaylist.v1') ?? 'null'))).toBe('19723756');
+
+  await page.reload();
+  await expect(page.locator('iframe[title="网易云歌单播放器"]')).toHaveAttribute('src', /id=19723756/);
+  await page.getByRole('button', { name: '更换歌单' }).click();
+  await page.getByPlaceholder('粘贴网易云歌单链接或 ID').fill('3778678');
+  await page.getByRole('button', { name: '确认导入' }).click();
+  await expect(page.locator('iframe[title="网易云歌单播放器"]')).toHaveAttribute('src', /id=3778678/);
+
+  await page.getByRole('button', { name: '移除歌单' }).click();
+  await expect(page.locator('iframe[title="网易云歌单播放器"]')).toHaveCount(0);
+  await expect(page.getByText('导入歌单后，训练时可快速播放音乐')).toBeVisible();
+  expect(await page.evaluate(() => window.localStorage.getItem('musclemap.neteasePlaylist.v1'))).toBeNull();
   expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
 });
 

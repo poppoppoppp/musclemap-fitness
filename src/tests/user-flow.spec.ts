@@ -231,38 +231,7 @@ test('homepage recent workouts carousel shows and selects the five newest logs',
   expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
 });
 
-test('homepage imports full NetEase playlist data and renders only the current track card', async ({ page }) => {
-  const playableAudioUrl = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=';
-  const playlistTracks = Array.from({ length: 8 }, (_, index) => ({
-    id: String(1000 + index),
-    name: `Track ${index + 1}`,
-    artist: `Artist ${index + 1}`,
-    albumName: `Album ${index + 1}`,
-    coverUrl: `https://example.com/cover-${index + 1}.jpg`,
-    duration: 180000 + index * 1000,
-    audioUrl: playableAudioUrl
-  }));
-
-  await page.route('**/api/netease-playlist?id=*', async (route) => {
-    const url = new URL(route.request().url());
-    const id = url.searchParams.get('id') ?? '';
-    const tracks = id === '3778678' ? playlistTracks.slice(0, 7).map((track, index) => ({
-      ...track,
-      id: `replace-${track.id}`,
-      name: `Replace Track ${index + 1}`,
-      artist: `Replace Artist ${index + 1}`
-    })) : playlistTracks;
-
-    await route.fulfill({
-      contentType: 'application/json',
-      body: JSON.stringify({
-        ok: true,
-        playlist: { id, name: id === '3778678' ? 'Replacement Playlist' : 'Workout Playlist', source: 'netease', trackCount: id === '3778678' ? 9 : 10 },
-        tracks
-      })
-    });
-  });
-
+test('homepage imports a NetEase official player as the only music player', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
   await page.evaluate(() => window.localStorage.removeItem('musclemap.neteasePlaylist.v1'));
@@ -276,38 +245,27 @@ test('homepage imports full NetEase playlist data and renders only the current t
 
   await input.fill('分享歌单 https://music.163.com/#/playlist?id=19723756');
   await page.getByRole('button', { name: '确认导入' }).click();
-  await expect(page.locator('iframe[title="网易云歌单播放器"]')).toHaveCount(0);
-  await expect(page.getByText('当前播放')).toBeVisible();
-  await expect(page.getByText('来自网易云歌单 · Workout Playlist')).toBeVisible();
-  await expect(page.getByText('Track 1')).toBeVisible();
-  await expect(page.getByText('Artist 1')).toBeVisible();
-  await expect(page.getByText('播放队列已载入可播放歌曲')).toBeVisible();
-  await expect(page.getByTestId('music-track-count')).toHaveText('8 / 10 首');
+  const officialPlayer = page.locator('iframe[title="网易云官方歌单播放器"]');
+  await expect(officialPlayer).toHaveAttribute('src', 'https://music.163.com/outchain/player?type=0&id=19723756&auto=0&height=430');
+  await expect(page.getByText('歌单 ID：19723756')).toBeVisible();
+  await expect(page.getByRole('link', { name: '在网易云打开' })).toHaveAttribute('href', 'https://music.163.com/#/playlist?id=19723756');
+  await expect(page.getByText('当前播放')).toHaveCount(0);
+  await expect(page.getByTestId('music-track-count')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: '上一首' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: '下一首' })).toHaveCount(0);
   expect(await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.neteasePlaylist.v1') ?? 'null'))).toBe('19723756');
 
-  await page.locator('audio').evaluate((audio) => audio.dispatchEvent(new Event('error')));
-  await expect(page.getByText('Track 2')).toBeVisible();
-  await expect(page.getByRole('status')).toContainText('已跳过不可播放歌曲');
-
-  for (let index = 0; index < 6; index += 1) {
-    await page.getByRole('button', { name: '下一首' }).click();
-  }
-  await expect(page.getByText('Track 8')).toBeVisible();
-  await expect(page.getByText('Artist 8')).toBeVisible();
-
   await page.reload();
-  await expect(page.locator('iframe[title="网易云歌单播放器"]')).toHaveCount(0);
-  await expect(page.getByText('Workout Playlist')).toBeVisible();
+  await expect(page.locator('iframe[title="网易云官方歌单播放器"]')).toHaveAttribute('src', 'https://music.163.com/outchain/player?type=0&id=19723756&auto=0&height=430');
   await page.getByRole('button', { name: '更换歌单' }).click();
   await page.getByPlaceholder('粘贴网易云歌单链接或 ID').fill('3778678');
   await page.getByRole('button', { name: '确认导入' }).click();
-  await expect(page.getByText('来自网易云歌单 · Replacement Playlist')).toBeVisible();
-  await expect(page.getByText('Replace Track 1')).toBeVisible();
-  await expect(page.getByTestId('music-track-count')).toHaveText('7 / 9 首');
+  await expect(page.locator('iframe[title="网易云官方歌单播放器"]')).toHaveAttribute('src', 'https://music.163.com/outchain/player?type=0&id=3778678&auto=0&height=430');
+  await expect(page.getByText('歌单 ID：3778678')).toBeVisible();
 
   await page.getByRole('button', { name: '管理' }).click();
   await page.getByRole('button', { name: '移除歌单' }).click();
-  await expect(page.locator('iframe[title="网易云歌单播放器"]')).toHaveCount(0);
+  await expect(page.locator('iframe[title="网易云官方歌单播放器"]')).toHaveCount(0);
   await expect(page.getByText('导入歌单后，训练时可快速播放音乐')).toBeVisible();
   expect(await page.evaluate(() => window.localStorage.getItem('musclemap.neteasePlaylist.v1'))).toBeNull();
   expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);

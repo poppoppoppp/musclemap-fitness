@@ -49,6 +49,11 @@ export function buildNetEasePlaylistEmbedUrl(playlistId: string): string {
   return `https://music.163.com/outchain/player?type=0&id=${playlistId}&auto=0&height=430`;
 }
 
+export function buildNetEaseSongEmbedUrl(songId: string, auto = false): string {
+  if (!numericIdPattern.test(songId)) throw new Error('Invalid NetEase song id');
+  return `https://music.163.com/outchain/player?type=2&id=${songId}&auto=${auto ? 1 : 0}&height=66`;
+}
+
 export async function fetchNetEasePlaylistData(playlistId: string, timeoutMs = 20_000): Promise<NetEasePlaylistData> {
   if (!numericIdPattern.test(playlistId)) throw new Error('Invalid NetEase playlist id');
 

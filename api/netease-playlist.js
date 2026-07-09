@@ -28,11 +28,6 @@ function mapSong(song) {
   };
 }
 
-function normalizeAudioUrl(url) {
-  if (typeof url !== 'string' || url.length === 0) return undefined;
-  return url.replace(/^http:\/\//i, 'https://');
-}
-
 async function fetchJson(url) {
   const response = await fetch(url, { headers: NETEASE_HEADERS });
   if (!response.ok) throw new Error(`NetEase request failed: ${response.status}`);
@@ -57,29 +52,21 @@ export default async function handler(request, response) {
     }
 
     const trackIdChunks = chunk(trackIds, 200);
-    const [songBatches, playerBatches] = await Promise.all([
-      Promise.all(trackIdChunks.map((ids) => fetchJson(`https://music.163.com/api/song/detail?ids=[${ids.join(',')}]`))),
-      Promise.all(trackIdChunks.map((ids) => fetchJson(`https://music.163.com/api/song/enhance/player/url?ids=[${ids.join(',')}]&br=128000`)))
-    ]);
-    const songs = songBatches.flatMap((batch) => Array.isArray(batch?.songs) ? batch.songs : []);
-    const playableUrls = new Map(
-      playerBatches
-        .flatMap((batch) => Array.isArray(batch?.data) ? batch.data : [])
-        .filter((item) => item?.code === 200 && item?.url)
-        .map((item) => [String(item.id), normalizeAudioUrl(item.url)])
+    const songBatches = await Promise.all(
+      trackIdChunks.map((ids) => fetchJson(`https://music.163.com/api/song/detail?ids=[${ids.join(',')}]`))
     );
+    const songs = songBatches.flatMap((batch) => Array.isArray(batch?.songs) ? batch.songs : []);
     const songsById = new Map(songs.map((song) => [String(song.id), song]));
     const tracks = trackIds
       .map((trackId) => {
         const id = String(trackId);
         const song = songsById.get(id);
-        const audioUrl = playableUrls.get(id);
-        return song && audioUrl ? { ...mapSong(song), audioUrl } : null;
+        return song ? mapSong(song) : null;
       })
       .filter(Boolean);
 
     if (tracks.length === 0) {
-      response.status(200).json({ ok: false, error: 'no-playable-tracks' });
+      response.status(200).json({ ok: false, error: 'no-tracks' });
       return;
     }
 

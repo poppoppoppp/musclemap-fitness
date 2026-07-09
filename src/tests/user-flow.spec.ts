@@ -232,6 +232,35 @@ test('homepage recent workouts carousel shows and selects the five newest logs',
 });
 
 test('homepage imports a NetEase official player as the only music player', async ({ page }) => {
+  const playlistTracks = Array.from({ length: 8 }, (_, index) => ({
+    id: String(1000 + index),
+    name: `Track ${index + 1}`,
+    artist: `Artist ${index + 1}`,
+    albumName: `Album ${index + 1}`,
+    coverUrl: `https://example.com/cover-${index + 1}.jpg`,
+    duration: 180000 + index * 1000
+  }));
+
+  await page.route('**/api/netease-playlist?id=*', async (route) => {
+    const url = new URL(route.request().url());
+    const id = url.searchParams.get('id') ?? '';
+    const tracks = id === '3778678' ? playlistTracks.slice(0, 7).map((track, index) => ({
+      ...track,
+      id: `200${index}`,
+      name: `Replace Track ${index + 1}`,
+      artist: `Replace Artist ${index + 1}`
+    })) : playlistTracks;
+
+    await route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({
+        ok: true,
+        playlist: { id, name: id === '3778678' ? 'Replacement Playlist' : 'Workout Playlist', source: 'netease', trackCount: id === '3778678' ? 9 : 10 },
+        tracks
+      })
+    });
+  });
+
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
   await page.evaluate(() => window.localStorage.removeItem('musclemap.neteasePlaylist.v1'));
@@ -245,30 +274,105 @@ test('homepage imports a NetEase official player as the only music player', asyn
 
   await input.fill('分享歌单 https://music.163.com/#/playlist?id=19723756');
   await page.getByRole('button', { name: '确认导入' }).click();
-  const officialPlayer = page.locator('iframe[title="网易云官方歌单播放器"]');
-  await expect(officialPlayer).toHaveAttribute('src', 'https://music.163.com/outchain/player?type=0&id=19723756&auto=0&height=430');
-  await expect(page.getByText('歌单 ID：19723756')).toBeVisible();
+  const officialPlayer = page.locator('iframe[title="网易云官方单曲播放器"]');
+  await expect(officialPlayer).toHaveAttribute('src', 'https://music.163.com/outchain/player?type=2&id=1000&auto=0&height=66');
+  await expect(page.getByText('来自网易云歌单 · Workout Playlist')).toBeVisible();
+  await expect(page.getByTestId('music-track-count')).toHaveText('8 / 10 首');
+  await expect(page.getByTestId('music-track-list-item')).toHaveCount(8);
+  await expect(page.getByRole('button', { name: /播放 Track 1/ })).toBeVisible();
+  await expect(page.getByText('Artist 1')).toBeVisible();
+  await expect(page.getByRole('button', { name: /播放 Track 8/ })).toBeVisible();
   await expect(page.getByRole('link', { name: '在网易云打开' })).toHaveAttribute('href', 'https://music.163.com/#/playlist?id=19723756');
-  await expect(page.getByText('当前播放')).toHaveCount(0);
-  await expect(page.getByTestId('music-track-count')).toHaveCount(0);
-  await expect(page.getByRole('button', { name: '上一首' })).toHaveCount(0);
-  await expect(page.getByRole('button', { name: '下一首' })).toHaveCount(0);
   expect(await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.neteasePlaylist.v1') ?? 'null'))).toBe('19723756');
 
+  await page.getByRole('button', { name: /播放 Track 8/ }).click();
+  await expect(page.locator('iframe[title="网易云官方单曲播放器"]')).toHaveAttribute('src', 'https://music.163.com/outchain/player?type=2&id=1007&auto=1&height=66');
+  await expect(page.getByText('正在播放 · Track 8')).toBeVisible();
+
   await page.reload();
-  await expect(page.locator('iframe[title="网易云官方歌单播放器"]')).toHaveAttribute('src', 'https://music.163.com/outchain/player?type=0&id=19723756&auto=0&height=430');
+  await expect(page.locator('iframe[title="网易云官方单曲播放器"]')).toHaveAttribute('src', 'https://music.163.com/outchain/player?type=2&id=1000&auto=0&height=66');
   await page.getByRole('button', { name: '更换歌单' }).click();
   await page.getByPlaceholder('粘贴网易云歌单链接或 ID').fill('3778678');
   await page.getByRole('button', { name: '确认导入' }).click();
-  await expect(page.locator('iframe[title="网易云官方歌单播放器"]')).toHaveAttribute('src', 'https://music.163.com/outchain/player?type=0&id=3778678&auto=0&height=430');
-  await expect(page.getByText('歌单 ID：3778678')).toBeVisible();
+  await expect(page.locator('iframe[title="网易云官方单曲播放器"]')).toHaveAttribute('src', 'https://music.163.com/outchain/player?type=2&id=2000&auto=0&height=66');
+  await expect(page.getByText('来自网易云歌单 · Replacement Playlist')).toBeVisible();
+  await expect(page.getByTestId('music-track-count')).toHaveText('7 / 9 首');
 
   await page.getByRole('button', { name: '管理' }).click();
   await page.getByRole('button', { name: '移除歌单' }).click();
-  await expect(page.locator('iframe[title="网易云官方歌单播放器"]')).toHaveCount(0);
+  await expect(page.locator('iframe[title="网易云官方单曲播放器"]')).toHaveCount(0);
   await expect(page.getByText('导入歌单后，训练时可快速播放音乐')).toBeVisible();
   expect(await page.evaluate(() => window.localStorage.getItem('musclemap.neteasePlaylist.v1'))).toBeNull();
   expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
+});
+
+test('netease playlist api returns all playlist tracks without audio url filtering', async () => {
+  // @ts-expect-error Vercel API handlers live outside the TypeScript app source tree.
+  const { default: handler } = await import('../../api/netease-playlist.js');
+  const originalFetch = globalThis.fetch;
+  const requests: string[] = [];
+
+  globalThis.fetch = (async (url: string | URL | Request) => {
+    const requestUrl = String(url);
+    requests.push(requestUrl);
+
+    if (requestUrl.includes('/api/v6/playlist/detail')) {
+      return new Response(JSON.stringify({
+        code: 200,
+        playlist: {
+          name: '完整歌单',
+          trackCount: 3,
+          trackIds: [{ id: 11 }, { id: 22 }, { id: 33 }]
+        }
+      }), { status: 200 });
+    }
+
+    if (requestUrl.includes('/api/song/detail')) {
+      return new Response(JSON.stringify({
+        songs: [
+          { id: 11, name: 'Song 1', ar: [{ name: 'Artist 1' }], al: { name: 'Album 1', picUrl: 'https://example.com/1.jpg' }, dt: 181000 },
+          { id: 22, name: 'Song 2', ar: [{ name: 'Artist 2' }], al: { name: 'Album 2', picUrl: 'https://example.com/2.jpg' }, dt: 182000 },
+          { id: 33, name: 'Song 3', ar: [{ name: 'Artist 3' }], al: { name: 'Album 3', picUrl: 'https://example.com/3.jpg' }, dt: 183000 }
+        ]
+      }), { status: 200 });
+    }
+
+    if (requestUrl.includes('/api/song/enhance/player/url')) {
+      return new Response(JSON.stringify({ data: [{ id: 11, code: 200, url: 'https://example.com/1.mp3' }] }), { status: 200 });
+    }
+
+    return new Response('{}', { status: 404 });
+  }) as typeof fetch;
+
+  const responseBody: { ok?: boolean; playlist?: { trackCount?: number }; tracks?: Array<{ id: string; audioUrl?: string }> } = {};
+  const response = {
+    statusCode: 0,
+    headers: {} as Record<string, string>,
+    status(code: number) {
+      this.statusCode = code;
+      return this;
+    },
+    setHeader(name: string, value: string) {
+      this.headers[name] = value;
+    },
+    json(payload: typeof responseBody) {
+      Object.assign(responseBody, payload);
+      return this;
+    }
+  };
+
+  try {
+    await handler({ query: { id: '123' } }, response);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+
+  expect(requests.some((url) => url.includes('/api/song/enhance/player/url'))).toBe(false);
+  expect(response.statusCode).toBe(200);
+  expect(responseBody.ok).toBe(true);
+  expect(responseBody.playlist?.trackCount).toBe(3);
+  expect(responseBody.tracks?.map((track) => track.id)).toEqual(['11', '22', '33']);
+  expect(responseBody.tracks?.some((track) => track.audioUrl)).toBe(false);
 });
 
 test('dark homepage and profile content extend behind the floating navigation', async ({ page }) => {

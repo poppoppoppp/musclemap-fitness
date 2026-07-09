@@ -1,4 +1,9 @@
 {
+  "functions": {
+    "api/netease-playlist.js": {
+      "regions": ["hkg1"]
+    }
+  },
   "rewrites": [
     {
       "source": "/(.*)",

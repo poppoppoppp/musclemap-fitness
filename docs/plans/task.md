@@ -21,3 +21,6 @@
 | Homepage recent workout carousel: implementation | completed |
 | Homepage NetEase playlist player: design and plan | completed |
 | Homepage NetEase playlist player: implementation | completed |
+| Native NetEase current-track player: design and plan | completed |
+| Native NetEase current-track player: implementation | completed |
+| Native NetEase current-track player: verification and deployment | completed |

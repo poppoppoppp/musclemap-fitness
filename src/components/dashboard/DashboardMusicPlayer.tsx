@@ -24,6 +24,12 @@ function formatCurrentTime(seconds: number) {
   return `${minutes}:${String(remaining).padStart(2, '0')}`;
 }
 
+function formatTrackCount(playlist: MusicPlaylist, tracks: MusicTrack[]) {
+  return playlist.trackCount && playlist.trackCount !== tracks.length
+    ? `${tracks.length} / ${playlist.trackCount} 首`
+    : `${tracks.length} 首`;
+}
+
 export default function DashboardMusicPlayer() {
   const [playlistId, setPlaylistId] = useState<string | null>(() => readNetEasePlaylistId());
   const [playlist, setPlaylist] = useState<MusicPlaylist | null>(null);
@@ -66,7 +72,7 @@ export default function DashboardMusicPlayer() {
         setTracks([]);
         setCurrentTrackIndex(0);
         setIsPlaying(false);
-        setError('该歌单不可外链播放，请将歌单设为公开或更换歌单');
+        setError('歌单加载失败或没有可播放歌曲，请更换歌单后重试');
         loadedPlaylistIdRef.current = null;
       })
       .finally(() => {
@@ -116,7 +122,7 @@ export default function DashboardMusicPlayer() {
       setImportOpen(false);
       setStatus('');
     } catch {
-      setError('该歌单不可外链播放，请将歌单设为公开或更换歌单');
+      setError('歌单加载失败或没有可播放歌曲，请更换歌单后重试');
     } finally {
       setIsLoading(false);
     }
@@ -159,8 +165,21 @@ export default function DashboardMusicPlayer() {
       setError('');
     } catch {
       setIsPlaying(false);
-      setError('当前歌曲暂时无法站外播放，请切换下一首');
+      handleAudioError();
     }
+  };
+
+  const handleAudioError = () => {
+    setIsPlaying(false);
+    if (tracks.length > 1) {
+      moveTrack(1);
+      setError('');
+      setStatus('已跳过不可播放歌曲');
+      return;
+    }
+
+    setStatus('');
+    setError('当前歌单没有可播放歌曲，请更换歌单');
   };
 
   const progress = currentTrack?.duration ? Math.min(100, (currentTime * 1000 / currentTrack.duration) * 100) : 0;
@@ -220,8 +239,8 @@ export default function DashboardMusicPlayer() {
 
             <div className="mt-6 border-t border-white/10 pt-4 text-center text-sm font-semibold text-zinc-400">
               <span className="mr-2 inline-flex h-2.5 w-2.5 rounded-full bg-lime-300 shadow-[0_0_10px_rgba(190,242,100,0.75)]" />
-              播放队列已载入完整歌单
-              <span data-testid="music-track-count" className="ml-2 text-lime-300">{tracks.length} 首</span>
+              播放队列已载入可播放歌曲
+              <span data-testid="music-track-count" className="ml-2 text-lime-300">{formatTrackCount(playlist, tracks)}</span>
             </div>
 
             <audio
@@ -232,7 +251,7 @@ export default function DashboardMusicPlayer() {
               onEnded={() => moveTrack(1)}
               onPause={() => setIsPlaying(false)}
               onPlay={() => setIsPlaying(true)}
-              onError={() => setError('当前歌曲暂时无法站外播放，请切换下一首')}
+              onError={handleAudioError}
             />
           </div>
         ) : (
@@ -272,6 +291,8 @@ export default function DashboardMusicPlayer() {
           </form>
         ) : error ? (
           <p role="alert" className="mt-3 rounded-xl border border-red-300/20 bg-red-500/10 px-3 py-2 text-sm font-semibold text-red-200">{error}</p>
+        ) : status ? (
+          <p role="status" className="mt-3 rounded-xl border border-lime-300/20 bg-lime-300/10 px-3 py-2 text-sm font-semibold text-lime-200">{status}</p>
         ) : null}
       </div>
 

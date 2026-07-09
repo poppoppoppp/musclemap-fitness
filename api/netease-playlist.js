@@ -24,9 +24,13 @@ function mapSong(song) {
     artist: artists.map((artist) => artist.name).filter(Boolean).join(' / ') || '未知歌手',
     albumName: album.name,
     coverUrl: album.picUrl,
-    duration: song.duration ?? song.dt,
-    audioUrl: id ? `https://music.163.com/song/media/outer/url?id=${id}.mp3` : undefined
+    duration: song.duration ?? song.dt
   };
+}
+
+function normalizeAudioUrl(url) {
+  if (typeof url !== 'string' || url.length === 0) return undefined;
+  return url.replace(/^http:\/\//i, 'https://');
 }
 
 async function fetchJson(url) {
@@ -52,10 +56,34 @@ export default async function handler(request, response) {
       return;
     }
 
-    const songBatches = await Promise.all(
-      chunk(trackIds, 200).map((ids) => fetchJson(`https://music.163.com/api/song/detail?ids=[${ids.join(',')}]`))
-    );
+    const trackIdChunks = chunk(trackIds, 200);
+    const [songBatches, playerBatches] = await Promise.all([
+      Promise.all(trackIdChunks.map((ids) => fetchJson(`https://music.163.com/api/song/detail?ids=[${ids.join(',')}]`))),
+      Promise.all(trackIdChunks.map((ids) => fetchJson(`https://music.163.com/api/song/enhance/player/url?ids=[${ids.join(',')}]&br=128000`)))
+    ]);
     const songs = songBatches.flatMap((batch) => Array.isArray(batch?.songs) ? batch.songs : []);
+    const playableUrls = new Map(
+      playerBatches
+        .flatMap((batch) => Array.isArray(batch?.data) ? batch.data : [])
+        .filter((item) => item?.code === 200 && item?.url)
+        .map((item) => [String(item.id), normalizeAudioUrl(item.url)])
+    );
+    const songsById = new Map(songs.map((song) => [String(song.id), song]));
+    const tracks = trackIds
+      .map((trackId) => {
+        const id = String(trackId);
+        const song = songsById.get(id);
+        const audioUrl = playableUrls.get(id);
+        return song && audioUrl ? { ...mapSong(song), audioUrl } : null;
+      })
+      .filter(Boolean);
+
+    if (tracks.length === 0) {
+      response.status(200).json({ ok: false, error: 'no-playable-tracks' });
+      return;
+    }
+
+    response.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=86400');
 
     response.status(200).json({
       ok: true,
@@ -65,7 +93,7 @@ export default async function handler(request, response) {
         source: 'netease',
         trackCount: playlist.trackCount ?? trackIds.length
       },
-      tracks: songs.map(mapSong).filter((track) => track.id)
+      tracks
     });
   } catch (error) {
     response.status(200).json({ ok: false, error: 'unavailable' });

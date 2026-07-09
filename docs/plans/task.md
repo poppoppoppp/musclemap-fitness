@@ -24,3 +24,5 @@
 | Native NetEase current-track player: design and plan | completed |
 | Native NetEase current-track player: implementation | completed |
 | Native NetEase current-track player: verification and deployment | completed |
+| Music playability and bottom seam fix: design and plan | completed |
+| Music playability and bottom seam fix: implementation | completed |

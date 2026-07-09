@@ -49,18 +49,25 @@ export function buildNetEasePlaylistEmbedUrl(playlistId: string): string {
   return `https://music.163.com/outchain/player?type=0&id=${playlistId}&auto=0&height=430`;
 }
 
-export async function fetchNetEasePlaylistData(playlistId: string): Promise<NetEasePlaylistData> {
+export async function fetchNetEasePlaylistData(playlistId: string, timeoutMs = 20_000): Promise<NetEasePlaylistData> {
   if (!numericIdPattern.test(playlistId)) throw new Error('Invalid NetEase playlist id');
 
-  const response = await fetch(`/api/netease-playlist?id=${encodeURIComponent(playlistId)}`);
-  if (!response.ok) throw new Error('NetEase playlist request failed');
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
 
-  const payload = await response.json() as { ok?: boolean; playlist?: MusicPlaylist; tracks?: MusicTrack[]; error?: string };
-  if (!payload.ok || !payload.playlist || !Array.isArray(payload.tracks)) {
-    throw new Error(payload.error === 'unavailable' ? 'NetEase playlist unavailable' : 'NetEase playlist data invalid');
+  try {
+    const response = await fetch(`/api/netease-playlist?id=${encodeURIComponent(playlistId)}`, { signal: controller.signal });
+    if (!response.ok) throw new Error('NetEase playlist request failed');
+
+    const payload = await response.json() as { ok?: boolean; playlist?: MusicPlaylist; tracks?: MusicTrack[]; error?: string };
+    if (!payload.ok || !payload.playlist || !Array.isArray(payload.tracks)) {
+      throw new Error(payload.error === 'unavailable' ? 'NetEase playlist unavailable' : 'NetEase playlist data invalid');
+    }
+
+    return { playlist: payload.playlist, tracks: payload.tracks };
+  } finally {
+    window.clearTimeout(timeoutId);
   }
-
-  return { playlist: payload.playlist, tracks: payload.tracks };
 }
 
 export function readNetEasePlaylistId(): string | null {

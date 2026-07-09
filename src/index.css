@@ -4,7 +4,7 @@
 
 :root {
   color-scheme: light;
-  background: #f5f7fa;
+  background: #080a08;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
   --app-bg: #f5f7fa;
   --app-surface: #ffffff;
@@ -27,7 +27,7 @@
 }
 
 html {
-  background: #f5f7fa;
+  background: #080a08;
 }
 
 body {
@@ -35,7 +35,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   min-height: 100dvh;
-  background: linear-gradient(180deg, #f7f8fa 0%, #eef2f6 100%);
+  background: #080a08;
   color: #111827;
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;

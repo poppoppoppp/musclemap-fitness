@@ -232,6 +232,7 @@ test('homepage recent workouts carousel shows and selects the five newest logs',
 });
 
 test('homepage imports full NetEase playlist data and renders only the current track card', async ({ page }) => {
+  const playableAudioUrl = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=';
   const playlistTracks = Array.from({ length: 8 }, (_, index) => ({
     id: String(1000 + index),
     name: `Track ${index + 1}`,
@@ -239,7 +240,7 @@ test('homepage imports full NetEase playlist data and renders only the current t
     albumName: `Album ${index + 1}`,
     coverUrl: `https://example.com/cover-${index + 1}.jpg`,
     duration: 180000 + index * 1000,
-    audioUrl: `https://example.com/audio-${index + 1}.mp3`
+    audioUrl: playableAudioUrl
   }));
 
   await page.route('**/api/netease-playlist?id=*', async (route) => {
@@ -256,7 +257,7 @@ test('homepage imports full NetEase playlist data and renders only the current t
       contentType: 'application/json',
       body: JSON.stringify({
         ok: true,
-        playlist: { id, name: id === '3778678' ? 'Replacement Playlist' : 'Workout Playlist', source: 'netease', trackCount: tracks.length },
+        playlist: { id, name: id === '3778678' ? 'Replacement Playlist' : 'Workout Playlist', source: 'netease', trackCount: id === '3778678' ? 9 : 10 },
         tracks
       })
     });
@@ -280,11 +281,15 @@ test('homepage imports full NetEase playlist data and renders only the current t
   await expect(page.getByText('来自网易云歌单 · Workout Playlist')).toBeVisible();
   await expect(page.getByText('Track 1')).toBeVisible();
   await expect(page.getByText('Artist 1')).toBeVisible();
-  await expect(page.getByText('播放队列已载入完整歌单')).toBeVisible();
-  await expect(page.getByTestId('music-track-count')).toHaveText('8 首');
+  await expect(page.getByText('播放队列已载入可播放歌曲')).toBeVisible();
+  await expect(page.getByTestId('music-track-count')).toHaveText('8 / 10 首');
   expect(await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.neteasePlaylist.v1') ?? 'null'))).toBe('19723756');
 
-  for (let index = 0; index < 7; index += 1) {
+  await page.locator('audio').evaluate((audio) => audio.dispatchEvent(new Event('error')));
+  await expect(page.getByText('Track 2')).toBeVisible();
+  await expect(page.getByRole('status')).toContainText('已跳过不可播放歌曲');
+
+  for (let index = 0; index < 6; index += 1) {
     await page.getByRole('button', { name: '下一首' }).click();
   }
   await expect(page.getByText('Track 8')).toBeVisible();
@@ -298,7 +303,7 @@ test('homepage imports full NetEase playlist data and renders only the current t
   await page.getByRole('button', { name: '确认导入' }).click();
   await expect(page.getByText('来自网易云歌单 · Replacement Playlist')).toBeVisible();
   await expect(page.getByText('Replace Track 1')).toBeVisible();
-  await expect(page.getByTestId('music-track-count')).toHaveText('7 首');
+  await expect(page.getByTestId('music-track-count')).toHaveText('7 / 9 首');
 
   await page.getByRole('button', { name: '管理' }).click();
   await page.getByRole('button', { name: '移除歌单' }).click();
@@ -306,6 +311,38 @@ test('homepage imports full NetEase playlist data and renders only the current t
   await expect(page.getByText('导入歌单后，训练时可快速播放音乐')).toBeVisible();
   expect(await page.evaluate(() => window.localStorage.getItem('musclemap.neteasePlaylist.v1'))).toBeNull();
   expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
+});
+
+test('dark homepage and profile content extend behind the floating navigation', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+
+  for (const path of ['/', '/data-management']) {
+    await page.goto(path);
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    const seam = await page.evaluate(() => {
+      const nav = document.querySelector('nav')?.getBoundingClientRect();
+      const y = Math.max(0, Math.floor((nav?.top ?? window.innerHeight) - 10));
+      const element = document.elementFromPoint(Math.floor(window.innerWidth / 2), y);
+      let backgroundElement: Element | null = element;
+      let backgroundColor = '';
+      while (backgroundElement) {
+        backgroundColor = getComputedStyle(backgroundElement).backgroundColor;
+        if (backgroundColor && backgroundColor !== 'rgba(0, 0, 0, 0)') break;
+        backgroundElement = backgroundElement.parentElement;
+      }
+      return {
+        path: location.pathname,
+        tag: element?.tagName ?? '',
+        className: String((element as HTMLElement | null)?.className ?? ''),
+        backgroundColor,
+        bodyBackground: getComputedStyle(document.body).backgroundColor
+      };
+    });
+
+    expect(seam.backgroundColor).not.toBe('rgb(246, 248, 252)');
+    expect(seam.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+    expect(seam.bodyBackground).not.toBe('rgb(246, 248, 252)');
+  }
 });
 
 test('bottom navigation uses the four requested destinations and highlights profile', async ({ page }) => {

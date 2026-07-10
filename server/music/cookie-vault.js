@@ -21,7 +21,7 @@ export function createCookieVault(key = readEncryptionKey()) {
     },
     unseal(value) {
       const [ivText, tagText, ciphertextText] = String(value).split('.');
-      if (!ivText || !tagText || !ciphertextText) throw new Error('Invalid encrypted music cookie');
+      if (!ivText || !tagText || ciphertextText === undefined) throw new Error('Invalid encrypted music cookie');
       const decipher = createDecipheriv('aes-256-gcm', key, Buffer.from(ivText, 'base64url'));
       decipher.setAuthTag(Buffer.from(tagText, 'base64url'));
       return Buffer.concat([

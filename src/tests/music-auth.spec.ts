@@ -167,6 +167,16 @@ test('music auth store uses the Vercel KV write token and never the read-only to
   expect(command).toEqual(['SET', 'music:test', JSON.stringify({ ok: true }), 'EX', 60]);
 });
 
+test('music cookie vault supports an empty pre-login cookie', async () => {
+  // @ts-expect-error Server-only modules live outside the TypeScript app source tree.
+  const { createCookieVault } = await import('../../server/music/cookie-vault.js');
+  const vault = createCookieVault(Buffer.alloc(32, 7));
+  const sealed = vault.seal('');
+
+  expect(sealed.split('.')).toHaveLength(3);
+  expect(vault.unseal(sealed)).toBe('');
+});
+
 test('music settings binds a NetEase account through the qr status flow', async ({ page }) => {
   let statusChecks = 0;
   let loggedOut = false;

@@ -113,6 +113,60 @@ test('authorized qr login persists the member session without exposing the NetEa
   expect(records.has('music:qr:login-attempt-id')).toBe(false);
 });
 
+test('music auth store uses the Vercel KV write token and never the read-only token', async () => {
+  // @ts-expect-error Server-only modules live outside the TypeScript app source tree.
+  const { createMusicAuthStore } = await import('../../server/music/store.js');
+  const originalEnvironment = {
+    customUrl: process.env.MUSIC_AUTH_REDIS_REST_URL,
+    customToken: process.env.MUSIC_AUTH_REDIS_REST_TOKEN,
+    upstashUrl: process.env.UPSTASH_REDIS_REST_URL,
+    upstashToken: process.env.UPSTASH_REDIS_REST_TOKEN,
+    kvUrl: process.env.KV_REST_API_URL,
+    kvToken: process.env.KV_REST_API_TOKEN,
+    readOnlyToken: process.env.KV_REST_API_READ_ONLY_TOKEN
+  };
+  let requestedUrl = '';
+  let authorization = '';
+  let command: unknown = null;
+
+  delete process.env.MUSIC_AUTH_REDIS_REST_URL;
+  delete process.env.MUSIC_AUTH_REDIS_REST_TOKEN;
+  delete process.env.UPSTASH_REDIS_REST_URL;
+  delete process.env.UPSTASH_REDIS_REST_TOKEN;
+  process.env.KV_REST_API_URL = 'https://redis.example.test';
+  process.env.KV_REST_API_TOKEN = 'write-token-for-test';
+  process.env.KV_REST_API_READ_ONLY_TOKEN = 'read-only-token-must-not-be-used';
+
+  try {
+    const store = createMusicAuthStore({
+      fetchImpl: async (url: string | URL | Request, init?: RequestInit) => {
+        requestedUrl = String(url);
+        authorization = String((init?.headers as Record<string, string>)?.Authorization ?? '');
+        command = JSON.parse(String(init?.body));
+        return new Response(JSON.stringify({ result: 'OK' }), { status: 200 });
+      }
+    });
+    await store.setJson('music:test', { ok: true }, 60);
+  } finally {
+    const restore = (name: string, value: string | undefined) => {
+      if (value === undefined) delete process.env[name];
+      else process.env[name] = value;
+    };
+    restore('MUSIC_AUTH_REDIS_REST_URL', originalEnvironment.customUrl);
+    restore('MUSIC_AUTH_REDIS_REST_TOKEN', originalEnvironment.customToken);
+    restore('UPSTASH_REDIS_REST_URL', originalEnvironment.upstashUrl);
+    restore('UPSTASH_REDIS_REST_TOKEN', originalEnvironment.upstashToken);
+    restore('KV_REST_API_URL', originalEnvironment.kvUrl);
+    restore('KV_REST_API_TOKEN', originalEnvironment.kvToken);
+    restore('KV_REST_API_READ_ONLY_TOKEN', originalEnvironment.readOnlyToken);
+  }
+
+  expect(requestedUrl).toBe('https://redis.example.test');
+  expect(authorization).toBe('Bearer write-token-for-test');
+  expect(authorization).not.toContain('read-only-token');
+  expect(command).toEqual(['SET', 'music:test', JSON.stringify({ ok: true }), 'EX', 60]);
+});
+
 test('music settings binds a NetEase account through the qr status flow', async ({ page }) => {
   let statusChecks = 0;
   let loggedOut = false;

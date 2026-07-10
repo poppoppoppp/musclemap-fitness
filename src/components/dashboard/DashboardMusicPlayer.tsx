@@ -1,7 +1,8 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import {
   buildNetEaseSongEmbedUrl,
+  fetchNetEaseSongUrl,
   fetchNetEasePlaylistData,
   parseNetEasePlaylistId,
   readNetEasePlaylistId,
@@ -32,8 +33,39 @@ export default function DashboardMusicPlayer() {
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [audioUrl, setAudioUrl] = useState('');
+  const [audioLoading, setAudioLoading] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const currentTrack = tracks[currentTrackIndex] ?? null;
+
+  useEffect(() => {
+    if (!currentTrack) {
+      setAudioUrl('');
+      setAudioLoading(false);
+      return;
+    }
+
+    let active = true;
+    setAudioUrl('');
+    setAudioLoading(true);
+    setIsPlaying(false);
+    fetchNetEaseSongUrl(currentTrack.id)
+      .then((result) => {
+        if (active) setAudioUrl(result.audioUrl);
+      })
+      .catch(() => {
+        if (active) setAudioUrl('');
+      })
+      .finally(() => {
+        if (active) setAudioLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [currentTrack]);
 
   useEffect(() => {
     if (!playlistId) return;
@@ -111,6 +143,13 @@ export default function DashboardMusicPlayer() {
     setAutoplay(true);
   };
 
+  const togglePlayback = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (isPlaying) audio.pause();
+    else void audio.play().catch(() => setIsPlaying(false));
+  };
+
   return (
     <section data-testid="dashboard-music-player" aria-labelledby="music-player-title" className="space-y-3">
       <div className="flex items-center justify-between gap-3">
@@ -128,7 +167,7 @@ export default function DashboardMusicPlayer() {
           <div>
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <span className="inline-flex rounded-full border border-lime-300/35 bg-lime-300/10 px-3 py-1 text-sm font-black text-lime-300">网易云官方播放</span>
+                <span className="inline-flex rounded-full border border-lime-300/35 bg-lime-300/10 px-3 py-1 text-sm font-black text-lime-300">{audioUrl ? '账号权限播放' : '网易云官方播放'}</span>
                 <p className="mt-3 truncate text-sm text-zinc-400">来自网易云歌单 · {playlist.name}</p>
               </div>
               <button type="button" onClick={openImport} className="min-h-10 shrink-0 rounded-full border border-white/15 px-4 text-sm font-bold text-zinc-300 transition hover:border-lime-300/50 hover:text-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/50">
@@ -139,15 +178,42 @@ export default function DashboardMusicPlayer() {
             <div className="mt-5 rounded-[22px] border border-lime-300/20 bg-black/35 p-3">
               <p className="mb-2 truncate text-sm font-bold text-zinc-300">正在播放 · {currentTrack.name}</p>
               <div className="overflow-hidden rounded-2xl border border-white/15 bg-white">
-                <iframe
-                  key={`${currentTrack.id}-${autoplay ? 'auto' : 'manual'}`}
-                  title="网易云官方单曲播放器"
-                  src={buildNetEaseSongEmbedUrl(currentTrack.id, autoplay)}
-                  loading="lazy"
-                  allow="autoplay; encrypted-media"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  className="block h-[86px] w-full border-0 bg-white"
-                />
+                {audioUrl ? (
+                  <div className="flex items-center gap-2 bg-white px-2">
+                    <button
+                      type="button"
+                      aria-label={isPlaying ? '暂停当前歌曲' : '播放当前歌曲'}
+                      onClick={togglePlayback}
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#10130d] text-lg text-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-500"
+                    >
+                      {isPlaying ? 'Ⅱ' : '▶'}
+                    </button>
+                    <audio
+                      ref={audioRef}
+                      key={`${currentTrack.id}-${autoplay ? 'auto' : 'manual'}`}
+                      aria-label="网易云账号权限播放器"
+                      src={audioUrl}
+                      controls
+                      autoPlay={autoplay}
+                      onPlaying={() => setIsPlaying(true)}
+                      onPause={() => setIsPlaying(false)}
+                      onEnded={() => setIsPlaying(false)}
+                      className="block h-[54px] min-w-0 flex-1 bg-white"
+                    />
+                  </div>
+                ) : audioLoading ? (
+                  <div role="status" className="flex h-[86px] items-center justify-center text-sm font-bold text-zinc-600">正在获取播放权限</div>
+                ) : (
+                  <iframe
+                    key={`${currentTrack.id}-${autoplay ? 'auto' : 'manual'}`}
+                    title="网易云官方单曲播放器"
+                    src={buildNetEaseSongEmbedUrl(currentTrack.id, autoplay)}
+                    loading="lazy"
+                    allow="autoplay; encrypted-media"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    className="block h-[86px] w-full border-0 bg-white"
+                  />
+                )}
               </div>
             </div>
 

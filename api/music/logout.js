@@ -3,6 +3,7 @@ import { createMusicAuthStore } from '../../server/music/store.js';
 
 export function createLogoutHandler({ store }) {
   return async function logoutHandler(request, response) {
+    response.setHeader('Cache-Control', 'private, no-store');
     if (request.method !== 'POST') {
       response.status(405).json({ error: 'METHOD_NOT_ALLOWED' });
       return;

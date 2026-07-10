@@ -24,6 +24,7 @@ function qrStatusLabel(status: MusicQrStatus['status'] | null) {
 
 export default function MusicSettings() {
   const [account, setAccount] = useState<MusicAccount | null>(null);
+  const [accountPending, setAccountPending] = useState(false);
   const [accountLoading, setAccountLoading] = useState(true);
   const [loginId, setLoginId] = useState<string | null>(null);
   const [qrImage, setQrImage] = useState('');
@@ -37,6 +38,7 @@ export default function MusicSettings() {
       .then((state) => {
         if (!active) return;
         setAccount(state.bound && state.account ? state.account : null);
+        setAccountPending(state.bound && state.accountState === 'pending');
         if (state.reason === 'LOGIN_EXPIRED') setError('网易云登录状态已过期，请重新绑定');
       })
       .catch((requestError: Error & { code?: string }) => {
@@ -63,8 +65,9 @@ export default function MusicSettings() {
         const result = await fetchMusicQrStatus(loginId);
         if (!active) return;
         setQrStatus(result.status);
-        if (result.status === 'authorized' && result.account) {
-          setAccount(result.account);
+        if (result.status === 'authorized') {
+          setAccount(result.account ?? null);
+          setAccountPending(!result.account);
           setLoginId(null);
           setQrImage('');
           setError('');
@@ -72,10 +75,10 @@ export default function MusicSettings() {
         }
         if (result.status === 'expired' || result.status === 'error') return;
         timerId = window.setTimeout(checkStatus, QR_POLL_INTERVAL_MS);
-      } catch (requestError) {
+      } catch {
         if (!active) return;
         setQrStatus('error');
-        setError(requestError instanceof Error ? requestError.message : '二维码状态查询失败');
+        setError('绑定服务暂时异常，请检查服务端日志');
       }
     };
 
@@ -91,6 +94,7 @@ export default function MusicSettings() {
     setError('');
     try {
       const result = await startMusicQrLogin();
+      setAccountPending(false);
       setLoginId(result.loginId);
       setQrImage(result.qrImage);
       setQrStatus('waiting');
@@ -109,6 +113,7 @@ export default function MusicSettings() {
     try {
       await logoutMusicAccount();
       setAccount(null);
+      setAccountPending(false);
       setLoginId(null);
       setQrImage('');
       setQrStatus(null);
@@ -144,6 +149,11 @@ export default function MusicSettings() {
                 <p className="mt-1 text-sm font-bold text-lime-300">{vipLabel(account.vipType)}</p>
               </div>
               <button type="button" disabled={busy} onClick={logout} className="min-h-11 rounded-full border border-red-300/30 px-4 text-sm font-bold text-red-200 disabled:opacity-50">解除绑定</button>
+            </div>
+          ) : accountPending ? (
+            <div className="mt-5 flex items-center justify-between gap-4 rounded-2xl border border-lime-300/25 bg-black/25 p-4">
+              <p className="text-sm font-bold text-lime-200">账号已绑定，资料正在同步</p>
+              <button type="button" disabled={busy} onClick={logout} className="min-h-11 shrink-0 rounded-full border border-red-300/30 px-4 text-sm font-bold text-red-200 disabled:opacity-50">解除绑定</button>
             </div>
           ) : qrImage ? (
             <div className="mt-5 text-center">

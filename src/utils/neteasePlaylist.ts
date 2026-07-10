@@ -27,6 +27,11 @@ export type NetEasePlaylistData = {
   tracks: MusicTrack[];
 };
 
+export type NetEaseSongUrl = {
+  audioUrl: string;
+  bitrate?: number;
+};
+
 export function parseNetEasePlaylistId(input: string): string | null {
   const trimmed = input.trim();
   if (numericIdPattern.test(trimmed)) return trimmed;
@@ -73,6 +78,19 @@ export async function fetchNetEasePlaylistData(playlistId: string, timeoutMs = 2
   } finally {
     window.clearTimeout(timeoutId);
   }
+}
+
+export async function fetchNetEaseSongUrl(songId: string): Promise<NetEaseSongUrl> {
+  if (!numericIdPattern.test(songId)) throw new Error('Invalid NetEase song id');
+
+  const response = await fetch(`/api/music/song-url?id=${encodeURIComponent(songId)}`, {
+    credentials: 'include'
+  });
+  const payload = await response.json() as { ok?: boolean; audioUrl?: string; bitrate?: number; error?: string };
+  if (!response.ok || !payload.ok || typeof payload.audioUrl !== 'string') {
+    throw new Error(payload.error ?? 'NetEase song URL unavailable');
+  }
+  return { audioUrl: payload.audioUrl, bitrate: payload.bitrate };
 }
 
 export function readNetEasePlaylistId(): string | null {

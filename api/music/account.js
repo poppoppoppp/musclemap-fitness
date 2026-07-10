@@ -7,6 +7,7 @@ const SESSION_TTL_SECONDS = 30 * 24 * 60 * 60;
 
 export function createAccountHandler({ store, netease, unseal, now = Date.now }) {
   return async function accountHandler(request, response) {
+    response.setHeader('Cache-Control', 'private, no-store');
     if (request.method !== 'GET') {
       response.status(405).json({ error: 'METHOD_NOT_ALLOWED' });
       return;
@@ -25,10 +26,14 @@ export function createAccountHandler({ store, netease, unseal, now = Date.now })
         return;
       }
 
-      const account = await netease.getAccount(unseal(session.sealedCookie));
+      let account = null;
+      try {
+        account = await netease.getAccount(unseal(session.sealedCookie));
+      } catch {
+        // Keep the durable binding and retry profile synchronization later.
+      }
       if (!account) {
-        await store.delete(`music:session:${sessionId}`);
-        response.status(200).json({ bound: false, reason: 'LOGIN_EXPIRED' });
+        response.status(200).json({ bound: true, accountState: 'pending' });
         return;
       }
 
@@ -37,7 +42,7 @@ export function createAccountHandler({ store, netease, unseal, now = Date.now })
         account,
         expiresAt: now() + SESSION_TTL_SECONDS * 1_000
       }, SESSION_TTL_SECONDS);
-      response.status(200).json({ bound: true, account });
+      response.status(200).json({ bound: true, account, accountState: 'ready' });
     } catch (error) {
       const configurationError = error?.code === 'MUSIC_AUTH_NOT_CONFIGURED';
       response.status(configurationError ? 503 : 502).json({

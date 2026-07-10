@@ -24,6 +24,7 @@ export function createStartQrHandler({
   now = Date.now
 }) {
   return async function startQrHandler(request, response) {
+    response.setHeader('Cache-Control', 'private, no-store');
     if (request.method !== 'POST') {
       response.status(405).json({ error: 'METHOD_NOT_ALLOWED' });
       return;

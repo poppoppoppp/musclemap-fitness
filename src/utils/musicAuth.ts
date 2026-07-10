@@ -8,6 +8,7 @@ export type MusicAccount = {
 export type MusicAccountState = {
   bound: boolean;
   account?: MusicAccount;
+  accountState?: 'ready' | 'pending';
   reason?: 'LOGIN_EXPIRED';
   error?: string;
 };
@@ -21,6 +22,7 @@ export type MusicQrStart = {
 export type MusicQrStatus = {
   status: 'waiting' | 'scanned' | 'authorized' | 'expired' | 'error';
   account?: MusicAccount;
+  accountState?: 'ready' | 'pending';
   error?: string;
 };
 

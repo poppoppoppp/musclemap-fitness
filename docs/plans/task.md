@@ -26,3 +26,10 @@
 | Native NetEase current-track player: verification and deployment | completed |
 | Music playability and bottom seam fix: design and plan | completed |
 | Music playability and bottom seam fix: implementation | completed |
+| NetEase QR binding: inspect production flow and logs | completed |
+| NetEase QR binding: add failing regression tests | completed |
+| NetEase QR binding: implement diagnostics and persistence fix | completed |
+| NetEase QR binding: deploy and complete real scan verification | completed |
+| NetEase member playback: add failing URL and player tests | completed |
+| NetEase member playback: implement account-scoped song URL | completed |
+| NetEase member playback: verify free, VIP, and unavailable tracks | completed |

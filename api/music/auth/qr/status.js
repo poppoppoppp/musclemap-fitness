@@ -6,16 +6,33 @@ import { createMusicAuthStore } from '../../../../server/music/store.js';
 const SESSION_TTL_SECONDS = 30 * 24 * 60 * 60;
 const LOGIN_ID_PATTERN = /^[A-Za-z0-9_-]{8,128}$/;
 
-function sendError(response, error) {
+function sendError(response, error, errorStage) {
   const configurationError = error?.code === 'MUSIC_AUTH_NOT_CONFIGURED';
   response.status(configurationError ? 503 : 502).json({
     status: 'error',
-    error: configurationError ? 'MUSIC_AUTH_NOT_CONFIGURED' : 'QR_STATUS_FAILED'
+    error: configurationError ? 'MUSIC_AUTH_NOT_CONFIGURED' : 'QR_STATUS_FAILED',
+    errorStage
   });
 }
 
-export function createQrStatusHandler({ store, netease, seal, unseal, now = Date.now }) {
+function writeDiagnostic(logger, values) {
+  logger.info?.('music_qr_binding', {
+    upstreamCode: values.upstreamCode ?? null,
+    hasSetCookie: values.hasSetCookie ?? false,
+    setCookieCount: values.setCookieCount ?? 0,
+    hasMusicU: values.hasMusicU ?? false,
+    hasMusicA: values.hasMusicA ?? false,
+    hasCsrf: values.hasCsrf ?? false,
+    redisWriteAttempted: values.redisWriteAttempted ?? false,
+    redisWriteSucceeded: values.redisWriteSucceeded ?? false,
+    accountFetchSucceeded: values.accountFetchSucceeded ?? false,
+    errorStage: values.errorStage ?? null
+  });
+}
+
+export function createQrStatusHandler({ store, netease, seal, unseal, now = Date.now, logger = console }) {
   return async function qrStatusHandler(request, response) {
+    response.setHeader('Cache-Control', 'private, no-store');
     if (request.method !== 'GET') {
       response.status(405).json({ status: 'error', error: 'METHOD_NOT_ALLOWED' });
       return;
@@ -40,41 +57,122 @@ export function createQrStatusHandler({ store, netease, seal, unseal, now = Date
         return;
       }
 
-      const checked = await netease.checkQrLogin(attempt.qrKey, unseal(attempt.sealedCookie));
+      let checked;
+      try {
+        checked = await netease.checkQrLogin(attempt.qrKey, unseal(attempt.sealedCookie));
+      } catch (error) {
+        writeDiagnostic(logger, { errorStage: 'QR_STATUS_REQUEST_FAILED' });
+        sendError(response, error, 'QR_STATUS_REQUEST_FAILED');
+        return;
+      }
+      const upstreamDiagnostics = {
+        upstreamCode: checked.code,
+        hasSetCookie: checked.diagnostics?.hasSetCookie ?? false,
+        setCookieCount: checked.diagnostics?.setCookieCount ?? 0,
+        hasMusicU: checked.diagnostics?.hasMusicU ?? /(?:^|;\s*)MUSIC_U=/.test(checked.cookie ?? ''),
+        hasMusicA: checked.diagnostics?.hasMusicA ?? /(?:^|;\s*)MUSIC_A=/.test(checked.cookie ?? ''),
+        hasCsrf: checked.diagnostics?.hasCsrf ?? /(?:^|;\s*)__csrf=/.test(checked.cookie ?? '')
+      };
       if (checked.code === 800) {
+        writeDiagnostic(logger, upstreamDiagnostics);
         await store.delete(`music:qr:${loginId}`);
         response.status(200).json({ status: 'expired' });
         return;
       }
       if (checked.code === 801) {
+        writeDiagnostic(logger, upstreamDiagnostics);
         response.status(200).json({ status: 'waiting' });
         return;
       }
       if (checked.code === 802) {
+        writeDiagnostic(logger, upstreamDiagnostics);
         response.status(200).json({ status: 'scanned' });
         return;
       }
-      if (checked.code !== 803 || !checked.cookie) {
-        response.status(200).json({ status: 'error' });
+      if (checked.code !== 803) {
+        writeDiagnostic(logger, { ...upstreamDiagnostics, errorStage: 'QR_STATUS_INVALID_RESPONSE' });
+        response.status(200).json({ status: 'error', error: 'QR_STATUS_INVALID_RESPONSE' });
         return;
       }
 
-      const account = await netease.getAccount(checked.cookie);
-      if (!account) {
-        response.status(200).json({ status: 'error' });
+      const hasAuthorizedCookie = Boolean(checked.cookie)
+        && (checked.diagnostics?.hasMusicU
+          || checked.diagnostics?.hasMusicA
+          || /(?:^|;\s*)MUSIC_[UA]=/.test(checked.cookie));
+      if (!hasAuthorizedCookie) {
+        writeDiagnostic(logger, { ...upstreamDiagnostics, errorStage: 'AUTHORIZED_COOKIE_MISSING' });
+        response.status(200).json({ status: 'error', error: 'AUTHORIZED_COOKIE_MISSING' });
         return;
       }
 
-      await store.setJson(`music:session:${sessionId}`, {
-        sealedCookie: seal(checked.cookie),
-        account,
+      let sealedCookie;
+      try {
+        sealedCookie = seal(checked.cookie);
+      } catch (error) {
+        writeDiagnostic(logger, { ...upstreamDiagnostics, errorStage: 'COOKIE_ENCRYPT_FAILED' });
+        sendError(response, error, 'COOKIE_ENCRYPT_FAILED');
+        return;
+      }
+
+      const session = {
+        sealedCookie,
+        account: null,
         authorizedAt: now(),
         expiresAt: now() + SESSION_TTL_SECONDS * 1_000
-      }, SESSION_TTL_SECONDS);
-      await store.delete(`music:qr:${loginId}`);
-      response.status(200).json({ status: 'authorized', account });
+      };
+      try {
+        await store.setJson(`music:session:${sessionId}`, session, SESSION_TTL_SECONDS);
+      } catch (error) {
+        writeDiagnostic(logger, {
+          ...upstreamDiagnostics,
+          redisWriteAttempted: true,
+          errorStage: 'REDIS_WRITE_FAILED'
+        });
+        sendError(response, error, 'REDIS_WRITE_FAILED');
+        return;
+      }
+      await store.delete(`music:qr:${loginId}`).catch(() => {});
+
+      let account = null;
+      try {
+        account = await netease.getAccount(checked.cookie);
+      } catch {
+        // The encrypted login session is already durable; profile sync can retry later.
+      }
+      if (!account) {
+        writeDiagnostic(logger, {
+          ...upstreamDiagnostics,
+          redisWriteAttempted: true,
+          redisWriteSucceeded: true,
+          errorStage: 'ACCOUNT_PROFILE_FAILED'
+        });
+        response.status(200).json({ status: 'authorized', accountState: 'pending' });
+        return;
+      }
+
+      try {
+        await store.setJson(`music:session:${sessionId}`, { ...session, account }, SESSION_TTL_SECONDS);
+      } catch {
+        writeDiagnostic(logger, {
+          ...upstreamDiagnostics,
+          redisWriteAttempted: true,
+          redisWriteSucceeded: true,
+          accountFetchSucceeded: true,
+          errorStage: 'REDIS_WRITE_FAILED'
+        });
+        response.status(200).json({ status: 'authorized', accountState: 'pending' });
+        return;
+      }
+      writeDiagnostic(logger, {
+        ...upstreamDiagnostics,
+        redisWriteAttempted: true,
+        redisWriteSucceeded: true,
+        accountFetchSucceeded: true
+      });
+      response.status(200).json({ status: 'authorized', account, accountState: 'ready' });
     } catch (error) {
-      sendError(response, error);
+      writeDiagnostic(logger, { errorStage: 'QR_STATUS_REQUEST_FAILED' });
+      sendError(response, error, 'QR_STATUS_REQUEST_FAILED');
     }
   };
 }
@@ -89,6 +187,7 @@ export default async function handler(request, response) {
       unseal: vault.unseal
     })(request, response);
   } catch (error) {
-    sendError(response, error);
+    writeDiagnostic(console, { errorStage: 'QR_STATUS_REQUEST_FAILED' });
+    sendError(response, error, 'QR_STATUS_REQUEST_FAILED');
   }
 }

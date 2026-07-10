@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
+import { Link } from 'react-router-dom';
 import {
   buildNetEaseSongEmbedUrl,
   fetchNetEasePlaylistData,
@@ -114,9 +115,12 @@ export default function DashboardMusicPlayer() {
     <section data-testid="dashboard-music-player" aria-labelledby="music-player-title" className="space-y-3">
       <div className="flex items-center justify-between gap-3">
         <h2 id="music-player-title" className="text-lg font-extrabold text-white">训练音乐</h2>
-        <button type="button" onClick={openImport} className="min-h-11 py-3 text-sm font-semibold text-zinc-400 transition hover:text-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/60">
-          更换歌单
-        </button>
+        <div className="flex items-center gap-3">
+          <Link to="/music" className="min-h-11 py-3 text-sm font-semibold text-zinc-400 transition hover:text-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/60">绑定账号</Link>
+          <button type="button" onClick={openImport} className="min-h-11 py-3 text-sm font-semibold text-zinc-400 transition hover:text-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/60">
+            更换歌单
+          </button>
+        </div>
       </div>
 
       <div className="rounded-[28px] border border-lime-300/25 bg-[radial-gradient(circle_at_80%_0%,rgba(190,242,100,0.13),transparent_34%),linear-gradient(145deg,rgba(255,255,255,0.08),rgba(255,255,255,0.025))] p-4 shadow-[0_0_28px_rgba(132,204,22,0.12)]">

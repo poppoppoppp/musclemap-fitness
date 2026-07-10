@@ -1,7 +1,10 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "regions": ["hkg1"],
   "functions": {
-    "api/netease-playlist.js": {
-      "regions": ["hkg1"]
+    "api/**/*.js": {
+      "regions": ["hkg1"],
+      "maxDuration": 60
     }
   },
   "rewrites": [

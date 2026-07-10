@@ -8,7 +8,7 @@ interface AppShellProps {
 
 export default function AppShell({ children }: AppShellProps) {
   const location = useLocation();
-  const darkShell = location.pathname === '/' || location.pathname === '/data-management' || location.pathname === '/plan-builder' || location.pathname.startsWith('/templates/');
+  const darkShell = location.pathname === '/' || location.pathname === '/music' || location.pathname === '/data-management' || location.pathname === '/plan-builder' || location.pathname.startsWith('/templates/');
 
   return (
     <div className={`min-h-screen ${darkShell ? 'bg-[#080a08]' : 'bg-[#F6F8FC]'} text-app-text`}>

@@ -5,6 +5,8 @@ import { useMusicPlayer } from '../music/MusicPlayerContext';
 export default function WorkoutMiniPlayer({ compact = false }: { compact?: boolean }) {
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const [popoverPosition, setPopoverPosition] = useState({ top: 0, right: 16 });
   const [expanded, setExpanded] = useState(false);
   const { currentTrack, tracks, audioUrl, isPlaying, currentTime, duration, togglePlayback, playPrevious, playNext } = useMusicPlayer();
   const progress = duration > 0 && Number.isFinite(currentTime) ? Math.min(100, Math.max(0, (currentTime / duration) * 100)) : 0;
@@ -27,13 +29,27 @@ export default function WorkoutMiniPlayer({ compact = false }: { compact?: boole
     };
   }, [expanded]);
 
+  const toggleExpanded = () => {
+    if (!expanded) {
+      const rect = triggerRef.current?.getBoundingClientRect();
+      if (rect) {
+        setPopoverPosition({
+          top: rect.bottom + 8,
+          right: Math.max(16, window.innerWidth - rect.right)
+        });
+      }
+    }
+    setExpanded((value) => !value);
+  };
+
   if (compact) {
     return (
       <div ref={containerRef} className="relative">
         <button
+          ref={triggerRef}
           type="button"
           data-testid="workout-mini-player"
-          onClick={() => setExpanded((value) => !value)}
+          onClick={toggleExpanded}
           aria-label={expanded ? '收起训练音乐播放器' : '展开训练音乐播放器'}
           aria-expanded={expanded}
           aria-controls="workout-music-popover"
@@ -55,7 +71,8 @@ export default function WorkoutMiniPlayer({ compact = false }: { compact?: boole
           aria-label="训练音乐控制"
           aria-hidden={!expanded}
           inert={!expanded}
-          className={`absolute right-0 top-[calc(100%+0.55rem)] z-50 w-[min(20rem,calc(100vw-2rem))] origin-top-right overflow-hidden rounded-[24px] border border-white/12 bg-[#111411]/95 p-3.5 text-white shadow-[0_22px_60px_rgba(0,0,0,0.55)] backdrop-blur-xl transition-all duration-200 ease-out ${expanded ? 'pointer-events-auto translate-y-0 scale-100 opacity-100' : 'pointer-events-none -translate-y-2 scale-95 opacity-0'}`}
+          style={{ top: popoverPosition.top, right: popoverPosition.right }}
+          className={`fixed z-50 w-[min(20rem,calc(100vw-2rem))] origin-top-right overflow-hidden rounded-[24px] border border-white/12 bg-[#111411]/95 p-3.5 text-white shadow-[0_22px_60px_rgba(0,0,0,0.55)] backdrop-blur-xl transition-all duration-200 ease-out ${expanded ? 'pointer-events-auto translate-y-0 scale-100 opacity-100' : 'pointer-events-none -translate-y-2 scale-95 opacity-0'}`}
         >
           <div className="flex items-center gap-3">
             {currentTrack?.coverUrl ? <img src={currentTrack.coverUrl} alt="" className="h-14 w-14 shrink-0 rounded-2xl object-cover shadow-lg" /> : <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/[0.06] text-xl text-zinc-500">♫</span>}

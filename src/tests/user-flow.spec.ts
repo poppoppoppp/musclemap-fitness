@@ -15,6 +15,11 @@ import {
   normalizeMuscleId
 } from '../utils/workoutSummary';
 
+async function startFreeWorkout(page: import('@playwright/test').Page) {
+  await page.getByRole('button', { name: '开始记录训练' }).click();
+  await page.getByTestId('start-active-workout').click();
+}
+
 test('workout summary utilities calculate report metrics and normalized muscles', () => {
   const workout: WorkoutLog = {
     id: 'summary-unit',
@@ -592,7 +597,7 @@ test('three muscle selector adds lower body exercises to active workout without 
   await page.getByTestId('three-add-exercise-squat').click();
   await expect(page).toHaveURL(/\/workout-log\?focusExercise=[^#]+$/);
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(1);
-  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('Squat');
+  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('深蹲');
 
   await page.goto('/three-muscle-selector');
   await page.getByTestId('select-three-region-legs').click();
@@ -600,7 +605,8 @@ test('three muscle selector adds lower body exercises to active workout without 
   await page.getByTestId('three-add-exercise-leg-extension').click();
   await expect(page).toHaveURL(/\/workout-log\?focusExercise=[^#]+$/);
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(2);
-  await expect(page.getByTestId('workout-log-exercise').nth(1)).toContainText('Leg Extension');
+  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('腿屈伸');
+  await expect(page.getByTestId('workout-log-exercise').nth(1)).toContainText('深蹲');
 
   let active = await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null'));
   expect(active.exercises.map((exercise: { exerciseId: string }) => exercise.exerciseId)).toEqual(['squat', 'leg-extension']);
@@ -638,6 +644,7 @@ test('three muscle selector lower body actions can open exercise detail and work
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(1);
   await expect(page.getByTestId('set-weight-input').first()).toBeVisible();
   await expect(page.getByTestId('set-reps-input').first()).toBeVisible();
+  await page.getByTestId('toggle-exercise-notes').click();
   await expect(page.getByTestId('exercise-notes-input').first()).toBeVisible();
 
   const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
@@ -686,8 +693,8 @@ test('three muscle selector focuses the newly added workout exercise', async ({ 
   await page.getByTestId('three-add-exercise-standing-calf-raise').click();
 
   await expect(page).toHaveURL(/\/workout-log\?focusExercise=[^#]+$/);
-  const addedExercise = page.getByTestId('workout-log-exercise').last();
-  await expect(addedExercise).toContainText('Standing Calf Raise');
+  const addedExercise = page.getByTestId('current-exercise-card');
+  await expect(addedExercise).toContainText('站姿提踵');
   await expect(addedExercise).toBeInViewport({ ratio: 0.5 });
 });
 
@@ -834,7 +841,7 @@ test('three muscle selector adds front upper body exercises to active workout wi
   await page.getByTestId('three-add-exercise-push-up').click();
   await expect(page).toHaveURL(/\/workout-log\?focusExercise=[^#]+$/);
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(1);
-  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('Push-up');
+  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('俯卧撑');
 
   await page.goto('/three-muscle-selector');
   await page.getByTestId('select-three-region-arms').click();
@@ -842,7 +849,8 @@ test('three muscle selector adds front upper body exercises to active workout wi
   await page.getByTestId('three-add-exercise-dumbbell-curl').click();
   await expect(page).toHaveURL(/\/workout-log\?focusExercise=[^#]+$/);
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(2);
-  await expect(page.getByTestId('workout-log-exercise').nth(1)).toContainText('Dumbbell Curl');
+  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('哑铃弯举');
+  await expect(page.getByTestId('workout-log-exercise').nth(1)).toContainText('俯卧撑');
 
   let active = await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null'));
   expect(active.exercises.map((exercise: { exerciseId: string }) => exercise.exerciseId)).toEqual(['push-up', 'dumbbell-curl']);
@@ -921,7 +929,7 @@ test('three muscle selector can add related exercises to the active workout with
   await page.getByTestId('three-add-exercise-lat-pulldown').click();
   await expect(page).toHaveURL(/\/workout-log\?focusExercise=[^#]+$/);
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(1);
-  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('Lat Pulldown');
+  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('高位下拉');
 
   let active = await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null'));
   expect(active.exercises.map((exercise: { exerciseId: string }) => exercise.exerciseId)).toEqual(['lat-pulldown']);
@@ -932,8 +940,8 @@ test('three muscle selector can add related exercises to the active workout with
   await page.getByTestId('three-add-exercise-straight-arm-pulldown').click();
   await expect(page).toHaveURL(/\/workout-log\?focusExercise=[^#]+$/);
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(2);
-  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('Lat Pulldown');
-  await expect(page.getByTestId('workout-log-exercise').nth(1)).toContainText('Straight-arm Pulldown');
+  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('直臂下拉');
+  await expect(page.getByTestId('workout-log-exercise').nth(1)).toContainText('高位下拉');
 
   active = await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null'));
   expect(active.exercises.map((exercise: { exerciseId: string }) => exercise.exerciseId)).toEqual([
@@ -1157,13 +1165,13 @@ test.skip('legacy three muscle demo does not overflow at 390px mobile width', as
   expect(hasHorizontalOverflow).toBe(false);
 });
 
-test('workout log hides invalid legacy latest sets instead of rendering undefined values', async ({ page }) => {
+test('workout log hides invalid legacy sets instead of rendering undefined values', async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.removeItem('musclemap.latestGeneratedPlan.v0.2');
     window.localStorage.removeItem('musclemap.workoutLogs.v0.3');
     window.localStorage.setItem(
-      'musclemap.latestWorkoutLog.v0.3',
-      JSON.stringify({
+      'musclemap.workoutLogs.v0.3',
+      JSON.stringify([{
         id: 'legacy-log',
         date: '2026-05-23',
         exercises: [
@@ -1184,21 +1192,17 @@ test('workout log hides invalid legacy latest sets instead of rendering undefine
           }
         ],
         createdAt: '2026-05-23T00:00:00.000Z'
-      })
+      }])
     );
   });
 
   await page.goto('/workout-log');
 
-  await expect(page.getByTestId('latest-workout-log')).toContainText('Lat Pulldown');
-  await expect(page.getByTestId('latest-workout-log')).toContainText('35.5kg');
-  await expect(page.getByTestId('latest-workout-log')).toContainText('第 1 组');
-  await expect(page.getByTestId('latest-workout-log')).toContainText('次');
-  await expect(page.getByTestId('latest-workout-log')).not.toContainText('undefined');
-  await expect(page.getByTestId('latest-workout-log')).not.toContainText('绗');
-  await expect(page.getByTestId('latest-workout-log')).not.toContainText('缁');
-  await expect(page.getByTestId('latest-workout-log')).not.toContainText('娆');
-  await expect(page.getByTestId('latest-workout-log')).not.toContainText('Seated Cable Row');
+  const recentCard = page.getByTestId('recent-workout-card');
+  await expect(recentCard).toContainText('高位下拉');
+  await expect(recentCard).toContainText('35.5kg × 12');
+  await expect(recentCard).not.toContainText('undefined');
+  await expect(recentCard).not.toContainText('坐姿划船');
 });
 
 test('workout history shows an empty state when there are no archived logs', async ({ page }) => {
@@ -1322,7 +1326,7 @@ test('workout history opens a read only workout log detail page', async ({ page 
   await expect(page.getByTestId('workout-log-detail')).toContainText('Keep tempo controlled');
   const firstExercise = page.getByTestId('workout-detail-exercise').first();
   await expect(firstExercise).toContainText('高位下拉');
-  await expect(firstExercise).toContainText('Lat Pulldown');
+  await expect(firstExercise).toContainText('高位下拉');
   await expect(firstExercise).toContainText('No swinging');
   await expect(firstExercise).toContainText('4 组');
   await expect(firstExercise).toContainText('背');
@@ -1374,7 +1378,7 @@ test('workout history has an entry from workout log and does not overflow at 390
   });
 
   await page.goto('/workout-log');
-  await page.getByRole('link', { name: '查看训练历史' }).click();
+  await page.getByRole('link', { name: '查看训练日历与历史' }).click();
   await expect(page).toHaveURL(/\/workout-history$/);
   await expect(page.getByRole('heading', { name: '训练历史' })).toBeVisible();
 
@@ -1527,7 +1531,7 @@ test('exercise detail can start an active workout with the current exercise', as
   await page.getByTestId('start-workout-with-exercise').click();
   await expect(page).toHaveURL(/\/workout-log$/);
   await expect(page.getByTestId('active-workout-card')).toContainText('进行中');
-  await expect(page.getByTestId('workout-log-exercise')).toContainText('Lat Pulldown');
+  await expect(page.getByTestId('workout-log-exercise')).toContainText('高位下拉');
 
   const stored = await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null'));
   expect(stored.exercises).toHaveLength(1);
@@ -1541,7 +1545,7 @@ test('exercise detail adds exercises to an existing active workout without dupli
     window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
   });
   await page.reload();
-  await page.getByTestId('start-active-workout').click();
+  await startFreeWorkout(page);
   await expect(page.getByTestId('active-workout-card')).toContainText('进行中');
   await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
   await page.getByTestId('add-manual-exercise').click();
@@ -1554,8 +1558,8 @@ test('exercise detail adds exercises to an existing active workout without dupli
   await page.getByTestId('go-to-active-workout').click();
   await expect(page).toHaveURL(/\/workout-log$/);
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(2);
-  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('Lat Pulldown');
-  await expect(page.getByTestId('workout-log-exercise').last()).toContainText('Seated Cable Row');
+  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('高位下拉');
+  await expect(page.getByTestId('workout-log-exercise').last()).toContainText('坐姿划船');
 
   await page.goto('/exercises/seated-row');
   await page.getByTestId('add-exercise-to-active-workout').click();
@@ -1829,14 +1833,15 @@ test('workout log starts active workout from latest plan day and archives plan i
   });
 
   await page.reload();
-  await expect(page.getByTestId('latest-plan-start')).toContainText('从最近计划开始训练');
+  await page.getByRole('button', { name: '开始记录训练' }).click();
+  await expect(page.getByTestId('latest-plan-start')).toContainText('从计划开始');
   await expect(page.getByTestId('latest-plan-start')).toContainText('V0.7.2 Test Plan');
   await page.getByTestId('start-plan-day-pull-day').click();
 
   await expect(page.getByTestId('active-workout-card')).toContainText('进行中');
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(2);
   const firstExercise = page.getByTestId('workout-log-exercise').first();
-  await expect(firstExercise).toContainText('Lat Pulldown');
+  await expect(firstExercise).toContainText('高位下拉');
   await expect(firstExercise).toContainText('计划建议');
   await expect(firstExercise).toContainText('8-12');
   await expect(firstExercise).toContainText('90');
@@ -1893,9 +1898,10 @@ test('workout log blocks starting a plan day when active workout already exists 
   });
 
   await page.goto('/workout-log');
-  await page.getByTestId('start-active-workout').click();
-  await page.getByTestId('start-plan-day-blocked-day').click();
-  await expect(page.getByTestId('save-status')).toContainText('当前已有进行中的训练，请先结束或放弃当前训练');
+  await startFreeWorkout(page);
+  await expect(page.getByTestId('workout-log-overview')).toHaveCount(0);
+  await expect(page.getByTestId('start-plan-day-blocked-day')).toHaveCount(0);
+  await expect(page.getByTestId('active-workout-card')).toContainText('进行中');
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(0);
 
   const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
@@ -1920,8 +1926,8 @@ test('workout log active workout flow persists edits archives and clears', async
   });
   await page.reload();
 
-  await expect(page.getByTestId('active-workout-empty')).toContainText('开始训练');
-  await page.getByTestId('start-active-workout').click();
+  await expect(page.getByTestId('workout-log-overview')).toBeVisible();
+  await startFreeWorkout(page);
   await expect(page.getByTestId('active-workout-card')).toContainText('进行中');
 
   await page.reload();
@@ -1934,16 +1940,15 @@ test('workout log active workout flow persists edits archives and clears', async
   await expect(exercise).toBeVisible();
   await exercise.getByTestId('set-weight-input').fill('42.5');
   await exercise.getByTestId('set-reps-input').fill('10');
+  await exercise.getByTestId('toggle-exercise-notes').click();
   await exercise.getByTestId('exercise-notes-input').fill('controlled first working set');
   await page.getByTestId('end-active-workout').click();
 
-  await expect(page.getByTestId('save-status')).toContainText('训练已结束并保存');
-  await expect(page.getByTestId('active-workout-empty')).toBeVisible();
+  await expect(page.getByTestId('workout-log-overview')).toBeVisible();
   expect(await page.evaluate(() => window.localStorage.getItem('musclemap.activeWorkout.v0.7'))).toBeNull();
   await page.reload();
-  await expect(page.getByTestId('latest-workout-log')).toContainText('Lat Pulldown');
-  await expect(page.getByTestId('latest-workout-log')).toContainText('42.5kg');
-  await expect(page.getByTestId('latest-workout-log')).toContainText('controlled first working set');
+  await expect(page.getByTestId('recent-workout-card')).toContainText('高位下拉');
+  await expect(page.getByTestId('recent-workout-card')).toContainText('42.5kg × 10');
 });
 
 test('workout log tracks current exercise elapsed time after first set entry', async ({ page }) => {
@@ -1957,7 +1962,7 @@ test('workout log tracks current exercise elapsed time after first set entry', a
   await page.reload();
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.getByTestId('start-active-workout').click();
+  await startFreeWorkout(page);
   await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
   await page.getByTestId('add-manual-exercise').click();
 
@@ -1968,16 +1973,13 @@ test('workout log tracks current exercise elapsed time after first set entry', a
   const timer = exercise.getByTestId('current-exercise-timer');
   await expect(timer).toBeVisible();
   await expect(exercise.getByTestId('end-current-exercise')).toBeVisible();
-  await expect(exercise.getByTestId('toggle-workout-exercise-collapse')).toBeVisible();
+  await expect(exercise.getByTestId('toggle-exercise-notes')).toBeVisible();
 
-  await exercise.getByTestId('toggle-workout-exercise-collapse').click();
-  await expect(exercise.getByTestId('set-weight-input')).toHaveCount(0);
-  await expect(exercise.getByTestId('set-reps-input')).toHaveCount(0);
-  await expect(exercise.getByTestId('exercise-notes-input')).toHaveCount(0);
-  await expect(exercise).toContainText('Lat Pulldown');
-
-  await exercise.getByTestId('toggle-workout-exercise-collapse').click();
-  await expect(exercise.getByTestId('set-weight-input')).toBeVisible();
+  await exercise.getByTestId('toggle-exercise-notes').click();
+  await expect(exercise.getByTestId('exercise-notes-input')).toBeVisible();
+  await exercise.getByTestId('toggle-exercise-notes').click();
+  await expect(exercise.getByTestId('exercise-notes-input')).toBeHidden();
+  await expect(exercise).toContainText('高位下拉');
 
   const firstValue = parseTimerValue((await timer.textContent()) ?? '');
   await page.waitForTimeout(1100);
@@ -1985,9 +1987,9 @@ test('workout log tracks current exercise elapsed time after first set entry', a
   expect(secondValue).toBeGreaterThanOrEqual(firstValue);
 
   await exercise.getByTestId('end-current-exercise').click();
-  await expect(exercise.getByTestId('set-weight-input')).toHaveCount(0);
-  await expect(exercise.getByTestId('set-reps-input')).toHaveCount(0);
-  await expect(exercise.getByTestId('exercise-notes-input')).toHaveCount(0);
+  await expect(exercise.getByTestId('set-weight-input')).toBeHidden();
+  await expect(exercise.getByTestId('set-reps-input')).toBeHidden();
+  await expect(exercise.getByTestId('exercise-notes-input')).toBeHidden();
   await expect(timer).toContainText('用时');
 
   const endedValue = parseTimerValue((await timer.textContent()) ?? '');
@@ -1998,7 +2000,7 @@ test('workout log tracks current exercise elapsed time after first set entry', a
   const reloadedExercise = page.getByTestId('workout-log-exercise').first();
   await expect(reloadedExercise.getByTestId('current-exercise-timer')).toContainText('用时');
   await expect(reloadedExercise.getByTestId('end-current-exercise')).toHaveCount(0);
-  await expect(reloadedExercise.getByTestId('set-weight-input')).toHaveCount(0);
+  await expect(reloadedExercise.getByTestId('set-weight-input')).toBeHidden();
   expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
 });
 
@@ -2011,7 +2013,7 @@ test('workout log rejects empty active workout before archiving', async ({ page 
   });
 
   await page.goto('/workout-log');
-  await page.getByTestId('start-active-workout').click();
+  await startFreeWorkout(page);
   await page.getByTestId('end-active-workout').click();
 
   await expect(page.getByTestId('save-status')).toContainText('请先添加至少一个动作');
@@ -2028,7 +2030,7 @@ test('workout log rejects empty sets and invalid reps in active workout', async 
   });
 
   await page.goto('/workout-log');
-  await page.getByTestId('start-active-workout').click();
+  await startFreeWorkout(page);
   await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
   await page.getByTestId('add-manual-exercise').click();
   await page.getByTestId('end-active-workout').click();
@@ -2048,7 +2050,7 @@ test('workout log can discard active workout after confirmation', async ({ page 
   });
 
   await page.goto('/workout-log');
-  await page.getByTestId('start-active-workout').click();
+  await startFreeWorkout(page);
   await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
   await page.getByTestId('add-manual-exercise').click();
 
@@ -2056,6 +2058,7 @@ test('workout log can discard active workout after confirmation', async ({ page 
     expect(dialog.type()).toBe('confirm');
     await dialog.dismiss();
   });
+  await page.getByLabel('更多训练操作').click();
   await page.getByTestId('discard-active-workout').click();
   await expect(page.getByTestId('active-workout-card')).toBeVisible();
 
@@ -2064,7 +2067,7 @@ test('workout log can discard active workout after confirmation', async ({ page 
     await dialog.accept();
   });
   await page.getByTestId('discard-active-workout').click();
-  await expect(page.getByTestId('active-workout-empty')).toBeVisible();
+  await expect(page.getByTestId('workout-log-overview')).toBeVisible();
   expect(await page.evaluate(() => window.localStorage.getItem('musclemap.activeWorkout.v0.7'))).toBeNull();
 });
 
@@ -2077,7 +2080,7 @@ test('workout log can add and delete sets and exercises in active workout', asyn
   });
 
   await page.goto('/workout-log');
-  await page.getByTestId('start-active-workout').click();
+  await startFreeWorkout(page);
   await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
   await page.getByTestId('add-manual-exercise').click();
 
@@ -2085,8 +2088,10 @@ test('workout log can add and delete sets and exercises in active workout', asyn
   await expect(exercise.getByTestId('workout-set-row')).toHaveCount(1);
   await exercise.getByTestId('add-set').click();
   await expect(exercise.getByTestId('workout-set-row')).toHaveCount(2);
+  await exercise.getByTestId('set-completion-toggle').last().click();
   await exercise.getByTestId('delete-set').last().click();
   await expect(exercise.getByTestId('workout-set-row')).toHaveCount(1);
+  await exercise.getByLabel('当前动作更多设置').click();
   await exercise.getByTestId('delete-workout-exercise').click();
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(0);
 });
@@ -2098,13 +2103,13 @@ test('workout log active controls are available above mobile navigation', async 
     window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
   });
   await page.reload();
-  await page.getByTestId('start-active-workout').click();
+  await startFreeWorkout(page);
   await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
   await page.getByTestId('add-manual-exercise').click();
 
-  const endButton = page.getByTestId('end-active-workout-bottom');
-  await endButton.scrollIntoViewIfNeeded();
-  const buttonBox = await endButton.boundingBox();
+  const miniPlayer = page.getByTestId('workout-mini-player');
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  const buttonBox = await miniPlayer.boundingBox();
   const navBox = await page.locator('nav').boundingBox();
 
   expect(buttonBox).not.toBeNull();
@@ -2363,7 +2368,7 @@ test('data management validates imported backup files before overwriting storage
   await page.getByTestId('open-backup-panel').click();
   await expect(page.getByTestId('backup-workout-log-count')).toContainText('1 条');
   await page.goto('/workout-log');
-  await expect(page.getByTestId('latest-workout-log')).toContainText('Seated Cable Row');
+  await expect(page.getByTestId('recent-workout-card')).toContainText('坐姿划船');
 });
 
 test('data management remains usable on mobile viewport', async ({ page }) => {

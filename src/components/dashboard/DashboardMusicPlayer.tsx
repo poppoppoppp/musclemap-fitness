@@ -1,13 +1,9 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
+import { useMusicPlayer } from '../../features/music/MusicPlayerContext';
 import {
   buildNetEaseSongEmbedUrl,
-  fetchNetEaseSongUrl,
-  fetchNetEasePlaylistData,
   parseNetEasePlaylistId,
-  readNetEasePlaylistId,
-  removeNetEasePlaylistId,
-  writeNetEasePlaylistId,
   type MusicPlaylist,
   type MusicTrack
 } from '../../utils/neteasePlaylist';
@@ -23,84 +19,14 @@ function formatTrackCount(playlist: MusicPlaylist, tracks: MusicTrack[]) {
 }
 
 export default function DashboardMusicPlayer() {
-  const [playlistId, setPlaylistId] = useState<string | null>(() => readNetEasePlaylistId());
-  const [playlist, setPlaylist] = useState<MusicPlaylist | null>(null);
-  const [tracks, setTracks] = useState<MusicTrack[]>([]);
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const [autoplay, setAutoplay] = useState(false);
+  const {
+    playlistId, playlist, tracks, currentTrack, currentTrackIndex, autoplay, audioUrl, audioLoading,
+    isLoading, isPlaying, error: playerError, importPlaylist, removePlaylist, selectTrack, togglePlayback
+  } = useMusicPlayer();
   const [importOpen, setImportOpen] = useState(false);
   const [input, setInput] = useState('');
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [audioUrl, setAudioUrl] = useState('');
-  const [audioLoading, setAudioLoading] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  const currentTrack = tracks[currentTrackIndex] ?? null;
-
-  useEffect(() => {
-    if (!currentTrack) {
-      setAudioUrl('');
-      setAudioLoading(false);
-      return;
-    }
-
-    let active = true;
-    setAudioUrl('');
-    setAudioLoading(true);
-    setIsPlaying(false);
-    fetchNetEaseSongUrl(currentTrack.id)
-      .then((result) => {
-        if (active) setAudioUrl(result.audioUrl);
-      })
-      .catch(() => {
-        if (active) setAudioUrl('');
-      })
-      .finally(() => {
-        if (active) setAudioLoading(false);
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [currentTrack]);
-
-  useEffect(() => {
-    if (!playlistId) return;
-
-    let active = true;
-    setIsLoading(true);
-    setError('');
-    setStatus('正在载入歌单');
-
-    fetchNetEasePlaylistData(playlistId)
-      .then((data) => {
-        if (!active) return;
-        setPlaylist(data.playlist);
-        setTracks(data.tracks);
-        setCurrentTrackIndex(0);
-        setAutoplay(false);
-        setStatus('');
-      })
-      .catch(() => {
-        if (!active) return;
-        setPlaylist(null);
-        setTracks([]);
-        setCurrentTrackIndex(0);
-        setAutoplay(false);
-        setStatus('');
-        setError('歌单加载失败，请更换歌单后重试');
-      })
-      .finally(() => {
-        if (active) setIsLoading(false);
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [playlistId]);
 
   const openImport = () => {
     setInput(playlistId ?? '');
@@ -117,8 +43,7 @@ export default function DashboardMusicPlayer() {
       return;
     }
 
-    writeNetEasePlaylistId(parsedId);
-    setPlaylistId(parsedId);
+    importPlaylist(parsedId);
     setInput(parsedId);
     setError('');
     setStatus('');
@@ -126,32 +51,15 @@ export default function DashboardMusicPlayer() {
   };
 
   const handleRemove = () => {
-    removeNetEasePlaylistId();
-    setPlaylistId(null);
-    setPlaylist(null);
-    setTracks([]);
-    setCurrentTrackIndex(0);
-    setAutoplay(false);
+    removePlaylist();
     setInput('');
     setError('');
     setStatus('');
     setImportOpen(false);
   };
 
-  const selectTrack = (index: number) => {
-    setCurrentTrackIndex(index);
-    setAutoplay(true);
-  };
-
-  const togglePlayback = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    if (isPlaying) audio.pause();
-    else void audio.play().catch(() => setIsPlaying(false));
-  };
-
   return (
-    <section data-testid="dashboard-music-player" aria-labelledby="music-player-title" className="space-y-3">
+    <section id="music-player" data-testid="dashboard-music-player" aria-labelledby="music-player-title" className="space-y-3">
       <div className="flex items-center justify-between gap-3">
         <h2 id="music-player-title" className="text-lg font-extrabold text-white">训练音乐</h2>
         <div className="flex items-center gap-3">
@@ -179,7 +87,7 @@ export default function DashboardMusicPlayer() {
               <p className="mb-2 truncate text-sm font-bold text-zinc-300">正在播放 · {currentTrack.name}</p>
               <div className="overflow-hidden rounded-2xl border border-white/15 bg-white">
                 {audioUrl ? (
-                  <div className="flex items-center gap-2 bg-white px-2">
+                  <div className="flex min-h-[70px] items-center gap-3 bg-white px-3">
                     <button
                       type="button"
                       aria-label={isPlaying ? '暂停当前歌曲' : '播放当前歌曲'}
@@ -188,18 +96,10 @@ export default function DashboardMusicPlayer() {
                     >
                       {isPlaying ? 'Ⅱ' : '▶'}
                     </button>
-                    <audio
-                      ref={audioRef}
-                      key={`${currentTrack.id}-${autoplay ? 'auto' : 'manual'}`}
-                      aria-label="网易云账号权限播放器"
-                      src={audioUrl}
-                      controls
-                      autoPlay={autoplay}
-                      onPlaying={() => setIsPlaying(true)}
-                      onPause={() => setIsPlaying(false)}
-                      onEnded={() => setIsPlaying(false)}
-                      className="block h-[54px] min-w-0 flex-1 bg-white"
-                    />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-black text-zinc-900">{currentTrack.name}</p>
+                      <p className="mt-1 truncate text-xs font-semibold text-zinc-500">{currentTrack.artist}</p>
+                    </div>
                   </div>
                 ) : audioLoading ? (
                   <div role="status" className="flex h-[86px] items-center justify-center text-sm font-bold text-zinc-600">正在获取播放权限</div>
@@ -299,8 +199,8 @@ export default function DashboardMusicPlayer() {
               <button type="button" onClick={() => { setImportOpen(false); setError(''); setStatus(''); }} className="min-h-11 rounded-full border border-white/15 px-4 text-sm font-bold text-zinc-300 transition hover:border-white/30 hover:text-white focus:outline-none focus:ring-2 focus:ring-white/40">取消</button>
             </div>
           </form>
-        ) : error ? (
-          <p role="alert" className="mt-3 rounded-xl border border-red-300/20 bg-red-500/10 px-3 py-2 text-sm font-semibold text-red-200">{error}</p>
+        ) : error || playerError ? (
+          <p role="alert" className="mt-3 rounded-xl border border-red-300/20 bg-red-500/10 px-3 py-2 text-sm font-semibold text-red-200">{error || playerError}</p>
         ) : status ? (
           <p role="status" className="mt-3 rounded-xl border border-lime-300/20 bg-lime-300/10 px-3 py-2 text-sm font-semibold text-lime-200">{status}</p>
         ) : null}

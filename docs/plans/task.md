@@ -33,3 +33,12 @@
 | NetEase member playback: add failing URL and player tests | completed |
 | NetEase member playback: implement account-scoped song URL | completed |
 | NetEase member playback: verify free, VIP, and unavailable tracks | completed |
+| Workout log overview: audit and approved design | completed |
+| Workout log overview: failing behavior tests | completed |
+| Workout log overview: components and state modes | completed |
+| Workout log overview: regression and mobile verification | completed |
+| Active workout phase 2: audit and approved design | completed |
+| Active workout phase 2: failing behavior tests | completed |
+| Active workout phase 2: persistent music state | completed |
+| Active workout phase 2: active UI components | completed |
+| Active workout phase 2: regression and mobile verification | completed |

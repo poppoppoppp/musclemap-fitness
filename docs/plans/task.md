@@ -42,3 +42,9 @@
 | Active workout phase 2: persistent music state | completed |
 | Active workout phase 2: active UI components | completed |
 | Active workout phase 2: regression and mobile verification | completed |
+| Completed workout detail: audit and approved design | completed |
+| Completed workout detail: failing tests | completed |
+| Completed workout detail: history persistence and archive navigation | completed |
+| Completed workout detail: dark detail and edit mode | completed |
+| Active workout refinements: header music and dark inputs | completed |
+| Completed workout detail: full regression and mobile verification | completed |

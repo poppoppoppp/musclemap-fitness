@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ActiveWorkoutView from '../features/workout-log/ActiveWorkoutView';
 import WorkoutLogOverview from '../features/workout-log/WorkoutLogOverview';
 import type { ActiveWorkout } from '../types/activeWorkout';
@@ -11,22 +12,21 @@ import {
   startWorkoutWithExercise,
   writeActiveWorkout
 } from '../utils/activeWorkout';
-import { LATEST_WORKOUT_LOG_KEY, WORKOUT_LOGS_KEY } from '../utils/backup';
 import { PLAN_STORAGE_KEY } from '../utils/planRules';
-import { readStorage, writeStorage } from '../utils/storage';
-import { readWorkoutLogs } from '../utils/workoutHistory';
+import { readStorage } from '../utils/storage';
+import { readWorkoutLogs, saveWorkoutLog } from '../utils/workoutHistory';
 
 export type WorkoutLogPageMode = 'overview' | 'active' | 'completed';
 
 export default function WorkoutLog() {
+  const navigate = useNavigate();
   const [activeWorkout, setActiveWorkout] = useState<ActiveWorkout | null>(() => readActiveWorkout());
-  const [completedWorkout, setCompletedWorkout] = useState<WorkoutLog | null>(null);
   const [workoutLogs, setWorkoutLogs] = useState<WorkoutLog[]>(() => readWorkoutLogs());
   const [recentPlan] = useState<GeneratedPlan | null>(() => {
     const value = readStorage<GeneratedPlan | null>(PLAN_STORAGE_KEY, null);
     return isGeneratedPlan(value) ? value : null;
   });
-  const mode: WorkoutLogPageMode = activeWorkout ? 'active' : completedWorkout ? 'completed' : 'overview';
+  const mode: WorkoutLogPageMode = activeWorkout ? 'active' : 'overview';
 
   const persistActiveWorkout = (workout: ActiveWorkout) => {
     writeActiveWorkout(workout);
@@ -34,7 +34,6 @@ export default function WorkoutLog() {
   };
 
   const handleStartFree = () => {
-    setCompletedWorkout(null);
     const workout = readActiveWorkout() ?? createManualActiveWorkout();
     writeActiveWorkout(workout);
     setActiveWorkout(readActiveWorkout() ?? workout);
@@ -42,26 +41,22 @@ export default function WorkoutLog() {
 
   const handleStartPlanDay = (day: GeneratedWorkoutDay) => {
     if (!recentPlan) return;
-    setCompletedWorkout(null);
     const workout = readActiveWorkout() ?? createActiveWorkoutFromPlanDay(recentPlan, day);
     writeActiveWorkout(workout);
     setActiveWorkout(readActiveWorkout() ?? workout);
   };
 
   const handleStartRecentExercise = (exerciseId: string) => {
-    setCompletedWorkout(null);
     const existing = readActiveWorkout();
     setActiveWorkout(existing ?? startWorkoutWithExercise(exerciseId));
   };
 
   const handleArchive = (log: WorkoutLog) => {
-    const nextLogs = [log, ...readWorkoutLogs().filter((item) => item.id !== log.id)];
-    writeStorage(WORKOUT_LOGS_KEY, nextLogs);
-    writeStorage(LATEST_WORKOUT_LOG_KEY, log);
+    saveWorkoutLog(log);
     clearActiveWorkout();
     setActiveWorkout(null);
     setWorkoutLogs(readWorkoutLogs());
-    setCompletedWorkout(log);
+    navigate(`/workout-history/${log.id}`, { replace: true, state: { justCompleted: true } });
   };
 
   const handleDiscard = () => {

@@ -93,6 +93,20 @@ select:-webkit-autofill {
   color: #71717a;
 }
 
+.workout-dark input,
+.workout-dark textarea,
+.workout-dark select {
+  color: #f4f4f5 !important;
+  -webkit-text-fill-color: #f4f4f5 !important;
+  caret-color: #bef264;
+}
+
+.workout-dark input::placeholder,
+.workout-dark textarea::placeholder {
+  color: #71717a !important;
+  -webkit-text-fill-color: #71717a !important;
+}
+
 ::selection {
   background: rgba(22, 119, 255, 0.18);
 }

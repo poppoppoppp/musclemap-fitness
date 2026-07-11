@@ -34,6 +34,8 @@ test('renders the active hierarchy with real timers and a derived current exerci
   await expect(page.getByTestId('workout-log-overview')).toHaveCount(0);
   await expect(page.getByRole('heading', { name: '训练中', exact: true })).toBeVisible();
   await expect(page.locator('header').getByText('进行中', { exact: true })).toBeVisible();
+  await expect(page.locator('header').getByTestId('workout-mini-player')).toBeVisible();
+  await expect(page.getByRole('link', { name: '打开训练音乐' })).toHaveCount(0);
   await expect(page.getByTestId('workout-duration')).toContainText(/00:0[45]:\d{2}/);
   await expect(page.getByTestId('workout-start-time')).not.toContainText('Invalid Date');
   await expect(page.getByTestId('active-workout-card')).not.toContainText('有效组');
@@ -56,6 +58,12 @@ test('supports compact set entry, set deletion, notes and completing the current
   await expect(current.getByTestId('workout-set-row')).toHaveCount(1);
   await expect(current.getByTestId('set-weight-input')).toHaveAttribute('inputmode', 'decimal');
   await expect(current.getByTestId('set-reps-input')).toHaveAttribute('inputmode', 'numeric');
+  const inputColors = await current.getByTestId('set-weight-input').evaluate((input) => {
+    const style = getComputedStyle(input);
+    return { color: style.color, webkitTextFillColor: style.webkitTextFillColor };
+  });
+  expect(inputColors.color).not.toBe('rgb(17, 24, 39)');
+  expect(inputColors.webkitTextFillColor).not.toBe('rgb(17, 24, 39)');
   await current.getByTestId('set-weight-input').fill('42.5');
   await current.getByTestId('set-reps-input').fill('10');
   await expect(current.getByTestId('set-completion-toggle')).toHaveAttribute('data-completed', 'true');
@@ -108,8 +116,8 @@ test('mini player degrades without music and uses real shared NetEase playback s
   await page.locator('audio[data-testid="persistent-music-audio"]').evaluate((audio) => { (audio as HTMLAudioElement & { mountMarker?: string }).mountMarker = 'same-node'; });
   await page.waitForTimeout(1_100);
   expect(await page.locator('audio[data-testid="persistent-music-audio"]').evaluate((audio) => (audio as HTMLAudioElement & { mountMarker?: string }).mountMarker)).toBe('same-node');
-  await miniPlayer.getByRole('button', { name: '下一首' }).click();
-  await expect(miniPlayer).toContainText('真实歌曲二');
+  await miniPlayer.click();
+  await expect(page).toHaveURL(/\/#music-player$/);
 });
 
 test('fits a 320px viewport and keeps content above BottomNav', async ({ page }) => {

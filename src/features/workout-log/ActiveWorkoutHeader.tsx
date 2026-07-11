@@ -1,29 +1,24 @@
-import { Link } from 'react-router-dom';
+import type { ReactNode } from 'react';
 
 interface ActiveWorkoutHeaderProps {
   onEndWorkout: () => void;
   onDiscardWorkout: () => void;
+  musicPlayer: ReactNode;
 }
 
-export default function ActiveWorkoutHeader({ onEndWorkout, onDiscardWorkout }: ActiveWorkoutHeaderProps) {
+export default function ActiveWorkoutHeader({ onEndWorkout, onDiscardWorkout, musicPlayer }: ActiveWorkoutHeaderProps) {
   return (
     <header className="flex min-h-14 items-center justify-between gap-2">
       <div className="min-w-0">
         <div className="flex items-center gap-2.5">
-          <h1 className="text-2xl font-black tracking-[-0.035em] text-white min-[390px]:text-[1.75rem]">训练中</h1>
+          <h1 className="whitespace-nowrap text-xl font-black tracking-[-0.035em] text-white min-[390px]:text-[1.75rem]">训练中</h1>
           <span aria-hidden="true" className="h-2 w-2 shrink-0 rounded-full bg-lime-300 shadow-[0_0_8px_rgba(190,242,100,0.55)]" />
         </div>
         <p className="mt-0.5 text-sm font-semibold text-lime-300">进行中</p>
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
-        <Link
-          to="/#music-player"
-          className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-white/15 px-2.5 text-xs font-bold text-zinc-300 transition hover:border-lime-300/35 hover:text-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/60"
-          aria-label="打开训练音乐"
-        >
-          <span aria-hidden="true">♫</span><span>音乐</span>
-        </Link>
+        {musicPlayer}
         <span data-testid="end-active-workout-bottom" className="inline-flex">
           <button
             type="button"

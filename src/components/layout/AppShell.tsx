@@ -9,7 +9,7 @@ interface AppShellProps {
 
 export default function AppShell({ children }: AppShellProps) {
   const location = useLocation();
-  const darkShell = location.pathname === '/' || location.pathname === '/music' || location.pathname === '/workout-log' || location.pathname === '/data-management' || location.pathname === '/plan-builder' || location.pathname.startsWith('/templates/');
+  const darkShell = location.pathname === '/' || location.pathname === '/music' || location.pathname === '/workout-log' || location.pathname.startsWith('/workout-history') || location.pathname === '/data-management' || location.pathname === '/plan-builder' || location.pathname.startsWith('/templates/');
 
   return (
     <MusicPlayerProvider>

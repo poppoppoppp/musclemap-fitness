@@ -1,10 +1,22 @@
 import { useNavigate } from 'react-router-dom';
 import { useMusicPlayer } from '../music/MusicPlayerContext';
 
-export default function WorkoutMiniPlayer() {
+export default function WorkoutMiniPlayer({ compact = false }: { compact?: boolean }) {
   const navigate = useNavigate();
   const { currentTrack, tracks, audioUrl, isPlaying, currentTime, duration, togglePlayback, playPrevious, playNext } = useMusicPlayer();
   const progress = duration > 0 && Number.isFinite(currentTime) ? Math.min(100, Math.max(0, (currentTime / duration) * 100)) : 0;
+
+  if (compact) {
+    return (
+      <button type="button" data-testid="workout-mini-player" onClick={() => navigate('/#music-player')} aria-label="打开完整训练音乐播放器" className="flex h-11 w-[76px] min-w-0 items-center gap-1.5 overflow-hidden rounded-full border border-white/12 bg-white/[0.035] px-1.5 text-left transition hover:border-lime-300/30 focus:outline-none focus:ring-2 focus:ring-lime-300/55 min-[390px]:w-[104px] min-[390px]:px-2">
+        {currentTrack?.coverUrl ? <img src={currentTrack.coverUrl} alt="" className="h-8 w-8 shrink-0 rounded-full object-cover" /> : <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-sm text-zinc-500">♫</span>}
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-[11px] font-bold text-zinc-300">{currentTrack?.name ?? '选音乐'}</span>
+          <span className="sr-only">{currentTrack?.artist ?? '暂未播放'}{currentTrack ? '' : '，选择训练音乐'}</span>
+        </span>
+      </button>
+    );
+  }
 
   return (
     <section

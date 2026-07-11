@@ -1314,26 +1314,23 @@ test('workout history opens a read only workout log detail page', async ({ page 
   await expect(page).toHaveURL(/\/workout-history\/detail-log$/);
   await expect(page.getByRole('heading', { name: '训练详情' })).toBeVisible();
   await expect(page.getByTestId('workout-log-detail')).toContainText('2026-05-25');
-  await expect(page.getByTestId('workout-log-detail')).toContainText('45 分钟');
-  await expect(page.getByTestId('workout-summary-card')).toContainText('270 kcal');
-  await expect(page.getByTestId('workout-summary-card')).toContainText('625 kg');
-  await expect(page.getByTestId('workout-summary-card')).toContainText('5 组');
-  await expect(page.getByTestId('workout-summary-card')).toContainText('2 个动作');
-  await expect(page.getByTestId('workout-summary-card')).toContainText('来源：计划训练');
+  await expect(page.getByTestId('workout-detail-duration')).toHaveText('45:00');
+  await expect(page.getByTestId('workout-detail-calories')).toContainText('约 270 kcal');
+  await expect(page.getByTestId('workout-detail-valid-sets')).toContainText('4 组');
+  await expect(page.getByTestId('workout-detail-exercise-count')).toContainText('2 个');
+  await expect(page.getByTestId('workout-log-detail')).not.toContainText('总训练容量');
   await expect(page.getByTestId('workout-muscle-back')).toHaveAttribute('data-highlight', 'primary');
   await expect(page.getByTestId('workout-muscle-chest').first()).toHaveAttribute('data-highlight', 'primary');
   await expect(page.getByTestId('workout-muscle-triceps').first()).toHaveAttribute('data-highlight', 'secondary');
   await expect(page.getByTestId('workout-log-detail')).toContainText('Keep tempo controlled');
-  const firstExercise = page.getByTestId('workout-detail-exercise').first();
+  const firstExercise = page.getByTestId('workout-detail-exercise-row').first();
   await expect(firstExercise).toContainText('高位下拉');
   await expect(firstExercise).toContainText('高位下拉');
   await expect(firstExercise).toContainText('No swinging');
-  await expect(firstExercise).toContainText('4 组');
-  await expect(firstExercise).toContainText('背');
-  await expect(page.getByTestId('workout-set-pill').first()).toContainText('1');
-  await expect(page.getByTestId('workout-set-pill').first()).toContainText('42.5kg × 10');
-  await expect(firstExercise).toContainText('自重 × 12');
-  await expect(page.getByRole('link', { name: '返回训练历史' })).toHaveAttribute('href', '/workout-history');
+  await expect(firstExercise).toContainText('3 组 · 最高 42.5kg · 10–12 次');
+  await expect(firstExercise).toContainText('第 1 组 · 42.5kg · 10 次');
+  await expect(firstExercise).toContainText('第 3 组 · 12 次');
+  await expect(page.getByRole('link', { name: '返回记录概览' })).toHaveAttribute('href', '/workout-log');
   await expect(page.locator('input, textarea')).toHaveCount(0);
 });
 
@@ -1356,9 +1353,9 @@ test('workout history detail handles missing logs and unknown exercises without 
   await expect(page.getByText('未找到这次训练记录')).toBeVisible();
 
   await page.goto('/workout-history/unknown-exercise-log');
-  await expect(page.getByTestId('workout-detail-exercise')).toContainText('未知动作');
-  await expect(page.getByTestId('workout-detail-exercise')).toContainText('not-real-exercise');
-  await expect(page.getByTestId('workout-detail-exercise')).toContainText('自重 × 9');
+  await expect(page.getByTestId('workout-detail-exercise-row')).toContainText('未知动作');
+  await expect(page.getByTestId('workout-detail-exercise-row')).toContainText('not-real-exercise');
+  await expect(page.getByTestId('workout-detail-exercise-row')).toContainText('1 组 · 9 次');
 });
 
 test('workout history has an entry from workout log and does not overflow at 390px mobile width', async ({ page }) => {
@@ -1944,9 +1941,12 @@ test('workout log active workout flow persists edits archives and clears', async
   await exercise.getByTestId('exercise-notes-input').fill('controlled first working set');
   await page.getByTestId('end-active-workout').click();
 
-  await expect(page.getByTestId('workout-log-overview')).toBeVisible();
+  await expect(page).toHaveURL(/\/workout-history\/workout-log-/);
+  await expect(page.getByTestId('workout-completed-notice')).toBeVisible();
   expect(await page.evaluate(() => window.localStorage.getItem('musclemap.activeWorkout.v0.7'))).toBeNull();
   await page.reload();
+  await expect(page.getByTestId('workout-completed-notice')).toHaveCount(0);
+  await page.getByRole('link', { name: '返回记录概览' }).click();
   await expect(page.getByTestId('recent-workout-card')).toContainText('高位下拉');
   await expect(page.getByTestId('recent-workout-card')).toContainText('42.5kg × 10');
 });

@@ -27,6 +27,7 @@ export default function BottomNav() {
               className={({ isActive }) => {
                 const active = isActive
                   || (item.to === '/' && location.pathname === '/music')
+                  || (item.to === '/workout-log' && location.pathname.startsWith('/workout-history'))
                   || (item.to === '/data-management' && (location.pathname === '/plan-builder' || location.pathname.startsWith('/templates/')));
                 return [
                 'flex min-h-14 flex-col items-center justify-center gap-1 rounded-[15px] px-2 py-1 text-xs font-bold transition duration-200 active:scale-[0.98] focus:outline-none focus:ring-2',

@@ -90,10 +90,10 @@ export default function ActiveWorkoutView({ workout, onChange, onArchive, onDisc
   };
 
   return (
-    <div data-testid="active-workout-view" className="relative -mx-4 -mt-5 min-h-[calc(100dvh-5rem)] overflow-hidden bg-[#080a08] px-4 pb-3 pt-5 text-white sm:-mx-6 sm:px-6">
+    <div data-testid="active-workout-view" className="workout-dark relative -mx-4 -mt-5 min-h-[calc(100dvh-5rem)] overflow-hidden bg-[#080a08] px-4 pb-3 pt-5 text-white sm:-mx-6 sm:px-6">
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-52 bg-[radial-gradient(circle_at_70%_0%,rgba(190,242,48,0.07),transparent_48%)]" />
       <div className="relative mx-auto max-w-[440px] space-y-3.5">
-        <ActiveWorkoutHeader onEndWorkout={handleEndWorkout} onDiscardWorkout={handleDiscardWorkout} />
+        <ActiveWorkoutHeader onEndWorkout={handleEndWorkout} onDiscardWorkout={handleDiscardWorkout} musicPlayer={<WorkoutMiniPlayer compact />} />
         <WorkoutTimerCard startedAt={workout.startedAt} />
         <p data-testid="save-status" role={status ? 'alert' : undefined} className={`min-h-0 text-sm font-semibold ${status ? 'rounded-xl border border-red-300/20 bg-red-400/[0.07] px-3 py-2 text-red-200' : ''}`}>{status}</p>
 
@@ -129,7 +129,6 @@ export default function ActiveWorkoutView({ workout, onChange, onArchive, onDisc
           ) : null}
         </section>
 
-        <WorkoutMiniPlayer />
       </div>
     </div>
   );

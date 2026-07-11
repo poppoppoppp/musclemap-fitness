@@ -117,6 +117,12 @@ test('mini player degrades without music and uses real shared NetEase playback s
   await page.waitForTimeout(1_100);
   expect(await page.locator('audio[data-testid="persistent-music-audio"]').evaluate((audio) => (audio as HTMLAudioElement & { mountMarker?: string }).mountMarker)).toBe('same-node');
   await miniPlayer.click();
+  await expect(page).toHaveURL(/\/workout-log$/);
+  const popover = page.getByTestId('workout-mini-player-popover');
+  await expect(popover).toBeVisible();
+  await expect(popover).toContainText('真实歌曲一');
+  await expect(popover.getByRole('button', { name: '播放' })).toBeEnabled();
+  await popover.getByRole('button', { name: '查看完整歌单' }).click();
   await expect(page).toHaveURL(/\/#music-player$/);
 });
 

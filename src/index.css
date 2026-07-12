@@ -139,3 +139,141 @@ select:-webkit-autofill {
     animation-iteration-count: 1 !important;
   }
 }
+/* exercise-library-dark:start */
+.exercise-library-dark {
+  isolation: isolate;
+  background-color: #080a08;
+}
+
+.exercise-library-dark::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 0;
+  height: 36rem;
+  background:
+    radial-gradient(
+      circle at 82% 4%,
+      rgba(190, 242, 100, 0.13),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 10% 22%,
+      rgba(190, 242, 100, 0.055),
+      transparent 28%
+    );
+}
+
+.exercise-library-dark > * {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1100px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* 页面、筛选面板和动作卡片 */
+.exercise-library-dark .bg-app-surface {
+  background-color: rgba(17, 23, 17, 0.92) !important;
+}
+
+.exercise-library-dark .bg-app-surfaceMuted {
+  background-color: rgba(190, 242, 100, 0.07) !important;
+}
+
+.exercise-library-dark .border-app-line {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.exercise-library-dark .text-app-text {
+  color: #ffffff !important;
+}
+
+.exercise-library-dark .text-app-muted {
+  color: #a1a1aa !important;
+}
+
+.exercise-library-dark .text-app-subtle {
+  color: #71717a !important;
+}
+
+.exercise-library-dark .text-app-accent {
+  color: #bef264 !important;
+}
+
+/* 搜索框与下拉框 */
+.exercise-library-dark input,
+.exercise-library-dark textarea,
+.exercise-library-dark select {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(0, 0, 0, 0.28) !important;
+  color: #f4f4f5 !important;
+  -webkit-text-fill-color: #f4f4f5 !important;
+  caret-color: #bef264;
+}
+
+.exercise-library-dark input::placeholder,
+.exercise-library-dark textarea::placeholder {
+  color: #71717a !important;
+  -webkit-text-fill-color: #71717a !important;
+}
+
+.exercise-library-dark select option {
+  background-color: #111711;
+  color: #f4f4f5;
+}
+
+/* 荧光绿焦点状态 */
+.exercise-library-dark input:focus,
+.exercise-library-dark textarea:focus,
+.exercise-library-dark select:focus {
+  border-color: rgba(190, 242, 100, 0.72) !important;
+  box-shadow: 0 0 0 3px rgba(190, 242, 100, 0.12) !important;
+}
+
+/* 动作卡片 */
+.exercise-library-dark a > section {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.025) inset,
+    0 18px 45px rgba(0, 0, 0, 0.16);
+}
+
+.exercise-library-dark a:hover > section {
+  border-color: rgba(190, 242, 100, 0.38) !important;
+  background-color: rgba(190, 242, 100, 0.075) !important;
+  transform: translateY(-1px);
+}
+
+/* 肌群匹配标签 */
+.exercise-library-dark .border-app-accent\/70 {
+  border-color: rgba(190, 242, 100, 0.55) !important;
+}
+
+.exercise-library-dark .bg-app-accent\/15 {
+  background-color: rgba(190, 242, 100, 0.11) !important;
+}
+
+/* 返回按钮 */
+.exercise-library-dark header a {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(255, 255, 255, 0.055) !important;
+  color: #bef264 !important;
+}
+
+.exercise-library-dark header a:hover {
+  border-color: rgba(190, 242, 100, 0.42) !important;
+  background-color: rgba(190, 242, 100, 0.1) !important;
+}
+
+/* 深色滚动条 */
+.exercise-library-dark {
+  scrollbar-color: rgba(190, 242, 100, 0.28) transparent;
+}
+
+.exercise-library-dark::-webkit-scrollbar-thumb {
+  border-color: #080a08;
+  background: rgba(190, 242, 100, 0.28);
+}
+/* exercise-library-dark:end */

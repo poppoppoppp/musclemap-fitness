@@ -5,25 +5,35 @@ import Select from '../ui/Select';
 
 interface ExerciseFilterProps {
   query: string;
+  bodyPart: string;
   muscleId: string;
   equipment: string;
   onQueryChange: (value: string) => void;
+  onBodyPartChange: (value: string) => void;
   onMuscleChange: (value: string) => void;
   onEquipmentChange: (value: string) => void;
 }
 
 export default function ExerciseFilter({
   query,
+  bodyPart,
   muscleId,
   equipment,
   onQueryChange,
+  onBodyPartChange,
   onMuscleChange,
   onEquipmentChange
 }: ExerciseFilterProps) {
   return (
     <div className="rounded-2xl border border-app-line bg-app-surface p-5">
-      <div className="grid gap-3 md:grid-cols-[1.2fr_1fr_1fr]">
+      <div className="grid gap-3 md:grid-cols-2">
         <SearchInput label="搜索动作" value={query} placeholder="输入划船、下拉、背阔肌..." onChange={onQueryChange} />
+        <Select
+          label="部位"
+          value={bodyPart}
+          onChange={onBodyPartChange}
+          options={[{ value: '', label: '全部部位' }, ...bodyPartOptions.map((item) => ({ value: item, label: item }))]}
+        />
         <Select
           label="涉及肌群"
           value={muscleId}
@@ -43,3 +53,5 @@ export default function ExerciseFilter({
     </div>
   );
 }
+
+const bodyPartOptions = [...new Set(muscles.map((muscle) => muscle.bodyPart)), '全身'];

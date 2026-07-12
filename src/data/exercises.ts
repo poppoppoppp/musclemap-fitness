@@ -1,6 +1,7 @@
 import type { Exercise } from '../types/exercise';
+import { catalogExercises } from './exerciseCatalog';
 
-export const exercises: Exercise[] = [
+const existingExercises: Exercise[] = [
   {
     id: 'lat-pulldown',
     name: '高位下拉',
@@ -818,5 +819,7 @@ export const exercises: Exercise[] = [
     tags: ['核心', '单杠', '进阶']
   }
 ];
+
+export const exercises: Exercise[] = [...existingExercises, ...catalogExercises];
 
 export const getExerciseById = (id: string) => exercises.find((exercise) => exercise.id === id);

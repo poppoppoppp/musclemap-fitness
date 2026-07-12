@@ -4,7 +4,7 @@
 
 :root {
   color-scheme: light;
-  background: #f5f7fa;
+  background: #080a08;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
   --app-bg: #f5f7fa;
   --app-surface: #ffffff;
@@ -27,7 +27,7 @@
 }
 
 html {
-  background: #f5f7fa;
+  background: #080a08;
 }
 
 body {
@@ -35,7 +35,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   min-height: 100dvh;
-  background: linear-gradient(180deg, #f7f8fa 0%, #eef2f6 100%);
+  background: #080a08;
   color: #111827;
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
@@ -75,6 +75,36 @@ select:-webkit-autofill {
   -webkit-text-fill-color: #111827;
   caret-color: #1677ff;
   transition: background-color 9999s ease-in-out 0s;
+}
+
+.profile-dark input {
+  color: #e4e4e7 !important;
+  -webkit-text-fill-color: #e4e4e7 !important;
+  caret-color: #bef264;
+}
+
+.template-dark input {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #bef264;
+}
+
+.template-dark input::placeholder {
+  color: #71717a;
+}
+
+.workout-dark input,
+.workout-dark textarea,
+.workout-dark select {
+  color: #f4f4f5 !important;
+  -webkit-text-fill-color: #f4f4f5 !important;
+  caret-color: #bef264;
+}
+
+.workout-dark input::placeholder,
+.workout-dark textarea::placeholder {
+  color: #71717a !important;
+  -webkit-text-fill-color: #71717a !important;
 }
 
 ::selection {

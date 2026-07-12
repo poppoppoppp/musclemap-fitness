@@ -1,8 +1,10 @@
+import type { CSSProperties } from 'react';
 import { normalizeMuscleId } from '../../utils/workoutSummary';
 
 type WorkoutMuscleMap2DProps = {
   primaryMuscles: string[];
   secondaryMuscles?: string[];
+  variant?: 'light' | 'dark';
 };
 
 type HighlightState = 'primary' | 'secondary' | 'none';
@@ -23,7 +25,7 @@ const skinFill = 'var(--app-surface)';
 const muscleStroke = 'var(--app-line)';
 const quietStroke = 'var(--app-subtle)';
 
-export default function WorkoutMuscleMap2D({ primaryMuscles, secondaryMuscles = [] }: WorkoutMuscleMap2DProps) {
+export default function WorkoutMuscleMap2D({ primaryMuscles, secondaryMuscles = [], variant = 'light' }: WorkoutMuscleMap2DProps) {
   const primary = new Set(primaryMuscles.map(normalizeMuscleId));
   const secondary = new Set(secondaryMuscles.map(normalizeMuscleId).filter((muscleId) => !primary.has(muscleId)));
 
@@ -48,13 +50,17 @@ export default function WorkoutMuscleMap2D({ primaryMuscles, secondaryMuscles = 
   });
 
   return (
-    <div className="grid grid-cols-2 gap-2" data-testid="workout-muscle-map-2d">
+    <div
+      className="grid grid-cols-2 gap-2"
+      data-testid="workout-muscle-map-2d"
+      style={variant === 'dark' ? ({ '--app-blue': '#bef264', '--app-subtle': '#4d7c0f', '--app-surface-raised': '#1b2119', '--app-surface': '#111411', '--app-line': '#3f463d' } as CSSProperties) : undefined}
+    >
       <figure className="min-w-0 px-1">
-        <figcaption className="mb-1 text-center text-xs font-semibold text-app-muted">正面</figcaption>
+        <figcaption className={`mb-1 text-center text-xs font-semibold ${variant === 'dark' ? 'text-zinc-500' : 'text-app-muted'}`}>正面</figcaption>
         <FrontMuscleFigure muscleProps={muscleProps} />
       </figure>
       <figure className="min-w-0 px-1">
-        <figcaption className="mb-1 text-center text-xs font-semibold text-app-muted">背面</figcaption>
+        <figcaption className={`mb-1 text-center text-xs font-semibold ${variant === 'dark' ? 'text-zinc-500' : 'text-app-muted'}`}>背面</figcaption>
         <BackMuscleFigure muscleProps={muscleProps} />
       </figure>
     </div>

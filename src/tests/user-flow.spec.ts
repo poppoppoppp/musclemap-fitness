@@ -4,6 +4,8 @@ import { exerciseTrajectories } from '../data/exerciseTrajectories';
 import { threeModelRegions } from '../data/threeModelRegions';
 import { upperBodyLocalMeshMappings } from '../data/upperBodyLocalMeshMappings';
 import type { WorkoutLog } from '../types/workout';
+import { getLatestBodySnapshot } from '../utils/bodySnapshots';
+import { validateBackupText } from '../utils/backup';
 import {
   calculateWorkoutExerciseCount,
   calculateWorkoutSetCount,
@@ -12,6 +14,17 @@ import {
   getWorkedMusclesFromWorkout,
   normalizeMuscleId
 } from '../utils/workoutSummary';
+
+async function startFreeWorkout(page: import('@playwright/test').Page) {
+  await page.getByRole('button', { name: '开始记录训练' }).click();
+  await page.getByTestId('start-active-workout').click();
+}
+
+async function addExerciseFromPicker(page: import('@playwright/test').Page, exerciseId: string) {
+  await page.getByTestId('open-exercise-picker').click();
+  await page.getByTestId(`add-exercise-${exerciseId}`).click();
+  await expect(page.getByTestId('exercise-picker-sheet')).toBeHidden();
+}
 
 test('workout summary utilities calculate report metrics and normalized muscles', () => {
   const workout: WorkoutLog = {
@@ -55,7 +68,49 @@ test('workout summary utilities calculate report metrics and normalized muscles'
   expect(worked.secondary).toEqual(['triceps', 'biceps']);
 });
 
-test('homepage matches the light mobile fitness dashboard structure', async ({ page }) => {
+test('body snapshot utilities select the latest dated valid record', () => {
+  expect(
+    getLatestBodySnapshot([
+      { id: 'older', date: '2026-06-01', bodyWeightKg: 71, createdAt: '2026-06-01T09:00:00.000Z' },
+      { id: 'newer-created', date: '2026-06-08', waistCm: 78, createdAt: '2026-06-08T10:00:00.000Z' },
+      { id: 'latest', date: '2026-06-08', bodyWeightKg: 70.5, waistCm: 77.5, createdAt: '2026-06-08T11:00:00.000Z' }
+    ])
+  ).toMatchObject({ id: 'latest', bodyWeightKg: 70.5, waistCm: 77.5 });
+  expect(getLatestBodySnapshot([])).toBeNull();
+});
+
+test('backup v2 validates body snapshots and normalizes legacy v1 backups', () => {
+  const commonData = { latestGeneratedPlan: null, workoutLogs: [], latestWorkoutLog: null };
+  const legacy = validateBackupText(JSON.stringify({
+    app: 'MuscleMap Fitness',
+    exportVersion: 1,
+    exportedAt: '2026-06-08T12:00:00.000Z',
+    data: commonData
+  }));
+  expect(legacy.ok).toBe(true);
+  if (legacy.ok) expect(legacy.backup.data.bodySnapshots).toEqual([]);
+
+  const current = validateBackupText(JSON.stringify({
+    app: 'MuscleMap Fitness',
+    exportVersion: 2,
+    exportedAt: '2026-06-08T12:00:00.000Z',
+    data: {
+      ...commonData,
+      bodySnapshots: [{ id: 'body-1', date: '2026-06-08', bodyWeightKg: 70.5, waistCm: 78, createdAt: '2026-06-08T12:00:00.000Z' }]
+    }
+  }));
+  expect(current.ok).toBe(true);
+
+  const damaged = validateBackupText(JSON.stringify({
+    app: 'MuscleMap Fitness',
+    exportVersion: 2,
+    exportedAt: '2026-06-08T12:00:00.000Z',
+    data: { ...commonData, bodySnapshots: [{ id: 'broken' }] }
+  }));
+  expect(damaged).toEqual({ ok: false, error: 'damaged-body-snapshots' });
+});
+
+test('training entry homepage presents stored workout plan and music states', async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.setItem(
       'musclemap.latestGeneratedPlan.v0.2',
@@ -86,6 +141,8 @@ test('homepage matches the light mobile fitness dashboard structure', async ({ p
         {
           id: 'home-log',
           date: '2026-06-07',
+          planId: 'plan-home',
+          durationSeconds: 1860,
           exercises: [
             { id: 'exercise-1', exerciseId: 'lat-pulldown', order: 0, sets: [{ id: 'set-1', setIndex: 1, weight: 45, reps: 10, completed: true }] },
             { id: 'exercise-2', exerciseId: 'seated-row', order: 1, sets: [{ id: 'set-2', setIndex: 1, reps: 12, completed: true }] }
@@ -97,36 +154,281 @@ test('homepage matches the light mobile fitness dashboard structure', async ({ p
     window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
   });
 
-  await page.setViewportSize({ width: 430, height: 932 });
+  await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
 
   const main = page.locator('main');
-  await expect(page.getByRole('heading', { name: '今天点亮哪块肌肉？' })).toBeVisible();
-  await expect(page.getByText('选择目标肌群，快速生成今天的训练记录')).toBeVisible();
-  await expect(page.getByTestId('dashboard-muscle-card')).toBeVisible();
-  await expect(page.getByTestId('dashboard-body-front')).toBeVisible();
-  await expect(page.getByTestId('dashboard-body-back')).toBeVisible();
-  await expect(page.getByTestId('dashboard-muscle-picker')).toBeVisible();
-  await expect(page.getByTestId('dashboard-muscle-picker')).toContainText('胸部');
-  await expect(page.getByTestId('dashboard-muscle-picker')).toContainText('背部');
-  await expect(page.getByTestId('dashboard-muscle-picker')).toContainText('腿部');
-  await expect(page.getByTestId('dashboard-muscle-picker')).toContainText('肩部');
-  await expect(page.getByTestId('dashboard-muscle-picker')).toContainText('手臂');
-  await expect(page.getByTestId('dashboard-muscle-picker')).toContainText('核心');
-  await expect(page.getByTestId('dashboard-muscle-shortcut-chest')).toHaveAttribute('aria-current', 'true');
-  await expect(page.getByTestId('dashboard-muscle-shortcut-chest')).toHaveAttribute('href', '/three-muscle-selector?area=chest');
-  await expect(main.getByRole('link', { name: /开始记录/ })).toHaveAttribute('href', '/workout-log');
-  await expect(page.getByTestId('dashboard-recent-plan')).toContainText('最近计划');
-  await expect(page.getByTestId('dashboard-recent-plan')).toContainText('背部日 · 今天可执行');
+  await expect(page.getByRole('heading', { name: 'MuscleMap' })).toBeVisible();
+  await expect(page.getByText('科学训练 · 精准进阶')).toHaveCount(0);
+  await expect(page.getByTestId('dashboard-start-card')).toContainText('开始训练');
+  await expect(page.getByTestId('dashboard-start-card')).toContainText('选择计划或自由训练');
+  await expect(main.getByRole('link', { name: /开始训练/ })).toHaveAttribute('href', '/workout-log');
+  await expect(page.getByTestId('dashboard-muscle-card')).toHaveCount(0);
+  await expect(page.getByTestId('dashboard-recent-plan')).toContainText('增肌四分化计划');
+  await expect(page.getByTestId('dashboard-recent-plan')).toContainText('100%');
   await expect(page.getByTestId('dashboard-recent-workout')).toContainText('2026-06-07');
-  await expect(page.getByTestId('dashboard-recent-workout')).toContainText('2 个动作');
+  await expect(page.getByTestId('dashboard-recent-workout')).toContainText('31 分钟');
+  await expect(page.getByTestId('dashboard-recent-workout')).toContainText('186 kcal');
   await expect(page.getByTestId('dashboard-recent-workout')).toContainText('2 组');
-  await expect(main.getByRole('link', { name: '动作库' })).toHaveCount(0);
-  await expect(main.getByRole('link', { name: '训练计划' })).toHaveCount(0);
-  await expect(page.getByRole('link', { name: '统计' })).toHaveAttribute('href', '/workout-log');
+  await expect(page.getByTestId('dashboard-music-player')).toContainText('导入歌单后，训练时可快速播放音乐');
+  await page.getByRole('button', { name: '更换歌单' }).click();
+  await expect(page.getByPlaceholder('粘贴网易云歌单链接或 ID')).toBeVisible();
+  await expect(page.getByRole('link', { name: '记录', exact: true })).toHaveAttribute('href', '/workout-log');
+  await expect(page.getByRole('link', { name: '动作库', exact: true })).toHaveAttribute('href', '/exercises');
 
   const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
   expect(hasHorizontalOverflow).toBe(false);
+});
+
+test('training entry homepage teaches empty states without fabricated data', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.removeItem('musclemap.latestGeneratedPlan.v0.2');
+    window.localStorage.removeItem('musclemap.workoutLogs.v0.3');
+    window.localStorage.removeItem('musclemap.latestWorkoutLog.v0.3');
+    window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
+  });
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+
+  await expect(page.getByTestId('dashboard-recent-workout')).toContainText('还没有训练记录，完成一次训练后会显示在这里');
+  await expect(page.getByTestId('dashboard-recent-plan')).toContainText('还没有训练计划');
+  await expect(page.getByTestId('dashboard-recent-plan')).toContainText('选择计划');
+  await expect(page.getByTestId('dashboard-music-player')).toContainText('导入歌单后，训练时可快速播放音乐');
+  await expect(page.getByTestId('dashboard-music-player').getByRole('button', { name: '更换歌单' })).toBeVisible();
+
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  const navBox = await page.locator('nav').boundingBox();
+  const musicBox = await page.getByTestId('dashboard-music-player').boundingBox();
+  expect(navBox).not.toBeNull();
+  expect(musicBox).not.toBeNull();
+  expect(musicBox!.y + musicBox!.height).toBeLessThanOrEqual(navBox!.y);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
+});
+
+test('homepage recent workouts carousel shows and selects the five newest logs', async ({ page }) => {
+  await page.addInitScript(() => {
+    const logs = Array.from({ length: 6 }, (_, index) => ({
+      id: `carousel-log-${index + 1}`,
+      date: `2026-07-0${6 - index}`,
+      durationSeconds: (30 - index) * 60,
+      exercises: [
+        {
+          id: `carousel-exercise-${index + 1}`,
+          exerciseId: 'lat-pulldown',
+          order: 0,
+          sets: [{ id: `carousel-set-${index + 1}`, setIndex: 1, reps: 10, completed: true }]
+        }
+      ],
+      createdAt: `2026-07-0${6 - index}T10:00:00.000Z`
+    }));
+    window.localStorage.setItem('musclemap.workoutLogs.v0.3', JSON.stringify(logs));
+    window.localStorage.removeItem('musclemap.latestGeneratedPlan.v0.2');
+  });
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+
+  const slides = page.getByTestId('dashboard-recent-workout-slide');
+  await expect(slides).toHaveCount(5);
+  await expect(slides.first()).toHaveAttribute('href', '/workout-history/carousel-log-1');
+  await expect(slides.first()).toHaveAttribute('data-selected', 'true');
+  await expect(page.getByTestId('dashboard-workout-position')).toHaveText('1/5');
+  await expect(page.getByText('2026-07-01')).toHaveCount(0);
+
+  await page.getByRole('button', { name: '查看第 3 次训练' }).click();
+  await expect(slides.nth(2)).toHaveAttribute('data-selected', 'true');
+  await expect(page.getByTestId('dashboard-workout-position')).toHaveText('3/5');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
+});
+
+test('homepage imports a NetEase official player as the only music player', async ({ page }) => {
+  const playlistTracks = Array.from({ length: 8 }, (_, index) => ({
+    id: String(1000 + index),
+    name: `Track ${index + 1}`,
+    artist: `Artist ${index + 1}`,
+    albumName: `Album ${index + 1}`,
+    coverUrl: `https://example.com/cover-${index + 1}.jpg`,
+    duration: 180000 + index * 1000
+  }));
+
+  await page.route('**/api/netease-playlist?id=*', async (route) => {
+    const url = new URL(route.request().url());
+    const id = url.searchParams.get('id') ?? '';
+    const tracks = id === '3778678' ? playlistTracks.slice(0, 7).map((track, index) => ({
+      ...track,
+      id: `200${index}`,
+      name: `Replace Track ${index + 1}`,
+      artist: `Replace Artist ${index + 1}`
+    })) : playlistTracks;
+
+    await route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({
+        ok: true,
+        playlist: { id, name: id === '3778678' ? 'Replacement Playlist' : 'Workout Playlist', source: 'netease', trackCount: id === '3778678' ? 9 : 10 },
+        tracks
+      })
+    });
+  });
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.evaluate(() => window.localStorage.removeItem('musclemap.neteasePlaylist.v1'));
+  await page.reload();
+
+  await page.getByRole('button', { name: '更换歌单' }).click();
+  const input = page.getByPlaceholder('粘贴网易云歌单链接或 ID');
+  await input.fill('https://example.com/playlist?id=19723756');
+  await page.getByRole('button', { name: '确认导入' }).click();
+  await expect(page.getByRole('alert')).toHaveText('请输入有效的网易云歌单链接或 ID');
+
+  await input.fill('分享歌单 https://music.163.com/#/playlist?id=19723756');
+  await page.getByRole('button', { name: '确认导入' }).click();
+  const officialPlayer = page.locator('iframe[title="网易云官方单曲播放器"]');
+  await expect(officialPlayer).toHaveAttribute('src', 'https://music.163.com/outchain/player?type=2&id=1000&auto=0&height=66');
+  await expect(page.getByText('来自网易云歌单 · Workout Playlist')).toBeVisible();
+  await expect(page.getByTestId('music-track-count')).toHaveText('8 / 10 首');
+  await expect(page.getByTestId('music-track-list-item')).toHaveCount(8);
+  await expect(page.getByRole('button', { name: /播放 Track 1/ })).toBeVisible();
+  await expect(page.getByText('Artist 1')).toBeVisible();
+  await expect(page.getByRole('button', { name: /播放 Track 8/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: '在网易云打开' })).toHaveAttribute('href', 'https://music.163.com/#/playlist?id=19723756');
+  expect(await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.neteasePlaylist.v1') ?? 'null'))).toBe('19723756');
+
+  await page.getByRole('button', { name: /播放 Track 8/ }).click();
+  await expect(page.locator('iframe[title="网易云官方单曲播放器"]')).toHaveAttribute('src', 'https://music.163.com/outchain/player?type=2&id=1007&auto=1&height=66');
+  await expect(page.getByText('正在播放 · Track 8')).toBeVisible();
+
+  await page.reload();
+  await expect(page.locator('iframe[title="网易云官方单曲播放器"]')).toHaveAttribute('src', 'https://music.163.com/outchain/player?type=2&id=1000&auto=0&height=66');
+  await page.getByRole('button', { name: '更换歌单' }).click();
+  await page.getByPlaceholder('粘贴网易云歌单链接或 ID').fill('3778678');
+  await page.getByRole('button', { name: '确认导入' }).click();
+  await expect(page.locator('iframe[title="网易云官方单曲播放器"]')).toHaveAttribute('src', 'https://music.163.com/outchain/player?type=2&id=2000&auto=0&height=66');
+  await expect(page.getByText('来自网易云歌单 · Replacement Playlist')).toBeVisible();
+  await expect(page.getByTestId('music-track-count')).toHaveText('7 / 9 首');
+
+  await page.getByRole('button', { name: '管理' }).click();
+  await page.getByRole('button', { name: '移除歌单' }).click();
+  await expect(page.locator('iframe[title="网易云官方单曲播放器"]')).toHaveCount(0);
+  await expect(page.getByText('导入歌单后，训练时可快速播放音乐')).toBeVisible();
+  expect(await page.evaluate(() => window.localStorage.getItem('musclemap.neteasePlaylist.v1'))).toBeNull();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
+});
+
+test('netease playlist api returns all playlist tracks without audio url filtering', async () => {
+  // @ts-expect-error Vercel API handlers live outside the TypeScript app source tree.
+  const { default: handler } = await import('../../api/netease-playlist.js');
+  const originalFetch = globalThis.fetch;
+  const requests: string[] = [];
+
+  globalThis.fetch = (async (url: string | URL | Request) => {
+    const requestUrl = String(url);
+    requests.push(requestUrl);
+
+    if (requestUrl.includes('/api/v6/playlist/detail')) {
+      return new Response(JSON.stringify({
+        code: 200,
+        playlist: {
+          name: '完整歌单',
+          trackCount: 3,
+          trackIds: [{ id: 11 }, { id: 22 }, { id: 33 }]
+        }
+      }), { status: 200 });
+    }
+
+    if (requestUrl.includes('/api/song/detail')) {
+      return new Response(JSON.stringify({
+        songs: [
+          { id: 11, name: 'Song 1', ar: [{ name: 'Artist 1' }], al: { name: 'Album 1', picUrl: 'https://example.com/1.jpg' }, dt: 181000 },
+          { id: 22, name: 'Song 2', ar: [{ name: 'Artist 2' }], al: { name: 'Album 2', picUrl: 'https://example.com/2.jpg' }, dt: 182000 },
+          { id: 33, name: 'Song 3', ar: [{ name: 'Artist 3' }], al: { name: 'Album 3', picUrl: 'https://example.com/3.jpg' }, dt: 183000 }
+        ]
+      }), { status: 200 });
+    }
+
+    if (requestUrl.includes('/api/song/enhance/player/url')) {
+      return new Response(JSON.stringify({ data: [{ id: 11, code: 200, url: 'https://example.com/1.mp3' }] }), { status: 200 });
+    }
+
+    return new Response('{}', { status: 404 });
+  }) as typeof fetch;
+
+  const responseBody: { ok?: boolean; playlist?: { trackCount?: number }; tracks?: Array<{ id: string; audioUrl?: string }> } = {};
+  const response = {
+    statusCode: 0,
+    headers: {} as Record<string, string>,
+    status(code: number) {
+      this.statusCode = code;
+      return this;
+    },
+    setHeader(name: string, value: string) {
+      this.headers[name] = value;
+    },
+    json(payload: typeof responseBody) {
+      Object.assign(responseBody, payload);
+      return this;
+    }
+  };
+
+  try {
+    await handler({ query: { id: '123' } }, response);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+
+  expect(requests.some((url) => url.includes('/api/song/enhance/player/url'))).toBe(false);
+  expect(response.statusCode).toBe(200);
+  expect(responseBody.ok).toBe(true);
+  expect(responseBody.playlist?.trackCount).toBe(3);
+  expect(responseBody.tracks?.map((track) => track.id)).toEqual(['11', '22', '33']);
+  expect(responseBody.tracks?.some((track) => track.audioUrl)).toBe(false);
+});
+
+test('dark homepage and profile content extend behind the floating navigation', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+
+  for (const path of ['/', '/data-management']) {
+    await page.goto(path);
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    const seam = await page.evaluate(() => {
+      const nav = document.querySelector('nav')?.getBoundingClientRect();
+      const y = Math.max(0, Math.floor((nav?.top ?? window.innerHeight) - 10));
+      const element = document.elementFromPoint(Math.floor(window.innerWidth / 2), y);
+      let backgroundElement: Element | null = element;
+      let backgroundColor = '';
+      while (backgroundElement) {
+        backgroundColor = getComputedStyle(backgroundElement).backgroundColor;
+        if (backgroundColor && backgroundColor !== 'rgba(0, 0, 0, 0)') break;
+        backgroundElement = backgroundElement.parentElement;
+      }
+      return {
+        path: location.pathname,
+        tag: element?.tagName ?? '',
+        className: String((element as HTMLElement | null)?.className ?? ''),
+        backgroundColor,
+        bodyBackground: getComputedStyle(document.body).backgroundColor
+      };
+    });
+
+    expect(seam.backgroundColor).not.toBe('rgb(246, 248, 252)');
+    expect(seam.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+    expect(seam.bodyBackground).not.toBe('rgb(246, 248, 252)');
+  }
+});
+
+test('bottom navigation uses the four requested destinations and highlights profile', async ({ page }) => {
+  await page.goto('/data-management');
+
+  const nav = page.locator('nav');
+  await expect(nav.getByRole('link', { name: '首页', exact: true })).toHaveAttribute('href', '/');
+  await expect(nav.getByRole('link', { name: '记录', exact: true })).toHaveAttribute('href', '/workout-log');
+  await expect(nav.getByRole('link', { name: '动作库', exact: true })).toHaveAttribute('href', '/exercises');
+  await expect(nav.getByRole('link', { name: '我的', exact: true })).toHaveAttribute('href', '/data-management');
+  await expect(nav.getByRole('link', { name: '我的', exact: true })).toHaveAttribute('aria-current', 'page');
+  await expect(nav.getByText('计划', { exact: true })).toHaveCount(0);
+  await expect(nav.getByText('统计', { exact: true })).toHaveCount(0);
 });
 
 test('homepage shows elapsed timer for active workout', async ({ page }) => {
@@ -178,35 +480,6 @@ test('homepage start record immediately creates an active workout timer', async 
 
   await page.goto('/');
   await expect(page.getByTestId('dashboard-active-workout-timer')).toBeVisible();
-});
-
-test('homepage muscle map shortcuts open the matching 3d selector area', async ({ page }) => {
-  const cases = [
-    { label: '胸部', area: 'chest', expected: '胸部' },
-    { label: '背部', area: 'back', expected: '背部' },
-    { label: '腿部', area: 'legs', expected: '腿部' },
-    { label: '肩部', area: 'shoulders', expected: '肩部' },
-    { label: '手臂', area: 'arms', expected: '手臂' },
-    { label: '核心', area: 'core', expected: '核心' }
-  ];
-
-  await page.goto('/');
-  await expect(page.getByTestId('dashboard-body-front')).toBeVisible();
-  await expect(page.getByTestId('dashboard-body-back')).toBeVisible();
-
-  for (const item of cases) {
-    await expect(page.getByTestId(`dashboard-muscle-shortcut-${item.area}`)).toContainText(item.label);
-  }
-
-  for (const item of cases) {
-    await page.goto('/');
-    await expect(page.getByTestId(`dashboard-muscle-shortcut-${item.area}`)).toHaveAttribute('href', `/three-muscle-selector?area=${item.area}`);
-    await page.getByTestId(`dashboard-muscle-shortcut-${item.area}`).hover();
-    await expect(page.getByTestId(`dashboard-muscle-shortcut-${item.area}`)).toHaveAttribute('aria-current', 'true');
-    await page.getByTestId(`dashboard-muscle-shortcut-${item.area}`).click();
-    await expect(page).toHaveURL(new RegExp(`/three-muscle-selector\\?area=${item.area}$`));
-    await expect(page.getByTestId('three-current-region-label')).toContainText(item.expected);
-  }
 });
 
 function parseTimerValue(value: string) {
@@ -330,7 +603,7 @@ test('three muscle selector adds lower body exercises to active workout without 
   await page.getByTestId('three-add-exercise-squat').click();
   await expect(page).toHaveURL(/\/workout-log\?focusExercise=[^#]+$/);
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(1);
-  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('Squat');
+  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('深蹲');
 
   await page.goto('/three-muscle-selector');
   await page.getByTestId('select-three-region-legs').click();
@@ -338,7 +611,8 @@ test('three muscle selector adds lower body exercises to active workout without 
   await page.getByTestId('three-add-exercise-leg-extension').click();
   await expect(page).toHaveURL(/\/workout-log\?focusExercise=[^#]+$/);
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(2);
-  await expect(page.getByTestId('workout-log-exercise').nth(1)).toContainText('Leg Extension');
+  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('腿屈伸');
+  await expect(page.getByTestId('workout-log-exercise').nth(1)).toContainText('深蹲');
 
   let active = await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null'));
   expect(active.exercises.map((exercise: { exerciseId: string }) => exercise.exerciseId)).toEqual(['squat', 'leg-extension']);
@@ -376,6 +650,7 @@ test('three muscle selector lower body actions can open exercise detail and work
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(1);
   await expect(page.getByTestId('set-weight-input').first()).toBeVisible();
   await expect(page.getByTestId('set-reps-input').first()).toBeVisible();
+  await page.getByTestId('toggle-exercise-notes').click();
   await expect(page.getByTestId('exercise-notes-input').first()).toBeVisible();
 
   const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
@@ -424,8 +699,8 @@ test('three muscle selector focuses the newly added workout exercise', async ({ 
   await page.getByTestId('three-add-exercise-standing-calf-raise').click();
 
   await expect(page).toHaveURL(/\/workout-log\?focusExercise=[^#]+$/);
-  const addedExercise = page.getByTestId('workout-log-exercise').last();
-  await expect(addedExercise).toContainText('Standing Calf Raise');
+  const addedExercise = page.getByTestId('current-exercise-card');
+  await expect(addedExercise).toContainText('站姿提踵');
   await expect(addedExercise).toBeInViewport({ ratio: 0.5 });
 });
 
@@ -572,7 +847,7 @@ test('three muscle selector adds front upper body exercises to active workout wi
   await page.getByTestId('three-add-exercise-push-up').click();
   await expect(page).toHaveURL(/\/workout-log\?focusExercise=[^#]+$/);
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(1);
-  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('Push-up');
+  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('俯卧撑');
 
   await page.goto('/three-muscle-selector');
   await page.getByTestId('select-three-region-arms').click();
@@ -580,7 +855,8 @@ test('three muscle selector adds front upper body exercises to active workout wi
   await page.getByTestId('three-add-exercise-dumbbell-curl').click();
   await expect(page).toHaveURL(/\/workout-log\?focusExercise=[^#]+$/);
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(2);
-  await expect(page.getByTestId('workout-log-exercise').nth(1)).toContainText('Dumbbell Curl');
+  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('哑铃弯举');
+  await expect(page.getByTestId('workout-log-exercise').nth(1)).toContainText('俯卧撑');
 
   let active = await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null'));
   expect(active.exercises.map((exercise: { exerciseId: string }) => exercise.exerciseId)).toEqual(['push-up', 'dumbbell-curl']);
@@ -659,7 +935,7 @@ test('three muscle selector can add related exercises to the active workout with
   await page.getByTestId('three-add-exercise-lat-pulldown').click();
   await expect(page).toHaveURL(/\/workout-log\?focusExercise=[^#]+$/);
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(1);
-  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('Lat Pulldown');
+  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('高位下拉');
 
   let active = await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null'));
   expect(active.exercises.map((exercise: { exerciseId: string }) => exercise.exerciseId)).toEqual(['lat-pulldown']);
@@ -670,8 +946,8 @@ test('three muscle selector can add related exercises to the active workout with
   await page.getByTestId('three-add-exercise-straight-arm-pulldown').click();
   await expect(page).toHaveURL(/\/workout-log\?focusExercise=[^#]+$/);
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(2);
-  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('Lat Pulldown');
-  await expect(page.getByTestId('workout-log-exercise').nth(1)).toContainText('Straight-arm Pulldown');
+  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('直臂下拉');
+  await expect(page.getByTestId('workout-log-exercise').nth(1)).toContainText('高位下拉');
 
   active = await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null'));
   expect(active.exercises.map((exercise: { exerciseId: string }) => exercise.exerciseId)).toEqual([
@@ -895,13 +1171,13 @@ test.skip('legacy three muscle demo does not overflow at 390px mobile width', as
   expect(hasHorizontalOverflow).toBe(false);
 });
 
-test('workout log hides invalid legacy latest sets instead of rendering undefined values', async ({ page }) => {
+test('workout log hides invalid legacy sets instead of rendering undefined values', async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.removeItem('musclemap.latestGeneratedPlan.v0.2');
     window.localStorage.removeItem('musclemap.workoutLogs.v0.3');
     window.localStorage.setItem(
-      'musclemap.latestWorkoutLog.v0.3',
-      JSON.stringify({
+      'musclemap.workoutLogs.v0.3',
+      JSON.stringify([{
         id: 'legacy-log',
         date: '2026-05-23',
         exercises: [
@@ -922,21 +1198,17 @@ test('workout log hides invalid legacy latest sets instead of rendering undefine
           }
         ],
         createdAt: '2026-05-23T00:00:00.000Z'
-      })
+      }])
     );
   });
 
   await page.goto('/workout-log');
 
-  await expect(page.getByTestId('latest-workout-log')).toContainText('Lat Pulldown');
-  await expect(page.getByTestId('latest-workout-log')).toContainText('35.5kg');
-  await expect(page.getByTestId('latest-workout-log')).toContainText('第 1 组');
-  await expect(page.getByTestId('latest-workout-log')).toContainText('次');
-  await expect(page.getByTestId('latest-workout-log')).not.toContainText('undefined');
-  await expect(page.getByTestId('latest-workout-log')).not.toContainText('绗');
-  await expect(page.getByTestId('latest-workout-log')).not.toContainText('缁');
-  await expect(page.getByTestId('latest-workout-log')).not.toContainText('娆');
-  await expect(page.getByTestId('latest-workout-log')).not.toContainText('Seated Cable Row');
+  const recentCard = page.getByTestId('recent-workout-card');
+  await expect(recentCard).toContainText('高位下拉');
+  await expect(recentCard).toContainText('35.5kg × 12');
+  await expect(recentCard).not.toContainText('undefined');
+  await expect(recentCard).not.toContainText('坐姿划船');
 });
 
 test('workout history shows an empty state when there are no archived logs', async ({ page }) => {
@@ -1048,26 +1320,23 @@ test('workout history opens a read only workout log detail page', async ({ page 
   await expect(page).toHaveURL(/\/workout-history\/detail-log$/);
   await expect(page.getByRole('heading', { name: '训练详情' })).toBeVisible();
   await expect(page.getByTestId('workout-log-detail')).toContainText('2026-05-25');
-  await expect(page.getByTestId('workout-log-detail')).toContainText('45 分钟');
-  await expect(page.getByTestId('workout-summary-card')).toContainText('270 kcal');
-  await expect(page.getByTestId('workout-summary-card')).toContainText('625 kg');
-  await expect(page.getByTestId('workout-summary-card')).toContainText('5 组');
-  await expect(page.getByTestId('workout-summary-card')).toContainText('2 个动作');
-  await expect(page.getByTestId('workout-summary-card')).toContainText('来源：计划训练');
+  await expect(page.getByTestId('workout-detail-duration')).toHaveText('45:00');
+  await expect(page.getByTestId('workout-detail-calories')).toContainText('约 270 kcal');
+  await expect(page.getByTestId('workout-detail-valid-sets')).toContainText('4 组');
+  await expect(page.getByTestId('workout-detail-exercise-count')).toContainText('2 个');
+  await expect(page.getByTestId('workout-log-detail')).not.toContainText('总训练容量');
   await expect(page.getByTestId('workout-muscle-back')).toHaveAttribute('data-highlight', 'primary');
   await expect(page.getByTestId('workout-muscle-chest').first()).toHaveAttribute('data-highlight', 'primary');
   await expect(page.getByTestId('workout-muscle-triceps').first()).toHaveAttribute('data-highlight', 'secondary');
   await expect(page.getByTestId('workout-log-detail')).toContainText('Keep tempo controlled');
-  const firstExercise = page.getByTestId('workout-detail-exercise').first();
+  const firstExercise = page.getByTestId('workout-detail-exercise-row').first();
   await expect(firstExercise).toContainText('高位下拉');
-  await expect(firstExercise).toContainText('Lat Pulldown');
+  await expect(firstExercise).toContainText('高位下拉');
   await expect(firstExercise).toContainText('No swinging');
-  await expect(firstExercise).toContainText('4 组');
-  await expect(firstExercise).toContainText('背');
-  await expect(page.getByTestId('workout-set-pill').first()).toContainText('1');
-  await expect(page.getByTestId('workout-set-pill').first()).toContainText('42.5kg × 10');
-  await expect(firstExercise).toContainText('自重 × 12');
-  await expect(page.getByRole('link', { name: '返回训练历史' })).toHaveAttribute('href', '/workout-history');
+  await expect(firstExercise).toContainText('3 组 · 最高 42.5kg · 10–12 次');
+  await expect(firstExercise).toContainText('第 1 组 · 42.5kg · 10 次');
+  await expect(firstExercise).toContainText('第 3 组 · 12 次');
+  await expect(page.getByRole('link', { name: '返回记录概览' })).toHaveAttribute('href', '/workout-log');
   await expect(page.locator('input, textarea')).toHaveCount(0);
 });
 
@@ -1090,9 +1359,9 @@ test('workout history detail handles missing logs and unknown exercises without 
   await expect(page.getByText('未找到这次训练记录')).toBeVisible();
 
   await page.goto('/workout-history/unknown-exercise-log');
-  await expect(page.getByTestId('workout-detail-exercise')).toContainText('未知动作');
-  await expect(page.getByTestId('workout-detail-exercise')).toContainText('not-real-exercise');
-  await expect(page.getByTestId('workout-detail-exercise')).toContainText('自重 × 9');
+  await expect(page.getByTestId('workout-detail-exercise-row')).toContainText('未知动作');
+  await expect(page.getByTestId('workout-detail-exercise-row')).toContainText('not-real-exercise');
+  await expect(page.getByTestId('workout-detail-exercise-row')).toContainText('1 组 · 9 次');
 });
 
 test('workout history has an entry from workout log and does not overflow at 390px mobile width', async ({ page }) => {
@@ -1112,7 +1381,7 @@ test('workout history has an entry from workout log and does not overflow at 390
   });
 
   await page.goto('/workout-log');
-  await page.getByRole('link', { name: '查看训练历史' }).click();
+  await page.getByRole('link', { name: '查看训练日历与历史' }).click();
   await expect(page).toHaveURL(/\/workout-history$/);
   await expect(page.getByRole('heading', { name: '训练历史' })).toBeVisible();
 
@@ -1265,7 +1534,7 @@ test('exercise detail can start an active workout with the current exercise', as
   await page.getByTestId('start-workout-with-exercise').click();
   await expect(page).toHaveURL(/\/workout-log$/);
   await expect(page.getByTestId('active-workout-card')).toContainText('进行中');
-  await expect(page.getByTestId('workout-log-exercise')).toContainText('Lat Pulldown');
+  await expect(page.getByTestId('workout-log-exercise')).toContainText('高位下拉');
 
   const stored = await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null'));
   expect(stored.exercises).toHaveLength(1);
@@ -1279,10 +1548,9 @@ test('exercise detail adds exercises to an existing active workout without dupli
     window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
   });
   await page.reload();
-  await page.getByTestId('start-active-workout').click();
+  await startFreeWorkout(page);
   await expect(page.getByTestId('active-workout-card')).toContainText('进行中');
-  await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
-  await page.getByTestId('add-manual-exercise').click();
+  await addExerciseFromPicker(page, 'lat-pulldown');
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(1);
 
   await page.goto('/exercises/seated-row');
@@ -1292,8 +1560,8 @@ test('exercise detail adds exercises to an existing active workout without dupli
   await page.getByTestId('go-to-active-workout').click();
   await expect(page).toHaveURL(/\/workout-log$/);
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(2);
-  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('Lat Pulldown');
-  await expect(page.getByTestId('workout-log-exercise').last()).toContainText('Seated Cable Row');
+  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('高位下拉');
+  await expect(page.getByTestId('workout-log-exercise').last()).toContainText('坐姿划船');
 
   await page.goto('/exercises/seated-row');
   await page.getByTestId('add-exercise-to-active-workout').click();
@@ -1338,7 +1606,7 @@ test('latissimus dorsi filter distinguishes primary and secondary matches', asyn
   await expect(page.getByRole('link', { name: /罗马尼亚硬拉/ })).toHaveCount(0);
 });
 
-test('plan builder generates a persisted 3 day back focused gym plan', async ({ page }) => {
+test.skip('plan builder generates a persisted 3 day back focused gym plan', async ({ page }) => {
   await page.goto('/plan-builder');
   await page.getByLabel('训练目标').selectOption('hypertrophy');
   await page.getByLabel('每周训练天数').selectOption('3');
@@ -1364,7 +1632,7 @@ test('plan builder generates a persisted 3 day back focused gym plan', async ({ 
   await expect(page.getByTestId('generated-workout-day')).toHaveCount(3);
 });
 
-test('bodyweight plan does not recommend unavailable equipment and shows shortage notice', async ({ page }) => {
+test.skip('bodyweight plan does not recommend unavailable equipment and shows shortage notice', async ({ page }) => {
   await page.goto('/plan-builder');
   await page.getByLabel('训练目标').selectOption('beginner');
   await page.getByLabel('每周训练天数').selectOption('3');
@@ -1377,7 +1645,7 @@ test('bodyweight plan does not recommend unavailable equipment and shows shortag
   await expect(page.getByTestId('generated-plan-result')).not.toContainText(/杠铃卧推|哑铃卧推|器械推胸|绳索夹胸|腿举|坐姿划船/);
 });
 
-test('3 day gym plan keeps push pull legs and core structure', async ({ page }) => {
+test.skip('3 day gym plan keeps push pull legs and core structure', async ({ page }) => {
   await page.goto('/plan-builder');
   await page.getByLabel('训练目标').selectOption('hypertrophy');
   await page.getByLabel('每周训练天数').selectOption('3');
@@ -1400,7 +1668,7 @@ test('3 day gym plan keeps push pull legs and core structure', async ({ page }) 
   }
 });
 
-test('posture plan prioritizes scapular stability posterior chain and core control', async ({ page }) => {
+test.skip('posture plan prioritizes scapular stability posterior chain and core control', async ({ page }) => {
   await page.goto('/plan-builder');
   await page.getByLabel('训练目标').selectOption('posture');
   await page.getByLabel('每周训练天数').selectOption('3');
@@ -1413,7 +1681,7 @@ test('posture plan prioritizes scapular stability posterior chain and core contr
   await expect(page.getByTestId('workout-day-push')).not.toContainText(/杠铃卧推|器械推胸|器械肩推|绳索下压|仰卧臂屈伸/);
 });
 
-test('bodyweight beginner plan avoids unrealistic pull up prescription', async ({ page }) => {
+test.skip('bodyweight beginner plan avoids unrealistic pull up prescription', async ({ page }) => {
   await page.goto('/plan-builder');
   await page.getByLabel('训练目标').selectOption('beginner');
   await page.getByLabel('每周训练天数').selectOption('3');
@@ -1425,7 +1693,7 @@ test('bodyweight beginner plan avoids unrealistic pull up prescription', async (
   await expect(page.getByTestId('workout-day-pull')).toContainText(/反向划船|毛巾划船|俯卧 W Raise|当前徒手背部动作较少/);
 });
 
-test('strength plan separates main lifts and assistance prescriptions', async ({ page }) => {
+test.skip('strength plan separates main lifts and assistance prescriptions', async ({ page }) => {
   await page.goto('/plan-builder');
   await page.getByLabel('训练目标').selectOption('strength');
   await page.getByLabel('每周训练天数').selectOption('3');
@@ -1439,7 +1707,7 @@ test('strength plan separates main lifts and assistance prescriptions', async ({
   await expect(page.getByTestId('generated-plan-result').getByText(/休息 60 秒|休息 75 秒|休息 90 秒/).first()).toBeVisible();
 });
 
-test('plan builder keeps mobile bottom content above navigation', async ({ page }) => {
+test.skip('plan builder keeps mobile bottom content above navigation', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/plan-builder');
   await page.getByLabel('训练目标').selectOption('hypertrophy');
@@ -1456,6 +1724,67 @@ test('plan builder keeps mobile bottom content above navigation', async ({ page 
   expect(lastDayBox).not.toBeNull();
   expect(navBox).not.toBeNull();
   expect(lastDayBox!.y + lastDayBox!.height).toBeLessThanOrEqual(navBox!.y);
+});
+
+test('training templates start empty and open the new template page', async ({ page }) => {
+  await page.addInitScript(() => localStorage.removeItem('musclemap.trainingTemplates.v1'));
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/plan-builder');
+
+  await expect(page.getByRole('heading', { name: '训练模板', exact: true })).toBeVisible();
+  await expect(page.getByText('还没有训练模板')).toBeVisible();
+  await expect(page.getByText(/Pull Day|Push Day|Leg Day/)).toHaveCount(0);
+  await page.getByRole('link', { name: /新建模板/ }).click();
+  await expect(page).toHaveURL(/\/templates\/new$/);
+});
+
+test('new template validates and saves an empty user template', async ({ page }) => {
+  await page.addInitScript(() => localStorage.removeItem('musclemap.trainingTemplates.v1'));
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/templates/new');
+
+  for (const text of ['新建模板', '模板名称', '训练重点', '动作列表', '添加方式', '还没有添加动作', '+ 添加动作', '搜索动作', '从肌群地图添加', '从动作库', '保存模板']) {
+    await expect(page.getByText(text, { exact: true }).first()).toBeVisible();
+  }
+  await expect(page.getByPlaceholder('请输入模板名称')).toBeVisible();
+  for (const tag of ['胸部', '背部', '肩部', '手臂', '腿部', '核心', '+']) {
+    await expect(page.getByRole('button', { name: tag, exact: true })).toBeVisible();
+  }
+  await expect(page.getByText('想专门练某块肌肉？')).toHaveCount(0);
+  await expect(page.getByText('打开肌群地图')).toHaveCount(0);
+
+  await page.getByRole('button', { name: '保存模板' }).click();
+  await expect(page.getByRole('alert')).toHaveText('请输入模板名称');
+
+  await page.getByPlaceholder('请输入模板名称').fill('我的背部训练');
+  await page.getByRole('button', { name: '背部', exact: true }).click();
+  await page.getByRole('button', { name: '手臂', exact: true }).click();
+  await page.getByRole('button', { name: '保存模板' }).click();
+
+  await expect(page).toHaveURL(/\/plan-builder$/);
+  await expect(page.getByRole('status')).toHaveText('模板已保存');
+  await expect(page.getByRole('heading', { name: '我的背部训练' })).toBeVisible();
+  await expect(page.getByText('0 个动作')).toBeVisible();
+  const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('musclemap.trainingTemplates.v1') ?? '[]'));
+  expect(stored).toHaveLength(1);
+  expect(stored[0]).toMatchObject({ name: '我的背部训练', focusTags: ['背部', '手臂'], items: [] });
+});
+
+test('new template add methods route correctly and clear mobile navigation', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/templates/new');
+
+  await expect(page.getByRole('link', { name: '从肌群地图添加' })).toHaveAttribute('href', '/three-muscle-selector?mode=template');
+  await expect(page.getByRole('link', { name: '从动作库' })).toHaveAttribute('href', '/exercises?mode=template');
+  await expect(page.getByRole('link', { name: '我的', exact: true })).toHaveClass(/text-lime-300/);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
+
+  await page.getByRole('button', { name: '保存模板' }).scrollIntoViewIfNeeded();
+  const saveBox = await page.getByRole('button', { name: '保存模板' }).boundingBox();
+  const navBox = await page.locator('nav').boundingBox();
+  expect(saveBox).not.toBeNull();
+  expect(navBox).not.toBeNull();
+  expect(saveBox!.y + saveBox!.height).toBeLessThanOrEqual(navBox!.y);
 });
 
 test('workout log starts active workout from latest plan day and archives plan id', async ({ page }) => {
@@ -1506,14 +1835,15 @@ test('workout log starts active workout from latest plan day and archives plan i
   });
 
   await page.reload();
-  await expect(page.getByTestId('latest-plan-start')).toContainText('从最近计划开始训练');
+  await page.getByRole('button', { name: '开始记录训练' }).click();
+  await expect(page.getByTestId('latest-plan-start')).toContainText('从计划开始');
   await expect(page.getByTestId('latest-plan-start')).toContainText('V0.7.2 Test Plan');
   await page.getByTestId('start-plan-day-pull-day').click();
 
   await expect(page.getByTestId('active-workout-card')).toContainText('进行中');
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(2);
   const firstExercise = page.getByTestId('workout-log-exercise').first();
-  await expect(firstExercise).toContainText('Lat Pulldown');
+  await expect(firstExercise).toContainText('高位下拉');
   await expect(firstExercise).toContainText('计划建议');
   await expect(firstExercise).toContainText('8-12');
   await expect(firstExercise).toContainText('90');
@@ -1570,9 +1900,10 @@ test('workout log blocks starting a plan day when active workout already exists 
   });
 
   await page.goto('/workout-log');
-  await page.getByTestId('start-active-workout').click();
-  await page.getByTestId('start-plan-day-blocked-day').click();
-  await expect(page.getByTestId('save-status')).toContainText('当前已有进行中的训练，请先结束或放弃当前训练');
+  await startFreeWorkout(page);
+  await expect(page.getByTestId('workout-log-overview')).toHaveCount(0);
+  await expect(page.getByTestId('start-plan-day-blocked-day')).toHaveCount(0);
+  await expect(page.getByTestId('active-workout-card')).toContainText('进行中');
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(0);
 
   const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
@@ -1597,30 +1928,31 @@ test('workout log active workout flow persists edits archives and clears', async
   });
   await page.reload();
 
-  await expect(page.getByTestId('active-workout-empty')).toContainText('开始训练');
-  await page.getByTestId('start-active-workout').click();
+  await expect(page.getByTestId('workout-log-overview')).toBeVisible();
+  await startFreeWorkout(page);
   await expect(page.getByTestId('active-workout-card')).toContainText('进行中');
 
   await page.reload();
   await expect(page.getByTestId('active-workout-card')).toContainText('进行中');
 
-  await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
-  await page.getByTestId('add-manual-exercise').click();
+  await addExerciseFromPicker(page, 'lat-pulldown');
 
   const exercise = page.getByTestId('workout-log-exercise').first();
   await expect(exercise).toBeVisible();
   await exercise.getByTestId('set-weight-input').fill('42.5');
   await exercise.getByTestId('set-reps-input').fill('10');
+  await exercise.getByTestId('toggle-exercise-notes').click();
   await exercise.getByTestId('exercise-notes-input').fill('controlled first working set');
   await page.getByTestId('end-active-workout').click();
 
-  await expect(page.getByTestId('save-status')).toContainText('训练已结束并保存');
-  await expect(page.getByTestId('active-workout-empty')).toBeVisible();
+  await expect(page).toHaveURL(/\/workout-history\/workout-log-/);
+  await expect(page.getByTestId('workout-completed-notice')).toBeVisible();
   expect(await page.evaluate(() => window.localStorage.getItem('musclemap.activeWorkout.v0.7'))).toBeNull();
   await page.reload();
-  await expect(page.getByTestId('latest-workout-log')).toContainText('Lat Pulldown');
-  await expect(page.getByTestId('latest-workout-log')).toContainText('42.5kg');
-  await expect(page.getByTestId('latest-workout-log')).toContainText('controlled first working set');
+  await expect(page.getByTestId('workout-completed-notice')).toHaveCount(0);
+  await page.getByRole('link', { name: '返回记录概览' }).click();
+  await expect(page.getByTestId('recent-workout-card')).toContainText('高位下拉');
+  await expect(page.getByTestId('recent-workout-card')).toContainText('42.5kg × 10');
 });
 
 test('workout log tracks current exercise elapsed time after first set entry', async ({ page }) => {
@@ -1634,9 +1966,8 @@ test('workout log tracks current exercise elapsed time after first set entry', a
   await page.reload();
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.getByTestId('start-active-workout').click();
-  await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
-  await page.getByTestId('add-manual-exercise').click();
+  await startFreeWorkout(page);
+  await addExerciseFromPicker(page, 'lat-pulldown');
 
   const exercise = page.getByTestId('workout-log-exercise').first();
   await expect(exercise.getByTestId('current-exercise-timer')).toHaveCount(0);
@@ -1645,16 +1976,13 @@ test('workout log tracks current exercise elapsed time after first set entry', a
   const timer = exercise.getByTestId('current-exercise-timer');
   await expect(timer).toBeVisible();
   await expect(exercise.getByTestId('end-current-exercise')).toBeVisible();
-  await expect(exercise.getByTestId('toggle-workout-exercise-collapse')).toBeVisible();
+  await expect(exercise.getByTestId('toggle-exercise-notes')).toBeVisible();
 
-  await exercise.getByTestId('toggle-workout-exercise-collapse').click();
-  await expect(exercise.getByTestId('set-weight-input')).toHaveCount(0);
-  await expect(exercise.getByTestId('set-reps-input')).toHaveCount(0);
-  await expect(exercise.getByTestId('exercise-notes-input')).toHaveCount(0);
-  await expect(exercise).toContainText('Lat Pulldown');
-
-  await exercise.getByTestId('toggle-workout-exercise-collapse').click();
-  await expect(exercise.getByTestId('set-weight-input')).toBeVisible();
+  await exercise.getByTestId('toggle-exercise-notes').click();
+  await expect(exercise.getByTestId('exercise-notes-input')).toBeVisible();
+  await exercise.getByTestId('toggle-exercise-notes').click();
+  await expect(exercise.getByTestId('exercise-notes-input')).toBeHidden();
+  await expect(exercise).toContainText('高位下拉');
 
   const firstValue = parseTimerValue((await timer.textContent()) ?? '');
   await page.waitForTimeout(1100);
@@ -1662,9 +1990,9 @@ test('workout log tracks current exercise elapsed time after first set entry', a
   expect(secondValue).toBeGreaterThanOrEqual(firstValue);
 
   await exercise.getByTestId('end-current-exercise').click();
-  await expect(exercise.getByTestId('set-weight-input')).toHaveCount(0);
-  await expect(exercise.getByTestId('set-reps-input')).toHaveCount(0);
-  await expect(exercise.getByTestId('exercise-notes-input')).toHaveCount(0);
+  await expect(exercise.getByTestId('set-weight-input')).toBeHidden();
+  await expect(exercise.getByTestId('set-reps-input')).toBeHidden();
+  await expect(exercise.getByTestId('exercise-notes-input')).toBeHidden();
   await expect(timer).toContainText('用时');
 
   const endedValue = parseTimerValue((await timer.textContent()) ?? '');
@@ -1675,7 +2003,7 @@ test('workout log tracks current exercise elapsed time after first set entry', a
   const reloadedExercise = page.getByTestId('workout-log-exercise').first();
   await expect(reloadedExercise.getByTestId('current-exercise-timer')).toContainText('用时');
   await expect(reloadedExercise.getByTestId('end-current-exercise')).toHaveCount(0);
-  await expect(reloadedExercise.getByTestId('set-weight-input')).toHaveCount(0);
+  await expect(reloadedExercise.getByTestId('set-weight-input')).toBeHidden();
   expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
 });
 
@@ -1688,7 +2016,7 @@ test('workout log rejects empty active workout before archiving', async ({ page 
   });
 
   await page.goto('/workout-log');
-  await page.getByTestId('start-active-workout').click();
+  await startFreeWorkout(page);
   await page.getByTestId('end-active-workout').click();
 
   await expect(page.getByTestId('save-status')).toContainText('请先添加至少一个动作');
@@ -1705,9 +2033,8 @@ test('workout log rejects empty sets and invalid reps in active workout', async 
   });
 
   await page.goto('/workout-log');
-  await page.getByTestId('start-active-workout').click();
-  await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
-  await page.getByTestId('add-manual-exercise').click();
+  await startFreeWorkout(page);
+  await addExerciseFromPicker(page, 'lat-pulldown');
   await page.getByTestId('end-active-workout').click();
   await expect(page.getByTestId('save-status')).toContainText('请至少填写一组重量或次数');
 
@@ -1725,14 +2052,14 @@ test('workout log can discard active workout after confirmation', async ({ page 
   });
 
   await page.goto('/workout-log');
-  await page.getByTestId('start-active-workout').click();
-  await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
-  await page.getByTestId('add-manual-exercise').click();
+  await startFreeWorkout(page);
+  await addExerciseFromPicker(page, 'lat-pulldown');
 
   page.once('dialog', async (dialog) => {
     expect(dialog.type()).toBe('confirm');
     await dialog.dismiss();
   });
+  await page.getByLabel('更多训练操作').click();
   await page.getByTestId('discard-active-workout').click();
   await expect(page.getByTestId('active-workout-card')).toBeVisible();
 
@@ -1741,7 +2068,7 @@ test('workout log can discard active workout after confirmation', async ({ page 
     await dialog.accept();
   });
   await page.getByTestId('discard-active-workout').click();
-  await expect(page.getByTestId('active-workout-empty')).toBeVisible();
+  await expect(page.getByTestId('workout-log-overview')).toBeVisible();
   expect(await page.evaluate(() => window.localStorage.getItem('musclemap.activeWorkout.v0.7'))).toBeNull();
 });
 
@@ -1754,16 +2081,17 @@ test('workout log can add and delete sets and exercises in active workout', asyn
   });
 
   await page.goto('/workout-log');
-  await page.getByTestId('start-active-workout').click();
-  await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
-  await page.getByTestId('add-manual-exercise').click();
+  await startFreeWorkout(page);
+  await addExerciseFromPicker(page, 'lat-pulldown');
 
   const exercise = page.getByTestId('workout-log-exercise').first();
   await expect(exercise.getByTestId('workout-set-row')).toHaveCount(1);
   await exercise.getByTestId('add-set').click();
   await expect(exercise.getByTestId('workout-set-row')).toHaveCount(2);
+  await exercise.getByTestId('set-completion-toggle').last().click();
   await exercise.getByTestId('delete-set').last().click();
   await expect(exercise.getByTestId('workout-set-row')).toHaveCount(1);
+  await exercise.getByLabel('当前动作更多设置').click();
   await exercise.getByTestId('delete-workout-exercise').click();
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(0);
 });
@@ -1775,13 +2103,12 @@ test('workout log active controls are available above mobile navigation', async 
     window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
   });
   await page.reload();
-  await page.getByTestId('start-active-workout').click();
-  await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
-  await page.getByTestId('add-manual-exercise').click();
+  await startFreeWorkout(page);
+  await addExerciseFromPicker(page, 'lat-pulldown');
 
-  const endButton = page.getByTestId('end-active-workout-bottom');
-  await endButton.scrollIntoViewIfNeeded();
-  const buttonBox = await endButton.boundingBox();
+  const miniPlayer = page.getByTestId('workout-mini-player');
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  const buttonBox = await miniPlayer.boundingBox();
   const navBox = await page.locator('nav').boundingBox();
 
   expect(buttonBox).not.toBeNull();
@@ -1804,6 +2131,72 @@ test('core pages are usable on mobile viewport and static data survives refresh'
   await page.goto('/exercises');
   await expect(page.getByRole('textbox', { name: '搜索动作' })).toBeVisible();
   await expect(page.locator('body')).not.toHaveCSS('overflow-x', 'scroll');
+});
+
+test('profile page shows the dark training profile, management entries and latest real metrics', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      'musclemap.workoutLogs.v0.3',
+      JSON.stringify([
+        { id: 'profile-log-1', date: '2026-07-01', exercises: [], createdAt: '2026-07-01T09:00:00.000Z' },
+        { id: 'profile-log-2', date: '2026-07-02', exercises: [], createdAt: '2026-07-02T09:00:00.000Z' }
+      ])
+    );
+    window.localStorage.setItem(
+      'musclemap.bodySnapshots.v0.1',
+      JSON.stringify([
+        { id: 'profile-body-old', date: '2026-07-01', bodyWeightKg: 71, waistCm: 79, createdAt: '2026-07-01T09:00:00.000Z' },
+        { id: 'profile-body-new', date: '2026-07-06', bodyWeightKg: 70.5, waistCm: 78, createdAt: '2026-07-06T09:00:00.000Z' }
+      ])
+    );
+  });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/data-management');
+
+  await expect(page.getByRole('heading', { name: '我的', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '我的训练档案' })).toBeVisible();
+  await expect(page.getByTestId('profile-metric')).toHaveCount(3);
+  await expect(page.getByTestId('profile-training-count')).toHaveText('2次');
+  await expect(page.getByTestId('profile-current-weight')).toHaveText('70.5kg');
+  await expect(page.getByTestId('profile-current-waist')).toHaveText('78cm');
+  await expect(page.getByText('数据来自最近一次身体记录')).toHaveCount(0);
+
+  for (const label of ['训练模板', '训练历史', '动作进步', '身体变化', '数据备份', '偏好设置']) {
+    await expect(page.getByText(label, { exact: true })).toBeVisible();
+  }
+  await expect(page.getByRole('link', { name: '训练模板' })).toHaveAttribute('href', '/plan-builder');
+  await expect(page.getByRole('link', { name: '训练历史' })).toHaveAttribute('href', '/workout-history');
+
+  await page.getByRole('button', { name: '记录身体数据' }).click();
+  await expect(page.getByRole('status')).toContainText('身体数据记录功能开发中');
+  await page.getByRole('button', { name: '动作进步' }).click();
+  await expect(page.getByRole('status')).toContainText('动作进步功能开发中');
+  await page.getByRole('button', { name: '偏好设置' }).click();
+  await expect(page.getByRole('status')).toContainText('偏好设置功能开发中');
+
+  await expect(page.getByTestId('backup-panel')).toHaveCount(0);
+  await page.getByRole('button', { name: '数据备份' }).click();
+  await expect(page.getByTestId('backup-panel')).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
+});
+
+test('profile page uses honest empty body metrics and clears the floating navigation', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.removeItem('musclemap.workoutLogs.v0.3');
+    window.localStorage.removeItem('musclemap.bodySnapshots.v0.1');
+  });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/data-management');
+
+  await expect(page.getByTestId('profile-training-count')).toHaveText('0次');
+  await expect(page.getByTestId('profile-current-weight')).toHaveText('未记录');
+  await expect(page.getByTestId('profile-current-waist')).toHaveText('未记录');
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  const navBox = await page.locator('nav').boundingBox();
+  const endBox = await page.getByTestId('profile-content-end').boundingBox();
+  expect(navBox).not.toBeNull();
+  expect(endBox).not.toBeNull();
+  expect(endBox!.y + endBox!.height).toBeLessThanOrEqual(navBox!.y);
 });
 test('data management exports current local backup data', async ({ page }) => {
   await page.addInitScript(() => {
@@ -1849,12 +2242,16 @@ test('data management exports current local backup data', async ({ page }) => {
         createdAt: '2026-05-25T00:00:00.000Z'
       })
     );
+    window.localStorage.setItem(
+      'musclemap.bodySnapshots.v0.1',
+      JSON.stringify([{ id: 'body-export', date: '2026-05-25', bodyWeightKg: 70.5, waistCm: 78, createdAt: '2026-05-25T09:00:00.000Z' }])
+    );
   });
 
   await page.goto('/');
-  await page.getByRole('link', { name: '我的' }).click();
+  await page.getByRole('link', { name: '我的', exact: true }).click();
   await expect(page).toHaveURL(/\/data-management$/);
-  await expect(page.getByRole('heading', { name: '我的' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '我的', exact: true })).toBeVisible();
   await expect(page.getByTestId('backup-panel')).toHaveCount(0);
   await page.getByTestId('open-backup-panel').click();
   await expect(page.getByText('进行中的训练不会导出，请先结束训练后再备份。')).toBeVisible();
@@ -1874,9 +2271,12 @@ test('data management exports current local backup data', async ({ page }) => {
 
   expect(download.suggestedFilename()).toMatch(/^musclemap-backup-\d{4}-\d{2}-\d{2}\.json$/);
   expect(exported.app).toBe('MuscleMap Fitness');
-  expect(exported.exportVersion).toBe(1);
+  expect(exported.exportVersion).toBe(2);
   expect(typeof exported.exportedAt).toBe('string');
   expect(exported.data.workoutLogs).toHaveLength(2);
+  expect(exported.data.bodySnapshots).toEqual([
+    { id: 'body-export', date: '2026-05-25', bodyWeightKg: 70.5, waistCm: 78, createdAt: '2026-05-25T09:00:00.000Z' }
+  ]);
 });
 
 test('data management validates imported backup files before overwriting storage', async ({ page }) => {
@@ -1894,7 +2294,7 @@ test('data management validates imported backup files before overwriting storage
   });
 
   await page.reload();
-  await expect(page.getByRole('heading', { name: '我的' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '我的', exact: true })).toBeVisible();
   await page.getByTestId('open-backup-panel').click();
 
   await page.setInputFiles('input[data-testid="import-backup-file"]', {
@@ -1920,7 +2320,7 @@ test('data management validates imported backup files before overwriting storage
 
   const validBackup = {
     app: 'MuscleMap Fitness',
-    exportVersion: 1,
+    exportVersion: 2,
     exportedAt: '2026-05-25T08:00:00.000Z',
     data: {
       latestGeneratedPlan: null,
@@ -1937,7 +2337,10 @@ test('data management validates imported backup files before overwriting storage
         date: '2026-05-25',
         exercises: [{ id: 'imported-exercise', exerciseId: 'seated-row', order: 0, sets: [{ id: 'imported-set', setIndex: 1, weight: 42.5, reps: 10, completed: true }] }],
         createdAt: '2026-05-25T08:00:00.000Z'
-      }
+      },
+      bodySnapshots: [
+        { id: 'imported-body', date: '2026-05-25', bodyWeightKg: 69.8, waistCm: 77, createdAt: '2026-05-25T08:00:00.000Z' }
+      ]
     }
   };
 
@@ -1956,17 +2359,21 @@ test('data management validates imported backup files before overwriting storage
   expect(await page.evaluate(() => window.localStorage.getItem('musclemap.latestGeneratedPlan.v0.2'))).toBeNull();
   expect(await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.workoutLogs.v0.3') ?? '[]'))).toHaveLength(1);
   expect(await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.latestWorkoutLog.v0.3') ?? 'null').id)).toBe('imported-log');
+  expect(await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.bodySnapshots.v0.1') ?? '[]'))).toEqual([
+    { id: 'imported-body', date: '2026-05-25', bodyWeightKg: 69.8, waistCm: 77, createdAt: '2026-05-25T08:00:00.000Z' }
+  ]);
 
   await page.reload();
+  await page.getByTestId('open-backup-panel').click();
   await expect(page.getByTestId('backup-workout-log-count')).toContainText('1 条');
   await page.goto('/workout-log');
-  await expect(page.getByTestId('latest-workout-log')).toContainText('Seated Cable Row');
+  await expect(page.getByTestId('recent-workout-card')).toContainText('坐姿划船');
 });
 
 test('data management remains usable on mobile viewport', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/data-management');
-  await expect(page.getByRole('heading', { name: '我的' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '我的', exact: true })).toBeVisible();
   await page.getByTestId('open-backup-panel').click();
   await expect(page.getByTestId('backup-panel')).toBeVisible();
 

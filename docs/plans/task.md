@@ -58,3 +58,10 @@
 | Exercise catalog and entry restructure: write implementation plan | completed |
 | Exercise catalog and entry restructure: implement with TDD | completed |
 | Exercise catalog and entry restructure: validate data, UI, tests, and build | completed |
+| Growth page redesign: audit existing navigation, record state, and data | completed |
+| Growth page redesign: confirm data and photo boundaries | completed |
+| Growth page redesign: approve design and implementation plan | completed |
+| Growth page redesign: add failing behavior and metric tests | pending |
+| Growth page redesign: implement navigation and growth modules | pending |
+| Growth page redesign: simplify idle workout-log state | pending |
+| Growth page redesign: build, regression, and mobile visual QA | pending |

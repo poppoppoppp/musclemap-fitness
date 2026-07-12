@@ -1,8 +1,12 @@
-import type { KeyboardEvent } from 'react';
+import type { CSSProperties, KeyboardEvent } from 'react';
+
+export type MuscleMapView = 'front' | 'back';
 
 type InteractiveMuscleMap2DProps = {
   selectedMuscleId: string;
   onSelectMuscle: (muscleId: string) => void;
+  variant?: 'default' | 'compact';
+  view?: MuscleMapView;
 };
 
 type MuscleRegion = {
@@ -188,17 +192,35 @@ const stroke = 'var(--app-line)';
 
 export const interactive2DMuscleIds = regions.map((region) => region.id);
 
-export default function InteractiveMuscleMap2D({ selectedMuscleId, onSelectMuscle }: InteractiveMuscleMap2DProps) {
+export default function InteractiveMuscleMap2D({ selectedMuscleId, onSelectMuscle, variant = 'default', view }: InteractiveMuscleMap2DProps) {
+  const visibleViews: MuscleMapView[] = view ? [view] : ['front', 'back'];
+  const compactStyle = variant === 'compact'
+    ? ({ '--app-surface-raised': '#252824', '--app-blue': '#bef264', '--app-subtle': '#3f4638', '--app-line': 'rgba(255,255,255,0.16)', '--app-surface': '#10120f' } as CSSProperties)
+    : undefined;
+
   return (
-    <div data-testid="three-muscle-canvas" className="relative grid grid-cols-2 gap-3 rounded-[24px] border border-app-line bg-app-surfaceMuted p-3">
+    <div
+      data-testid="three-muscle-canvas"
+      style={compactStyle}
+      className={variant === 'compact'
+        ? 'relative grid grid-cols-1 rounded-2xl border border-white/10 bg-black/20 p-2'
+        : 'relative grid grid-cols-2 gap-3 rounded-[24px] border border-app-line bg-app-surfaceMuted p-3'}
+    >
       <button
         type="button"
         aria-label="左背阔肌"
         className="absolute left-1/2 top-1/3 z-10 h-3 w-3 opacity-0"
         onClick={() => onSelectMuscle('latissimus-dorsi')}
       />
-      <Figure title="正面" view="front" selectedMuscleId={selectedMuscleId} onSelectMuscle={onSelectMuscle} />
-      <Figure title="背面" view="back" selectedMuscleId={selectedMuscleId} onSelectMuscle={onSelectMuscle} />
+      {visibleViews.map((visibleView) => (
+        <Figure
+          key={visibleView}
+          title={visibleView === 'front' ? '正面' : '背面'}
+          view={visibleView}
+          selectedMuscleId={selectedMuscleId}
+          onSelectMuscle={onSelectMuscle}
+        />
+      ))}
     </div>
   );
 }

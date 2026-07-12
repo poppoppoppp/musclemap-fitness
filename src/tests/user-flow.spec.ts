@@ -20,6 +20,12 @@ async function startFreeWorkout(page: import('@playwright/test').Page) {
   await page.getByTestId('start-active-workout').click();
 }
 
+async function addExerciseFromPicker(page: import('@playwright/test').Page, exerciseId: string) {
+  await page.getByTestId('open-exercise-picker').click();
+  await page.getByTestId(`add-exercise-${exerciseId}`).click();
+  await expect(page.getByTestId('exercise-picker-sheet')).toBeHidden();
+}
+
 test('workout summary utilities calculate report metrics and normalized muscles', () => {
   const workout: WorkoutLog = {
     id: 'summary-unit',
@@ -1544,8 +1550,7 @@ test('exercise detail adds exercises to an existing active workout without dupli
   await page.reload();
   await startFreeWorkout(page);
   await expect(page.getByTestId('active-workout-card')).toContainText('进行中');
-  await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
-  await page.getByTestId('add-manual-exercise').click();
+  await addExerciseFromPicker(page, 'lat-pulldown');
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(1);
 
   await page.goto('/exercises/seated-row');
@@ -1930,8 +1935,7 @@ test('workout log active workout flow persists edits archives and clears', async
   await page.reload();
   await expect(page.getByTestId('active-workout-card')).toContainText('进行中');
 
-  await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
-  await page.getByTestId('add-manual-exercise').click();
+  await addExerciseFromPicker(page, 'lat-pulldown');
 
   const exercise = page.getByTestId('workout-log-exercise').first();
   await expect(exercise).toBeVisible();
@@ -1963,8 +1967,7 @@ test('workout log tracks current exercise elapsed time after first set entry', a
 
   await page.setViewportSize({ width: 390, height: 844 });
   await startFreeWorkout(page);
-  await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
-  await page.getByTestId('add-manual-exercise').click();
+  await addExerciseFromPicker(page, 'lat-pulldown');
 
   const exercise = page.getByTestId('workout-log-exercise').first();
   await expect(exercise.getByTestId('current-exercise-timer')).toHaveCount(0);
@@ -2031,8 +2034,7 @@ test('workout log rejects empty sets and invalid reps in active workout', async 
 
   await page.goto('/workout-log');
   await startFreeWorkout(page);
-  await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
-  await page.getByTestId('add-manual-exercise').click();
+  await addExerciseFromPicker(page, 'lat-pulldown');
   await page.getByTestId('end-active-workout').click();
   await expect(page.getByTestId('save-status')).toContainText('请至少填写一组重量或次数');
 
@@ -2051,8 +2053,7 @@ test('workout log can discard active workout after confirmation', async ({ page 
 
   await page.goto('/workout-log');
   await startFreeWorkout(page);
-  await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
-  await page.getByTestId('add-manual-exercise').click();
+  await addExerciseFromPicker(page, 'lat-pulldown');
 
   page.once('dialog', async (dialog) => {
     expect(dialog.type()).toBe('confirm');
@@ -2081,8 +2082,7 @@ test('workout log can add and delete sets and exercises in active workout', asyn
 
   await page.goto('/workout-log');
   await startFreeWorkout(page);
-  await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
-  await page.getByTestId('add-manual-exercise').click();
+  await addExerciseFromPicker(page, 'lat-pulldown');
 
   const exercise = page.getByTestId('workout-log-exercise').first();
   await expect(exercise.getByTestId('workout-set-row')).toHaveCount(1);
@@ -2104,8 +2104,7 @@ test('workout log active controls are available above mobile navigation', async 
   });
   await page.reload();
   await startFreeWorkout(page);
-  await page.getByTestId('manual-exercise-select').selectOption('lat-pulldown');
-  await page.getByTestId('add-manual-exercise').click();
+  await addExerciseFromPicker(page, 'lat-pulldown');
 
   const miniPlayer = page.getByTestId('workout-mini-player');
   await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));

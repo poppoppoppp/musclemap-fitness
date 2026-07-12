@@ -98,8 +98,8 @@ test('mini player degrades without music and uses real shared NetEase playback s
         ok: true,
         playlist: { id: '19723756', name: '训练歌单', source: 'netease', trackCount: 2 },
         tracks: [
-          { id: 'track-one', name: '真实歌曲一', artist: '真实歌手', coverUrl: 'https://example.com/cover.jpg' },
-          { id: 'track-two', name: '真实歌曲二', artist: '另一位歌手' }
+          { id: '1001', name: '真实歌曲一', artist: '真实歌手', coverUrl: 'https://example.com/cover.jpg' },
+          { id: '1002', name: '真实歌曲二', artist: '另一位歌手' }
         ]
       })
     });
@@ -121,7 +121,7 @@ test('mini player degrades without music and uses real shared NetEase playback s
   const popover = page.getByTestId('workout-mini-player-popover');
   await expect(popover).toBeVisible();
   await expect(popover).toContainText('真实歌曲一');
-  await expect(popover.getByRole('button', { name: '播放' })).toBeEnabled();
+  await expect(popover.getByRole('button', { name: '播放', exact: true })).toBeEnabled();
   await popover.getByRole('button', { name: '查看完整歌单' }).click();
   await expect(page).toHaveURL(/\/#music-player$/);
 });

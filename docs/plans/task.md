@@ -48,3 +48,8 @@
 | Completed workout detail: dark detail and edit mode | completed |
 | Active workout refinements: header music and dark inputs | completed |
 | Completed workout detail: full regression and mobile verification | completed |
+| Exercise picker sheet: approved design and implementation plan | completed |
+| Exercise picker sheet: failing behavior tests | completed |
+| Exercise picker sheet: shared filtering and 2D relationships | completed |
+| Exercise picker sheet: accessible sheet and workout integration | completed |
+| Exercise picker sheet: regression, build, and mobile visual QA | completed |

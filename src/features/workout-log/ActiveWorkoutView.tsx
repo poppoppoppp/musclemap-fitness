@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { exercises } from '../../data/exercises';
+import ExercisePickerSheet from '../../components/workout/ExercisePickerSheet';
 import type { ActiveWorkout, ActiveWorkoutExercise } from '../../types/activeWorkout';
 import type { WorkoutLog, WorkoutSet } from '../../types/workout';
 import {
@@ -12,6 +12,7 @@ import {
   removeSetFromActiveWorkoutExercise,
   updateActiveWorkoutExerciseNotes,
   updateActiveWorkoutSet,
+  isExerciseInActiveWorkout,
   type ActiveWorkoutArchiveError
 } from '../../utils/activeWorkout';
 import ActiveWorkoutHeader from './ActiveWorkoutHeader';
@@ -37,9 +38,8 @@ interface ActiveWorkoutViewProps {
 export default function ActiveWorkoutView({ workout, onChange, onArchive, onDiscard }: ActiveWorkoutViewProps) {
   const [searchParams] = useSearchParams();
   const focusedExerciseId = searchParams.get('focusExercise');
-  const [selectedExerciseId, setSelectedExerciseId] = useState(exercises[0]?.id ?? '');
   const [status, setStatus] = useState('');
-  const [addExerciseOpen, setAddExerciseOpen] = useState(workout.exercises.length === 0);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const currentExercise = useMemo(() => getCurrentExercise(workout.exercises, focusedExerciseId), [workout.exercises, focusedExerciseId]);
   const completedExercises = useMemo(() => workout.exercises.filter((exercise) => Boolean(exercise.endedAt)).sort(byExerciseOrder), [workout.exercises]);
   const pendingExercises = useMemo(() => workout.exercises.filter((exercise) => !exercise.endedAt && exercise.id !== currentExercise?.id).sort(byExerciseOrder), [workout.exercises, currentExercise?.id]);
@@ -64,11 +64,21 @@ export default function ActiveWorkoutView({ workout, onChange, onArchive, onDisc
     if (window.confirm('确定放弃当前训练吗？本次未结束的内容不会保存为训练记录。')) onDiscard();
   };
 
-  const handleAddManualExercise = () => {
-    if (!selectedExerciseId) return;
-    onChange(addExerciseToActiveWorkout(workout, selectedExerciseId));
+  const handleAddExercise = (exerciseId: string) => {
+    if (isExerciseInActiveWorkout(workout, exerciseId)) return false;
+    const nextWorkout = addExerciseToActiveWorkout(workout, exerciseId);
+    const activeExerciseId = nextWorkout.exercises.at(-1)?.id;
+    onChange(nextWorkout);
     setStatus('');
-    setAddExerciseOpen(false);
+    setPickerOpen(false);
+    if (activeExerciseId) {
+      window.setTimeout(() => {
+        const element = document.getElementById(getActiveExerciseElementId(activeExerciseId));
+        element?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        element?.focus({ preventScroll: true });
+      }, 0);
+    }
+    return true;
   };
 
   const handleDeleteExercise = (activeExerciseId: string) => {
@@ -116,18 +126,16 @@ export default function ActiveWorkoutView({ workout, onChange, onArchive, onDisc
 
         <CompletedExercisesList exercises={completedExercises} pendingExercises={pendingExercises} {...sharedExerciseProps} />
 
-        <section className="rounded-2xl border border-white/10 bg-white/[0.025] p-3">
-          <button type="button" onClick={() => setAddExerciseOpen((value) => !value)} data-testid="add-exercise-panel-toggle" aria-expanded={addExerciseOpen} className="min-h-11 w-full rounded-xl border border-lime-300/25 text-sm font-black text-lime-300 transition hover:border-lime-300/45 hover:bg-lime-300/[0.04] focus:outline-none focus:ring-2 focus:ring-lime-300/50">+ 添加动作</button>
-          {addExerciseOpen ? (
-            <div className="mt-3 grid gap-2 min-[390px]:grid-cols-[minmax(0,1fr)_auto]">
-              <label className="sr-only" htmlFor="manual-exercise-select">选择动作</label>
-              <select id="manual-exercise-select" data-testid="manual-exercise-select" value={selectedExerciseId} onChange={(event) => setSelectedExerciseId(event.target.value)} className="min-h-12 min-w-0 w-full rounded-xl border border-white/10 bg-[#171a16] px-3 text-sm !text-white outline-none focus:border-lime-300 focus:ring-2 focus:ring-lime-300/15">
-                {exercises.map((exercise) => <option key={exercise.id} value={exercise.id}>{exercise.name} / {exercise.nameEn}</option>)}
-              </select>
-              <button type="button" onClick={handleAddManualExercise} data-testid="add-manual-exercise" className="min-h-12 rounded-xl bg-lime-300 px-5 text-sm font-black text-[#10130d] focus:outline-none focus:ring-2 focus:ring-lime-100">确认添加</button>
-            </div>
-          ) : null}
-        </section>
+        <button type="button" onClick={() => setPickerOpen(true)} data-testid="open-exercise-picker" aria-haspopup="dialog" className="min-h-12 w-full rounded-2xl border border-lime-300/30 bg-lime-300/[0.05] text-sm font-black text-lime-300 transition hover:border-lime-300/50 hover:bg-lime-300/[0.09] focus:outline-none focus:ring-2 focus:ring-lime-300/50">
+          {workout.exercises.length === 0 ? '＋ 添加第一个动作' : '＋ 添加动作'}
+        </button>
+
+        <ExercisePickerSheet
+          open={pickerOpen}
+          existingExerciseIds={new Set(workout.exercises.map((exercise) => exercise.exerciseId))}
+          onAddExercise={handleAddExercise}
+          onClose={() => setPickerOpen(false)}
+        />
 
       </div>
     </div>

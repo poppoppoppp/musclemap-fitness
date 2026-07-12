@@ -3,7 +3,6 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import InteractiveMuscleMap2D, { interactive2DMuscleIds } from '../components/muscle/InteractiveMuscleMap2D';
 import PageHeader from '../components/layout/PageHeader';
 import Button from '../components/ui/Button';
-import { exercises } from '../data/exercises';
 import { getMuscleById, muscles } from '../data/muscles';
 import type { Exercise } from '../types/exercise';
 import {
@@ -12,16 +11,12 @@ import {
   startWorkoutWithExercise
 } from '../utils/activeWorkout';
 import { useAppStore } from '../store/useAppStore';
+import { getRelatedExercises } from '../utils/exerciseFilters';
 
 type MuscleGroup = {
   id: string;
   label: string;
   muscleIds: string[];
-};
-
-type RelatedExercise = {
-  exercise: Exercise;
-  matchType: 'primary' | 'secondary';
 };
 
 const MAX_RELATED_EXERCISES = 4;
@@ -60,7 +55,7 @@ export default function TwoDMuscleSelector() {
   const visibleMuscles = selectedGroup.muscleIds
     .map((muscleId) => getMuscleById(muscleId))
     .filter((muscle): muscle is NonNullable<typeof muscle> => Boolean(muscle));
-  const relatedExercises = useMemo(() => getRelatedExercises(selectedMuscleId), [selectedMuscleId]);
+  const relatedExercises = useMemo(() => getRelatedExercises(selectedMuscleId, MAX_RELATED_EXERCISES), [selectedMuscleId]);
 
   useEffect(() => {
     if (!selectedGroup.muscleIds.includes(selectedMuscleId)) {
@@ -266,18 +261,6 @@ export default function TwoDMuscleSelector() {
       </div>
     </div>
   );
-}
-
-function getRelatedExercises(muscleId: string): RelatedExercise[] {
-  const primaryMatches = exercises
-    .filter((exercise) => exercise.primaryMuscles.includes(muscleId))
-    .map((exercise) => ({ exercise, matchType: 'primary' as const }));
-
-  const secondaryMatches = exercises
-    .filter((exercise) => !exercise.primaryMuscles.includes(muscleId) && exercise.secondaryMuscles.includes(muscleId))
-    .map((exercise) => ({ exercise, matchType: 'secondary' as const }));
-
-  return [...primaryMatches, ...secondaryMatches].slice(0, MAX_RELATED_EXERCISES);
 }
 
 function getLegacyRegionName(muscleId: string) {

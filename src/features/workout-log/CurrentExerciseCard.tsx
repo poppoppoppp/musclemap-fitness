@@ -26,7 +26,7 @@ export default function CurrentExerciseCard({ exercise, position, totalExercises
   const canFinish = Boolean(exercise.startedAt) && !exercise.endedAt;
 
   return (
-    <article id={getActiveExerciseElementId(exercise.id)} data-testid="workout-log-exercise" data-active-exercise-id={exercise.id} className="rounded-2xl border border-white/12 bg-white/[0.035] p-3.5 min-[390px]:p-4">
+    <article id={getActiveExerciseElementId(exercise.id)} tabIndex={-1} data-testid="workout-log-exercise" data-active-exercise-id={exercise.id} className="rounded-2xl border border-white/12 bg-white/[0.035] p-3.5 outline-none min-[390px]:p-4">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-sm font-bold text-zinc-400">当前动作 <span data-testid="current-exercise-position" className="ml-1 text-zinc-500">{position} / {totalExercises}</span></p>

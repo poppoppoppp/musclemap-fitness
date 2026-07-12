@@ -1,0 +1,81 @@
+diff --git a/src/features/workout-log/WorkoutMiniPlayer.tsx b/src/features/workout-log/WorkoutMiniPlayer.tsx
+--- a/src/features/workout-log/WorkoutMiniPlayer.tsx
++++ b/src/features/workout-log/WorkoutMiniPlayer.tsx
+@@ -6,6 +6,8 @@ export default function WorkoutMiniPlayer({ compact = false }: { compact?: boole
+   const navigate = useNavigate();
+   const containerRef = useRef<HTMLDivElement | null>(null);
++  const triggerRef = useRef<HTMLButtonElement | null>(null);
++  const [popoverPosition, setPopoverPosition] = useState({ top: 0, right: 16 });
+   const [expanded, setExpanded] = useState(false);
+   const { currentTrack, tracks, audioUrl, isPlaying, currentTime, duration, togglePlayback, playPrevious, playNext } = useMusicPlayer();
+   const progress = duration > 0 && Number.isFinite(currentTime) ? Math.min(100, Math.max(0, (currentTime / duration) * 100)) : 0;
+@@ -31,11 +33,21 @@ export default function WorkoutMiniPlayer({ compact = false }: { compact?: boole
+     };
+   }, [expanded]);
+
++  const toggleExpanded = () => {
++    if (!expanded) {
++      const rect = triggerRef.current?.getBoundingClientRect();
++      if (rect) {
++        setPopoverPosition({
++          top: rect.bottom + 8,
++          right: Math.max(16, window.innerWidth - rect.right)
++        });
++      }
++    }
++    setExpanded((value) => !value);
++  };
++
+   if (compact) {
+     return (
+       <div ref={containerRef} className="relative">
+         <button
++          ref={triggerRef}
+           type="button"
+           data-testid="workout-mini-player"
+-          onClick={() => setExpanded((value) => !value)}
++          onClick={toggleExpanded}
+           aria-label={expanded ? '收起训练音乐播放器' : '展开训练音乐播放器'}
+           aria-expanded={expanded}
+           aria-controls="workout-music-popover"
+@@ -58,7 +70,8 @@ export default function WorkoutMiniPlayer({ compact = false }: { compact?: boole
+           aria-label="训练音乐控制"
+           aria-hidden={!expanded}
+           inert={!expanded}
+-          className={`absolute right-0 top-[calc(100%+0.55rem)] z-50 w-[min(20rem,calc(100vw-2rem))] origin-top-right overflow-hidden rounded-[24px] border border-white/12 bg-[#111411]/95 p-3.5 text-white shadow-[0_22px_60px_rgba(0,0,0,0.55)] backdrop-blur-xl transition-all duration-200 ease-out ${expanded ? 'pointer-events-auto translate-y-0 scale-100 opacity-100' : 'pointer-events-none -translate-y-2 scale-95 opacity-0'}`}
++          style={{ top: popoverPosition.top, right: popoverPosition.right }}
++          className={`fixed z-50 w-[min(20rem,calc(100vw-2rem))] origin-top-right overflow-hidden rounded-[24px] border border-white/12 bg-[#111411]/95 p-3.5 text-white shadow-[0_22px_60px_rgba(0,0,0,0.55)] backdrop-blur-xl transition-all duration-200 ease-out ${expanded ? 'pointer-events-auto translate-y-0 scale-100 opacity-100' : 'pointer-events-none -translate-y-2 scale-95 opacity-0'}`}
+         >
+diff --git a/src/tests/active-workout-phase-two.spec.ts b/src/tests/active-workout-phase-two.spec.ts
+--- a/src/tests/active-workout-phase-two.spec.ts
++++ b/src/tests/active-workout-phase-two.spec.ts
+@@ -118,10 +118,14 @@ test('mini player degrades without music and uses real shared NetEase playback s
+   await page.waitForTimeout(1_100);
+   expect(await page.locator('audio[data-testid="persistent-music-audio"]').evaluate((audio) => (audio as HTMLAudioElement & { mountMarker?: string }).mountMarker)).toBe('same-node');
+   await miniPlayer.click();
+-  await expect(page.getByTestId('workout-mini-player-popover')).toBeVisible();
++  const popover = page.getByTestId('workout-mini-player-popover');
++  await expect(popover).toBeVisible();
+   await expect(page).toHaveURL(/\/workout-log$/);
+-  await page.getByRole('button', { name: '查看完整歌单' }).click();
++  const box = await popover.boundingBox();
++  expect(box).not.toBeNull();
++  expect(box!.x).toBeGreaterThanOrEqual(0);
++  expect(box!.x + box!.width).toBeLessThanOrEqual(await page.evaluate(() => window.innerWidth));
++  await popover.getByRole('button', { name: '查看完整歌单' }).click();
+   await expect(page).toHaveURL(/\/#music-player$/);
+ });
+
+@@ -138,6 +142,13 @@ test('fits a 320px viewport and keeps content above BottomNav', async ({ page })
+   expect(playerBox).not.toBeNull();
+   expect(navBox).not.toBeNull();
+   expect(playerBox!.y + playerBox!.height).toBeLessThanOrEqual(navBox!.y);
++
++  await miniPlayer.click();
++  const popover = page.getByTestId('workout-mini-player-popover');
++  await expect(popover).toBeVisible();
++  const popoverBox = await popover.boundingBox();
++  expect(popoverBox).not.toBeNull();
++  expect(popoverBox!.x).toBeGreaterThanOrEqual(0);
++  expect(popoverBox!.x + popoverBox!.width).toBeLessThanOrEqual(320);
+ });

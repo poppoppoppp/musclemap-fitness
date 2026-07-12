@@ -53,3 +53,8 @@
 | Exercise picker sheet: shared filtering and 2D relationships | completed |
 | Exercise picker sheet: accessible sheet and workout integration | completed |
 | Exercise picker sheet: regression, build, and mobile visual QA | completed |
+| Exercise catalog and entry restructure: audit current data, navigation, routes, and tests | completed |
+| Exercise catalog and entry restructure: clarify target and approve design | completed |
+| Exercise catalog and entry restructure: write implementation plan | completed |
+| Exercise catalog and entry restructure: implement with TDD | completed |
+| Exercise catalog and entry restructure: validate data, UI, tests, and build | completed |

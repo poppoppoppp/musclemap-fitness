@@ -100,3 +100,19 @@ test('adding an exercise persists it, closes the sheet, and prevents duplicates 
   });
   expect(storedCount).toBe(1);
 });
+
+test('expanded catalog exercise can be searched, added and restored after reload', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await startEmptyWorkout(page);
+  await openPicker(page);
+
+  await page.getByTestId('exercise-picker-search').fill('壶铃摆动');
+  await expect(page.getByTestId('exercise-picker-result-kettlebell-swing')).toContainText('臀大肌');
+  await expect(page.getByTestId('exercise-picker-result-kettlebell-swing')).toContainText('壶铃');
+  await page.getByTestId('add-exercise-kettlebell-swing').click();
+
+  await expect(page.getByTestId('exercise-picker-sheet')).toBeHidden();
+  await expect(page.getByTestId('workout-log-exercise')).toContainText('壶铃摆动');
+  await page.reload();
+  await expect(page.getByTestId('workout-log-exercise')).toContainText('壶铃摆动');
+});

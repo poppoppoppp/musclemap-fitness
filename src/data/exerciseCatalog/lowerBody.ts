@@ -1,0 +1,55 @@
+import { catalogExercise as e } from './createCatalogExercise';
+
+const quads = ['quadriceps'];
+const hamstrings = ['hamstrings'];
+const glutes = ['gluteus-maximus'];
+const squat = { force: 'push' as const, mechanic: 'compound' as const, secondaryMuscles: glutes, tags: ['腿部', '深蹲', '股四头肌'] };
+
+export const lowerBodyExercises = [
+  e('front-squat', '杠铃前蹲', 'Barbell Front Squat', quads, ['杠铃', '深蹲架'], squat),
+  e('goblet-squat', '壶铃高脚杯深蹲', 'Kettlebell Goblet Squat', quads, ['壶铃'], squat),
+  e('smith-squat', '史密斯机深蹲', 'Smith Machine Squat', quads, ['史密斯机'], squat),
+  e('hack-squat', '哈克深蹲', 'Hack Squat', quads, ['哈克深蹲机'], squat),
+  e('pendulum-squat', '摆动式深蹲', 'Pendulum Squat', quads, ['摆动深蹲机'], squat),
+  e('belt-squat', '腰带深蹲', 'Belt Squat', quads, ['腰带深蹲机'], squat),
+  e('bulgarian-split-squat', '保加利亚分腿蹲', 'Bulgarian Split Squat', quads, ['哑铃', '卧推凳'], { ...squat, tags: ['腿部', '分腿蹲', '单侧'] }),
+  e('dumbbell-split-squat', '哑铃原地分腿蹲', 'Dumbbell Split Squat', quads, ['哑铃'], { ...squat, tags: ['腿部', '分腿蹲', '单侧'] }),
+  e('reverse-lunge', '后撤弓步蹲', 'Reverse Lunge', quads, ['自重', '哑铃'], { ...squat, tags: ['腿部', '弓步蹲', '单侧'] }),
+  e('walking-lunge', '行走弓步蹲', 'Walking Lunge', quads, ['自重', '哑铃'], { ...squat, tags: ['腿部', '弓步蹲', '行走'] }),
+  e('step-up', '哑铃登台阶', 'Dumbbell Step-up', quads, ['哑铃', '卧推凳'], { ...squat, tags: ['腿部', '登阶', '单侧'] }),
+  e('sissy-squat', '西斯深蹲', 'Sissy Squat', quads, ['自重'], { force: 'push', mechanic: 'isolation', category: 'bodyweight', tags: ['腿部', '股四头肌', '自重'] }),
+  e('seated-leg-curl', '坐姿腿弯举', 'Seated Leg Curl', hamstrings, ['腿弯举机'], { force: 'pull', mechanic: 'isolation', tags: ['腿部', '腘绳肌', '腿弯举'] }),
+  e('single-leg-curl', '单腿器械弯举', 'Single-leg Curl', hamstrings, ['腿弯举机'], { force: 'pull', mechanic: 'isolation', tags: ['腿部', '腘绳肌', '单侧'] }),
+  e('stability-ball-leg-curl', '健身球腿弯举', 'Stability Ball Leg Curl', hamstrings, ['健身球'], { force: 'pull', mechanic: 'isolation', category: 'bodyweight', secondaryMuscles: glutes, tags: ['腿部', '腘绳肌', '健身球'] }),
+  e('nordic-hamstring-curl', '北欧腿弯举', 'Nordic Hamstring Curl', hamstrings, ['自重'], { force: 'pull', mechanic: 'isolation', category: 'bodyweight', difficulty: 'advanced', tags: ['腿部', '腘绳肌', '自重'] }),
+  e('sliding-leg-curl', '滑垫腿弯举', 'Sliding Leg Curl', hamstrings, ['滑垫'], { force: 'pull', mechanic: 'isolation', category: 'bodyweight', secondaryMuscles: glutes, tags: ['腿部', '腘绳肌', '滑垫'] }),
+  e('single-leg-romanian-deadlift', '单腿罗马尼亚硬拉', 'Single-leg Romanian Deadlift', hamstrings, ['哑铃'], { force: 'hinge', mechanic: 'compound', secondaryMuscles: glutes, tags: ['腿部', '腘绳肌', '髋铰链', '单侧'] }),
+  e('smith-romanian-deadlift', '史密斯机罗马尼亚硬拉', 'Smith Machine Romanian Deadlift', hamstrings, ['史密斯机'], { force: 'hinge', mechanic: 'compound', secondaryMuscles: glutes, tags: ['腿部', '腘绳肌', '髋铰链'] }),
+  e('cable-romanian-deadlift', '绳索罗马尼亚硬拉', 'Cable Romanian Deadlift', hamstrings, ['绳索器械'], { force: 'hinge', mechanic: 'compound', secondaryMuscles: glutes, tags: ['腿部', '腘绳肌', '髋铰链', '绳索'] }),
+  e('barbell-hip-thrust', '杠铃臀推', 'Barbell Hip Thrust', glutes, ['杠铃', '卧推凳'], { force: 'push', mechanic: 'compound', secondaryMuscles: hamstrings, tags: ['臀部', '臀推', '杠铃'] }),
+  e('smith-hip-thrust', '史密斯机臀推', 'Smith Machine Hip Thrust', glutes, ['史密斯机', '卧推凳'], { force: 'push', mechanic: 'compound', secondaryMuscles: hamstrings, tags: ['臀部', '臀推', '史密斯机'] }),
+  e('machine-hip-thrust', '器械臀推', 'Machine Hip Thrust', glutes, ['臀推机'], { force: 'push', mechanic: 'compound', secondaryMuscles: hamstrings, tags: ['臀部', '臀推', '器械'] }),
+  e('dumbbell-hip-thrust', '哑铃臀推', 'Dumbbell Hip Thrust', glutes, ['哑铃', '卧推凳'], { force: 'push', mechanic: 'compound', secondaryMuscles: hamstrings, tags: ['臀部', '臀推', '哑铃'] }),
+  e('glute-bridge', '臀桥', 'Glute Bridge', glutes, ['自重'], { force: 'push', mechanic: 'compound', category: 'bodyweight', secondaryMuscles: hamstrings, tags: ['臀部', '臀桥', '自重'] }),
+  e('single-leg-glute-bridge', '单腿臀桥', 'Single-leg Glute Bridge', glutes, ['自重'], { force: 'push', mechanic: 'compound', category: 'bodyweight', secondaryMuscles: hamstrings, tags: ['臀部', '臀桥', '单侧'] }),
+  e('cable-pull-through', '绳索胯下拉', 'Cable Pull-through', glutes, ['绳索器械'], { force: 'hinge', mechanic: 'compound', secondaryMuscles: hamstrings, tags: ['臀部', '髋铰链', '绳索'] }),
+  e('cable-kickback', '绳索后踢腿', 'Cable Glute Kickback', glutes, ['绳索器械'], { force: 'push', mechanic: 'isolation', tags: ['臀部', '后踢腿', '绳索'] }),
+  e('donkey-kick', '跪姿后踢腿', 'Donkey Kick', glutes, ['自重'], { force: 'push', mechanic: 'isolation', category: 'bodyweight', tags: ['臀部', '后踢腿', '自重'] }),
+  e('frog-pump', '蛙式臀桥', 'Frog Pump', glutes, ['自重'], { force: 'push', mechanic: 'isolation', category: 'bodyweight', tags: ['臀部', '臀桥', '自重'] }),
+  e('seated-calf-raise', '坐姿提踵', 'Seated Calf Raise', ['calves'], ['坐姿提踵机'], { force: 'push', mechanic: 'isolation', tags: ['腿部', '小腿', '提踵'] }),
+  e('machine-standing-calf-raise', '器械站姿提踵', 'Machine Standing Calf Raise', ['calves'], ['站姿提踵机'], { force: 'push', mechanic: 'isolation', tags: ['腿部', '小腿', '提踵'] }),
+  e('leg-press-calf-raise', '腿举机提踵', 'Leg Press Calf Raise', ['calves'], ['腿举机'], { force: 'push', mechanic: 'isolation', tags: ['腿部', '小腿', '提踵'] }),
+  e('donkey-calf-raise', '俯身提踵', 'Donkey Calf Raise', ['calves'], ['自重'], { force: 'push', mechanic: 'isolation', category: 'bodyweight', tags: ['腿部', '小腿', '提踵'] }),
+  e('single-leg-calf-raise', '单腿提踵', 'Single-leg Calf Raise', ['calves'], ['自重', '哑铃'], { force: 'push', mechanic: 'isolation', tags: ['腿部', '小腿', '提踵', '单侧'] }),
+  e('squat-position-calf-raise', '深蹲姿提踵', 'Squat-position Calf Raise', ['calves'], ['自重'], { force: 'push', mechanic: 'isolation', category: 'bodyweight', tags: ['腿部', '小腿', '提踵'] }),
+  e('machine-hip-adduction', '器械髋内收', 'Machine Hip Adduction', ['hip-adductors'], ['髋内收机'], { force: 'pull', mechanic: 'isolation', tags: ['腿部', '内收肌', '器械'] }),
+  e('cable-hip-adduction', '绳索髋内收', 'Cable Hip Adduction', ['hip-adductors'], ['绳索器械'], { force: 'pull', mechanic: 'isolation', tags: ['腿部', '内收肌', '绳索', '单侧'] }),
+  e('band-hip-adduction', '弹力带髋内收', 'Band Hip Adduction', ['hip-adductors'], ['弹力带'], { force: 'pull', mechanic: 'isolation', tags: ['腿部', '内收肌', '弹力带', '单侧'] }),
+  e('side-lying-hip-adduction', '侧卧髋内收', 'Side-lying Hip Adduction', ['hip-adductors'], ['自重'], { force: 'pull', mechanic: 'isolation', category: 'bodyweight', tags: ['腿部', '内收肌', '自重'] }),
+  e('cossack-squat', '哥萨克深蹲', 'Cossack Squat', ['hip-adductors', 'quadriceps'], ['自重'], { force: 'push', mechanic: 'compound', category: 'bodyweight', secondaryMuscles: glutes, tags: ['腿部', '内收肌', '侧向深蹲'] }),
+  e('machine-hip-abduction', '器械髋外展', 'Machine Hip Abduction', ['hip-abductors'], ['髋外展机'], { force: 'push', mechanic: 'isolation', tags: ['腿部', '外展肌', '器械'] }),
+  e('cable-hip-abduction', '绳索髋外展', 'Cable Hip Abduction', ['hip-abductors'], ['绳索器械'], { force: 'push', mechanic: 'isolation', tags: ['腿部', '外展肌', '绳索', '单侧'] }),
+  e('band-lateral-walk', '弹力带侧向行走', 'Band Lateral Walk', ['hip-abductors'], ['弹力带'], { force: 'push', mechanic: 'compound', category: 'activation', tags: ['腿部', '外展肌', '弹力带'] }),
+  e('clamshell', '蚌式开合', 'Clamshell', ['hip-abductors'], ['弹力带'], { force: 'push', mechanic: 'isolation', category: 'activation', tags: ['腿部', '外展肌', '弹力带'] }),
+  e('side-lying-hip-abduction', '侧卧髋外展', 'Side-lying Hip Abduction', ['hip-abductors'], ['自重'], { force: 'push', mechanic: 'isolation', category: 'bodyweight', tags: ['腿部', '外展肌', '自重'] })
+];

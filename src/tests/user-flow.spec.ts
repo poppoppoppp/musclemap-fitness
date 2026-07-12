@@ -174,7 +174,7 @@ test('training entry homepage presents stored workout plan and music states', as
   await page.getByRole('button', { name: '更换歌单' }).click();
   await expect(page.getByPlaceholder('粘贴网易云歌单链接或 ID')).toBeVisible();
   await expect(page.getByRole('link', { name: '记录', exact: true })).toHaveAttribute('href', '/workout-log');
-  await expect(page.getByRole('link', { name: '动作库', exact: true })).toHaveAttribute('href', '/exercises');
+  await expect(page.getByRole('link', { name: '动作库', exact: true })).toHaveCount(0);
 
   const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
   expect(hasHorizontalOverflow).toBe(false);
@@ -418,17 +418,47 @@ test('dark homepage and profile content extend behind the floating navigation', 
   }
 });
 
-test('bottom navigation uses the four requested destinations and highlights profile', async ({ page }) => {
+test('bottom navigation uses the three requested destinations and highlights profile', async ({ page }) => {
   await page.goto('/data-management');
 
   const nav = page.locator('nav');
+  await expect(nav.getByRole('link')).toHaveCount(3);
   await expect(nav.getByRole('link', { name: '首页', exact: true })).toHaveAttribute('href', '/');
   await expect(nav.getByRole('link', { name: '记录', exact: true })).toHaveAttribute('href', '/workout-log');
-  await expect(nav.getByRole('link', { name: '动作库', exact: true })).toHaveAttribute('href', '/exercises');
+  await expect(nav.getByRole('link', { name: '动作库', exact: true })).toHaveCount(0);
   await expect(nav.getByRole('link', { name: '我的', exact: true })).toHaveAttribute('href', '/data-management');
   await expect(nav.getByRole('link', { name: '我的', exact: true })).toHaveAttribute('aria-current', 'page');
   await expect(nav.getByText('计划', { exact: true })).toHaveCount(0);
   await expect(nav.getByText('统计', { exact: true })).toHaveCount(0);
+});
+
+test('profile opens exercise management with total, search, body-part filter and mobile-safe return flow', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/data-management');
+
+  const managementEntry = page.getByRole('link', { name: '动作管理' });
+  await expect(managementEntry).toHaveAttribute('href', '/exercises');
+  await managementEntry.click();
+
+  await expect(page).toHaveURL(/\/exercises$/);
+  await expect(page.getByRole('heading', { name: '动作管理' })).toBeVisible();
+  await expect(page.getByText('共 260 个动作')).toBeVisible();
+  await expect(page.getByRole('link', { name: '返回' })).toHaveAttribute('href', '/data-management');
+  await expect(page.getByRole('link', { name: '我的', exact: true })).toHaveAttribute('aria-current', 'page');
+
+  await page.getByLabel('搜索动作').fill('上斜卧推');
+  await expect(page.getByRole('link', { name: '上斜杠铃卧推 动作详情' })).toBeVisible();
+  await page.getByLabel('搜索动作').fill('');
+  await page.getByLabel('部位').selectOption('腿部');
+  await expect(page.getByRole('link', { name: '器械髋内收 动作详情' })).toBeVisible();
+  await page.getByLabel('部位').selectOption('全身');
+  const fullBodyExercise = page.getByRole('link', { name: '壶铃摆动 动作详情' });
+  await expect(fullBodyExercise).toContainText('臀大肌');
+  await expect(fullBodyExercise).toContainText('壶铃');
+
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
+  await page.getByRole('link', { name: '返回' }).click();
+  await expect(page).toHaveURL(/\/data-management$/);
 });
 
 test('homepage shows elapsed timer for active workout', async ({ page }) => {
@@ -1588,7 +1618,7 @@ test('user can search and filter rowing exercises', async ({ page }) => {
   await page.getByRole('textbox', { name: '搜索动作' }).fill('划船');
   await expect(page.getByRole('link', { name: /单臂哑铃划船/ })).toBeVisible();
   await expect(page.getByRole('link', { name: /坐姿划船/ })).toBeVisible();
-  await expect(page.getByRole('link', { name: /杠铃划船/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: '杠铃划船 动作详情', exact: true })).toBeVisible();
 
   await page.getByLabel('涉及肌群').selectOption('latissimus-dorsi');
   await expect(page.getByRole('link', { name: /单臂哑铃划船/ })).toContainText('主练匹配');
@@ -1600,7 +1630,7 @@ test('latissimus dorsi filter distinguishes primary and secondary matches', asyn
   await page.goto('/exercises');
   await page.getByLabel('涉及肌群').selectOption('latissimus-dorsi');
 
-  await expect(page.getByRole('link', { name: /高位下拉/ })).toContainText('主练匹配');
+  await expect(page.getByRole('link', { name: '高位下拉 动作详情', exact: true })).toContainText('主练匹配');
   await expect(page.getByRole('link', { name: '硬拉 动作详情', exact: true })).toHaveCount(0);
   await expect(page.getByRole('link', { name: /山羊挺身/ })).toHaveCount(0);
   await expect(page.getByRole('link', { name: /罗马尼亚硬拉/ })).toHaveCount(0);

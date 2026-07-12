@@ -139,6 +139,7 @@ export default function DataManagement() {
         <ProfileSection title="训练管理">
           <EntryRow title="训练模板" to="/plan-builder" icon={DocumentIcon} />
           <EntryRow title="训练历史" to="/workout-history" icon={ClockIcon} />
+          <EntryRow title="动作管理" to="/exercises" icon={DumbbellIcon} />
           <EntryRow title="动作进步" onClick={() => showStatus('动作进步功能开发中')} icon={WorkoutIcon} />
           <EntryRow title="身体变化" onClick={() => showStatus('身体变化功能开发中')} icon={UserIcon} />
         </ProfileSection>

@@ -41,7 +41,7 @@ export default function ExerciseDetail() {
     return (
       <div>
         <PageHeader title="动作详情" backTo="/exercises" />
-        <EmptyState title="未找到这个动作" description="请返回动作库重新选择。" />
+        <EmptyState title="未找到这个动作" description="请返回动作管理重新选择。" />
       </div>
     );
   }
@@ -133,7 +133,7 @@ export default function ExerciseDetail() {
                 </Link>
               ))}
             </div>
-            {hasFewAlternatives ? <p className="mt-3 text-sm text-app-muted">当前肌群的替代动作较少，可到动作库查看更多相关动作。</p> : null}
+            {hasFewAlternatives ? <p className="mt-3 text-sm text-app-muted">当前肌群的替代动作较少，可到动作管理查看更多相关动作。</p> : null}
           </Card>
         </div>
       </div>

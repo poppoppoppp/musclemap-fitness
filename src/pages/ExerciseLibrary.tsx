@@ -22,7 +22,7 @@ export default function ExerciseLibrary() {
   );
 
   return (
-    <div className="pb-24 lg:pb-0">
+    <div className="exercise-library-dark profile-dark relative -mx-4 -mt-5 min-h-[calc(100vh-5rem)] overflow-hidden bg-[#080a08] px-4 pb-28 pt-6 text-white sm:-mx-6 sm:px-6 lg:pb-10">
       <PageHeader title="动作管理" description="查看内置动作，按部位、肌群或器械快速筛选。" backTo="/data-management" />
       <ExerciseFilter
         query={query}

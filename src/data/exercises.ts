@@ -1,7 +1,9 @@
-import type { Exercise } from '../types/exercise';
+import type { Exercise, ExerciseWeightType } from '../types/exercise';
 import { catalogExercises } from './exerciseCatalog';
 
-const existingExercises: Exercise[] = [
+type ExerciseDefinition = Omit<Exercise, 'weightType'> & { weightType?: ExerciseWeightType };
+
+const existingExercises: ExerciseDefinition[] = [
   {
     id: 'lat-pulldown',
     name: '高位下拉',
@@ -820,6 +822,9 @@ const existingExercises: Exercise[] = [
   }
 ];
 
-export const exercises: Exercise[] = [...existingExercises, ...catalogExercises];
+export const exercises: Exercise[] = [...existingExercises, ...catalogExercises].map((exercise) => ({
+  ...exercise,
+  weightType: exercise.weightType ?? (exercise.category === 'bodyweight' || (exercise.equipment.length === 1 && exercise.equipment[0] === '自重') ? 'bodyweight' : 'external_weight')
+}));
 
 export const getExerciseById = (id: string) => exercises.find((exercise) => exercise.id === id);

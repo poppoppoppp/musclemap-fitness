@@ -1,5 +1,5 @@
 import type { Difficulty, ExerciseCategory, ForceType, MechanicType } from '../../types/common';
-import type { Exercise } from '../../types/exercise';
+import type { Exercise, ExerciseWeightType } from '../../types/exercise';
 
 type CatalogExerciseOptions = {
   secondaryMuscles?: string[];
@@ -8,6 +8,7 @@ type CatalogExerciseOptions = {
   mechanic: MechanicType;
   category?: ExerciseCategory;
   tags?: string[];
+  weightType?: ExerciseWeightType;
 };
 
 export function catalogExercise(
@@ -29,6 +30,7 @@ export function catalogExercise(
     force: options.force,
     mechanic: options.mechanic,
     category: options.category ?? 'strength',
+    weightType: options.weightType ?? (options.category === 'bodyweight' ? 'bodyweight' : 'external_weight'),
     steps: [],
     cues: [],
     commonMistakes: [],

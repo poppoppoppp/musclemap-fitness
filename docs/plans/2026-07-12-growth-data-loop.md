@@ -140,4 +140,3 @@
 4. Run `git diff --check`.
 5. Capture 390×844 screenshots for empty growth, populated growth, body sheet, body history, photo sheet, gallery, comparison, and distribution details.
 6. Confirm no unrelated user files were modified and no push/deployment occurred.
-

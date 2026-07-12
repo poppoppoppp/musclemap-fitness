@@ -9,7 +9,7 @@ export const backExercises = [
   e('reverse-grip-lat-pulldown', '反握高位下拉', 'Reverse-grip Lat Pulldown', lats, ['高位下拉器'], { ...pull, tags: ['背部', '下拉', '反握'] }),
   e('single-arm-lat-pulldown', '单臂高位下拉', 'Single-arm Lat Pulldown', lats, ['高位下拉器'], { ...pull, tags: ['背部', '下拉', '单臂'] }),
   e('kneeling-single-arm-pulldown', '跪姿单臂下拉', 'Kneeling Single-arm Pulldown', lats, ['绳索器械'], { ...pull, tags: ['背部', '下拉', '绳索', '单臂'] }),
-  e('assisted-pull-up', '辅助引体向上', 'Assisted Pull-up', lats, ['辅助引体机'], { ...pull, difficulty: 'beginner' }),
+  e('assisted-pull-up', '辅助引体向上', 'Assisted Pull-up', lats, ['辅助引体机'], { ...pull, difficulty: 'beginner', weightType: 'bodyweight_assisted' }),
   e('neutral-grip-pull-up', '对握引体向上', 'Neutral-grip Pull-up', lats, ['单杠'], { ...pull, category: 'bodyweight' }),
   e('chin-up', '反握引体向上', 'Chin-up', lats, ['单杠'], { ...pull, category: 'bodyweight', secondaryMuscles: ['biceps-brachii'] }),
   e('wide-grip-pull-up', '宽握引体向上', 'Wide-grip Pull-up', lats, ['单杠'], { ...pull, category: 'bodyweight', difficulty: 'advanced' }),

@@ -1,102 +1,102 @@
 import { expect, test } from '@playwright/test';
-import type { BodySnapshot } from '../types/body';
+import type { BodyMetricRecord } from '../types/body';
 import type { WorkoutLog } from '../types/workout';
 import {
-  deriveBodyMetricSeries,
-  deriveTrainingDistribution,
+  deriveStrengthTrends,
+  deriveTrainingDistributionDetails,
   deriveTrainingOverview,
+  findNearestBodyWeight,
   filterWorkoutLogsByRange
 } from '../utils/growthMetrics';
 
 const now = new Date(2026, 6, 12, 12);
 
-test('filters workout logs by the selected local date range', () => {
-  const logs = [
-    log('recent', '2026-07-10'),
-    log('four-week-edge', '2026-06-14'),
-    log('three-month-edge', '2026-04-12'),
-    log('old', '2025-12-20')
-  ];
-
+test('all finite time ranges filter real logs and all keeps every valid record', () => {
+  const logs = [log('recent', '2026-07-10'), log('four-week-edge', '2026-06-14'), log('three-month-edge', '2026-04-12'), log('old', '2025-12-20')];
   expect(filterWorkoutLogsByRange(logs, '4w', now).map(({ id }) => id)).toEqual(['recent', 'four-week-edge']);
   expect(filterWorkoutLogsByRange(logs, '3m', now).map(({ id }) => id)).toEqual(['recent', 'four-week-edge', 'three-month-edge']);
-  expect(filterWorkoutLogsByRange(logs, '6m', now).map(({ id }) => id)).toEqual(['recent', 'four-week-edge', 'three-month-edge']);
+  expect(filterWorkoutLogsByRange(logs, '6m', now)).toHaveLength(3);
   expect(filterWorkoutLogsByRange(logs, 'all', now)).toHaveLength(4);
 });
 
-test('derives completed workouts active weeks and average frequency from real logs', () => {
+test('overview compares a finite range with the preceding equal period and omits comparison for all', () => {
+  const logs = [log('current-a', '2026-07-10'), log('current-b', '2026-06-28'), log('previous', '2026-06-01'), log('old', '2025-01-01')];
+  const finite = deriveTrainingOverview(logs, '4w', now);
+  expect(finite.current.completedWorkouts).toBe(2);
+  expect(finite.previous?.completedWorkouts).toBe(1);
+  expect(finite.changes.completedWorkouts).toBe(1);
+  const all = deriveTrainingOverview(logs, 'all', now);
+  expect(all.current.completedWorkouts).toBe(4);
+  expect(all.previous).toBeNull();
+  expect(all.changes).toBeNull();
+});
+
+test('strength selector contains only actually trained actions sorted by latest record', () => {
   const logs = [
-    log('week-a-1', '2026-07-06'),
-    log('week-a-2', '2026-07-09'),
-    log('week-b', '2026-06-30'),
-    log('outside', '2026-01-01')
+    { ...log('older', '2026-07-01'), exercises: [exercise('bench', 'barbell-bench-press', [{ weight: 60, reps: 8 }])] },
+    { ...log('latest', '2026-07-10'), exercises: [exercise('row', 'seated-row', [{ weight: 45, reps: 10 }])] }
   ];
-
-  expect(deriveTrainingOverview(logs, '3m', now)).toEqual({
-    completedWorkouts: 3,
-    activeWeeks: 2,
-    averagePerActiveWeek: 1.5
-  });
+  const trends = deriveStrengthTrends(logs, [], '3m', now);
+  expect(trends.map(({ exerciseId }) => exerciseId)).toEqual(['seated-row', 'barbell-bench-press']);
+  expect(trends.map(({ exerciseId }) => exerciseId)).not.toContain('deadlift');
+  expect(trends[0].points[0]).toMatchObject({ date: '2026-07-10', value: 45, reps: 10, setIndex: 1 });
 });
 
-test('aggregates valid sets into the five requested muscle groups', () => {
-  const logs: WorkoutLog[] = [{
-    ...log('distribution', '2026-07-10'),
-    exercises: [
-      exercise('bench', 'barbell-bench-press', 2),
-      exercise('row', 'seated-row', 3),
-      exercise('shoulders', 'dumbbell-lateral-raise', 1),
-      exercise('legs', 'squat', 4),
-      exercise('arms', 'dumbbell-curl', 2)
-    ]
+test('external weight uses the heaviest valid set from each workout', () => {
+  const logs = [{
+    ...log('bench-day', '2026-07-10'),
+    exercises: [exercise('bench', 'barbell-bench-press', [{ weight: 60, reps: 10 }, { weight: 70, reps: 6 }, { reps: 12 }])]
   }];
-
-  expect(deriveTrainingDistribution(logs, '3m', now)).toEqual([
-    { id: 'chest', label: '胸部', sets: 2 },
-    { id: 'back', label: '背部', sets: 3 },
-    { id: 'shoulders', label: '肩部', sets: 1 },
-    { id: 'legs', label: '腿部', sets: 4 },
-    { id: 'arms', label: '手臂', sets: 2 }
-  ]);
+  const trend = deriveStrengthTrends(logs, [], '3m', now)[0];
+  expect(trend.points).toEqual([{ date: '2026-07-10', value: 70, reps: 6, setIndex: 2, sourceWeight: 70 }]);
+  expect(trend.status).toBe('single');
 });
 
-test('uses real body snapshot series when enough values exist and falls back otherwise', () => {
-  const snapshots: BodySnapshot[] = [
-    { id: 'a', date: '2026-05-01', bodyWeightKg: 73.2, createdAt: '2026-05-01T08:00:00.000Z' },
-    { id: 'b', date: '2026-06-01', bodyWeightKg: 72.8, waistCm: 81, createdAt: '2026-06-01T08:00:00.000Z' },
-    { id: 'c', date: '2026-07-01', bodyWeightKg: 72.3, createdAt: '2026-07-01T08:00:00.000Z' }
+test('nearest body weight prefers the earlier record when absolute distance ties', () => {
+  const records: BodyMetricRecord[] = [
+    body('before', '2026-07-01', 70),
+    body('after', '2026-07-03', 72)
   ];
-  const fallback = [
-    { label: '4/12', value: 82 },
-    { label: '7/12', value: 80 }
-  ];
+  expect(findNearestBodyWeight(records, '2026-07-02')?.id).toBe('before');
+});
 
-  expect(deriveBodyMetricSeries(snapshots, 'weight', '3m', now, fallback)).toEqual({
-    source: 'real',
-    points: [
-      { label: '5/1', value: 73.2 },
-      { label: '6/1', value: 72.8 },
-      { label: '7/1', value: 72.3 }
-    ]
-  });
-  expect(deriveBodyMetricSeries(snapshots, 'waist', '3m', now, fallback)).toEqual({ source: 'mock', points: fallback });
-  expect(deriveBodyMetricSeries(snapshots, 'arm', '3m', now, fallback)).toEqual({ source: 'mock', points: fallback });
+test('bodyweight variants calculate effective weight and ignore missing body records', () => {
+  const records = [body('weight', '2026-07-09', 72)];
+  const logs = [
+    { ...log('pull', '2026-07-10'), exercises: [exercise('pull', 'pull-up', [{ reps: 8, weight: 99 }])] },
+    { ...log('weighted', '2026-07-10'), exercises: [exercise('weighted', 'weighted-push-up', [{ weight: 10, reps: 10 }])] },
+    { ...log('assisted', '2026-07-10'), exercises: [exercise('assisted', 'assisted-pull-up', [{ weight: 20, reps: 12 }])] }
+  ];
+  const trends = deriveStrengthTrends(logs, records, '3m', now);
+  expect(trends.find(({ exerciseId }) => exerciseId === 'pull-up')?.points[0]).toMatchObject({ value: 72, bodyWeight: 72, reps: 8 });
+  expect(trends.find(({ exerciseId }) => exerciseId === 'weighted-push-up')?.points[0]).toMatchObject({ value: 82, bodyWeight: 72, modifierWeight: 10 });
+  expect(trends.find(({ exerciseId }) => exerciseId === 'assisted-pull-up')?.points[0]).toMatchObject({ value: 52, bodyWeight: 72, modifierWeight: 20 });
+
+  const missing = deriveStrengthTrends(logs, [], '3m', now);
+  expect(missing.find(({ exerciseId }) => exerciseId === 'pull-up')).toMatchObject({ status: 'empty', missingBodyWeightCount: 1, points: [] });
+});
+
+test('distribution details retain muscle totals and contributing exercises', () => {
+  const logs = [{
+    ...log('distribution', '2026-07-10'),
+    exercises: [exercise('pull', 'lat-pulldown', [{ reps: 10 }, { reps: 10 }]), exercise('row', 'seated-row', [{ reps: 8 }])]
+  }];
+  const back = deriveTrainingDistributionDetails(logs, '3m', now).find(({ id }) => id === 'back');
+  expect(back).toMatchObject({ label: '背部', sets: 3 });
+  expect(back?.exercises).toEqual([
+    { exerciseId: 'lat-pulldown', label: '高位下拉', sets: 2 },
+    { exerciseId: 'seated-row', label: '坐姿划船', sets: 1 }
+  ]);
 });
 
 function log(id: string, date: string): WorkoutLog {
   return { id, date, createdAt: `${date}T08:00:00.000Z`, exercises: [] };
 }
 
-function exercise(id: string, exerciseId: string, setCount: number) {
-  return {
-    id,
-    exerciseId,
-    order: 0,
-    sets: Array.from({ length: setCount }, (_, index) => ({
-      id: `${id}-set-${index}`,
-      setIndex: index + 1,
-      reps: 10,
-      completed: true
-    }))
-  };
+function exercise(id: string, exerciseId: string, values: Array<{ weight?: number; reps?: number }>) {
+  return { id, exerciseId, order: 0, sets: values.map((value, index) => ({ id: `${id}-${index}`, setIndex: index + 1, completed: true, ...value })) };
+}
+
+function body(id: string, date: string, weightKg: number): BodyMetricRecord {
+  return { id, date, weightKg, createdAt: `${date}T08:00:00.000Z`, updatedAt: `${date}T08:00:00.000Z` };
 }

@@ -1,5 +1,7 @@
 import type { Difficulty, ExerciseCategory, ForceType, MechanicType } from './common';
 
+export type ExerciseWeightType = 'external_weight' | 'bodyweight' | 'bodyweight_added' | 'bodyweight_assisted';
+
 export interface Exercise {
   id: string;
   name: string;
@@ -11,6 +13,7 @@ export interface Exercise {
   force: ForceType;
   mechanic: MechanicType;
   category: ExerciseCategory;
+  weightType: ExerciseWeightType;
   steps: string[];
   cues: string[];
   commonMistakes: string[];

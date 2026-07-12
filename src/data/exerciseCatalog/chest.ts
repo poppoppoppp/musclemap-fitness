@@ -32,5 +32,5 @@ export const chestExercises = [
   e('wide-grip-push-up', '宽距俯卧撑', 'Wide-grip Push-up', chest, ['自重'], { ...press, category: 'bodyweight', tags: ['胸部', '俯卧撑', '宽距'] }),
   e('decline-push-up', '下斜俯卧撑', 'Decline Push-up', chest, ['自重'], { ...press, category: 'bodyweight', tags: ['胸部', '俯卧撑', '上胸'] }),
   e('incline-push-up', '上斜俯卧撑', 'Incline Push-up', chest, ['自重'], { ...press, category: 'bodyweight', difficulty: 'beginner' }),
-  e('weighted-push-up', '负重俯卧撑', 'Weighted Push-up', chest, ['自重', '杠铃片'], { ...press, category: 'bodyweight', difficulty: 'advanced' })
+  e('weighted-push-up', '负重俯卧撑', 'Weighted Push-up', chest, ['自重', '杠铃片'], { ...press, category: 'bodyweight', difficulty: 'advanced', weightType: 'bodyweight_added' })
 ];

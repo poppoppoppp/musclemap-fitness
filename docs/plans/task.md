@@ -61,7 +61,7 @@
 | Growth page redesign: audit existing navigation, record state, and data | completed |
 | Growth page redesign: confirm data and photo boundaries | completed |
 | Growth page redesign: approve design and implementation plan | completed |
-| Growth page redesign: add failing behavior and metric tests | pending |
-| Growth page redesign: implement navigation and growth modules | pending |
+| Growth page redesign: add failing behavior and metric tests | completed |
+| Growth page redesign: implement navigation and growth modules | in_progress |
 | Growth page redesign: simplify idle workout-log state | pending |
 | Growth page redesign: build, regression, and mobile visual QA | pending |

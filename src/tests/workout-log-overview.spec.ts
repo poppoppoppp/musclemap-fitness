@@ -11,7 +11,7 @@ test.beforeEach(async ({ page }) => {
   }, { keys: [ACTIVE_WORKOUT_KEY, WORKOUT_LOGS_KEY, LATEST_WORKOUT_LOG_KEY, PLAN_STORAGE_KEY] });
 });
 
-test('shows the pre-workout overview with real empty states and no brand logo', async ({ page }) => {
+test('shows a focused pre-workout overview with one primary start action', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 800 });
   await page.goto('/workout-log');
 
@@ -21,8 +21,10 @@ test('shows the pre-workout overview with real empty states and no brand logo', 
   await expect(page.getByTestId('weekly-training-count')).toHaveText('0');
   await expect(page.getByTestId('weekly-duration')).toContainText('0 分钟');
   await expect(page.getByTestId('weekly-valid-set-count')).toHaveText('0');
-  await expect(page.getByTestId('recent-workout-card')).toContainText('暂无训练记录');
-  await expect(page.getByTestId('workout-progress-card')).toContainText('暂无足够数据生成趋势');
+  await expect(page.getByText('最近一次训练')).toHaveCount(0);
+  await expect(page.getByText('近期表现')).toHaveCount(0);
+  await expect(page.getByTestId('recent-workout-card')).toHaveCount(0);
+  await expect(page.getByTestId('workout-progress-card')).toHaveCount(0);
   const startButton = page.getByRole('button', { name: '开始记录训练' });
   await expect(startButton).toBeVisible();
   await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
@@ -34,7 +36,7 @@ test('shows the pre-workout overview with real empty states and no brand logo', 
   expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
 });
 
-test('derives weekly totals dates latest workout and representative exercises from stored logs', async ({ page }) => {
+test('derives weekly totals and trained dates from stored logs without secondary idle cards', async ({ page }) => {
   const current = new Date();
   const monday = startOfLocalWeek(current);
   const wednesday = addDays(monday, 2);
@@ -67,14 +69,8 @@ test('derives weekly totals dates latest workout and representative exercises fr
   await expect(page.getByTestId('weekly-valid-set-count')).toHaveText('6');
   await expect(page.getByTestId(`week-day-${mondayKey}`)).toHaveAttribute('data-trained', 'true');
   await expect(page.getByTestId(`week-day-${wednesdayKey}`)).toHaveAttribute('data-trained', 'true');
-  await expect(page.getByTestId('recent-workout-card')).toContainText(`${wednesday.getMonth() + 1}月${wednesday.getDate()}日`);
-  await expect(page.getByTestId('recent-workout-card')).toContainText('杠铃卧推');
-  await expect(page.getByTestId('recent-workout-card')).not.toContainText('哑铃弯举');
-  await expect(page.getByTestId('recent-workout-exercise')).toHaveCount(3);
-  await expect(page.getByTestId('workout-progress-card')).toContainText('杠铃卧推');
-  await expect(page.getByTestId('workout-progress-card')).toContainText('55kg');
-  await expect(page.getByTestId('workout-progress-card')).toContainText('60kg');
-  await expect(page.getByTestId('workout-progress-chart')).toBeVisible();
+  await expect(page.getByTestId('recent-workout-card')).toHaveCount(0);
+  await expect(page.getByTestId('workout-progress-card')).toHaveCount(0);
 });
 
 test('shows active workout instead of overview and restores it after reload', async ({ page }) => {

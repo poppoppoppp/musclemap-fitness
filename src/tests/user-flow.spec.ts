@@ -418,13 +418,14 @@ test('dark homepage and profile content extend behind the floating navigation', 
   }
 });
 
-test('bottom navigation uses the three requested destinations and highlights profile', async ({ page }) => {
+test('bottom navigation uses the four requested destinations and highlights profile', async ({ page }) => {
   await page.goto('/data-management');
 
   const nav = page.locator('nav');
-  await expect(nav.getByRole('link')).toHaveCount(3);
+  await expect(nav.getByRole('link')).toHaveCount(4);
   await expect(nav.getByRole('link', { name: '首页', exact: true })).toHaveAttribute('href', '/');
   await expect(nav.getByRole('link', { name: '记录', exact: true })).toHaveAttribute('href', '/workout-log');
+  await expect(nav.getByRole('link', { name: '成长', exact: true })).toHaveAttribute('href', '/growth');
   await expect(nav.getByRole('link', { name: '动作库', exact: true })).toHaveCount(0);
   await expect(nav.getByRole('link', { name: '我的', exact: true })).toHaveAttribute('href', '/data-management');
   await expect(nav.getByRole('link', { name: '我的', exact: true })).toHaveAttribute('aria-current', 'page');
@@ -1232,13 +1233,15 @@ test('workout log hides invalid legacy sets instead of rendering undefined value
     );
   });
 
-  await page.goto('/workout-log');
+  await page.goto('/workout-history/legacy-log');
 
-  const recentCard = page.getByTestId('recent-workout-card');
-  await expect(recentCard).toContainText('高位下拉');
-  await expect(recentCard).toContainText('35.5kg × 12');
-  await expect(recentCard).not.toContainText('undefined');
-  await expect(recentCard).not.toContainText('坐姿划船');
+  const detail = page.getByTestId('workout-log-detail');
+  await expect(detail).toContainText('高位下拉');
+  await expect(detail).toContainText('35.5kg');
+  await expect(detail).toContainText('12 次');
+  await expect(detail).not.toContainText('undefined');
+  await expect(detail).toContainText('坐姿划船');
+  await expect(detail).toContainText('暂无有效组');
 });
 
 test('workout history shows an empty state when there are no archived logs', async ({ page }) => {
@@ -1981,8 +1984,12 @@ test('workout log active workout flow persists edits archives and clears', async
   await page.reload();
   await expect(page.getByTestId('workout-completed-notice')).toHaveCount(0);
   await page.getByRole('link', { name: '返回记录概览' }).click();
-  await expect(page.getByTestId('recent-workout-card')).toContainText('高位下拉');
-  await expect(page.getByTestId('recent-workout-card')).toContainText('42.5kg × 10');
+  await expect(page.getByTestId('recent-workout-card')).toHaveCount(0);
+  await page.goto('/workout-history');
+  await page.getByTestId('workout-history-card').first().getByRole('link', { name: '查看详情' }).click();
+  await expect(page.getByTestId('workout-log-detail')).toContainText('高位下拉');
+  await expect(page.getByTestId('workout-log-detail')).toContainText('42.5kg');
+  await expect(page.getByTestId('workout-log-detail')).toContainText('10 次');
 });
 
 test('workout log tracks current exercise elapsed time after first set entry', async ({ page }) => {
@@ -2396,8 +2403,8 @@ test('data management validates imported backup files before overwriting storage
   await page.reload();
   await page.getByTestId('open-backup-panel').click();
   await expect(page.getByTestId('backup-workout-log-count')).toContainText('1 条');
-  await page.goto('/workout-log');
-  await expect(page.getByTestId('recent-workout-card')).toContainText('坐姿划船');
+  await page.goto('/workout-history/imported-log');
+  await expect(page.getByTestId('workout-log-detail')).toContainText('坐姿划船');
 });
 
 test('data management remains usable on mobile viewport', async ({ page }) => {

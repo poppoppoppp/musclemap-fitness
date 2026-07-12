@@ -44,4 +44,3 @@ export interface ProgressPhotoCategory {
   latestDate: string;
   imageUrl?: string;
 }
-

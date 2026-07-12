@@ -113,4 +113,3 @@ export const progressPhotoCategories: ProgressPhotoCategory[] = [
   { id: 'chest', label: '胸肌', featured: false, earliestDate: '4/12', latestDate: '7/12' },
   { id: 'biceps', label: '二头', featured: false, earliestDate: '4/12', latestDate: '7/12' }
 ];
-

@@ -2,11 +2,9 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import CalendarIcon from '../../components/icons/CalendarIcon';
 import type { GeneratedPlan, GeneratedWorkoutDay, WorkoutLog } from '../../types/workout';
-import { getRecentExerciseIds, getRecentWorkoutSummary, getWeeklyWorkoutSummary, getWorkoutProgressSummary } from '../../utils/workoutOverview';
-import RecentWorkoutCard from './RecentWorkoutCard';
+import { getRecentExerciseIds, getWeeklyWorkoutSummary } from '../../utils/workoutOverview';
 import StartWorkoutSheet from './StartWorkoutSheet';
 import WeeklyWorkoutSummaryCard from './WeeklyWorkoutSummaryCard';
-import WorkoutProgressCard from './WorkoutProgressCard';
 
 interface WorkoutLogOverviewProps {
   logs: WorkoutLog[];
@@ -19,8 +17,6 @@ interface WorkoutLogOverviewProps {
 export default function WorkoutLogOverview({ logs, recentPlan, onStartFree, onStartPlanDay, onStartRecentExercise }: WorkoutLogOverviewProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
   const weeklySummary = useMemo(() => getWeeklyWorkoutSummary(logs), [logs]);
-  const recentSummary = useMemo(() => getRecentWorkoutSummary(logs, recentPlan), [logs, recentPlan]);
-  const progressSummary = useMemo(() => getWorkoutProgressSummary(logs), [logs]);
   const recentExerciseIds = useMemo(() => getRecentExerciseIds(logs), [logs]);
 
   return (
@@ -35,12 +31,12 @@ export default function WorkoutLogOverview({ logs, recentPlan, onStartFree, onSt
         </header>
 
         <WeeklyWorkoutSummaryCard summary={weeklySummary} />
-        <RecentWorkoutCard summary={recentSummary} />
-        <WorkoutProgressCard summary={progressSummary} />
-
-        <button type="button" onClick={() => setSheetOpen(true)} className="min-h-14 w-full rounded-2xl bg-lime-300 px-5 text-base font-black text-black shadow-[0_7px_18px_rgba(163,230,53,0.17)] transition hover:bg-lime-200 active:scale-[0.99] focus:outline-none focus:ring-2 focus:ring-lime-200 focus:ring-offset-2 focus:ring-offset-[#080a08]">
-          开始记录训练
-        </button>
+        <div className="px-2 pb-2 pt-5">
+          <p className="mb-4 text-center text-sm leading-6 text-zinc-400">准备好后，从一次专注的训练开始</p>
+          <button type="button" onClick={() => setSheetOpen(true)} className="min-h-[68px] w-full rounded-full bg-lime-300 px-6 text-lg font-black text-[#10130d] shadow-[0_12px_32px_rgba(163,230,53,0.2)] transition hover:bg-lime-200 active:scale-[0.99] focus:outline-none focus:ring-2 focus:ring-lime-200 focus:ring-offset-2 focus:ring-offset-[#080a08]">
+            开始记录训练
+          </button>
+        </div>
       </div>
 
       <StartWorkoutSheet

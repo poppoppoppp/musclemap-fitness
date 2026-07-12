@@ -31,13 +31,17 @@ test('opens the growth page in training mode and supports the planned controls',
   await expect(page.getByRole('heading', { name: '成长概览' })).toBeVisible();
   await expect(page.getByRole('heading', { name: '力量趋势' })).toBeVisible();
   await expect(page.getByRole('heading', { name: '训练分布' })).toBeVisible();
-  await expect(page.getByText('刷新纪录')).toHaveCount(0);
+  await expect(page.getByTestId('growth-overview-card')).not.toContainText('刷新纪录');
+  await page.getByLabel('选择动作').selectOption('squat');
+  await expect(page.getByText('120kg')).toBeVisible();
 
   await page.getByRole('tab', { name: '身体变化' }).click();
   await expect(page.getByRole('tab', { name: '身体变化' })).toHaveAttribute('aria-selected', 'true');
   await expect(page.getByRole('heading', { name: '身体数据' })).toBeVisible();
   await expect(page.getByRole('heading', { name: '进度照片' })).toBeVisible();
   await expect(page.getByText('成长回放（即将上线）')).toBeVisible();
+  await expect(page.getByText('体脂率')).toHaveCount(0);
+  await expect(page.getByText('肌肉量')).toHaveCount(0);
 
   await page.getByRole('button', { name: '腰围' }).click();
   await expect(page.getByRole('button', { name: '腰围' })).toHaveAttribute('aria-pressed', 'true');

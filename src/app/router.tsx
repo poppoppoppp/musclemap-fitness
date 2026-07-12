@@ -4,6 +4,7 @@ import DataManagement from '../pages/DataManagement';
 import Dashboard from '../pages/Dashboard';
 import ExerciseDetail from '../pages/ExerciseDetail';
 import ExerciseLibrary from '../pages/ExerciseLibrary';
+import GrowthPage from '../pages/GrowthPage';
 import MuscleMap from '../pages/MuscleMap';
 import MusicSettings from '../pages/MusicSettings';
 import NewTrainingTemplate from '../pages/NewTrainingTemplate';
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
       { path: 'music', element: <MusicSettings /> },
       { path: 'exercises', element: <ExerciseLibrary /> },
       { path: 'exercises/:exerciseId', element: <ExerciseDetail /> },
+      { path: 'growth', element: <GrowthPage /> },
       { path: 'plan-builder', element: <PlanBuilder /> },
       { path: 'templates/new', element: <NewTrainingTemplate /> },
       { path: 'data-management', element: <DataManagement /> },

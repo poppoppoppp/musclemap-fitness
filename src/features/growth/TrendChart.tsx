@@ -42,7 +42,7 @@ export default function TrendChart({ points, label, id, compact = false }: Trend
         ))}
         {area ? <path d={area} fill={`url(#${id}-area)`} /> : null}
         <polyline points={line} fill="none" stroke="#a3e635" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-        {coordinates.map(({ x, y, label: pointLabel }) => <circle key={`${pointLabel}-${x}`} cx={x} cy={y} r="3" fill="#a3e635" />)}
+        {coordinates.map(({ x, y, label: pointLabel, detail }) => <circle key={`${pointLabel}-${x}`} cx={x} cy={y} r="4" fill="#a3e635"><title>{detail ?? `${pointLabel} ${formatValue(points.find((point) => point.label === pointLabel)?.value)}`}</title></circle>)}
         {coordinates.length > 0 ? <circle cx={coordinates.at(-1)!.x} cy={coordinates.at(-1)!.y} r="4" fill="#f4f4f5" stroke="#a3e635" strokeWidth="1.5" /> : null}
         {visibleLabels.map(({ x, label: pointLabel }) => (
           <text key={pointLabel} x={x} y={height - 6} fill={pointLabel === coordinates.at(-1)?.label ? '#bef264' : '#71717a'} fontSize="10" textAnchor={x < width / 3 ? 'start' : x > width * 0.66 ? 'end' : 'middle'}>
@@ -53,3 +53,5 @@ export default function TrendChart({ points, label, id, compact = false }: Trend
     </figure>
   );
 }
+
+function formatValue(value: number | undefined) { return value === undefined ? '' : Number.isInteger(value) ? String(value) : value.toFixed(1); }

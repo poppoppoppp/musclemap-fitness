@@ -69,7 +69,7 @@
 | Growth data loop: confirm weight migration and approve architecture | completed |
 | Growth data loop: write design and implementation plan | completed |
 | Growth data loop: real strength and range derivation | completed |
-| Growth data loop: body metric repository and CRUD flow | in_progress |
-| Growth data loop: IndexedDB photo repository and CRUD flow | in_progress |
-| Growth data loop: snap sheets, routes, and entry audit | in_progress |
-| Growth data loop: full regression and 390px visual QA | pending |
+| Growth data loop: body metric repository and CRUD flow | completed |
+| Growth data loop: IndexedDB photo repository and CRUD flow | completed |
+| Growth data loop: snap sheets, routes, and entry audit | completed |
+| Growth data loop: full regression and 390px visual QA | completed |

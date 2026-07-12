@@ -60,7 +60,7 @@ export default function CurrentExerciseCard({ exercise, position, totalExercises
         </details>
       ) : null}
 
-      <WorkoutSetTable exerciseId={exercise.id} sets={exercise.sets} onSetChange={onSetChange} onDeleteSet={onDeleteSet} />
+      <WorkoutSetTable exerciseId={exercise.id} weightType={detail?.weightType} sets={exercise.sets} onSetChange={onSetChange} onDeleteSet={onDeleteSet} />
 
       <div className="mt-3 grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-2.5">
         <button type="button" onClick={() => onAddSet(exercise.id)} data-testid="add-set" className="min-h-12 rounded-xl border border-lime-300/30 bg-black/20 px-2 text-sm font-black text-lime-300 transition hover:border-lime-300/55 hover:bg-lime-300/[0.05] focus:outline-none focus:ring-2 focus:ring-lime-300/50">+ 添加一组</button>

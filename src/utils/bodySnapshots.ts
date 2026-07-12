@@ -8,7 +8,7 @@ export function readBodySnapshots(): BodyMetricRecord[] {
   return createBodyMetricRepository().list();
 }
 
-export function getLatestBodySnapshot(snapshots: BodyMetricRecord[]): BodyMetricRecord | null {
+export function getLatestBodySnapshot(snapshots: unknown[]): BodyMetricRecord | null {
   return snapshots.map(normalizeBodyMetricRecord).filter((record): record is BodyMetricRecord => record !== null)
     .sort((left, right) => right.date.localeCompare(left.date) || right.updatedAt.localeCompare(left.updatedAt))[0] ?? null;
 }

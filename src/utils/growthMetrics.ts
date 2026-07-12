@@ -81,13 +81,14 @@ export function deriveStrengthTrends(logs: WorkoutLog[], bodyRecords: BodyMetric
   return [...grouped.entries()].map(([exerciseId, value]) => {
     const exercise = getExerciseById(exerciseId)!;
     const points = value.points.sort((left, right) => left.date.localeCompare(right.date));
+    const status: StrengthTrend['status'] = points.length === 0 ? 'empty' : points.length === 1 ? 'single' : 'trend';
     return {
       exerciseId,
       label: exercise.name,
       weightType: exercise.weightType,
       lastRecordedAt: value.lastRecordedAt,
       points,
-      status: points.length === 0 ? 'empty' : points.length === 1 ? 'single' : 'trend',
+      status,
       missingBodyWeightCount: value.missingBodyWeightCount
     };
   }).sort((left, right) => right.lastRecordedAt.localeCompare(left.lastRecordedAt));

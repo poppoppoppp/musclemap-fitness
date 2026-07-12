@@ -2,10 +2,11 @@ import type { BackupSummary, MuscleMapBackupData, MuscleMapBackupFile } from '..
 import type { GeneratedPlan, WorkoutLog, WorkoutLogExercise, WorkoutSet } from '../types/workout';
 import { PLAN_STORAGE_KEY } from './planRules';
 import { readStorage } from './storage';
-import { BODY_SNAPSHOTS_KEY, isBodySnapshot, readBodySnapshots } from './bodySnapshots';
+import { BODY_SNAPSHOTS_KEY, readBodySnapshots } from './bodySnapshots';
+import { normalizeBodyMetricRecord } from '../repositories/bodyMetricRepository';
 
 export const BACKUP_APP_NAME = 'MuscleMap Fitness';
-export const BACKUP_EXPORT_VERSION = 2;
+export const BACKUP_EXPORT_VERSION = 3;
 export const WORKOUT_LOGS_KEY = 'musclemap.workoutLogs.v0.3';
 export const LATEST_WORKOUT_LOG_KEY = 'musclemap.latestWorkoutLog.v0.3';
 
@@ -77,7 +78,7 @@ export function validateBackupText(text: string): ValidationResult {
   }
 
   if (parsed.app !== BACKUP_APP_NAME) return { ok: false, error: 'wrong-app' };
-  if (parsed.exportVersion !== 1 && parsed.exportVersion !== BACKUP_EXPORT_VERSION) return { ok: false, error: 'unsupported-version' };
+  if (parsed.exportVersion !== 1 && parsed.exportVersion !== 2 && parsed.exportVersion !== BACKUP_EXPORT_VERSION) return { ok: false, error: 'unsupported-version' };
   if (typeof parsed.exportedAt !== 'string' || !isPlainObject(parsed.data)) return { ok: false, error: 'missing-fields' };
 
   const data = parsed.data;
@@ -97,10 +98,12 @@ export function validateBackupText(text: string): ValidationResult {
     return { ok: false, error: 'damaged-workout-logs' };
   }
 
-  const bodySnapshots = parsed.exportVersion === 1 ? [] : data.bodySnapshots;
-  if (!Array.isArray(bodySnapshots) || !bodySnapshots.every(isBodySnapshot)) {
+  const rawBodySnapshots = parsed.exportVersion === 1 ? [] : data.bodySnapshots;
+  if (!Array.isArray(rawBodySnapshots)) {
     return { ok: false, error: 'damaged-body-snapshots' };
   }
+  const bodySnapshots = rawBodySnapshots.map(normalizeBodyMetricRecord);
+  if (bodySnapshots.some((record) => record === null)) return { ok: false, error: 'damaged-body-snapshots' };
 
   const backup: MuscleMapBackupFile = {
     app: BACKUP_APP_NAME,
@@ -110,7 +113,7 @@ export function validateBackupText(text: string): ValidationResult {
       latestGeneratedPlan: data.latestGeneratedPlan,
       workoutLogs: data.workoutLogs,
       latestWorkoutLog: data.latestWorkoutLog,
-      bodySnapshots
+      bodySnapshots: bodySnapshots.filter((record): record is NonNullable<typeof record> => record !== null)
     }
   };
 

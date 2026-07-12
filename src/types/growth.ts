@@ -5,6 +5,7 @@ export type BodyMetricId = 'weight' | 'waist' | 'arm';
 export interface GrowthTrendPoint {
   label: string;
   value: number;
+  detail?: string;
 }
 
 export interface TrainingOverviewMetrics {

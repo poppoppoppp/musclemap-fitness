@@ -1,33 +1,12 @@
-import type { TrainingOverviewMetrics } from '../../types/growth';
+import type { TrainingOverviewResult } from '../../types/growth';
 
-export default function OverviewCard({ metrics }: { metrics: TrainingOverviewMetrics }) {
+export default function OverviewCard({ result }: { result: TrainingOverviewResult }) {
+  const { current, changes } = result;
   const items = [
-    { label: '完成训练', value: metrics.completedWorkouts, unit: '次', comparison: metrics.completedWorkouts > 0 ? '比上周期 ↑12%' : '等待首次训练' },
-    { label: '活跃周数', value: metrics.activeWeeks, unit: '周', comparison: metrics.activeWeeks > 0 ? '比上周期 ↑1周' : '本周期暂无记录' },
-    { label: '平均每周训练', value: metrics.averagePerActiveWeek, unit: '次/周', comparison: metrics.averagePerActiveWeek > 0 ? '比上周期 ↑0.6次' : '完成训练后生成' }
+    { id: 'completed-workouts', label: '完成训练', value: current.completedWorkouts, unit: '次', change: changes?.completedWorkouts },
+    { id: 'active-weeks', label: '活跃周数', value: current.activeWeeks, unit: '周', change: changes?.activeWeeks },
+    { id: 'average-weekly', label: '平均每周训练', value: current.averagePerActiveWeek, unit: '次/周', change: changes?.averagePerActiveWeek }
   ];
-
-  return (
-    <section data-testid="growth-overview-card" className="relative overflow-hidden rounded-[24px] border border-lime-300/20 bg-[#111611]/95 p-5 shadow-[0_20px_55px_rgba(0,0,0,0.18)]">
-      <div aria-hidden="true" className="absolute right-4 top-0 h-28 w-28 rounded-full bg-lime-300/[0.07] blur-3xl" />
-      <div className="relative">
-        <div className="flex items-center gap-2">
-          <h2 className="text-xl font-black tracking-[-0.025em] text-white">成长概览</h2>
-          <span className="flex h-5 w-5 items-center justify-center rounded-full border border-zinc-600 text-[0.65rem] font-bold text-zinc-400">i</span>
-        </div>
-        <div className="mt-7 grid grid-cols-3 divide-x divide-white/10">
-          {items.map((item) => (
-            <div key={item.label} className="min-w-0 px-3 first:pl-0 last:pr-0">
-              <p className="text-[1.65rem] font-black tracking-[-0.04em] text-white sm:text-[2rem]">
-                {item.value}<span className="ml-1 text-xs font-bold tracking-normal text-zinc-400">{item.unit}</span>
-              </p>
-              <p className="mt-2 text-xs font-semibold text-zinc-300">{item.label}</p>
-              <p className="mt-1.5 text-[0.65rem] leading-4 text-lime-300/90">{item.comparison}</p>
-            </div>
-          ))}
-        </div>
-        <p className="mt-6 border-t border-white/10 pt-4 text-center text-sm leading-6 text-zinc-400">保持稳定的训练节奏，你正在持续进步！</p>
-      </div>
-    </section>
-  );
+  return <section data-testid="growth-overview-card" className="rounded-[24px] border border-lime-300/20 bg-[#111611]/95 p-5"><h2 className="text-xl font-black">成长概览</h2>{current.completedWorkouts === 0 ? <div className="py-8 text-center"><p className="font-bold text-zinc-300">暂无训练记录</p><p className="mt-2 text-sm text-zinc-500">完成训练后会生成真实成长概览。</p></div> : <div className="mt-6 grid grid-cols-3 divide-x divide-white/10">{items.map((item) => <div key={item.id} className="min-w-0 px-3 first:pl-0 last:pr-0"><p data-testid={`overview-${item.id}`} className="text-[1.6rem] font-black tracking-[-0.04em]">{format(item.value)}<span className="ml-1 text-xs tracking-normal text-zinc-400">{item.unit}</span></p><p className="mt-2 text-xs font-semibold text-zinc-300">{item.label}</p>{item.change !== undefined ? <p data-testid="overview-period-comparison" className="mt-1 text-[0.68rem] text-lime-300">较上周期 {item.change > 0 ? '+' : ''}{format(item.change)}{item.unit}</p> : null}</div>)}</div>}</section>;
 }
+function format(value: number) { const rounded = Math.round(value * 10) / 10; return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1); }

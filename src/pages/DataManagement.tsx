@@ -121,7 +121,7 @@ export default function DataManagement() {
 
             <div className="mt-6 grid grid-cols-3">
               <ProfileMetric label="训练次数" value={`${trainingCount}次`} testId="profile-training-count" />
-              <ProfileMetric label="当前体重" value={formatMeasurement(latestBodySnapshot?.bodyWeightKg, 'kg')} testId="profile-current-weight" separated />
+              <ProfileMetric label="当前体重" value={formatMeasurement(latestBodySnapshot?.weightKg, 'kg')} testId="profile-current-weight" separated />
               <ProfileMetric label="当前腰围" value={formatMeasurement(latestBodySnapshot?.waistCm, 'cm')} testId="profile-current-waist" separated />
             </div>
 

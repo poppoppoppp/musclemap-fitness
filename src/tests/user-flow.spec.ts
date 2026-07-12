@@ -75,11 +75,11 @@ test('body snapshot utilities select the latest dated valid record', () => {
       { id: 'newer-created', date: '2026-06-08', waistCm: 78, createdAt: '2026-06-08T10:00:00.000Z' },
       { id: 'latest', date: '2026-06-08', bodyWeightKg: 70.5, waistCm: 77.5, createdAt: '2026-06-08T11:00:00.000Z' }
     ])
-  ).toMatchObject({ id: 'latest', bodyWeightKg: 70.5, waistCm: 77.5 });
+  ).toMatchObject({ id: 'latest', weightKg: 70.5, waistCm: 77.5 });
   expect(getLatestBodySnapshot([])).toBeNull();
 });
 
-test('backup v2 validates body snapshots and normalizes legacy v1 backups', () => {
+test('backup v3 normalizes legacy body snapshots and keeps arm measurements', () => {
   const commonData = { latestGeneratedPlan: null, workoutLogs: [], latestWorkoutLog: null };
   const legacy = validateBackupText(JSON.stringify({
     app: 'MuscleMap Fitness',
@@ -100,6 +100,13 @@ test('backup v2 validates body snapshots and normalizes legacy v1 backups', () =
     }
   }));
   expect(current.ok).toBe(true);
+  if (current.ok) expect(current.backup.data.bodySnapshots[0]).toMatchObject({ weightKg: 70.5, waistCm: 78 });
+
+  const v3 = validateBackupText(JSON.stringify({
+    app: 'MuscleMap Fitness', exportVersion: 3, exportedAt: '2026-06-08T12:00:00.000Z',
+    data: { ...commonData, bodySnapshots: [{ id: 'body-v3', date: '2026-06-08', weightKg: 70, armCm: 35, createdAt: '2026-06-08T12:00:00.000Z', updatedAt: '2026-06-08T12:00:00.000Z' }] }
+  }));
+  expect(v3.ok).toBe(true);
 
   const damaged = validateBackupText(JSON.stringify({
     app: 'MuscleMap Fitness',
@@ -2308,11 +2315,11 @@ test('data management exports current local backup data', async ({ page }) => {
 
   expect(download.suggestedFilename()).toMatch(/^musclemap-backup-\d{4}-\d{2}-\d{2}\.json$/);
   expect(exported.app).toBe('MuscleMap Fitness');
-  expect(exported.exportVersion).toBe(2);
+  expect(exported.exportVersion).toBe(3);
   expect(typeof exported.exportedAt).toBe('string');
   expect(exported.data.workoutLogs).toHaveLength(2);
   expect(exported.data.bodySnapshots).toEqual([
-    { id: 'body-export', date: '2026-05-25', bodyWeightKg: 70.5, waistCm: 78, createdAt: '2026-05-25T09:00:00.000Z' }
+    { id: 'body-export', date: '2026-05-25', weightKg: 70.5, waistCm: 78, createdAt: '2026-05-25T09:00:00.000Z', updatedAt: '2026-05-25T09:00:00.000Z' }
   ]);
 });
 
@@ -2397,7 +2404,7 @@ test('data management validates imported backup files before overwriting storage
   expect(await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.workoutLogs.v0.3') ?? '[]'))).toHaveLength(1);
   expect(await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.latestWorkoutLog.v0.3') ?? 'null').id)).toBe('imported-log');
   expect(await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.bodySnapshots.v0.1') ?? '[]'))).toEqual([
-    { id: 'imported-body', date: '2026-05-25', bodyWeightKg: 69.8, waistCm: 77, createdAt: '2026-05-25T08:00:00.000Z' }
+    { id: 'imported-body', date: '2026-05-25', weightKg: 69.8, waistCm: 77, createdAt: '2026-05-25T08:00:00.000Z', updatedAt: '2026-05-25T08:00:00.000Z' }
   ]);
 
   await page.reload();

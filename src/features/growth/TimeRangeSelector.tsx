@@ -27,9 +27,9 @@ export default function TimeRangeSelector({ value, onChange }: TimeRangeSelector
         })}
       </div>
       <span aria-hidden="true" className="h-7 w-px bg-white/10" />
-      <button type="button" aria-label="自定义时间范围（即将上线）" disabled className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-lime-300 opacity-70">
+      <span aria-label="时间范围" className="flex h-10 w-10 shrink-0 items-center justify-center text-lime-300/70">
         <CalendarIcon className="h-[1.15rem] w-[1.15rem]" />
-      </button>
+      </span>
     </div>
   );
 }

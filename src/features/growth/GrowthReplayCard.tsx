@@ -1,12 +1,7 @@
+import { useState } from 'react';
+import ConfirmDialog from '../../components/ui/ConfirmDialog';
+
 export default function GrowthReplayCard() {
-  return (
-    <section aria-label="成长回放即将上线" className="relative overflow-hidden rounded-[24px] border border-lime-300/20 bg-[#111611]/95 p-5">
-      <div aria-hidden="true" className="absolute -left-8 top-1/2 h-28 w-28 -translate-y-1/2 rounded-full bg-lime-300/10 blur-2xl" />
-      <div className="relative flex items-center gap-4">
-        <span aria-hidden="true" className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-lime-300/60 bg-black/35 text-lime-300 shadow-[0_0_28px_rgba(163,230,53,0.16)]"><span className="ml-1 text-2xl">▶</span></span>
-        <div className="min-w-0 flex-1"><h2 className="text-lg font-black tracking-[-0.02em] text-white">成长回放（即将上线）</h2><p className="mt-1 text-sm leading-6 text-zinc-400">一键生成变化视频，见证蜕变过程</p></div>
-        <span aria-hidden="true" className="text-3xl font-light text-lime-300">›</span>
-      </div>
-    </section>
-  );
+  const [open, setOpen] = useState(false);
+  return <><button type="button" aria-label="了解成长回放" onClick={() => setOpen(true)} className="flex w-full items-center gap-4 rounded-[24px] border border-lime-300/20 bg-[#111611] p-5 text-left"><span aria-hidden="true" className="grid h-14 w-14 place-items-center rounded-full border border-lime-300/50 text-lime-300">▶</span><span><strong className="block text-lg text-white">成长回放（即将上线）</strong><span className="mt-1 block text-sm text-zinc-400">了解后续照片序列如何生成变化视频</span></span></button><ConfirmDialog open={open} title="成长回放即将上线" message="后续将按同一分类和拍摄日期排序照片，完成位置与缩放对齐后生成平滑变化视频。本版不会生成模拟视频。" confirmLabel="知道了" onConfirm={() => setOpen(false)} onCancel={() => setOpen(false)} /></>;
 }

@@ -2,9 +2,12 @@ import { createBrowserRouter } from 'react-router-dom';
 import App from './App';
 import DataManagement from '../pages/DataManagement';
 import Dashboard from '../pages/Dashboard';
+import BodyMetricHistoryPage from '../pages/BodyMetricHistoryPage';
 import ExerciseDetail from '../pages/ExerciseDetail';
 import ExerciseLibrary from '../pages/ExerciseLibrary';
 import GrowthPage from '../pages/GrowthPage';
+import ProgressPhotoGalleryPage from '../pages/ProgressPhotoGalleryPage';
+import ProgressPhotoComparePage from '../pages/ProgressPhotoComparePage';
 import MuscleMap from '../pages/MuscleMap';
 import MusicSettings from '../pages/MusicSettings';
 import NewTrainingTemplate from '../pages/NewTrainingTemplate';
@@ -25,6 +28,9 @@ export const router = createBrowserRouter([
       { path: 'exercises', element: <ExerciseLibrary /> },
       { path: 'exercises/:exerciseId', element: <ExerciseDetail /> },
       { path: 'growth', element: <GrowthPage /> },
+      { path: 'growth/body-records', element: <BodyMetricHistoryPage /> },
+      { path: 'growth/photos', element: <ProgressPhotoGalleryPage /> },
+      { path: 'growth/photos/compare/:category', element: <ProgressPhotoComparePage /> },
       { path: 'plan-builder', element: <PlanBuilder /> },
       { path: 'templates/new', element: <NewTrainingTemplate /> },
       { path: 'data-management', element: <DataManagement /> },

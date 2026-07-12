@@ -24,7 +24,7 @@ test('overview compares a finite range with the preceding equal period and omits
   const finite = deriveTrainingOverview(logs, '4w', now);
   expect(finite.current.completedWorkouts).toBe(2);
   expect(finite.previous?.completedWorkouts).toBe(1);
-  expect(finite.changes.completedWorkouts).toBe(1);
+  expect(finite.changes!.completedWorkouts).toBe(1);
   const all = deriveTrainingOverview(logs, 'all', now);
   expect(all.current.completedWorkouts).toBe(4);
   expect(all.previous).toBeNull();

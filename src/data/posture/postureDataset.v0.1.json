@@ -1,0 +1,824 @@
+{
+  "schemaVersion": "0.1-recovered",
+  "datasetName": "MuscleMap 体态改善数据集",
+  "generatedAt": "2026-07-13T21:15:28+08:00",
+  "language": "zh-CN",
+  "meta": {
+    "declaredInventory": {
+      "effectiveProtocols": 12,
+      "theoryMaterials": 2,
+      "guidanceMaterials": 1
+    },
+    "currentRecoveryStatus": {
+      "protocolsReady": 1,
+      "protocolsConditionallyReady": 1,
+      "protocolsMetadataOnly": 10,
+      "theoryReady": 1,
+      "theoryMetadataOnly": 1,
+      "guidanceMetadataOnly": 1
+    },
+    "implementationRule": "V0.1 UI 只能展示 status=ready 的方案。status=conditionally_ready 的方案须经人工复核后才能展示；status=metadata_only 的条目仅用于保留编号与恢复线索，绝不能进入用户界面。",
+    "integrityRules": [
+      "视频未说明的组数、次数、时长、频率、休息和呼吸要求保持为空，不自行补全。",
+      "sourceOriginal 保存视频原始主张或忠实提取；standardized 保存 MuscleMap 标准化内容。",
+      "视频中的诊断、疗效百分比和绝对化结论不得直接写入公开 App 文案。",
+      "同一标准动作只保留一个动作实体；不同方案只保存顺序、处方和专项提示。",
+      "加入当前训练时生成方案快照，后续数据集更新不得修改既有训练和历史记录。"
+    ],
+    "recoveryNote": "当前可直接核对的结构化源文件仅覆盖 SHOULDER_001。THORACIC_001 与 THEORY_002 根据此前对话中保留下来的明确整理结果恢复。其余条目只保留已确认编号、主题和部分来源线索，未伪造动作内容。"
+  },
+  "postureIssues": [
+    {
+      "id": "humeral-anterior-translation",
+      "name": "肱骨前移",
+      "description": "肩关节与肩胛控制相关的体态表现。"
+    },
+    {
+      "id": "shoulder-clicking-discomfort",
+      "name": "肩部弹响或不适",
+      "description": "训练或抬臂过程中出现弹响、夹挤感或不适的表现。"
+    },
+    {
+      "id": "winged-scapula",
+      "name": "翼状肩胛",
+      "description": "肩胛骨内侧缘或下角相对突出。"
+    },
+    {
+      "id": "rounded-upper-posture",
+      "name": "含胸驼背",
+      "description": "胸廓、肩带与上肢位置共同形成的上半身体态表现。"
+    },
+    {
+      "id": "rib-flare",
+      "name": "肋骨外翻",
+      "description": "下位肋骨前突或呼吸与躯干控制相关的表现。"
+    },
+    {
+      "id": "thoracic-curve-flattening",
+      "name": "胸曲变直",
+      "description": "胸椎生理曲度相对变平的体态表现。"
+    },
+    {
+      "id": "scoliosis-related-posture",
+      "name": "脊柱侧弯相关体态",
+      "description": "仅作为视频涉及的体态标签，不代表医学诊断。"
+    },
+    {
+      "id": "scapular-medial-discomfort",
+      "name": "肩胛骨内侧不适",
+      "description": "肩胛骨内侧区域紧张或不适的表现。"
+    },
+    {
+      "id": "pelvic-anterior-tilt",
+      "name": "骨盆前倾",
+      "description": "骨盆前倾及其相关躯干、髋部控制表现。"
+    },
+    {
+      "id": "forward-head-posture",
+      "name": "头前移",
+      "description": "头部相对躯干前移的体态表现。"
+    }
+  ],
+  "standardExercises": [
+    {
+      "id": "quadruped-scapular-protraction-stability",
+      "name": "四点跪姿肩胛前伸稳定",
+      "aliases": [
+        "跪姿死虫（视频称呼）"
+      ],
+      "category": "体态改善",
+      "equipment": [
+        "瑜伽垫"
+      ],
+      "sourceOriginal": {
+        "summary": "视频将其作为肩胛稳定训练，并称可改善肩部弹响或不适。",
+        "timestamp": "约 01:55–05:15"
+      },
+      "standardized": {
+        "startPosition": "四点跪姿，双手撑地，肩关节位于手腕正上方，膝盖着地，肘部伸直。手腕不适时可改为拳撑。",
+        "executionSteps": [
+          "保持大臂外旋。",
+          "主动将肩胛骨向外展开，使胸口远离地面。",
+          "将上背部尽可能顶高，在该位置保持并配合均匀呼吸。",
+          "控制肩胛回到自然位置。"
+        ],
+        "breathing": "保持姿势时均匀呼吸；视频未给出固定呼吸次数。",
+        "keyCues": [
+          "肩关节位于手腕正上方",
+          "肘部保持伸直",
+          "大臂持续外旋",
+          "胸口远离地面",
+          "避免耸肩"
+        ],
+        "commonErrors": [
+          "肩部塌陷",
+          "大臂内旋",
+          "肘部屈曲",
+          "只通过弓腰顶背",
+          "肩胛骨没有主动前伸"
+        ],
+        "regression": "手腕不适时改为拳撑。",
+        "progression": "双膝离地进入熊爬悬停位，保持相同肩胛前伸与大臂外旋要求。",
+        "stopConditions": [
+          "出现锐痛",
+          "明显麻木或无力",
+          "症状持续加重"
+        ]
+      },
+      "verificationStatus": "待科学核验",
+      "dataConfidence": "高"
+    },
+    {
+      "id": "band-assisted-scapular-posterior-tilt-raise",
+      "name": "弹力带辅助肩胛后倾上举",
+      "aliases": [
+        "视频未给出正式名称"
+      ],
+      "category": "体态改善",
+      "equipment": [
+        "低阻力弹力带"
+      ],
+      "sourceOriginal": {
+        "summary": "视频称该动作尽可能恢复肩胛骨后倾能力。",
+        "timestamp": "约 05:18–06:15"
+      },
+      "standardized": {
+        "startPosition": "跪姿或站姿。弹力带绕过训练侧上臂或肘部，并从身体后侧形成牵拉；训练侧拇指放在肩部附近。弹力带具体绕法仍需逐帧复核。",
+        "executionSteps": [
+          "保持身体和头部稳定。",
+          "在弹力带阻力下将肘部向上抬起。",
+          "控制肘部回到起始位置。"
+        ],
+        "breathing": "视频明确：吸气上抬，呼气回到起始位置。",
+        "keyCues": [
+          "使用轻阻力",
+          "躯干保持稳定",
+          "头部不跟随动作",
+          "避免腰椎过伸",
+          "肘部不要强行向身体内侧挤压"
+        ],
+        "commonErrors": [
+          "腰椎后仰或过伸",
+          "身体旋转",
+          "头部前伸",
+          "阻力过大",
+          "肘部强行内夹"
+        ],
+        "regression": "使用更轻弹力带并减小抬臂幅度。",
+        "progression": null,
+        "stopConditions": [
+          "出现锐痛",
+          "明显夹挤感",
+          "麻木",
+          "症状持续加重"
+        ]
+      },
+      "verificationStatus": "待科学核验",
+      "dataConfidence": "中高"
+    },
+    {
+      "id": "infraspinatus-teres-minor-local-pressure-release",
+      "name": "冈下肌与小圆肌局部压放松",
+      "aliases": [
+        "视频称放松冈下和小圆"
+      ],
+      "category": "可选热身",
+      "equipment": [
+        "固定杠铃杆或其他稳定圆柱支点"
+      ],
+      "sourceOriginal": {
+        "summary": "视频建议训练前先放松冈下肌与小圆肌。",
+        "timestamp": "约 07:10–07:55"
+      },
+      "standardized": {
+        "startPosition": "侧卧或侧靠，将肩后侧冈下肌、小圆肌区域置于稳定支点上。",
+        "executionSteps": [
+          "用身体重量进行轻度、可控的局部按压。",
+          "短时间保持后离开支点。"
+        ],
+        "breathing": "视频未说明。",
+        "keyCues": [
+          "压力保持可控",
+          "不要直接压在骨性突起",
+          "避开腋窝神经血管区域"
+        ],
+        "commonErrors": [
+          "压力过大",
+          "长时间持续压迫",
+          "压到骨点或腋窝",
+          "出现放射性麻木仍继续"
+        ],
+        "regression": "改用按摩球靠墙并降低压力。",
+        "progression": null,
+        "stopConditions": [
+          "麻木",
+          "刺痛",
+          "放射痛",
+          "明显无力",
+          "疼痛加重"
+        ]
+      },
+      "verificationStatus": "待安全性与科学核验",
+      "dataConfidence": "中",
+      "appEligibility": "hold",
+      "appEligibilityReason": "公开上线前需单独审核，不建议现阶段作为标准处方。"
+    },
+    {
+      "id": "kneeling-posterior-thoracic-expansion-breathing",
+      "name": "跪姿胸椎后侧扩张呼吸",
+      "aliases": [
+        "背入式呼吸",
+        "胸椎呼吸训练"
+      ],
+      "category": "呼吸与胸廓控制",
+      "equipment": [
+        "瑜伽垫或稳定支撑面"
+      ],
+      "sourceOriginal": {
+        "summary": "视频将该动作与脊柱侧弯、胸曲变直、翼状肩胛和肩胛骨内侧不适联系，并提出每天约 5 分钟。",
+        "timestamp": null
+      },
+      "standardized": {
+        "startPosition": "跪姿或接近四点支撑，膝部着地，身体向前俯，双臂向前获得稳定支撑。具体手臂与骨盆位置仍需重新逐帧确认。",
+        "executionSteps": [
+          "保持颈肩放松和躯干稳定。",
+          "经鼻吸气，主动感受后侧肋骨和肩胛间区域扩张。",
+          "缓慢呼气，使胸廓自然回落。",
+          "重复呼吸循环，不以抬胸或腰椎过伸换取吸气幅度。"
+        ],
+        "breathing": "鼻吸气时扩张胸廓后侧；缓慢呼气回落。",
+        "keyCues": [
+          "肩颈保持放松",
+          "感受后侧肋骨扩张",
+          "避免抬胸",
+          "避免腰椎过伸"
+        ],
+        "commonErrors": [
+          "吸气时胸口明显抬起",
+          "腰椎过伸",
+          "耸肩",
+          "屏气",
+          "吸气过快"
+        ],
+        "regression": null,
+        "progression": null,
+        "stopConditions": [
+          "出现头晕或明显呼吸不适",
+          "疼痛加重"
+        ]
+      },
+      "verificationStatus": "条件性可用，动作方向基本明确，起始姿势与广泛疗效主张仍需复核",
+      "dataConfidence": "中"
+    }
+  ],
+  "protocols": [
+    {
+      "id": "SHOULDER_001",
+      "name": "肩部弹响/不适与肩胛控制方案",
+      "status": "ready",
+      "appEligibility": "review_before_release",
+      "targetIssueIds": [
+        "humeral-anterior-translation",
+        "shoulder-clicking-discomfort"
+      ],
+      "summary": "以肩胛前伸稳定与肩胛后倾控制为核心的两动作方案。",
+      "sourceOriginal": {
+        "creator": "谭成义",
+        "videoTitle": "十个健身九个疼，还有一个特别疼，肩峰撞击，肩部不适弹响的背后原因以及改善动作教学，大家收藏练起来吧",
+        "sourceFile": "@谭成义 十个健身九个疼，还有一个特别疼，肩峰撞击，肩部不适弹响的背后原因以及改善动作教学，大家收藏练起来吧 1080P.mp4",
+        "videoDuration": "约 8 分 45 秒",
+        "coreClaim": "视频将肩部弹响或不适与肱骨前移、肩胛控制及肩胛后倾能力联系起来。",
+        "claimsNotForPublicCopy": [
+          "两个动作可缓解约 80%–90% 的肩部疼痛或不适。"
+        ]
+      },
+      "exerciseItems": [
+        {
+          "exerciseId": "quadruped-scapular-protraction-stability",
+          "order": 1,
+          "roleInProtocol": "核心动作",
+          "prescription": {
+            "sets": 3,
+            "reps": null,
+            "durationSeconds": null,
+            "restSeconds": null,
+            "frequencyText": null,
+            "rawText": "3 组；每组次数、保持时间、休息和训练频率均未说明。"
+          },
+          "roleExplanation": "训练肩胛前伸位置下的稳定控制。",
+          "specialCues": [
+            "大臂外旋",
+            "胸口远离地面",
+            "避免只用腰背弓起代偿"
+          ],
+          "sourceOriginalText": "视频明确给出 3 组，其余剂量未说明。"
+        },
+        {
+          "exerciseId": "band-assisted-scapular-posterior-tilt-raise",
+          "order": 2,
+          "roleInProtocol": "核心动作",
+          "prescription": {
+            "sets": null,
+            "reps": null,
+            "durationSeconds": null,
+            "restSeconds": null,
+            "frequencyText": null,
+            "rawText": "视频未说明"
+          },
+          "roleExplanation": "在弹力带辅助下练习肩胛后倾与上举配合。",
+          "specialCues": [
+            "轻阻力",
+            "躯干和头部稳定",
+            "避免腰椎过伸"
+          ],
+          "sourceOriginalText": "视频明确吸气上抬、呼气回位；未给出训练剂量。"
+        },
+        {
+          "exerciseId": "infraspinatus-teres-minor-local-pressure-release",
+          "order": 0,
+          "roleInProtocol": "可选训练前放松，不属于两项核心动作",
+          "prescription": {
+            "sets": null,
+            "reps": null,
+            "durationSeconds": null,
+            "restSeconds": null,
+            "frequencyText": "视频建议训练前使用",
+            "rawText": "约 10–20 秒"
+          },
+          "roleExplanation": "训练前肩后侧局部放松。",
+          "specialCues": [
+            "仅使用可控轻压力",
+            "避开骨点与腋窝"
+          ],
+          "sourceOriginalText": "视频建议训练前按压约 10–20 秒。",
+          "includeByDefault": false,
+          "appEligibility": "hold"
+        }
+      ],
+      "theoryIds": [],
+      "guidanceIds": [],
+      "verificationStatus": "内容提取与标准化已完成；医学证据核验未完成",
+      "notes": [
+        "核心动作可进入人工审核；可选杠铃杆压放松暂缓公开上线。",
+        "不得把视频疗效百分比写入 App。"
+      ]
+    },
+    {
+      "id": "SHOULDER_002",
+      "name": "冈上肌激活与肩部训练相关方案",
+      "status": "metadata_only",
+      "appEligibility": "hidden",
+      "targetIssueIds": [
+        "shoulder-clicking-discomfort"
+      ],
+      "summary": "历史整理确认与肩部训练、冈上肌激活相关；完整动作与剂量尚未恢复。",
+      "sourceOriginal": {
+        "creator": "待恢复",
+        "shortLink": "https://v.douyin.com/ZrKoa-L2Lrk/",
+        "videoTitle": "冈上肌激活/肩部训练相关素材（历史摘要）"
+      },
+      "exerciseItems": [],
+      "recoveryMissing": [
+        "完整视频核心观点",
+        "动作顺序",
+        "起始姿势",
+        "执行步骤",
+        "呼吸",
+        "剂量",
+        "常见错误"
+      ]
+    },
+    {
+      "id": "PELVIS_001",
+      "name": "骨盆前倾筛查与处理三步法",
+      "status": "metadata_only",
+      "appEligibility": "hidden",
+      "targetIssueIds": [
+        "pelvic-anterior-tilt"
+      ],
+      "summary": "来源主题包含骨盆前倾的影响、形成原因、筛查方法和处理三步法；完整动作处方尚未恢复。",
+      "sourceOriginal": {
+        "creator": "凯圣王视频，讲解者为拓得时代北京店长阿亮",
+        "shortLink": "https://v.douyin.com/ykBOBqH2B_s/",
+        "videoTitle": "全身功能性筛查与跟练⑥——骨盆前倾"
+      },
+      "exerciseItems": [],
+      "recoveryMissing": [
+        "三步法的完整动作列表",
+        "动作顺序",
+        "呼吸",
+        "组数次数时长频率",
+        "常见错误"
+      ]
+    },
+    {
+      "id": "PELVIS_002",
+      "name": "骨盆前后倾控制与单腿抱膝相关方案",
+      "status": "metadata_only",
+      "appEligibility": "hidden",
+      "targetIssueIds": [
+        "pelvic-anterior-tilt"
+      ],
+      "summary": "历史记录确认涉及骨盆前后倾控制与单腿抱膝；完整执行信息尚未恢复。",
+      "sourceOriginal": {
+        "creator": "待恢复",
+        "shortLink": "https://v.douyin.com/kdvAeKbI5Bs/",
+        "videoTitle": "骨盆前后倾/单腿抱膝相关素材（历史摘要）"
+      },
+      "exerciseItems": [],
+      "recoveryMissing": [
+        "动作正式名称",
+        "起始姿势",
+        "执行步骤",
+        "呼吸",
+        "剂量",
+        "常见错误"
+      ]
+    },
+    {
+      "id": "CERVICAL_001",
+      "name": "头前移改善方案一",
+      "status": "metadata_only",
+      "appEligibility": "hidden",
+      "targetIssueIds": [
+        "forward-head-posture"
+      ],
+      "summary": "历史记录确认主题为头前移；完整方案内容尚未恢复。",
+      "sourceOriginal": {
+        "creator": "待恢复",
+        "shortLink": "https://v.douyin.com/jF6FM_bP0DY/",
+        "videoTitle": "头前移相关素材（历史摘要）"
+      },
+      "exerciseItems": [],
+      "recoveryMissing": [
+        "全部动作",
+        "起始姿势",
+        "执行步骤",
+        "呼吸",
+        "剂量",
+        "常见错误"
+      ]
+    },
+    {
+      "id": "CERVICAL_002",
+      "name": "头颈体态改善方案二",
+      "status": "metadata_only",
+      "appEligibility": "hidden",
+      "targetIssueIds": [
+        "forward-head-posture"
+      ],
+      "summary": "编号已确认，来源主题和完整方案尚未恢复。",
+      "sourceOriginal": {
+        "creator": "待恢复",
+        "shortLink": "https://v.douyin.com/PtR9AY7Hoe0/",
+        "videoTitle": "待恢复"
+      },
+      "exerciseItems": [],
+      "recoveryMissing": [
+        "素材主题",
+        "来源作者",
+        "全部动作与处方"
+      ]
+    },
+    {
+      "id": "UPPER_POSTURE_001",
+      "name": "上半身综合体态改善方案",
+      "status": "metadata_only",
+      "appEligibility": "hidden",
+      "targetIssueIds": [
+        "rounded-upper-posture",
+        "humeral-anterior-translation",
+        "winged-scapula",
+        "rib-flare"
+      ],
+      "summary": "历史编号确认；完整方案动作与来源尚未恢复。",
+      "sourceOriginal": {
+        "creator": "待恢复",
+        "videoTitle": "上半身综合体态素材（历史摘要）"
+      },
+      "exerciseItems": [],
+      "recoveryMissing": [
+        "来源",
+        "动作顺序",
+        "完整处方"
+      ]
+    },
+    {
+      "id": "OROFACIAL_001",
+      "name": "口面部相关训练素材",
+      "status": "metadata_only",
+      "appEligibility": "hidden",
+      "targetIssueIds": [],
+      "summary": "历史编号确认；是否应归入体态改善主数据集仍需重新审核。",
+      "sourceOriginal": {
+        "creator": "待恢复",
+        "videoTitle": "口面部相关素材（历史摘要）"
+      },
+      "exerciseItems": [],
+      "recoveryMissing": [
+        "来源",
+        "具体目标问题",
+        "动作与处方",
+        "分类资格审核"
+      ]
+    },
+    {
+      "id": "THORACIC_001",
+      "name": "跪姿胸椎后侧扩张呼吸方案",
+      "status": "conditionally_ready",
+      "appEligibility": "hidden_until_manual_review",
+      "targetIssueIds": [
+        "thoracic-curve-flattening",
+        "winged-scapula",
+        "scapular-medial-discomfort",
+        "scoliosis-related-posture"
+      ],
+      "summary": "通过跪姿胸廓后侧扩张呼吸练习，训练后侧肋骨扩张与胸廓控制。",
+      "sourceOriginal": {
+        "creator": "Can",
+        "sourceFile": "@Can ✅脊柱侧弯、胸曲变直、翼状肩胛、肩胛骨缝疼都可以去练的王牌体态改善动作，简单易学，在家就能练，新手小白改善体态必须要做的呼吸训练，每天5分钟，还你健康好体态！ 4K_proxy(2).mp4",
+        "coreClaim": "视频称该动作适用于脊柱侧弯、胸曲变直、翼状肩胛和肩胛骨内侧不适，并建议每天约 5 分钟。"
+      },
+      "exerciseItems": [
+        {
+          "exerciseId": "kneeling-posterior-thoracic-expansion-breathing",
+          "order": 1,
+          "roleInProtocol": "核心动作",
+          "prescription": {
+            "sets": null,
+            "reps": null,
+            "durationSeconds": 300,
+            "restSeconds": null,
+            "frequencyText": "视频称每天练习",
+            "rawText": "每天约 5 分钟"
+          },
+          "roleExplanation": "练习胸廓后侧扩张与呼吸控制。",
+          "specialCues": [
+            "鼻吸气",
+            "感受后侧肋骨扩张",
+            "肩颈放松",
+            "避免抬胸和腰椎过伸"
+          ],
+          "sourceOriginalText": "视频主张每天约 5 分钟；广泛体态改善效果仍需核验。"
+        }
+      ],
+      "theoryIds": [
+        "THEORY_002"
+      ],
+      "guidanceIds": [],
+      "verificationStatus": "条件性恢复；动作方向明确，具体起始姿势和适应范围需复核",
+      "notes": [
+        "上线前必须重新核对视频画面中的手臂、骨盆和躯干位置。",
+        "不可把脊柱侧弯等医学问题写成单一动作即可纠正。"
+      ]
+    },
+    {
+      "id": "WINGED_SCAPULA_001",
+      "name": "翼状肩胛改善方案一",
+      "status": "metadata_only",
+      "appEligibility": "hidden",
+      "targetIssueIds": [
+        "winged-scapula"
+      ],
+      "summary": "编号已确认；完整方案尚未恢复。",
+      "sourceOriginal": {
+        "creator": "待恢复",
+        "videoTitle": "待恢复"
+      },
+      "exerciseItems": [],
+      "recoveryMissing": [
+        "来源",
+        "全部动作与处方"
+      ]
+    },
+    {
+      "id": "WINGED_SCAPULA_002",
+      "name": "翼状肩胛改善方案二",
+      "status": "metadata_only",
+      "appEligibility": "hidden",
+      "targetIssueIds": [
+        "winged-scapula"
+      ],
+      "summary": "编号已确认；完整方案尚未恢复。",
+      "sourceOriginal": {
+        "creator": "待恢复",
+        "videoTitle": "待恢复"
+      },
+      "exerciseItems": [],
+      "recoveryMissing": [
+        "来源",
+        "全部动作与处方"
+      ]
+    },
+    {
+      "id": "RIB_FLARE_001",
+      "name": "肋骨外翻与胸廓控制方案",
+      "status": "metadata_only",
+      "appEligibility": "hidden",
+      "targetIssueIds": [
+        "rib-flare"
+      ],
+      "summary": "编号已确认；完整动作方案尚未恢复。",
+      "sourceOriginal": {
+        "creator": "待恢复",
+        "videoTitle": "待恢复"
+      },
+      "exerciseItems": [],
+      "recoveryMissing": [
+        "来源",
+        "动作顺序",
+        "呼吸与处方"
+      ]
+    }
+  ],
+  "theoryMaterials": [
+    {
+      "id": "THEORY_001",
+      "name": "骨盆前倾与肩部问题相关理论素材",
+      "status": "metadata_only",
+      "appEligibility": "hidden",
+      "targetIssueIds": [
+        "pelvic-anterior-tilt",
+        "humeral-anterior-translation",
+        "shoulder-clicking-discomfort"
+      ],
+      "sourceOriginal": {
+        "shortLink": "https://v.douyin.com/YZmnBpUQT2U/",
+        "creator": "待恢复",
+        "videoTitle": "骨盆前倾/肩峰撞击理论相关素材（历史摘要）"
+      },
+      "standardizedSummary": null,
+      "recoveryMissing": [
+        "完整理论观点",
+        "来源作者",
+        "视频原话与标准化边界"
+      ]
+    },
+    {
+      "id": "THEORY_002",
+      "name": "肋骨外翻、含胸驼背、翼状肩胛与肱骨前移的共同处理思路",
+      "status": "ready",
+      "appEligibility": "review_before_release",
+      "targetIssueIds": [
+        "rib-flare",
+        "rounded-upper-posture",
+        "winged-scapula",
+        "humeral-anterior-translation"
+      ],
+      "sourceOriginal": {
+        "coreClaim": "视频将肋骨外翻、含胸驼背、翼状肩胛和肱骨前移视为相互影响的上半身体态表现，并提出统一流程：松解紧张肌群、通过呼吸恢复胸廓位置、强化薄弱稳定肌群。",
+        "specificClaims": [
+          "胸前侧肌群可能紧张。",
+          "胸廓后侧、深层核心和肩胛稳定相关肌群可能薄弱。",
+          "视频将前锯肌、下斜方肌等作为肩胛稳定训练重点。",
+          "视频中关于背阔肌薄弱等说法仅保留为来源主张，不能直接标准化为普遍事实。"
+        ]
+      },
+      "standardizedSummary": {
+        "coreIdea": "多个上半身体态标签可能共享胸廓、肩胛与呼吸控制问题，训练方案可按组织准备、胸廓控制和稳定能力三个方向组织，但仍应根据具体表现选择动作，不能把所有人套入同一诊断。",
+        "threeStageFramework": [
+          {
+            "stage": 1,
+            "name": "组织准备",
+            "description": "处理视频明确指出的过度紧张或活动受限区域。"
+          },
+          {
+            "stage": 2,
+            "name": "胸廓与呼吸控制",
+            "description": "练习胸廓前后侧扩张、呼气回落和躯干位置控制。"
+          },
+          {
+            "stage": 3,
+            "name": "肩胛与核心稳定",
+            "description": "训练前锯肌、下斜方肌及相关躯干稳定能力。"
+          }
+        ],
+        "scopeBoundary": "这是方案组织逻辑，不是医学诊断，也不代表四类体态一定具有完全相同的成因。"
+      },
+      "verificationStatus": "待医学与运动科学审核"
+    }
+  ],
+  "guidanceMaterials": [
+    {
+      "id": "GUIDANCE_001",
+      "name": "体态改善观念引导",
+      "status": "metadata_only",
+      "appEligibility": "hidden",
+      "targetIssueIds": [],
+      "sourceOriginal": null,
+      "standardizedSummary": null,
+      "recoveryMissing": [
+        "原始内容",
+        "标准化文案",
+        "适用展示位置"
+      ]
+    }
+  ],
+  "sourceRegistry": [
+    {
+      "sourceId": "SRC_SHOULDER_001",
+      "linkedItemIds": [
+        "SHOULDER_001"
+      ],
+      "type": "uploaded_video_and_structured_workbook",
+      "creator": "谭成义",
+      "title": "肩部弹响/不适与肩胛控制",
+      "recoveryStatus": "complete"
+    },
+    {
+      "sourceId": "SRC_SHOULDER_002",
+      "linkedItemIds": [
+        "SHOULDER_002"
+      ],
+      "type": "douyin_short_link",
+      "url": "https://v.douyin.com/ZrKoa-L2Lrk/",
+      "recoveryStatus": "metadata_only"
+    },
+    {
+      "sourceId": "SRC_PELVIS_001",
+      "linkedItemIds": [
+        "PELVIS_001"
+      ],
+      "type": "douyin_short_link",
+      "url": "https://v.douyin.com/ykBOBqH2B_s/",
+      "recoveryStatus": "metadata_only"
+    },
+    {
+      "sourceId": "SRC_PELVIS_002",
+      "linkedItemIds": [
+        "PELVIS_002"
+      ],
+      "type": "douyin_short_link",
+      "url": "https://v.douyin.com/kdvAeKbI5Bs/",
+      "recoveryStatus": "metadata_only"
+    },
+    {
+      "sourceId": "SRC_THEORY_001",
+      "linkedItemIds": [
+        "THEORY_001"
+      ],
+      "type": "douyin_short_link",
+      "url": "https://v.douyin.com/YZmnBpUQT2U/",
+      "recoveryStatus": "metadata_only"
+    },
+    {
+      "sourceId": "SRC_CERVICAL_001",
+      "linkedItemIds": [
+        "CERVICAL_001"
+      ],
+      "type": "douyin_short_link",
+      "url": "https://v.douyin.com/jF6FM_bP0DY/",
+      "recoveryStatus": "metadata_only"
+    },
+    {
+      "sourceId": "SRC_CERVICAL_002",
+      "linkedItemIds": [
+        "CERVICAL_002"
+      ],
+      "type": "douyin_short_link",
+      "url": "https://v.douyin.com/PtR9AY7Hoe0/",
+      "recoveryStatus": "metadata_only"
+    },
+    {
+      "sourceId": "SRC_THORACIC_001",
+      "linkedItemIds": [
+        "THORACIC_001"
+      ],
+      "type": "uploaded_proxy_video_previous_conversation",
+      "creator": "Can",
+      "title": "跪姿胸椎后侧扩张呼吸相关视频",
+      "recoveryStatus": "conditional"
+    }
+  ],
+  "recoveryAudit": {
+    "groundedItems": [
+      {
+        "itemId": "SHOULDER_001",
+        "basis": "结构化 Excel：方案说明与方案动作表"
+      },
+      {
+        "itemId": "THORACIC_001",
+        "basis": "此前对话中保留下来的明确标准化名称、目标问题、呼吸方向和每天约 5 分钟信息"
+      },
+      {
+        "itemId": "THEORY_002",
+        "basis": "此前对话中用户粘贴的核心观点与整理摘要"
+      }
+    ],
+    "notRecovered": [
+      "SHOULDER_002",
+      "PELVIS_001",
+      "PELVIS_002",
+      "CERVICAL_001",
+      "CERVICAL_002",
+      "UPPER_POSTURE_001",
+      "OROFACIAL_001",
+      "WINGED_SCAPULA_001",
+      "WINGED_SCAPULA_002",
+      "RIB_FLARE_001",
+      "THEORY_001",
+      "GUIDANCE_001"
+    ],
+    "antiFabricationDecision": "未使用通用健身知识或网络相似视频补写上述缺失条目，因为这会破坏视频原话与标准化内容的可追溯性。"
+  }
+}

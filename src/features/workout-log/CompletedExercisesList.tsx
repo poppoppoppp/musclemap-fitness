@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import DumbbellIcon from '../../components/icons/DumbbellIcon';
 import { getExerciseById } from '../../data/exercises';
 import type { ActiveWorkoutExercise } from '../../types/activeWorkout';
-import { getActiveExerciseElementId, useExerciseElapsed } from './CurrentExerciseCard';
+import { getActiveExerciseElementId, getWorkoutExerciseDetailHref, useExerciseElapsed } from './CurrentExerciseCard';
 import WorkoutSetTable from './WorkoutSetTable';
 
 interface CompletedExercisesListProps {
@@ -61,7 +61,7 @@ function CompletedExerciseItem({ exercise, onAddSet, onDeleteSet, onSetChange, o
       </summary>
       <div data-testid="completed-exercise-details" className="border-t border-white/[0.07] px-3 pb-3 pt-2.5">
         <div className="flex items-center justify-between gap-3">
-          <Link to={`/exercises/${exercise.exerciseId}`} className="text-sm font-bold text-zinc-400 transition hover:text-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/50">查看动作详情</Link>
+          <Link to={getWorkoutExerciseDetailHref(exercise)} className="text-sm font-bold text-zinc-400 transition hover:text-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/50">查看动作详情</Link>
           {elapsed ? <span data-testid="current-exercise-timer" className="font-mono text-xs font-bold text-zinc-500 tabular-nums">用时 {elapsed}</span> : null}
         </div>
         <WorkoutSetTable exerciseId={exercise.id} weightType={detail?.weightType} sets={exercise.sets} onSetChange={onSetChange} onDeleteSet={onDeleteSet} />

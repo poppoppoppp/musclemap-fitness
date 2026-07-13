@@ -4,20 +4,25 @@ import InteractiveMuscleMap2D, { interactive2DMuscleIds, type MuscleMapView } fr
 import { getMuscleById, muscles } from '../../data/muscles';
 import type { Exercise } from '../../types/exercise';
 import { exerciseCategories, filterExercises, getRelatedExercises, type ExerciseCategoryId } from '../../utils/exerciseFilters';
+import PostureProtocolBrowser from './PostureProtocolBrowser';
 
-type PickerMode = 'list' | 'muscle2d';
+type PickerMode = 'list' | 'muscle2d' | 'posture';
 
 type ExercisePickerSheetProps = {
   open: boolean;
   existingExerciseIds: Set<string>;
   onAddExercise: (exerciseId: string) => boolean;
+  onAddPostureProtocol: (protocolId: string) => boolean;
+  initialPostureProtocolId?: string | null;
+  initialPostureIssueId?: string | null;
+  initialPostureScrollTop?: number;
   onClose: () => void;
 };
 
 const defaultMuscleId = 'latissimus-dorsi';
 const transitionMs = 250;
 
-export default function ExercisePickerSheet({ open, existingExerciseIds, onAddExercise, onClose }: ExercisePickerSheetProps) {
+export default function ExercisePickerSheet({ open, existingExerciseIds, onAddExercise, onAddPostureProtocol, initialPostureProtocolId, initialPostureIssueId, initialPostureScrollTop, onClose }: ExercisePickerSheetProps) {
   const [mounted, setMounted] = useState(open);
   const [entered, setEntered] = useState(false);
   const [query, setQuery] = useState('');
@@ -44,7 +49,7 @@ export default function ExercisePickerSheet({ open, existingExerciseIds, onAddEx
       setMounted(true);
       setQuery('');
       setCategory('all');
-      setMode('list');
+      setMode(initialPostureProtocolId ? 'posture' : 'list');
       setSelectedMuscleId(defaultMuscleId);
       setMuscleView('back');
       setStatus('');
@@ -58,7 +63,7 @@ export default function ExercisePickerSheet({ open, existingExerciseIds, onAddEx
       restoreFocusRef.current?.focus();
     }, transitionMs);
     return () => window.clearTimeout(timeout);
-  }, [open]);
+  }, [initialPostureProtocolId, open]);
 
   useEffect(() => {
     if (!open) return;
@@ -167,13 +172,13 @@ export default function ExercisePickerSheet({ open, existingExerciseIds, onAddEx
           <div aria-hidden="true" className="mx-auto mb-2 h-1 w-11 rounded-full bg-white/25" />
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h2 id="exercise-picker-title" className="text-xl font-black tracking-tight">添加动作</h2>
-              <p className="mt-0.5 text-xs text-zinc-400">搜索、筛选或从身体图中精确查找</p>
+              <h2 id="exercise-picker-title" className="text-xl font-black tracking-tight">{mode === 'posture' ? '体态改善' : '添加动作'}</h2>
+              <p className="mt-0.5 text-xs text-zinc-400">{mode === 'posture' ? '将有序动作模块加入当前训练' : '搜索、筛选或从身体图中精确查找'}</p>
             </div>
             <button type="button" aria-label="关闭动作选择器" onClick={onClose} className="grid min-h-11 min-w-11 place-items-center rounded-full text-xl text-zinc-400 transition hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-lime-300/60">×</button>
           </div>
 
-          <label className="relative mt-3 block w-full min-w-0 max-w-full">
+          {mode === 'list' ? <><label className="relative mt-3 block w-full min-w-0 max-w-full">
             <span className="sr-only">搜索动作</span>
             <span aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">⌕</span>
             <input
@@ -201,21 +206,28 @@ export default function ExercisePickerSheet({ open, existingExerciseIds, onAddEx
             ))}
           </nav>
 
-          <div className="mt-1 flex items-center justify-between gap-3">
+          <div className="mt-1 grid grid-cols-2 gap-2">
             <button
               type="button"
               data-testid="open-2d-muscle-picker"
-              aria-pressed={mode === 'muscle2d'}
               onClick={() => { setMode('muscle2d'); setStatus(''); }}
-              className={`min-h-9 rounded-full border px-3 text-xs font-black transition focus:outline-none focus:ring-2 focus:ring-lime-300/60 ${mode === 'muscle2d' ? 'border-lime-300 bg-lime-300 text-[#10130d]' : 'border-lime-300/30 text-lime-300 hover:bg-lime-300/[0.07]'}`}
+              className="min-h-11 rounded-xl border border-lime-300/30 px-3 text-xs font-black text-lime-300 transition hover:bg-lime-300/[0.07] focus:outline-none focus:ring-2 focus:ring-lime-300/60"
             >
               2D 找肌群
             </button>
-            <p role={status ? 'status' : undefined} className="truncate text-xs font-semibold text-amber-200">{status}</p>
+            <button
+              type="button"
+              data-testid="open-posture-picker"
+              onClick={() => { setMode('posture'); setStatus(''); }}
+              className="min-h-11 rounded-xl border border-lime-300/30 px-3 text-xs font-black text-lime-300 transition hover:bg-lime-300/[0.07] focus:outline-none focus:ring-2 focus:ring-lime-300/60"
+            >
+              体态改善
+            </button>
           </div>
+          <p role={status ? 'status' : undefined} className="mt-1 truncate text-xs font-semibold text-amber-200">{status}</p></> : null}
         </div>
 
-        <div className="min-h-0 w-full min-w-0 max-w-full flex-1 overflow-y-auto overflow-x-hidden px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-3 sm:px-5">
+        <div className={`min-h-0 w-full min-w-0 max-w-full flex-1 ${mode === 'posture' ? 'flex flex-col overflow-hidden' : 'overflow-y-auto overflow-x-hidden px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-3 sm:px-5'}`}>
           {mode === 'list' ? (
             filteredExercises.length ? (
               <ExerciseList exercises={filteredExercises} existingExerciseIds={existingExerciseIds} onAdd={handleAdd} />
@@ -225,7 +237,7 @@ export default function ExercisePickerSheet({ open, existingExerciseIds, onAddEx
                 <p className="mt-1 text-sm text-zinc-500">试试更短的关键词或切换肌群分类</p>
               </div>
             )
-          ) : (
+          ) : mode === 'muscle2d' ? (
             <div data-testid="exercise-picker-2d-mode" className="space-y-3">
               <div className="flex items-center justify-between gap-3">
                 <button type="button" data-testid="exercise-picker-back-to-list" onClick={() => setMode('list')} className="min-h-10 rounded-full border border-white/12 px-3 text-xs font-bold text-zinc-300 hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-lime-300/60">← 返回动作列表</button>
@@ -255,6 +267,14 @@ export default function ExercisePickerSheet({ open, existingExerciseIds, onAddEx
                 {relatedExercises.length ? <ExerciseList exercises={relatedExercises.map((item) => item.exercise)} existingExerciseIds={existingExerciseIds} onAdd={handleAdd} /> : <p className="text-sm text-zinc-500">暂无相关动作</p>}
               </div>
             </div>
+          ) : (
+            <PostureProtocolBrowser
+              initialProtocolId={initialPostureProtocolId}
+              initialIssueId={initialPostureIssueId}
+              initialScrollTop={initialPostureScrollTop}
+              onBackToExercises={() => setMode('list')}
+              onAddProtocol={onAddPostureProtocol}
+            />
           )}
         </div>
       </div>

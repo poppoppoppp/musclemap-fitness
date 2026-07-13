@@ -6,4 +6,4 @@ export type ForceType = 'pull' | 'push' | 'static' | 'hinge';
 
 export type MechanicType = 'compound' | 'isolation';
 
-export type ExerciseCategory = 'strength' | 'mobility' | 'activation' | 'bodyweight';
+export type ExerciseCategory = 'strength' | 'mobility' | 'activation' | 'bodyweight' | 'posture';

@@ -10,12 +10,14 @@ import { getExerciseTrajectoryByExerciseId } from '../data/exerciseTrajectories'
 import { getMuscleById } from '../data/muscles';
 import type { ActiveWorkout } from '../types/activeWorkout';
 import type { Exercise } from '../types/exercise';
+import type { PosturePrescription } from '../types/posture';
 import {
   addExerciseToExistingActiveWorkout,
   isExerciseInActiveWorkout,
   readActiveWorkout,
   startWorkoutWithExercise
 } from '../utils/activeWorkout';
+import { getPostureProtocolById, isProtocolVisibleInApp, postureDataset } from '../utils/postureProtocols';
 
 type AlternativeMatch = {
   exercise: Exercise;
@@ -53,6 +55,8 @@ export default function ExerciseDetail() {
   const hasFewAlternatives = contextualAlternatives.length < 3;
   const isInActiveWorkout = activeWorkout ? isExerciseInActiveWorkout(activeWorkout, exercise.id) : false;
   const trajectory = getExerciseTrajectoryByExerciseId(exercise.id);
+  const postureContext = getPostureContext(exercise.id, searchParams);
+  const backTarget = getExerciseBackTarget(searchParams);
 
   const handleStartWorkoutWithExercise = () => {
     startWorkoutWithExercise(exercise.id);
@@ -81,18 +85,26 @@ export default function ExerciseDetail() {
 
   return (
     <div>
-      <PageHeader title={exercise.name} description={exercise.nameEn} backTo="/exercises" />
+      <PageHeader
+        title={exercise.name}
+        description={exercise.nameEn}
+        backTo={backTarget}
+        backLabel={searchParams.get('from') === 'posture' ? '返回方案详情' : searchParams.get('from') === 'workout' ? '返回训练中' : '返回'}
+        backTestId={searchParams.get('from') === 'posture' ? 'posture-detail-back' : undefined}
+      />
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="space-y-4">
-          <WorkoutEntryCard
+          {exercise.category !== 'posture' ? <WorkoutEntryCard
             activeWorkout={activeWorkout}
             isInActiveWorkout={isInActiveWorkout}
             workoutStatus={workoutStatus}
             onStart={handleStartWorkoutWithExercise}
             onAdd={handleAddToActiveWorkout}
-          />
+          /> : null}
 
-          <Card>
+          {postureContext ? <PostureProtocolContextCard context={postureContext} /> : null}
+
+          {exercise.postureDetails ? <PostureExerciseOverview exercise={exercise} /> : <Card>
             {trajectory ? (
               <ExerciseTrajectoryViewer trajectory={trajectory} />
             ) : (
@@ -102,7 +114,7 @@ export default function ExerciseDetail() {
                 <p className="text-sm leading-6 text-app-muted">原动作详情和加入当前训练功能仍可正常使用。</p>
               </div>
             )}
-          </Card>
+          </Card>}
 
           <DetailList title="动作步骤" items={exercise.steps} ordered />
           <DetailList title="发力提示" items={exercise.cues} />
@@ -112,13 +124,13 @@ export default function ExerciseDetail() {
           <DetailList title="常见错误" items={exercise.commonMistakes} />
           <Card>
             <dl className="grid gap-4 text-sm">
-              <Meta title="主练肌群" values={exercise.primaryMuscles.map(formatMuscle)} />
-              <Meta title="次要肌群" values={exercise.secondaryMuscles.map(formatMuscle)} />
+              {exercise.primaryMuscles.length ? <Meta title="主练肌群" values={exercise.primaryMuscles.map(formatMuscle)} /> : null}
+              {exercise.secondaryMuscles.length ? <Meta title="次要肌群" values={exercise.secondaryMuscles.map(formatMuscle)} /> : null}
               <Meta title="器械" values={exercise.equipment} />
               <Meta title="难度" values={[difficultyLabel(exercise.difficulty)]} />
             </dl>
           </Card>
-          <Card>
+          {exercise.category !== 'posture' ? <Card>
             <h2 className="text-lg font-semibold text-app-text">替代动作</h2>
             <div data-testid="contextual-alternatives" className="mt-3 flex flex-wrap gap-2">
               {contextualAlternatives.map((alternative) => (
@@ -134,7 +146,7 @@ export default function ExerciseDetail() {
               ))}
             </div>
             {hasFewAlternatives ? <p className="mt-3 text-sm text-app-muted">当前肌群的替代动作较少，可到动作管理查看更多相关动作。</p> : null}
-          </Card>
+          </Card> : null}
         </div>
       </div>
     </div>
@@ -243,4 +255,125 @@ function difficultyLabel(difficulty: string) {
   if (difficulty === 'beginner') return '新手';
   if (difficulty === 'intermediate') return '进阶';
   return '高级';
+}
+
+type ResolvedPostureContext = {
+  protocolName: string;
+  issueNames: string[];
+  order: number;
+  prescription: PosturePrescription;
+  roleExplanation: string;
+  specialCues: string[];
+};
+
+function getExerciseBackTarget(searchParams: URLSearchParams) {
+  if (searchParams.get('from') === 'workout') return '/workout-log';
+  if (searchParams.get('from') !== 'posture') return '/exercises';
+  const query = new URLSearchParams({ picker: 'posture' });
+  for (const key of ['postureProtocolId', 'postureIssueId', 'postureScroll']) {
+    const value = searchParams.get(key);
+    if (value) query.set(key, value);
+  }
+  return `/workout-log?${query.toString()}`;
+}
+
+function getPostureContext(exerciseId: string, searchParams: URLSearchParams): ResolvedPostureContext | null {
+  const protocolId = searchParams.get('postureProtocolId');
+  if (protocolId) {
+    const protocol = getPostureProtocolById(protocolId);
+    const item = protocol?.exerciseItems.find((candidate) => candidate.exerciseId === exerciseId);
+    if (!protocol || !isProtocolVisibleInApp(protocol) || !item) return null;
+    return {
+      protocolName: protocol.name,
+      issueNames: protocol.targetIssueIds.flatMap((issueId) => {
+        const issue = postureDataset.postureIssues.find(({ id }) => id === issueId);
+        return issue ? [issue.name] : [];
+      }),
+      order: item.order,
+      prescription: { ...item.prescription },
+      roleExplanation: item.roleExplanation,
+      specialCues: [...item.specialCues]
+    };
+  }
+
+  const protocolInstanceId = searchParams.get('postureProtocolInstanceId');
+  if (!protocolInstanceId) return null;
+  const group = readActiveWorkout()?.postureProtocolGroups?.find(({ instanceId }) => instanceId === protocolInstanceId);
+  const activeExerciseId = searchParams.get('activeExerciseId');
+  const snapshot = group?.exerciseSnapshots.find((item) =>
+    activeExerciseId ? item.instanceId === activeExerciseId : item.exerciseId === exerciseId
+  );
+  if (!group || !snapshot) return null;
+  return {
+    protocolName: group.nameSnapshot,
+    issueNames: [...group.targetIssueNamesSnapshot],
+    order: snapshot.order,
+    prescription: { ...snapshot.prescription },
+    roleExplanation: snapshot.roleExplanation,
+    specialCues: [...snapshot.specialCues]
+  };
+}
+
+function PostureProtocolContextCard({ context }: { context: ResolvedPostureContext }) {
+  return (
+    <Card className="border-lime-300/25">
+      <section data-testid="posture-protocol-context">
+        <p className="text-xs font-bold text-lime-300">本方案中的安排</p>
+        <h2 className="mt-1 text-lg font-semibold text-app-text">{context.protocolName}</h2>
+        <p className="mt-2 text-sm text-app-muted">{context.issueNames.join(' · ')}</p>
+        <dl className="mt-4 grid gap-3 text-sm">
+          <div><dt className="font-semibold text-app-text">当前顺序</dt><dd className="mt-1 text-app-muted">第 {context.order} 个动作</dd></div>
+          <div><dt className="font-semibold text-app-text">本次处方</dt><dd className="mt-1 text-app-muted">{formatPosturePrescription(context.prescription)}</dd></div>
+          <div><dt className="font-semibold text-app-text">方案作用</dt><dd className="mt-1 text-app-muted">{context.roleExplanation}</dd></div>
+          {context.specialCues.length ? <div><dt className="font-semibold text-app-text">专项提示</dt><dd className="mt-1 text-app-muted">{context.specialCues.join(' · ')}</dd></div> : null}
+        </dl>
+      </section>
+    </Card>
+  );
+}
+
+function PostureExerciseOverview({ exercise }: { exercise: Exercise }) {
+  const details = exercise.postureDetails!;
+  return (
+    <div className="space-y-4">
+      <Card>
+        <h2 className="text-lg font-semibold text-app-text">起始姿势</h2>
+        <p className="mt-3 text-sm leading-6 text-app-muted">{details.startPosition}</p>
+        <h2 className="mt-5 text-lg font-semibold text-app-text">呼吸</h2>
+        <p className="mt-3 text-sm leading-6 text-app-muted">{details.breathing}</p>
+      </Card>
+      <Card>
+        <details>
+          <summary className="cursor-pointer text-lg font-semibold text-app-text">降阶、进阶与停止条件</summary>
+          <div className="mt-3 space-y-3 text-sm leading-6 text-app-muted">
+            {details.regression ? <p><strong className="text-app-text">降阶：</strong>{details.regression}</p> : null}
+            {details.progression ? <p><strong className="text-app-text">进阶：</strong>{details.progression}</p> : null}
+            {details.stopConditions.length ? <p><strong className="text-app-text">停止条件：</strong>{details.stopConditions.join(' · ')}</p> : null}
+          </div>
+        </details>
+      </Card>
+      <Card>
+        <details>
+          <summary className="cursor-pointer text-lg font-semibold text-app-text">来源与核验状态</summary>
+          <div className="mt-3 space-y-2 text-sm leading-6 text-app-muted">
+            <p><strong className="text-app-text">来源原始说明：</strong>{details.sourceSummary}</p>
+            {details.sourceTimestamp ? <p><strong className="text-app-text">时间：</strong>{details.sourceTimestamp}</p> : null}
+            <p><strong className="text-app-text">标准化状态：</strong>{details.verificationStatus}</p>
+            <p><strong className="text-app-text">数据置信度：</strong>{details.dataConfidence}</p>
+          </div>
+        </details>
+      </Card>
+    </div>
+  );
+}
+
+function formatPosturePrescription(prescription: PosturePrescription) {
+  const parts = [
+    prescription.sets !== null ? `${prescription.sets} 组` : '',
+    prescription.reps !== null ? `${prescription.reps} 次` : '',
+    prescription.durationSeconds !== null ? `${prescription.durationSeconds} 秒` : '',
+    prescription.restSeconds !== null ? `休息 ${prescription.restSeconds} 秒` : '',
+    prescription.frequencyText ?? ''
+  ].filter(Boolean);
+  return parts.length ? parts.join(' · ') : prescription.rawText || '视频未说明';
 }

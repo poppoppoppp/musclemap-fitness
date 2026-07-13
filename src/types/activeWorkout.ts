@@ -1,5 +1,7 @@
 export type ActiveWorkoutStatus = 'active';
-export type ActiveWorkoutSource = 'manual' | 'exercise-detail' | 'plan';
+import type { PostureProtocolWorkoutSnapshot } from './posture';
+
+export type ActiveWorkoutSource = 'manual' | 'exercise-detail' | 'plan' | 'posture';
 
 export interface ActiveWorkout {
   id: string;
@@ -10,6 +12,7 @@ export interface ActiveWorkout {
   planId?: string;
   planDayId?: string;
   exercises: ActiveWorkoutExercise[];
+  postureProtocolGroups?: PostureProtocolWorkoutSnapshot[];
   notes?: string;
   createdAt: string;
   updatedAt: string;
@@ -20,6 +23,7 @@ export interface ActiveWorkoutExercise {
   exerciseId: string;
   order: number;
   source: ActiveWorkoutSource;
+  postureProtocolInstanceId?: string;
   startedAt?: string;
   endedAt?: string;
   planned?: {

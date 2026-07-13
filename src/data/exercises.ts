@@ -1,4 +1,5 @@
 import type { Exercise, ExerciseWeightType } from '../types/exercise';
+import { getPostureStandardExerciseById, isPostureExerciseVisibleInApp } from '../utils/postureProtocols';
 import { catalogExercises } from './exerciseCatalog';
 
 type ExerciseDefinition = Omit<Exercise, 'weightType'> & { weightType?: ExerciseWeightType };
@@ -827,4 +828,39 @@ export const exercises: Exercise[] = [...existingExercises, ...catalogExercises]
   weightType: exercise.weightType ?? (exercise.category === 'bodyweight' || (exercise.equipment.length === 1 && exercise.equipment[0] === '自重') ? 'bodyweight' : 'external_weight')
 }));
 
-export const getExerciseById = (id: string) => exercises.find((exercise) => exercise.id === id);
+export const getExerciseById = (id: string) => exercises.find((exercise) => exercise.id === id) ?? mapPostureExercise(id);
+
+function mapPostureExercise(id: string): Exercise | undefined {
+  if (!isPostureExerciseVisibleInApp(id)) return undefined;
+  const exercise = getPostureStandardExerciseById(id);
+  if (!exercise || exercise.appEligibility === 'hold') return undefined;
+  return {
+    id: exercise.id,
+    name: exercise.name,
+    nameEn: exercise.aliases.join(' / '),
+    primaryMuscles: [],
+    secondaryMuscles: [],
+    equipment: [...exercise.equipment],
+    difficulty: 'beginner',
+    force: 'static',
+    mechanic: 'isolation',
+    category: 'posture',
+    weightType: 'bodyweight',
+    steps: [...exercise.standardized.executionSteps],
+    cues: [...exercise.standardized.keyCues],
+    commonMistakes: [...exercise.standardized.commonErrors],
+    alternatives: [],
+    tags: [exercise.category, ...exercise.aliases],
+    postureDetails: {
+      startPosition: exercise.standardized.startPosition,
+      breathing: exercise.standardized.breathing,
+      regression: exercise.standardized.regression,
+      progression: exercise.standardized.progression,
+      stopConditions: [...exercise.standardized.stopConditions],
+      sourceSummary: exercise.sourceOriginal.summary,
+      sourceTimestamp: exercise.sourceOriginal.timestamp,
+      verificationStatus: exercise.verificationStatus,
+      dataConfidence: exercise.dataConfidence
+    }
+  };
+}

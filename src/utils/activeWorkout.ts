@@ -1,5 +1,13 @@
 import type { ActiveWorkout, ActiveWorkoutExercise, ActiveWorkoutSet, ActiveWorkoutSource } from '../types/activeWorkout';
+import type { PostureDataset, PostureProtocolExerciseSnapshot, PostureProtocolWorkoutSnapshot } from '../types/posture';
 import type { GeneratedPlan, GeneratedPlanItem, GeneratedWorkoutDay, WorkoutLog, WorkoutLogExercise, WorkoutSet } from '../types/workout';
+import {
+  getAddableProtocolItems,
+  getPostureProtocolById,
+  getPostureStandardExerciseById,
+  isProtocolVisibleInApp,
+  postureDataset
+} from './postureProtocols';
 import { readStorage, removeStorage, writeStorage } from './storage';
 
 export const ACTIVE_WORKOUT_KEY = 'musclemap.activeWorkout.v0.7';
@@ -11,7 +19,11 @@ export type ActiveWorkoutArchiveResult =
 
 export function readActiveWorkout(): ActiveWorkout | null {
   const workout = readStorage<ActiveWorkout | null>(ACTIVE_WORKOUT_KEY, null);
-  return isActiveWorkout(workout) ? workout : null;
+  return normalizeActiveWorkout(workout);
+}
+
+export function normalizeActiveWorkout(value: unknown): ActiveWorkout | null {
+  return isActiveWorkout(value) ? value : null;
 }
 
 export function writeActiveWorkout(workout: ActiveWorkout): void {
@@ -40,6 +52,75 @@ export function addExerciseToActiveWorkout(workout: ActiveWorkout, exerciseId: s
   return touch({
     ...workout,
     exercises: [...workout.exercises, createActiveWorkoutExercise(exerciseId, workout.exercises.length, 'manual')]
+  });
+}
+
+export function addPostureProtocolToActiveWorkout(
+  workout: ActiveWorkout,
+  protocolId: string,
+  now = new Date(),
+  dataset: PostureDataset = postureDataset
+): ActiveWorkout {
+  const protocol = getPostureProtocolById(protocolId, dataset);
+  if (!protocol || !isProtocolVisibleInApp(protocol, dataset)) return workout;
+
+  const instanceId = createId('posture-protocol');
+  const addedAt = now.toISOString();
+  const targetIssueNamesSnapshot = protocol.targetIssueIds.flatMap((issueId) => {
+    const issue = dataset.postureIssues.find(({ id }) => id === issueId);
+    return issue ? [issue.name] : [];
+  });
+  const items = getAddableProtocolItems(protocol, dataset);
+  const addedExercises: ActiveWorkoutExercise[] = [];
+  const exerciseSnapshots: PostureProtocolExerciseSnapshot[] = [];
+
+  for (const item of items) {
+    const standardExercise = getPostureStandardExerciseById(item.exerciseId, dataset);
+    if (!standardExercise) continue;
+    const exercise = createActiveWorkoutExercise(
+      item.exerciseId,
+      workout.exercises.length + addedExercises.length,
+      'posture',
+      item.prescription.sets ?? 1
+    );
+    exercise.postureProtocolInstanceId = instanceId;
+    const planned = {
+      ...(item.prescription.sets !== null ? { sets: item.prescription.sets } : {}),
+      ...(item.prescription.reps !== null ? { repRange: String(item.prescription.reps) } : {}),
+      ...(item.prescription.restSeconds !== null ? { restSeconds: item.prescription.restSeconds } : {}),
+      ...(item.prescription.rawText ? { note: item.prescription.rawText } : {})
+    };
+    if (Object.keys(planned).length > 0) exercise.planned = planned;
+    addedExercises.push(exercise);
+    exerciseSnapshots.push({
+      instanceId: exercise.id,
+      exerciseId: item.exerciseId,
+      nameSnapshot: standardExercise.name,
+      order: item.order,
+      roleInProtocol: item.roleInProtocol,
+      roleExplanation: item.roleExplanation,
+      prescription: { ...item.prescription },
+      specialCues: [...item.specialCues],
+      sourceOriginalText: item.sourceOriginalText
+    });
+  }
+
+  const group: PostureProtocolWorkoutSnapshot = {
+    instanceId,
+    sourceProtocolId: protocol.id,
+    nameSnapshot: protocol.name,
+    targetIssueNamesSnapshot,
+    addedAt,
+    isModified: false,
+    order: workout.postureProtocolGroups?.length ?? 0,
+    exerciseInstanceIds: addedExercises.map(({ id }) => id),
+    exerciseSnapshots
+  };
+
+  return touch({
+    ...workout,
+    exercises: [...workout.exercises, ...addedExercises],
+    postureProtocolGroups: [...(workout.postureProtocolGroups ?? []), group]
   });
 }
 
@@ -104,11 +185,99 @@ export function isExerciseInActiveWorkout(workout: ActiveWorkout, exerciseId: st
 }
 
 export function removeExerciseFromActiveWorkout(workout: ActiveWorkout, activeExerciseId: string): ActiveWorkout {
+  const removedExercise = workout.exercises.find((exercise) => exercise.id === activeExerciseId);
+  const postureProtocolGroups = updateGroupsAfterExerciseRemoval(
+    workout.postureProtocolGroups,
+    removedExercise?.postureProtocolInstanceId,
+    activeExerciseId
+  );
   return touch({
     ...workout,
     exercises: workout.exercises
       .filter((exercise) => exercise.id !== activeExerciseId)
-      .map((exercise, index) => ({ ...exercise, order: index }))
+      .map((exercise, index) => ({ ...exercise, order: index })),
+    postureProtocolGroups
+  });
+}
+
+export function removePostureProtocolGroup(workout: ActiveWorkout, instanceId: string): ActiveWorkout {
+  const group = workout.postureProtocolGroups?.find((item) => item.instanceId === instanceId);
+  if (!group) return workout;
+  const linkedIds = new Set(group.exerciseInstanceIds);
+  return touch({
+    ...workout,
+    exercises: workout.exercises
+      .filter((exercise) => !linkedIds.has(exercise.id))
+      .map((exercise, index) => ({ ...exercise, order: index })),
+    postureProtocolGroups: (workout.postureProtocolGroups ?? [])
+      .filter((item) => item.instanceId !== instanceId)
+      .map((item, index) => ({ ...item, order: index }))
+  });
+}
+
+export function movePostureProtocolGroup(
+  workout: ActiveWorkout,
+  instanceId: string,
+  direction: 'up' | 'down'
+): ActiveWorkout {
+  const groups = [...(workout.postureProtocolGroups ?? [])].sort((left, right) => left.order - right.order);
+  const index = groups.findIndex((group) => group.instanceId === instanceId);
+  const targetIndex = direction === 'up' ? index - 1 : index + 1;
+  if (index < 0 || targetIndex < 0 || targetIndex >= groups.length) return workout;
+  [groups[index], groups[targetIndex]] = [groups[targetIndex], groups[index]];
+  const linkedIds = new Set(groups.flatMap((group) => group.exerciseInstanceIds));
+  const linkedPositions = workout.exercises.flatMap((exercise, exerciseIndex) => linkedIds.has(exercise.id) ? [exerciseIndex] : []);
+  const exerciseById = new Map(workout.exercises.map((exercise) => [exercise.id, exercise]));
+  const orderedLinkedExercises = groups.flatMap((group) =>
+    group.exerciseInstanceIds.flatMap((exerciseId) => {
+      const exercise = exerciseById.get(exerciseId);
+      return exercise ? [exercise] : [];
+    })
+  );
+  const exercises = [...workout.exercises];
+  linkedPositions.forEach((position, orderedIndex) => {
+    const exercise = orderedLinkedExercises[orderedIndex];
+    if (exercise) exercises[position] = exercise;
+  });
+  return touch({
+    ...workout,
+    exercises: exercises.map((exercise, order) => ({ ...exercise, order })),
+    postureProtocolGroups: groups.map((group, order) => ({ ...group, order }))
+  });
+}
+
+export function movePostureProtocolExercise(
+  workout: ActiveWorkout,
+  protocolInstanceId: string,
+  activeExerciseId: string,
+  direction: 'up' | 'down'
+): ActiveWorkout {
+  const group = workout.postureProtocolGroups?.find(({ instanceId }) => instanceId === protocolInstanceId);
+  if (!group) return workout;
+  const index = group.exerciseInstanceIds.indexOf(activeExerciseId);
+  const targetIndex = direction === 'up' ? index - 1 : index + 1;
+  if (index < 0 || targetIndex < 0 || targetIndex >= group.exerciseInstanceIds.length) return workout;
+
+  const exerciseInstanceIds = [...group.exerciseInstanceIds];
+  [exerciseInstanceIds[index], exerciseInstanceIds[targetIndex]] = [exerciseInstanceIds[targetIndex], exerciseInstanceIds[index]];
+  const snapshotById = new Map(group.exerciseSnapshots.map((snapshot) => [snapshot.instanceId, snapshot]));
+  const exerciseSnapshots = exerciseInstanceIds.flatMap((id, order) => {
+    const snapshot = snapshotById.get(id);
+    return snapshot ? [{ ...snapshot, order: order + 1 }] : [];
+  });
+  const exercises = [...workout.exercises];
+  const sourceIndex = exercises.findIndex(({ id }) => id === activeExerciseId);
+  const siblingIndex = exercises.findIndex(({ id }) => id === group.exerciseInstanceIds[targetIndex]);
+  if (sourceIndex >= 0 && siblingIndex >= 0) [exercises[sourceIndex], exercises[siblingIndex]] = [exercises[siblingIndex], exercises[sourceIndex]];
+
+  return touch({
+    ...workout,
+    exercises: exercises.map((exercise, order) => ({ ...exercise, order })),
+    postureProtocolGroups: workout.postureProtocolGroups?.map((item) =>
+      item.instanceId === protocolInstanceId
+        ? { ...item, exerciseInstanceIds, exerciseSnapshots, isModified: true }
+        : item
+    )
   });
 }
 
@@ -192,6 +361,7 @@ export function archiveActiveWorkout(workout: ActiveWorkout, endedAt = new Date(
         id: exercise.id,
         exerciseId: exercise.exerciseId,
         order: exercisesWithSets.length,
+        postureProtocolInstanceId: exercise.postureProtocolInstanceId,
         sets: validSets,
         notes: exercise.notes?.trim() || undefined
       });
@@ -215,6 +385,7 @@ export function archiveActiveWorkout(workout: ActiveWorkout, endedAt = new Date(
       planId: workout.planId,
       durationSeconds,
       exercises: exercisesWithSets,
+      postureProtocolGroups: clonePostureGroups(workout.postureProtocolGroups),
       notes: workout.notes?.trim() || undefined,
       createdAt: endedAt.toISOString()
     }
@@ -226,9 +397,11 @@ function updateExercise(
   activeExerciseId: string,
   updater: (exercise: ActiveWorkoutExercise) => ActiveWorkoutExercise
 ): ActiveWorkout {
+  const current = workout.exercises.find((exercise) => exercise.id === activeExerciseId);
   return touch({
     ...workout,
-    exercises: workout.exercises.map((exercise) => (exercise.id === activeExerciseId ? updater(exercise) : exercise))
+    exercises: workout.exercises.map((exercise) => (exercise.id === activeExerciseId ? updater(exercise) : exercise)),
+    postureProtocolGroups: markPostureGroupModified(workout.postureProtocolGroups, current?.postureProtocolInstanceId)
   });
 }
 
@@ -267,13 +440,18 @@ function createActiveWorkoutSet(setIndex: number): ActiveWorkoutSet {
   };
 }
 
-function createActiveWorkoutExercise(exerciseId: string, order: number, source: ActiveWorkoutSource): ActiveWorkoutExercise {
+function createActiveWorkoutExercise(
+  exerciseId: string,
+  order: number,
+  source: ActiveWorkoutSource,
+  setCount = 1
+): ActiveWorkoutExercise {
   return {
     id: createId('active-exercise'),
     exerciseId,
     order,
     source,
-    sets: [createActiveWorkoutSet(1)]
+    sets: Array.from({ length: Math.max(1, setCount) }, (_, index) => createActiveWorkoutSet(index + 1))
   };
 }
 
@@ -297,9 +475,54 @@ function isActiveWorkout(value: unknown): value is ActiveWorkout {
     typeof workout.id === 'string' &&
     typeof workout.startedAt === 'string' &&
     typeof workout.trainingDate === 'string' &&
-    (workout.source === 'manual' || workout.source === 'exercise-detail' || workout.source === 'plan') &&
+    (workout.source === 'manual' || workout.source === 'exercise-detail' || workout.source === 'plan' || workout.source === 'posture') &&
     Array.isArray(workout.exercises)
   );
+}
+
+function markPostureGroupModified(
+  groups: PostureProtocolWorkoutSnapshot[] | undefined,
+  instanceId: string | undefined
+): PostureProtocolWorkoutSnapshot[] | undefined {
+  if (!groups || !instanceId) return groups;
+  return groups.map((group) => (group.instanceId === instanceId ? { ...group, isModified: true } : group));
+}
+
+function updateGroupsAfterExerciseRemoval(
+  groups: PostureProtocolWorkoutSnapshot[] | undefined,
+  protocolInstanceId: string | undefined,
+  activeExerciseId: string
+): PostureProtocolWorkoutSnapshot[] | undefined {
+  if (!groups || !protocolInstanceId) return groups;
+  return groups.flatMap((group) => {
+    if (group.instanceId !== protocolInstanceId) return [group];
+    const exerciseInstanceIds = group.exerciseInstanceIds.filter((id) => id !== activeExerciseId);
+    if (exerciseInstanceIds.length === 0) return [];
+    const snapshotById = new Map(group.exerciseSnapshots.map((snapshot) => [snapshot.instanceId, snapshot]));
+    return [{
+      ...group,
+      exerciseInstanceIds,
+      exerciseSnapshots: exerciseInstanceIds.flatMap((id, order) => {
+        const snapshot = snapshotById.get(id);
+        return snapshot ? [{ ...snapshot, order: order + 1 }] : [];
+      }),
+      isModified: true
+    }];
+  }).map((group, order) => ({ ...group, order }));
+}
+
+function clonePostureGroups(groups: PostureProtocolWorkoutSnapshot[] | undefined) {
+  if (!groups) return undefined;
+  return groups.map((group) => ({
+    ...group,
+    targetIssueNamesSnapshot: [...group.targetIssueNamesSnapshot],
+    exerciseInstanceIds: [...group.exerciseInstanceIds],
+    exerciseSnapshots: group.exerciseSnapshots.map((snapshot) => ({
+      ...snapshot,
+      prescription: { ...snapshot.prescription },
+      specialCues: [...snapshot.specialCues]
+    }))
+  }));
 }
 
 function createId(prefix: string) {

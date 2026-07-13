@@ -4,17 +4,20 @@ interface PageHeaderProps {
   title: string;
   description?: string;
   backTo?: string;
+  backLabel?: string;
+  backTestId?: string;
 }
 
-export default function PageHeader({ title, description, backTo }: PageHeaderProps) {
+export default function PageHeader({ title, description, backTo, backLabel = '返回', backTestId }: PageHeaderProps) {
   return (
     <header className="mb-5 flex flex-col gap-3">
       {backTo ? (
         <Link
           className="inline-flex min-h-9 w-fit items-center rounded-xl border border-app-line bg-app-surface px-3 text-sm font-semibold text-app-accent transition hover:bg-app-surfaceMuted focus:outline-none focus:ring-2 focus:ring-app-accent/30"
           to={backTo}
+          data-testid={backTestId}
         >
-          返回
+          {backLabel}
         </Link>
       ) : null}
       <div>

@@ -33,6 +33,7 @@ export interface WorkoutLog {
   planId?: string;
   durationSeconds?: number;
   exercises: WorkoutLogExercise[];
+  postureProtocolGroups?: PostureProtocolWorkoutSnapshot[];
   notes?: string;
   createdAt: string;
 }
@@ -41,6 +42,7 @@ export interface WorkoutLogExercise {
   id: string;
   exerciseId: string;
   order: number;
+  postureProtocolInstanceId?: string;
   sets: WorkoutSet[];
   notes?: string;
 }
@@ -97,3 +99,4 @@ export interface GeneratedPlanItem {
   targetMuscles: string[];
   note?: string;
 }
+import type { PostureProtocolWorkoutSnapshot } from './posture';

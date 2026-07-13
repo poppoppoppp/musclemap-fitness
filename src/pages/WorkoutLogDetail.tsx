@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import DumbbellIcon from '../components/icons/DumbbellIcon';
 import WorkoutMuscleMap2D from '../components/workout/WorkoutMuscleMap2D';
-import { exercises } from '../data/exercises';
+import { exercises, getExerciseById } from '../data/exercises';
+import type { PosturePrescription, PostureProtocolWorkoutSnapshot } from '../types/posture';
 import type { WorkoutLog, WorkoutLogExercise, WorkoutSet } from '../types/workout';
 import {
   countValidSets,
@@ -123,6 +124,12 @@ export default function WorkoutLogDetail() {
           </div>
         </section>
 
+        {(displayed.postureProtocolGroups?.length ?? 0) > 0 ? (
+          <section className="space-y-2">
+            {displayed.postureProtocolGroups?.map((group) => <PostureHistoryGroup key={group.instanceId} group={group} />)}
+          </section>
+        ) : null}
+
         <section className="rounded-3xl border border-white/10 bg-white/[0.025] p-4">
           <h2 className="mb-3 text-base font-black">训练动作</h2>
           <div className="space-y-2">
@@ -157,7 +164,7 @@ function MuscleText({ label, muscles, className }: { label: string; muscles: str
 }
 
 function ExerciseRow({ exercise, editing, onChange, onDelete }: { exercise: WorkoutLogExercise; editing: boolean; onChange: (exercise: WorkoutLogExercise) => void; onDelete: () => void }) {
-  const detail = exercises.find((item) => item.id === exercise.exerciseId);
+  const detail = getExerciseById(exercise.exerciseId);
   const updateSet = (index: number, key: 'weight' | 'reps', value: string) => onChange({ ...exercise, sets: exercise.sets.map((set, setIndex) => setIndex === index ? { ...set, [key]: value === '' ? undefined : Number(value) } : set) });
   return (
     <details data-testid="workout-detail-exercise-row" open={editing || undefined} className="group rounded-2xl border border-white/10 bg-black/10 p-2.5">
@@ -189,4 +196,45 @@ function cloneWorkout(log: WorkoutLog): WorkoutLog {
 function formatWorkoutDate(value: string): string {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return '日期未知';
   return value;
+}
+
+function PostureHistoryGroup({ group }: { group: PostureProtocolWorkoutSnapshot }) {
+  return (
+    <details data-testid="workout-history-posture-group" open className="rounded-2xl border border-lime-300/20 bg-lime-300/[0.035] p-4">
+      <summary className="cursor-pointer list-none focus:outline-none focus:ring-2 focus:ring-lime-300/50">
+        <span className="flex items-start justify-between gap-3">
+          <span className="min-w-0">
+            <span className="block text-xs font-bold text-lime-300">体态改善</span>
+            <strong className="mt-1 block text-sm text-zinc-100">{group.nameSnapshot}</strong>
+            <span className="mt-1 block text-xs text-zinc-500">{group.targetIssueNamesSnapshot.join(' · ')}</span>
+          </span>
+          {group.isModified ? <span className="shrink-0 rounded-full bg-amber-300/10 px-2 py-1 text-[11px] font-bold text-amber-200">已修改</span> : null}
+        </span>
+      </summary>
+      <ol className="mt-3 space-y-2 border-t border-white/[0.08] pt-3">
+        {group.exerciseSnapshots.map((snapshot, index) => (
+          <li key={snapshot.instanceId} className="rounded-xl bg-black/20 p-3">
+            <div className="flex gap-2">
+              <span className="text-xs font-black text-lime-300">{index + 1}.</span>
+              <span className="min-w-0">
+                <strong className="block text-sm text-zinc-200">{snapshot.nameSnapshot}</strong>
+                <span className="mt-1 block text-xs text-zinc-500">{formatPosturePrescription(snapshot.prescription)}</span>
+              </span>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </details>
+  );
+}
+
+function formatPosturePrescription(prescription: PosturePrescription) {
+  const parts = [
+    prescription.sets !== null ? `${prescription.sets} 组` : '',
+    prescription.reps !== null ? `${prescription.reps} 次` : '',
+    prescription.durationSeconds !== null ? `${prescription.durationSeconds} 秒` : '',
+    prescription.restSeconds !== null ? `休息 ${prescription.restSeconds} 秒` : '',
+    prescription.frequencyText ?? ''
+  ].filter(Boolean);
+  return parts.length ? parts.join(' · ') : prescription.rawText || '视频未说明';
 }

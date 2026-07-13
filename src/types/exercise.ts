@@ -2,6 +2,18 @@ import type { Difficulty, ExerciseCategory, ForceType, MechanicType } from './co
 
 export type ExerciseWeightType = 'external_weight' | 'bodyweight' | 'bodyweight_added' | 'bodyweight_assisted';
 
+export interface PostureExerciseDetails {
+  startPosition: string;
+  breathing: string;
+  regression: string | null;
+  progression: string | null;
+  stopConditions: string[];
+  sourceSummary: string;
+  sourceTimestamp: string | null;
+  verificationStatus: string;
+  dataConfidence: string;
+}
+
 export interface Exercise {
   id: string;
   name: string;
@@ -19,4 +31,5 @@ export interface Exercise {
   commonMistakes: string[];
   alternatives: string[];
   tags: string[];
+  postureDetails?: PostureExerciseDetails;
 }

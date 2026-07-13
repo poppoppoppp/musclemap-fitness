@@ -24,6 +24,7 @@ export default function CurrentExerciseCard({ exercise, position, totalExercises
   const title = detail?.name ?? detail?.nameEn ?? exercise.exerciseId ?? '未知动作';
   const muscleSummary = detail ? formatMuscleSummary(detail.primaryMuscles, detail.secondaryMuscles) : '';
   const canFinish = Boolean(exercise.startedAt) && !exercise.endedAt;
+  const detailHref = getWorkoutExerciseDetailHref(exercise);
 
   return (
     <article id={getActiveExerciseElementId(exercise.id)} tabIndex={-1} data-testid="workout-log-exercise" data-active-exercise-id={exercise.id} className="rounded-2xl border border-white/12 bg-white/[0.035] p-3.5 outline-none min-[390px]:p-4">
@@ -38,11 +39,11 @@ export default function CurrentExerciseCard({ exercise, position, totalExercises
       </div>
 
       <div className="mt-3 flex items-center gap-3">
-        <Link to={`/exercises/${exercise.exerciseId}`} aria-label={`查看${title}动作详情`} className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-black/25 text-zinc-500 transition hover:border-lime-300/30 hover:text-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/60">
+        <Link to={detailHref} aria-label={`查看${title}动作详情`} className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-black/25 text-zinc-500 transition hover:border-lime-300/30 hover:text-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/60">
           <DumbbellIcon className="h-7 w-7" />
         </Link>
         <div className="min-w-0 flex-1">
-          <Link to={`/exercises/${exercise.exerciseId}`} className="block text-wrap-pretty text-lg font-black leading-6 text-white transition hover:text-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/60">{title}</Link>
+          <Link to={detailHref} className="block text-wrap-pretty text-lg font-black leading-6 text-white transition hover:text-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/60">{title}</Link>
           {muscleSummary ? <p className="mt-1 text-sm font-medium text-zinc-500">{muscleSummary}</p> : <p className="mt-1 text-sm font-medium text-zinc-600">动作信息暂不可用</p>}
         </div>
         <details className="relative shrink-0 self-start">
@@ -109,6 +110,12 @@ export function formatMuscleSummary(primary: string[], secondary: string[]) {
 
 export function getActiveExerciseElementId(activeExerciseId: string) {
   return `active-exercise-${activeExerciseId}`;
+}
+
+export function getWorkoutExerciseDetailHref(exercise: ActiveWorkoutExercise) {
+  const query = new URLSearchParams({ from: 'workout', activeExerciseId: exercise.id });
+  if (exercise.postureProtocolInstanceId) query.set('postureProtocolInstanceId', exercise.postureProtocolInstanceId);
+  return `/exercises/${exercise.exerciseId}?${query.toString()}`;
 }
 
 function formatPlannedExercise(exercise: ActiveWorkoutExercise) {

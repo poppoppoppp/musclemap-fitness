@@ -5,6 +5,7 @@ import type { ActiveWorkout, ActiveWorkoutExercise } from '../../types/activeWor
 import type { WorkoutLog, WorkoutSet } from '../../types/workout';
 import {
   addExerciseToActiveWorkout,
+  addPostureProtocolToActiveWorkout,
   addSetToActiveWorkoutExercise,
   archiveActiveWorkout,
   endActiveWorkoutExercise,
@@ -13,6 +14,9 @@ import {
   updateActiveWorkoutExerciseNotes,
   updateActiveWorkoutSet,
   isExerciseInActiveWorkout,
+  movePostureProtocolExercise,
+  movePostureProtocolGroup,
+  removePostureProtocolGroup,
   type ActiveWorkoutArchiveError
 } from '../../utils/activeWorkout';
 import ActiveWorkoutHeader from './ActiveWorkoutHeader';
@@ -20,6 +24,7 @@ import CompletedExercisesList from './CompletedExercisesList';
 import CurrentExerciseCard, { getActiveExerciseElementId } from './CurrentExerciseCard';
 import WorkoutMiniPlayer from './WorkoutMiniPlayer';
 import WorkoutTimerCard from './WorkoutTimerCard';
+import PostureProtocolGroupCard from './PostureProtocolGroupCard';
 
 const archiveMessages: Record<ActiveWorkoutArchiveError, string> = {
   'no-exercise': '请先添加至少一个动作',
@@ -36,14 +41,15 @@ interface ActiveWorkoutViewProps {
 }
 
 export default function ActiveWorkoutView({ workout, onChange, onArchive, onDiscard }: ActiveWorkoutViewProps) {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const focusedExerciseId = searchParams.get('focusExercise');
   const [status, setStatus] = useState('');
-  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(() => searchParams.get('picker') === 'posture');
   const currentExercise = useMemo(() => getCurrentExercise(workout.exercises, focusedExerciseId), [workout.exercises, focusedExerciseId]);
   const completedExercises = useMemo(() => workout.exercises.filter((exercise) => Boolean(exercise.endedAt)).sort(byExerciseOrder), [workout.exercises]);
   const pendingExercises = useMemo(() => workout.exercises.filter((exercise) => !exercise.endedAt && exercise.id !== currentExercise?.id).sort(byExerciseOrder), [workout.exercises, currentExercise?.id]);
   const currentPosition = currentExercise ? workout.exercises.findIndex((exercise) => exercise.id === currentExercise.id) + 1 : 0;
+  const postureGroups = useMemo(() => [...(workout.postureProtocolGroups ?? [])].sort((left, right) => left.order - right.order), [workout.postureProtocolGroups]);
 
   useEffect(() => {
     if (!focusedExerciseId) return;
@@ -81,8 +87,48 @@ export default function ActiveWorkoutView({ workout, onChange, onArchive, onDisc
     return true;
   };
 
+  const handleAddPostureProtocol = (protocolId: string) => {
+    const nextWorkout = addPostureProtocolToActiveWorkout(workout, protocolId);
+    if (nextWorkout === workout) return false;
+    const group = nextWorkout.postureProtocolGroups?.at(-1);
+    onChange(nextWorkout);
+    setStatus(group ? `已加入「${group.nameSnapshot}」` : '');
+    closePicker();
+    if (group) {
+      window.setTimeout(() => {
+        const element = document.getElementById(`posture-protocol-group-${group.instanceId}`);
+        element?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        element?.focus({ preventScroll: true });
+      }, 0);
+    }
+    return true;
+  };
+
+  const closePicker = () => {
+    setPickerOpen(false);
+    if (searchParams.get('picker') !== 'posture') return;
+    const next = new URLSearchParams(searchParams);
+    for (const key of ['picker', 'postureProtocolId', 'postureIssueId', 'postureScroll']) next.delete(key);
+    setSearchParams(next, { replace: true });
+  };
+
   const handleDeleteExercise = (activeExerciseId: string) => {
     onChange(removeExerciseFromActiveWorkout(workout, activeExerciseId));
+    setStatus('');
+  };
+
+  const handleDeletePostureGroup = (instanceId: string) => {
+    onChange(removePostureProtocolGroup(workout, instanceId));
+    setStatus('');
+  };
+
+  const handleMovePostureGroup = (instanceId: string, direction: 'up' | 'down') => {
+    onChange(movePostureProtocolGroup(workout, instanceId, direction));
+    setStatus('');
+  };
+
+  const handleMovePostureExercise = (groupId: string, exerciseId: string, direction: 'up' | 'down') => {
+    onChange(movePostureProtocolExercise(workout, groupId, exerciseId, direction));
     setStatus('');
   };
 
@@ -105,7 +151,20 @@ export default function ActiveWorkoutView({ workout, onChange, onArchive, onDisc
       <div className="relative mx-auto max-w-[440px] space-y-3.5">
         <ActiveWorkoutHeader onEndWorkout={handleEndWorkout} onDiscardWorkout={handleDiscardWorkout} musicPlayer={<WorkoutMiniPlayer compact />} />
         <WorkoutTimerCard startedAt={workout.startedAt} />
-        <p data-testid="save-status" role={status ? 'alert' : undefined} className={`min-h-0 text-sm font-semibold ${status ? 'rounded-xl border border-red-300/20 bg-red-400/[0.07] px-3 py-2 text-red-200' : ''}`}>{status}</p>
+        <p data-testid="save-status" role={status ? 'status' : undefined} className={`min-h-0 text-sm font-semibold ${status ? `rounded-xl border px-3 py-2 ${status.startsWith('已加入') ? 'border-lime-300/20 bg-lime-300/[0.06] text-lime-200' : 'border-red-300/20 bg-red-400/[0.07] text-red-200'}` : ''}`}>{status}</p>
+
+        {postureGroups.map((group, index) => (
+          <PostureProtocolGroupCard
+            key={group.instanceId}
+            group={group}
+            exercises={workout.exercises}
+            groupIndex={index}
+            groupCount={postureGroups.length}
+            onMoveGroup={handleMovePostureGroup}
+            onMoveExercise={handleMovePostureExercise}
+            onDelete={handleDeletePostureGroup}
+          />
+        ))}
 
         {currentExercise ? (
           <div data-testid="current-exercise-card">
@@ -134,7 +193,11 @@ export default function ActiveWorkoutView({ workout, onChange, onArchive, onDisc
           open={pickerOpen}
           existingExerciseIds={new Set(workout.exercises.map((exercise) => exercise.exerciseId))}
           onAddExercise={handleAddExercise}
-          onClose={() => setPickerOpen(false)}
+          onAddPostureProtocol={handleAddPostureProtocol}
+          initialPostureProtocolId={searchParams.get('postureProtocolId')}
+          initialPostureIssueId={searchParams.get('postureIssueId')}
+          initialPostureScrollTop={Number(searchParams.get('postureScroll') ?? 0)}
+          onClose={closePicker}
         />
 
       </div>

@@ -73,3 +73,10 @@
 | Growth data loop: IndexedDB photo repository and CRUD flow | completed |
 | Growth data loop: snap sheets, routes, and entry audit | completed |
 | Growth data loop: full regression and 390px visual QA | completed |
+| Posture protocols: audit current workout, picker, detail, history, persistence, and tests | completed |
+| Posture protocols: approve data boundary and snapshot architecture from supplied task brief | completed |
+| Posture protocols: write design and implementation plan | completed |
+| Posture protocols: add failing data and snapshot tests | completed |
+| Posture protocols: implement data filtering and workout snapshots | completed |
+| Posture protocols: implement picker, detail reuse, workout groups, and history | completed |
+| Posture protocols: full regression, build, and mobile visual QA | completed |

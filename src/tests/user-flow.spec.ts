@@ -1104,8 +1104,9 @@ test('user can discover latissimus dorsi and open lat pulldown detail', async ({
   await page.getByRole('link', { name: '高位下拉' }).click();
   await expect(page).toHaveURL(/\/exercises\/lat-pulldown\?muscleId=latissimus-dorsi$/);
   await expect(page.getByRole('heading', { name: '高位下拉' })).toBeVisible();
-  await expect(page.getByText('主练肌群')).toBeVisible();
-  await expect(page.getByText('背阔肌').first()).toBeVisible();
+  await page.getByRole('button', { name: /训练部位/ }).click();
+  await expect(page.getByTestId('exercise-muscles-sheet')).toContainText('主练肌群');
+  await expect(page.getByTestId('exercise-muscles-sheet')).toContainText('背阔肌');
 });
 
 test('app exposes pwa metadata for installation', async ({ page }) => {
@@ -1438,6 +1439,7 @@ test('rhomboids exercise detail keeps muscle context across alternatives', async
   await rowLink.click();
 
   await expect(page).toHaveURL(/\/exercises\/seated-row\?muscleId=rhomboids$/);
+  await page.getByRole('button', { name: /替代动作/ }).click();
   const alternatives = page.getByTestId('contextual-alternatives');
   await expect(alternatives).toContainText('主练匹配');
   await expect(alternatives).not.toContainText('滑草科键归屎');
@@ -1448,17 +1450,20 @@ test('rhomboids exercise detail keeps muscle context across alternatives', async
 
   await page.getByTestId('alternative-link-chest-supported-row').click();
   await expect(page).toHaveURL(/\/exercises\/chest-supported-row\?muscleId=rhomboids$/);
+  await page.getByRole('button', { name: /替代动作/ }).click();
   await page.getByTestId('alternative-link-barbell-row').click();
   await expect(page).toHaveURL(/\/exercises\/barbell-row\?muscleId=rhomboids$/);
 });
 
 test('exercise detail falls back to primary muscle when muscleId is missing or invalid', async ({ page }) => {
   await page.goto('/exercises/lat-pulldown');
+  await page.getByRole('button', { name: /替代动作/ }).click();
   await expect(page.getByTestId('alternative-link-pull-up')).toBeVisible();
   await expect(page.getByTestId('contextual-alternatives')).toContainText('主练匹配');
   await expect(page.getByTestId('contextual-alternatives')).not.toContainText('滑草科键归屎');
 
   await page.goto('/exercises/lat-pulldown?muscleId=not-a-real-muscle');
+  await page.getByRole('button', { name: /替代动作/ }).click();
   await expect(page.getByTestId('alternative-link-pull-up')).toBeVisible();
   await expect(page.getByTestId('contextual-alternatives')).toContainText('主练匹配');
   await expect(page.getByTestId('contextual-alternatives')).not.toContainText('滑草科键归屎');
@@ -1466,15 +1471,19 @@ test('exercise detail falls back to primary muscle when muscleId is missing or i
 
 test('exercise detail removes misleading alternative relationships', async ({ page }) => {
   await page.goto('/exercises/dumbbell-shrug?muscleId=upper-trapezius');
+  await page.getByRole('button', { name: /替代动作/ }).click();
   await expect(page.getByTestId('contextual-alternatives')).not.toContainText('Deadlift');
 
   await page.goto('/exercises/barbell-shrug?muscleId=upper-trapezius');
+  await page.getByRole('button', { name: /替代动作/ }).click();
   await expect(page.getByTestId('contextual-alternatives')).not.toContainText('Deadlift');
 
   await page.goto('/exercises/deadlift');
+  await page.getByRole('button', { name: /替代动作/ }).click();
   await expect(page.getByTestId('contextual-alternatives')).not.toContainText('T-bar Row');
 
   await page.goto('/exercises/prone-w-raise?muscleId=middle-lower-trapezius');
+  await page.getByRole('button', { name: /替代动作/ }).click();
   await expect(page.getByTestId('contextual-alternatives')).not.toContainText('Superman');
 });
 
@@ -1495,66 +1504,13 @@ test('exercise trajectory config covers the V0.21 first batch of existing exerci
   }
 });
 
-test('exercise detail shows simplified 3d trajectory for configured exercises', async ({ page }) => {
-  for (const exerciseId of ['lat-pulldown', 'machine-chest-press', 'squat']) {
-    await page.goto(`/exercises/${exerciseId}`);
-
-    const trajectory = page.getByTestId('exercise-trajectory-module');
-    await expect(trajectory).toBeVisible();
-    await expect(trajectory).toContainText('3D 动作轨迹');
-    await expect(trajectory).toContainText('起点');
-    await expect(trajectory).toContainText('终点');
-    await expect(trajectory).toContainText('方向');
-    await expect(trajectory).toContainText('目标肌群');
-    await expect(trajectory).toContainText('协同肌群');
-    await expect(trajectory).toContainText('当前为简化动作轨迹，不代表完整动作动画。');
-    await expect(page.getByTestId('exercise-trajectory-path')).toBeVisible();
-    await expect(page.getByTestId('exercise-trajectory-direction-label')).toBeVisible();
-    await expect(page.getByTestId('exercise-active-workout-entry')).toBeVisible();
-  }
-
-  await page.goto('/exercises/lat-pulldown');
-  await expect(page.getByTestId('exercise-trajectory-direction-label')).toContainText('从头顶上方下拉到上胸');
-});
-
-test('exercise trajectory playback moves through phases with play pause and replay controls', async ({ page }) => {
-  await page.goto('/exercises/lat-pulldown');
-
-  const trajectory = page.getByTestId('exercise-trajectory-module');
-  const playbackButton = page.getByTestId('exercise-trajectory-playback-button');
-  const phase = page.getByTestId('exercise-trajectory-current-phase');
-
-  await expect(playbackButton).toContainText('播放轨迹');
-  await expect(phase).toContainText('起始位置');
-  await expect(trajectory).toHaveAttribute('data-playback-progress', '0.00');
-
-  await playbackButton.click();
-  await expect(playbackButton).toContainText('暂停');
-  await expect(phase).toContainText('发力阶段');
-  await expect
-    .poll(async () => Number((await trajectory.getAttribute('data-playback-progress')) ?? '0'), {
-      message: 'trajectory playback progress should advance after play'
-    })
-    .toBeGreaterThan(0.15);
-
-  await playbackButton.click();
-  await expect(playbackButton).toContainText('播放轨迹');
-
-  await playbackButton.click();
-  await expect(playbackButton).toContainText('暂停');
-  await expect(phase).toContainText(/发力阶段|结束位置/);
-
-  await expect(playbackButton).toContainText('重新播放', { timeout: 3000 });
-  await expect(phase).toContainText('结束位置');
-});
-
-test('exercise detail shows trajectory fallback without mobile overflow', async ({ page }) => {
+test('exercise detail replaces the legacy trajectory with the two-stage media guide', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/exercises/plank');
 
-  await expect(page.getByTestId('exercise-trajectory-fallback')).toContainText('该动作暂未配置 3D 动作轨迹');
-  await expect(page.getByTestId('exercise-trajectory-playback-button')).toHaveCount(0);
-  await expect(page.getByTestId('exercise-active-workout-entry')).toBeVisible();
+  await expect(page.getByTestId('exercise-media-stage')).toHaveCount(2);
+  await expect(page.getByText('3D 动作轨迹')).toHaveCount(0);
+  await expect(page.getByTestId('exercise-primary-action')).toBeVisible();
 
   const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
   expect(hasHorizontalOverflow).toBe(false);
@@ -1568,11 +1524,10 @@ test('exercise detail can start an active workout with the current exercise', as
   });
 
   await page.goto('/exercises/lat-pulldown');
-  await expect(page.getByTestId('exercise-active-workout-entry')).toContainText('从这个动作开始一组训练');
-  await expect(page.getByTestId('start-workout-with-exercise')).toBeVisible();
+  await expect(page.getByTestId('exercise-primary-action')).toHaveText('添加到训练');
 
-  await page.getByTestId('start-workout-with-exercise').click();
-  await expect(page).toHaveURL(/\/workout-log$/);
+  await page.getByTestId('exercise-primary-action').click();
+  await expect(page).toHaveURL(/\/workout-log\?focusExercise=/);
   await expect(page.getByTestId('active-workout-card')).toContainText('进行中');
   await expect(page.getByTestId('workout-log-exercise')).toContainText('高位下拉');
 
@@ -1594,19 +1549,18 @@ test('exercise detail adds exercises to an existing active workout without dupli
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(1);
 
   await page.goto('/exercises/seated-row');
-  await expect(page.getByTestId('exercise-active-workout-entry')).toContainText('当前训练进行中');
-  await page.getByTestId('add-exercise-to-active-workout').click();
-  await expect(page.getByTestId('exercise-active-workout-status')).toContainText('已加入当前训练');
-  await page.getByTestId('go-to-active-workout').click();
-  await expect(page).toHaveURL(/\/workout-log$/);
+  await expect(page.getByTestId('exercise-primary-action')).toHaveText('加入当前训练');
+  await page.getByTestId('exercise-primary-action').click();
+  await expect(page.getByRole('status')).toContainText('已加入当前训练');
+  await page.getByTestId('exercise-primary-action').click();
+  await expect(page).toHaveURL(/\/workout-log\?focusExercise=/);
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(2);
-  await expect(page.getByTestId('workout-log-exercise').first()).toContainText('高位下拉');
-  await expect(page.getByTestId('workout-log-exercise').last()).toContainText('坐姿划船');
+  await expect(page.getByTestId('workout-log-exercise').filter({ hasText: '高位下拉' })).toHaveCount(1);
+  await expect(page.getByTestId('workout-log-exercise').filter({ hasText: '坐姿划船' })).toHaveCount(1);
 
   await page.goto('/exercises/seated-row');
-  await page.getByTestId('add-exercise-to-active-workout').click();
-  await expect(page.getByTestId('exercise-active-workout-status')).toContainText('该动作已在当前训练中');
-  await page.getByTestId('go-to-active-workout').click();
+  await expect(page.getByTestId('exercise-primary-action')).toHaveText('返回当前训练');
+  await page.getByTestId('exercise-primary-action').click();
   await expect(page.getByTestId('workout-log-exercise')).toHaveCount(2);
 });
 
@@ -1616,7 +1570,7 @@ test('exercise detail active workout entry does not overflow at 390px mobile wid
     window.localStorage.removeItem('musclemap.activeWorkout.v0.7');
   });
   await page.goto('/exercises/lat-pulldown');
-  await expect(page.getByTestId('start-workout-with-exercise')).toBeVisible();
+  await expect(page.getByTestId('exercise-primary-action')).toBeVisible();
 
   const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
   expect(hasHorizontalOverflow).toBe(false);

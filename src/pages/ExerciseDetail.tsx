@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
-import PageHeader from '../components/layout/PageHeader';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import Button from '../components/ui/Button';
-import Card from '../components/ui/Card';
-import EmptyState from '../components/ui/EmptyState';
-import ExerciseTrajectoryViewer from '../components/three/ExerciseTrajectoryViewer';
-import { exercises, getExerciseById } from '../data/exercises';
-import { getExerciseTrajectoryByExerciseId } from '../data/exerciseTrajectories';
+import ExerciseDetailActionBar from '../components/exercise/detail/ExerciseDetailActionBar';
+import ExerciseDetailLinks, { type ExerciseDetailSheetType } from '../components/exercise/detail/ExerciseDetailLinks';
+import ExerciseDetailSheets, { type OpenExerciseSheet } from '../components/exercise/detail/ExerciseDetailSheets';
+import ExerciseKeyCues from '../components/exercise/detail/ExerciseKeyCues';
+import ExerciseMediaPanel from '../components/exercise/detail/ExerciseMediaPanel';
+import ExerciseTroubleshooting from '../components/exercise/detail/ExerciseTroubleshooting';
+import { getExerciseById } from '../data/exercises';
 import { getMuscleById } from '../data/muscles';
 import type { ActiveWorkout } from '../types/activeWorkout';
-import type { Exercise } from '../types/exercise';
 import type { PostureDose, PostureDoseConfidence, PosturePrescription } from '../types/posture';
 import {
   addExerciseToExistingActiveWorkout,
@@ -17,33 +16,32 @@ import {
   readActiveWorkout,
   startWorkoutWithExercise
 } from '../utils/activeWorkout';
+import { resolveExerciseDetail } from '../utils/exerciseDetail';
+import { readExerciseFavorites, toggleExerciseFavorite } from '../utils/exerciseFavorites';
 import { formatDose, getPostureProtocolById, getPostureStandardExerciseById, isProtocolVisibleInApp, postureDataset } from '../utils/postureProtocols';
-
-type AlternativeMatch = {
-  exercise: Exercise;
-  matchType: 'primary' | 'secondary';
-};
-
-const MAX_CONTEXTUAL_ALTERNATIVES = 6;
 
 export default function ExerciseDetail() {
   const { exerciseId } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [activeWorkout, setActiveWorkout] = useState<ActiveWorkout | null>(null);
-  const [workoutStatus, setWorkoutStatus] = useState('');
   const exercise = exerciseId ? getExerciseById(exerciseId) : undefined;
+  const [activeWorkout, setActiveWorkout] = useState<ActiveWorkout | null>(() => readActiveWorkout());
+  const [status, setStatus] = useState('');
+  const [favorite, setFavorite] = useState(false);
+  const [openSheet, setOpenSheet] = useState<OpenExerciseSheet>(null);
 
   useEffect(() => {
     setActiveWorkout(readActiveWorkout());
-    setWorkoutStatus('');
+    setStatus('');
+    setOpenSheet(null);
+    setFavorite(exerciseId ? readExerciseFavorites().has(exerciseId) : false);
   }, [exerciseId]);
 
   if (!exercise) {
     return (
-      <div>
-        <PageHeader title="动作详情" backTo="/exercises" />
-        <EmptyState title="未找到这个动作" description="请返回动作管理重新选择。" />
+      <div className="exercise-detail-dark -mx-4 -mt-5 min-h-screen bg-[#080a08] px-4 py-8 text-white sm:-mx-6 sm:px-6">
+        <Link to="/exercises" className="inline-flex min-h-11 items-center gap-2 rounded-xl px-2 text-sm font-bold text-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/60">← 返回动作管理</Link>
+        <div className="mx-auto mt-20 max-w-sm text-center"><h1 className="text-2xl font-black">未找到这个动作</h1><p className="mt-2 text-sm text-zinc-400">请返回动作管理重新选择。</p></div>
       </div>
     );
   }
@@ -51,210 +49,112 @@ export default function ExerciseDetail() {
   const queryMuscleId = searchParams.get('muscleId');
   const fallbackMuscleId = exercise.primaryMuscles[0];
   const currentMuscleId = queryMuscleId && getMuscleById(queryMuscleId) ? queryMuscleId : fallbackMuscleId;
-  const contextualAlternatives = getContextualAlternatives(exercise, currentMuscleId);
-  const hasFewAlternatives = contextualAlternatives.length < 3;
+  const detail = resolveExerciseDetail(exercise, currentMuscleId);
   const isInActiveWorkout = activeWorkout ? isExerciseInActiveWorkout(activeWorkout, exercise.id) : false;
-  const trajectory = getExerciseTrajectoryByExerciseId(exercise.id);
+  const primaryLabel = activeWorkout ? (isInActiveWorkout ? '返回当前训练' : '加入当前训练') : '添加到训练';
   const postureContext = getPostureContext(exercise.id, searchParams);
   const backTarget = getExerciseBackTarget(searchParams);
 
-  const handleStartWorkoutWithExercise = () => {
-    startWorkoutWithExercise(exercise.id);
-    setWorkoutStatus('已开始训练并加入当前动作');
-    navigate('/workout-log');
+  const navigateToWorkout = (workout: ActiveWorkout) => {
+    const activeExercise = workout.exercises.find((item) => item.exerciseId === exercise.id);
+    navigate(activeExercise ? `/workout-log?focusExercise=${activeExercise.id}` : '/workout-log');
   };
 
-  const handleAddToActiveWorkout = () => {
+  const addToWorkout = () => {
     const result = addExerciseToExistingActiveWorkout(exercise.id);
+    if (result.status === 'missing' || !result.workout) {
+      const workout = startWorkoutWithExercise(exercise.id);
+      setActiveWorkout(workout);
+      return workout;
+    }
     setActiveWorkout(result.workout);
-
-    if (result.status === 'duplicate') {
-      setWorkoutStatus('该动作已在当前训练中');
-      return;
-    }
-
-    if (result.status === 'missing') {
-      startWorkoutWithExercise(exercise.id);
-      setWorkoutStatus('已开始训练并加入当前动作');
-      navigate('/workout-log');
-      return;
-    }
-
-    setWorkoutStatus('已加入当前训练');
+    if (result.status === 'added') setStatus('已加入当前训练');
+    return result.workout;
   };
 
+  const handlePrimary = () => {
+    if (!activeWorkout) {
+      navigateToWorkout(addToWorkout());
+      return;
+    }
+    if (isInActiveWorkout) {
+      navigateToWorkout(activeWorkout);
+      return;
+    }
+    addToWorkout();
+  };
+
+  const handleRecord = () => {
+    const workout = activeWorkout && isInActiveWorkout ? activeWorkout : addToWorkout();
+    navigateToWorkout(workout);
+  };
+
+  const handleFavorite = () => {
+    setFavorite(toggleExerciseFavorite(exercise.id));
+  };
+
+  const handleOpenDetailSheet = (type: ExerciseDetailSheetType) => setOpenSheet(type);
+
   return (
-    <div>
-      <PageHeader
-        title={exercise.name}
-        description={exercise.nameEn}
-        backTo={backTarget}
-        backLabel={searchParams.get('from') === 'posture' ? '返回方案详情' : searchParams.get('from') === 'workout' ? '返回训练中' : '返回'}
-        backTestId={searchParams.get('from') === 'posture' ? 'posture-detail-back' : undefined}
-      />
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
-        <div className="space-y-4">
-          {exercise.category !== 'posture' ? <WorkoutEntryCard
-            activeWorkout={activeWorkout}
-            isInActiveWorkout={isInActiveWorkout}
-            workoutStatus={workoutStatus}
-            onStart={handleStartWorkoutWithExercise}
-            onAdd={handleAddToActiveWorkout}
-          /> : null}
+    <div className="exercise-detail-dark -mx-4 -mt-5 min-h-screen bg-[#080a08] text-white sm:-mx-6">
+      <ExerciseDetailHeader backTo={backTarget} backTestId={searchParams.get('from') === 'posture' ? 'posture-detail-back' : undefined} favorite={favorite} onFavorite={handleFavorite} />
 
-          {postureContext ? <PostureProtocolContextCard context={postureContext} /> : null}
-
-          {exercise.postureDetails ? <PostureExerciseOverview exercise={exercise} /> : <Card>
-            {trajectory ? (
-              <ExerciseTrajectoryViewer trajectory={trajectory} />
-            ) : (
-              <div data-testid="exercise-trajectory-fallback" className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-wide text-app-accent">3D 动作轨迹</p>
-                <h2 className="text-lg font-semibold text-app-text">该动作暂未配置 3D 动作轨迹</h2>
-                <p className="text-sm leading-6 text-app-muted">原动作详情和加入当前训练功能仍可正常使用。</p>
-              </div>
-            )}
-          </Card>}
-
-          <DetailList title="动作步骤" items={exercise.steps} ordered />
-          <DetailList title="发力提示" items={exercise.cues} />
-        </div>
-
-        <div className="space-y-4">
-          <DetailList title="常见错误" items={exercise.commonMistakes} />
-          <Card>
-            <dl className="grid gap-4 text-sm">
-              {exercise.primaryMuscles.length ? <Meta title="主练肌群" values={exercise.primaryMuscles.map(formatMuscle)} /> : null}
-              {exercise.secondaryMuscles.length ? <Meta title="次要肌群" values={exercise.secondaryMuscles.map(formatMuscle)} /> : null}
-              <Meta title="器械" values={exercise.equipment} />
-              <Meta title="难度" values={[difficultyLabel(exercise.difficulty)]} />
-            </dl>
-          </Card>
-          {exercise.category !== 'posture' ? <Card>
-            <h2 className="text-lg font-semibold text-app-text">替代动作</h2>
-            <div data-testid="contextual-alternatives" className="mt-3 flex flex-wrap gap-2">
-              {contextualAlternatives.map((alternative) => (
-                <Link
-                  key={alternative.exercise.id}
-                  to={`/exercises/${alternative.exercise.id}?muscleId=${currentMuscleId}`}
-                  data-testid={`alternative-link-${alternative.exercise.id}`}
-                  className="inline-flex flex-col gap-1 rounded-xl border border-app-line bg-app-surfaceMuted px-3 py-2 text-sm hover:border-app-accent hover:text-app-accent"
-                >
-                  <span>{alternative.exercise.name}</span>
-                  <span className="text-xs text-app-muted">{alternative.matchType === 'primary' ? '主练匹配' : '次要参与'}</span>
-                </Link>
-              ))}
-            </div>
-            {hasFewAlternatives ? <p className="mt-3 text-sm text-app-muted">当前肌群的替代动作较少，可到动作管理查看更多相关动作。</p> : null}
-          </Card> : null}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function WorkoutEntryCard({
-  activeWorkout,
-  isInActiveWorkout,
-  workoutStatus,
-  onStart,
-  onAdd
-}: {
-  activeWorkout: ActiveWorkout | null;
-  isInActiveWorkout: boolean;
-  workoutStatus: string;
-  onStart: () => void;
-  onAdd: () => void;
-}) {
-  return (
-    <Card className="border-app-accent/25">
-      <div data-testid="exercise-active-workout-entry" className="space-y-3">
-        <div>
-          <h2 className="text-lg font-semibold text-app-text">加入训练</h2>
-          <p className="mt-1 text-sm text-app-muted">
-            {activeWorkout ? (isInActiveWorkout ? '该动作已在当前训练中' : '当前训练进行中') : '从这个动作开始一组训练'}
-          </p>
-        </div>
-        {activeWorkout ? (
-          <div className="grid gap-2 sm:grid-cols-2">
-            <Button type="button" className="min-h-11" onClick={onAdd} data-testid="add-exercise-to-active-workout">
-              加入当前训练
-            </Button>
-            <Link
-              to="/workout-log"
-              data-testid="go-to-active-workout"
-              className="inline-flex min-h-11 items-center justify-center rounded-md border border-app-line bg-app-surfaceMuted px-4 py-2 text-sm font-semibold text-app-text transition hover:border-app-accent hover:text-app-accent"
-            >
-              去记录
-            </Link>
+      <main className="mx-auto max-w-3xl space-y-4 px-4 pb-[calc(9.75rem+env(safe-area-inset-bottom))] pt-5 sm:px-6 sm:pt-7 md:pb-4">
+        <section data-exercise-section="title">
+          <h1 className="text-[2rem] font-black leading-tight tracking-[-0.035em] text-zinc-50 sm:text-4xl">{exercise.name}</h1>
+          <div data-testid="exercise-detail-tags" className="mt-4 flex flex-wrap gap-2">
+            <ExerciseTag type="region" label={detail.primaryRegion} />
+            <ExerciseTag type="equipment" label={detail.equipment} />
+            <ExerciseTag type="laterality" label={detail.lateralityLabel} />
           </div>
-        ) : (
-          <Button type="button" className="min-h-11 w-full sm:w-fit" onClick={onStart} data-testid="start-workout-with-exercise">
-            开始训练
-          </Button>
-        )}
-        <p data-testid="exercise-active-workout-status" className="min-h-6 text-sm text-app-accent">
-          {workoutStatus}
-        </p>
-      </div>
-    </Card>
-  );
-}
+        </section>
 
-function Meta({ title, values }: { title: string; values: string[] }) {
-  return (
-    <div>
-      <dt className="font-semibold text-app-text">{title}</dt>
-      <dd className="mt-2 flex flex-wrap gap-2">
-        {values.map((value) => (
-          <span key={value} className="rounded-full bg-app-surfaceMuted px-2 py-1 text-app-muted">
-            {value}
-          </span>
-        ))}
-      </dd>
+        <ExerciseMediaPanel media={detail.media} exerciseName={exercise.name} />
+        <ExerciseKeyCues cues={detail.keyCues} />
+        <ExerciseTroubleshooting items={detail.troubleshooting} onSelect={setOpenSheet} onViewAll={() => setOpenSheet('troubleshooting-all')} />
+        <ExerciseDetailLinks onOpen={handleOpenDetailSheet} />
+      </main>
+
+      <ExerciseDetailActionBar primaryLabel={primaryLabel} status={status} onRecord={handleRecord} onPrimary={handlePrimary} />
+      <ExerciseDetailSheets
+        openSheet={openSheet}
+        detail={detail}
+        postureContent={postureContext ? <PostureContextContent context={postureContext} /> : undefined}
+        onClose={() => setOpenSheet(null)}
+        onSelectIssue={setOpenSheet}
+      />
     </div>
   );
 }
 
-function getContextualAlternatives(exercise: Exercise, currentMuscleId: string): AlternativeMatch[] {
-  const primaryMatches = exercises
-    .filter((candidate) => candidate.id !== exercise.id && candidate.primaryMuscles.includes(currentMuscleId))
-    .map((candidate) => ({ exercise: candidate, matchType: 'primary' as const }));
-
-  const secondaryMatches = exercises
-    .filter(
-      (candidate) =>
-        candidate.id !== exercise.id &&
-        !candidate.primaryMuscles.includes(currentMuscleId) &&
-        candidate.secondaryMuscles.includes(currentMuscleId)
-    )
-    .map((candidate) => ({ exercise: candidate, matchType: 'secondary' as const }));
-
-  return [...primaryMatches, ...secondaryMatches].slice(0, MAX_CONTEXTUAL_ALTERNATIVES);
-}
-
-function DetailList({ title, items, ordered = false }: { title: string; items: string[]; ordered?: boolean }) {
-  const ListTag = ordered ? 'ol' : 'ul';
+function ExerciseDetailHeader({ backTo, backTestId, favorite, onFavorite }: { backTo: string; backTestId?: string; favorite: boolean; onFavorite: () => void }) {
   return (
-    <Card>
-      <h2 className="text-lg font-semibold text-app-text">{title}</h2>
-      <ListTag className={`mt-3 space-y-2 text-sm leading-6 text-app-muted ${ordered ? 'list-decimal' : 'list-disc'} pl-5`}>
-        {items.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ListTag>
-    </Card>
+    <header className="sticky top-0 z-20 border-b border-white/[0.08] bg-[#080a08] px-4 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top))] sm:px-6">
+      <div className="mx-auto grid max-w-3xl grid-cols-[44px_minmax(0,1fr)_44px] items-center">
+        <Link to={backTo} aria-label="返回" data-testid={backTestId} className="grid h-11 w-11 place-items-center rounded-xl text-zinc-100 transition hover:bg-white/[0.05] focus:outline-none focus:ring-2 focus:ring-lime-300/60">
+          <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+        </Link>
+        <p className="truncate text-center text-base font-bold text-zinc-100">动作详情</p>
+        <button type="button" aria-label={favorite ? '取消收藏' : '收藏动作'} aria-pressed={favorite} onClick={onFavorite} className={`grid h-11 w-11 place-items-center rounded-xl transition focus:outline-none focus:ring-2 focus:ring-lime-300/60 ${favorite ? 'text-lime-300' : 'text-zinc-300 hover:bg-white/[0.05]'}`}>
+          <svg viewBox="0 0 24 24" fill={favorite ? 'currentColor' : 'none'} className="h-6 w-6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3 2.75 5.57 6.15.9-4.45 4.33 1.05 6.12L12 17.03l-5.5 2.89 1.05-6.12L3.1 9.47l6.15-.9z" /></svg>
+        </button>
+      </div>
+    </header>
   );
 }
 
-function formatMuscle(muscleId: string) {
-  return getMuscleById(muscleId)?.nameZh ?? muscleId;
-}
-
-function difficultyLabel(difficulty: string) {
-  if (difficulty === 'beginner') return '新手';
-  if (difficulty === 'intermediate') return '进阶';
-  return '高级';
+function ExerciseTag({ type, label }: { type: 'region' | 'equipment' | 'laterality'; label: string }) {
+  const paths = {
+    region: <><circle cx="12" cy="5" r="2.5" /><path d="M8 21v-8a4 4 0 0 1 8 0v8M5 11l3-2m11 2-3-2" /></>,
+    equipment: <><path d="M7 9v6M4 10v4M17 9v6M20 10v4M7 12h10" /></>,
+    laterality: <><circle cx="12" cy="5" r="2.5" /><path d="M9 21v-8a3 3 0 0 1 6 0v8M9 11l-4 3m10-3 4 3" /></>
+  };
+  return (
+    <span className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/10 bg-white/[0.035] px-3 text-sm font-semibold text-zinc-300">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-4 w-4 text-lime-300" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">{paths[type]}</svg>
+      {label}
+    </span>
+  );
 }
 
 type ResolvedPostureContext = {
@@ -314,12 +214,8 @@ function getPostureContext(exerciseId: string, searchParams: URLSearchParams): R
   if (!protocolInstanceId) return null;
   const group = readActiveWorkout()?.postureProtocolGroups?.find(({ instanceId }) => instanceId === protocolInstanceId);
   const activeExerciseId = searchParams.get('activeExerciseId');
-  const snapshot = group?.exerciseSnapshots.find((item) =>
-    activeExerciseId ? item.instanceId === activeExerciseId : item.exerciseId === exerciseId
-  );
-  const stepSnapshot = group?.stepSnapshots?.find((item) =>
-    activeExerciseId ? item.exerciseInstanceId === activeExerciseId : item.exerciseId === exerciseId
-  );
+  const snapshot = group?.exerciseSnapshots.find((item) => activeExerciseId ? item.instanceId === activeExerciseId : item.exerciseId === exerciseId);
+  const stepSnapshot = group?.stepSnapshots?.find((item) => activeExerciseId ? item.exerciseInstanceId === activeExerciseId : item.exerciseId === exerciseId);
   if (!group || !snapshot) return null;
   return {
     protocolName: group.nameSnapshot,
@@ -337,60 +233,22 @@ function getPostureContext(exerciseId: string, searchParams: URLSearchParams): R
   };
 }
 
-function PostureProtocolContextCard({ context }: { context: ResolvedPostureContext }) {
+function PostureContextContent({ context }: { context: ResolvedPostureContext }) {
   return (
-    <Card className="border-lime-300/25">
-      <section data-testid="posture-protocol-context">
-        <p className="text-xs font-bold text-lime-300">本方案中的安排</p>
-        <h2 className="mt-1 text-lg font-semibold text-app-text">{context.protocolName}</h2>
-        <p className="mt-2 text-sm text-app-muted">{context.issueNames.join(' · ')}</p>
-        <dl className="mt-4 grid gap-3 text-sm">
-          <div><dt className="font-semibold text-app-text">当前顺序</dt><dd className="mt-1 text-app-muted">第 {context.order} 个动作</dd></div>
-          {context.groupLabel ? <div><dt className="font-semibold text-app-text">方案阶段</dt><dd className="mt-1 text-app-muted">{context.groupLabel}</dd></div> : null}
-          <div><dt className="font-semibold text-app-text">本次处方</dt><dd className="mt-1 text-app-muted">{context.dose ? formatDose(context.dose) : formatPosturePrescription(context.prescription)}</dd></div>
-          {context.doseConfidence === 'low' || context.doseConfidence === 'mediumLow' ? <div><dt className="font-semibold text-app-text">剂量置信度</dt><dd className="mt-1 text-amber-700">低置信度，仅保留原始信息，不自动填写训练计划</dd></div> : null}
-          <div><dt className="font-semibold text-app-text">方案作用</dt><dd className="mt-1 text-app-muted">{context.roleExplanation}</dd></div>
-          {context.specialCues.length ? <div><dt className="font-semibold text-app-text">专项提示</dt><dd className="mt-1 text-app-muted">{context.specialCues.join(' · ')}</dd></div> : null}
-          {context.limitations.length ? <div><dt className="font-semibold text-app-text">适用边界</dt><dd className="mt-1 text-app-muted">{context.limitations.join(' · ')}</dd></div> : null}
-          {context.visualReviewRequired ? <div><dt className="font-semibold text-app-text">图示状态</dt><dd className="mt-1 text-amber-700">动作图示待人工复核{context.visualReviewNote ? `：${context.visualReviewNote}` : ''}</dd></div> : null}
-        </dl>
-      </section>
-    </Card>
-  );
-}
-
-function PostureExerciseOverview({ exercise }: { exercise: Exercise }) {
-  const details = exercise.postureDetails!;
-  return (
-    <div className="space-y-4">
-      <Card>
-        <h2 className="text-lg font-semibold text-app-text">起始姿势</h2>
-        <p className="mt-3 text-sm leading-6 text-app-muted">{details.startPosition}</p>
-        <h2 className="mt-5 text-lg font-semibold text-app-text">呼吸</h2>
-        <p className="mt-3 text-sm leading-6 text-app-muted">{details.breathing}</p>
-      </Card>
-      <Card>
-        <details>
-          <summary className="cursor-pointer text-lg font-semibold text-app-text">降阶、进阶与停止条件</summary>
-          <div className="mt-3 space-y-3 text-sm leading-6 text-app-muted">
-            {details.regression ? <p><strong className="text-app-text">降阶：</strong>{details.regression}</p> : null}
-            {details.progression ? <p><strong className="text-app-text">进阶：</strong>{details.progression}</p> : null}
-            {details.stopConditions.length ? <p><strong className="text-app-text">停止条件：</strong>{details.stopConditions.join(' · ')}</p> : null}
-          </div>
-        </details>
-      </Card>
-      <Card>
-        <details>
-          <summary className="cursor-pointer text-lg font-semibold text-app-text">来源与核验状态</summary>
-          <div className="mt-3 space-y-2 text-sm leading-6 text-app-muted">
-            <p><strong className="text-app-text">来源原始说明：</strong>{details.sourceSummary}</p>
-            {details.sourceTimestamp ? <p><strong className="text-app-text">时间：</strong>{details.sourceTimestamp}</p> : null}
-            <p><strong className="text-app-text">标准化状态：</strong>{details.verificationStatus}</p>
-            <p><strong className="text-app-text">数据置信度：</strong>{details.dataConfidence}</p>
-          </div>
-        </details>
-      </Card>
-    </div>
+    <section data-testid="posture-protocol-context" className="border-t border-white/10 pt-5">
+      <h3 className="text-sm font-bold text-zinc-100">当前姿态方案</h3>
+      <p className="mt-2 text-sm font-semibold text-lime-200">{context.protocolName}</p>
+      <dl className="mt-3 space-y-3 text-sm">
+        {context.issueNames.length ? <div><dt className="font-semibold text-zinc-200">目标问题</dt><dd className="mt-1 text-zinc-400">{context.issueNames.join(' · ')}</dd></div> : null}
+        <div><dt className="font-semibold text-zinc-200">方案位置</dt><dd className="mt-1 text-zinc-400">第 {context.order} 个动作{context.groupLabel ? ` · ${context.groupLabel}` : ''}</dd></div>
+        <div><dt className="font-semibold text-zinc-200">本次处方</dt><dd className="mt-1 text-zinc-400">{context.dose ? formatDose(context.dose) : formatPosturePrescription(context.prescription)}</dd></div>
+        {context.doseConfidence === 'low' || context.doseConfidence === 'mediumLow' ? <div><dt className="font-semibold text-zinc-200">剂量置信度</dt><dd className="mt-1 text-amber-200">低置信度，仅保留原始信息</dd></div> : null}
+        <div><dt className="font-semibold text-zinc-200">方案作用</dt><dd className="mt-1 text-zinc-400">{context.roleExplanation}</dd></div>
+        {context.specialCues.length ? <div><dt className="font-semibold text-zinc-200">专项提示</dt><dd className="mt-1 text-zinc-400">{context.specialCues.join(' · ')}</dd></div> : null}
+        {context.limitations.length ? <div><dt className="font-semibold text-zinc-200">适用边界</dt><dd className="mt-1 text-zinc-400">{context.limitations.join(' · ')}</dd></div> : null}
+        {context.visualReviewRequired ? <div><dt className="font-semibold text-zinc-200">图示状态</dt><dd className="mt-1 text-amber-200">动作图示待人工复核{context.visualReviewNote ? `：${context.visualReviewNote}` : ''}</dd></div> : null}
+      </dl>
+    </section>
   );
 }
 
@@ -402,5 +260,5 @@ function formatPosturePrescription(prescription: PosturePrescription) {
     prescription.restSeconds !== null ? `休息 ${prescription.restSeconds} 秒` : '',
     prescription.frequencyText ?? ''
   ].filter(Boolean);
-  return parts.length ? parts.join(' · ') : prescription.rawText || '视频未说明';
+  return parts.length ? parts.join(' · ') : prescription.rawText || '按方案说明完成';
 }

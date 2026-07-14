@@ -2,6 +2,38 @@ import type { Difficulty, ExerciseCategory, ForceType, MechanicType } from './co
 
 export type ExerciseWeightType = 'external_weight' | 'bodyweight' | 'bodyweight_added' | 'bodyweight_assisted';
 
+export type ExerciseLaterality = 'unilateral' | 'bilateral' | 'alternating';
+
+export interface ExerciseMedia {
+  startImage?: string;
+  peakImage?: string;
+  startCaption?: string;
+  peakCaption?: string;
+  returnCaption?: string;
+}
+
+export interface ExerciseTroubleshootingItem {
+  id: string;
+  title: string;
+  quickFix: string;
+  causes: string[];
+  fixes: string[];
+  image?: string | null;
+}
+
+export interface ExerciseInstructions {
+  startPosition: string;
+  execution: string;
+  returnProcess: string;
+  rangeOfMotion: string;
+  notes?: string[];
+}
+
+export interface ExerciseAlternativeDetail {
+  exerciseId: string;
+  reason: string;
+}
+
 export interface PostureExerciseDetails {
   startPosition: string;
   breathing: string;
@@ -31,5 +63,13 @@ export interface Exercise {
   commonMistakes: string[];
   alternatives: string[];
   tags: string[];
+  primaryRegion?: string;
+  laterality?: ExerciseLaterality;
+  media?: ExerciseMedia;
+  keyCues?: string[];
+  troubleshooting?: ExerciseTroubleshootingItem[];
+  instructions?: ExerciseInstructions;
+  breathing?: string;
+  alternativeDetails?: ExerciseAlternativeDetail[];
   postureDetails?: PostureExerciseDetails;
 }

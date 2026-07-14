@@ -54,7 +54,56 @@ const existingExercises: ExerciseDefinition[] = [
     cues: ['肩膀远离耳朵。', '手肘略向后下方走，不要横向打开过多。', '骨盆保持稳定，不要扭腰。'],
     commonMistakes: ['身体旋转借力', '哑铃拉向肩膀导致手臂主导', '下降过快失去张力'],
     alternatives: ['seated-row', 'chest-supported-row', 't-bar-row'],
-    tags: ['划船', '哑铃', '背阔肌', '单侧']
+    tags: ['划船', '哑铃', '背阔肌', '单侧'],
+    primaryRegion: '背部',
+    laterality: 'unilateral',
+    media: {
+      startImage: '/exercise-media/one-arm-dumbbell-row/start.webp',
+      peakImage: '/exercise-media/one-arm-dumbbell-row/peak.webp',
+      startCaption: '持铃自然下垂，躯干稳定',
+      peakCaption: '肘部向髋部拉，背部收紧',
+      returnCaption: '控制重量沿原路径缓慢返回起始位置'
+    },
+    keyCues: ['胸口朝下', '肘向髋拉', '躯干稳定'],
+    troubleshooting: [
+      {
+        id: 'arm-fatigue',
+        title: '手臂酸',
+        quickFix: '减轻重量，用肘部带动',
+        causes: ['重量过大', '握力过紧', '过度主动屈肘'],
+        fixes: ['降低当前重量', '放松握力', '想象肘部向髋部移动'],
+        image: null
+      },
+      {
+        id: 'shoulder-shrug',
+        title: '肩膀耸起',
+        quickFix: '肩膀远离耳朵，保持下沉',
+        causes: ['重量超出控制范围', '肩胛没有先稳定', '顶峰位置过度抬肩'],
+        fixes: ['适当减轻重量', '起拉前先让肩膀下沉', '肘部向髋部而不是肩部移动'],
+        image: null
+      },
+      {
+        id: 'torso-rotation',
+        title: '腰部扭转',
+        quickFix: '胸口始终朝向地面',
+        causes: ['为了增加幅度而转体', '支撑点不稳定', '核心没有持续收紧'],
+        fixes: ['缩小到可控动作范围', '手掌和膝盖稳定压住长凳', '保持胸口朝向地面'],
+        image: null
+      }
+    ],
+    instructions: {
+      startPosition: '一侧手掌和同侧膝盖支撑长凳，支撑臂位于肩膀下方。另一手握哑铃自然下垂，背部保持中立。',
+      execution: '肩膀先保持下沉，再让肘部贴近身体向髋部方向拉动，避免手腕主动提拉。',
+      returnProcess: '在顶峰短暂停顿，随后沿原路径缓慢下放，直到背部获得舒适拉伸。',
+      rangeOfMotion: '拉到肘部略高于躯干或背部充分收紧即可，不用通过转腰增加幅度。',
+      notes: ['支撑侧肩膀保持稳定', '骨盆始终朝向地面', '两侧使用相同重量与次数']
+    },
+    breathing: '下放时吸气，向髋部拉起哑铃时呼气。',
+    alternativeDetails: [
+      { exerciseId: 'seated-row', reason: '需要更多躯干支撑时使用' },
+      { exerciseId: 'chest-supported-row', reason: '希望减少腰背稳定负担时使用' },
+      { exerciseId: 't-bar-row', reason: '需要双侧负重划船时使用' }
+    ]
   },
   {
     id: 'seated-row',

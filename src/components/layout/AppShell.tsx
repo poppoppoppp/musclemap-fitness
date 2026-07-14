@@ -9,15 +9,16 @@ interface AppShellProps {
 
 export default function AppShell({ children }: AppShellProps) {
   const location = useLocation();
-  const darkShell = location.pathname === '/' || location.pathname === '/music' || location.pathname.startsWith('/growth') || location.pathname === '/workout-log' || location.pathname.startsWith('/workout-history') || location.pathname === '/data-management' || location.pathname === '/plan-builder' || location.pathname.startsWith('/templates/');
+  const exerciseDetail = /^\/exercises\/[^/]+$/.test(location.pathname);
+  const darkShell = exerciseDetail || location.pathname === '/' || location.pathname === '/music' || location.pathname.startsWith('/growth') || location.pathname === '/workout-log' || location.pathname.startsWith('/workout-history') || location.pathname === '/data-management' || location.pathname === '/plan-builder' || location.pathname.startsWith('/templates/');
 
   return (
     <MusicPlayerProvider>
       <div className={`min-h-screen ${darkShell ? 'bg-[#080a08]' : 'bg-[#F6F8FC]'} text-app-text`}>
-        <div className="mx-auto flex min-h-screen w-full max-w-3xl flex-col px-4 pb-[calc(6.75rem+env(safe-area-inset-bottom))] pt-5 sm:px-6">
+        <div className={`mx-auto flex min-h-screen w-full max-w-3xl flex-col px-4 sm:px-6 ${exerciseDetail ? 'pb-0 pt-5' : 'pb-[calc(6.75rem+env(safe-area-inset-bottom))] pt-5'}`}>
           <main className="flex-1">{children}</main>
         </div>
-        <BottomNav />
+        {exerciseDetail ? null : <BottomNav />}
       </div>
     </MusicPlayerProvider>
   );

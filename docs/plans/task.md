@@ -88,3 +88,9 @@
 | Full posture dataset: integrate categories, stages, observations, and exercise reuse | completed |
 | Full posture dataset: adapt workout snapshots and history compatibility | completed |
 | Full posture dataset: run full tests, build, and mobile visual QA | completed |
+| Exercise detail redesign: audit route, data, workout state, sheets, and shell | completed |
+| Exercise detail redesign: compare approaches and approve design | completed |
+| Exercise detail redesign: write design and implementation plan | completed |
+| Exercise detail redesign: add failing behavior tests | completed |
+| Exercise detail redesign: implement data, components, and interactions | completed |
+| Exercise detail redesign: build, regression, and visual QA | completed |

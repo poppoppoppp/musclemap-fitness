@@ -40,11 +40,12 @@ test('browses categories, guidance and every stage in the existing picker', asyn
   await page.getByTestId('posture-action-EX_SCAP_QUADRUPED_PROTRACTION').click();
   await expect(page).toHaveURL(/\/exercises\/EX_SCAP_QUADRUPED_PROTRACTION/);
   await expect(page.getByRole('heading', { name: '四点跪姿肩胛前伸控制' })).toBeVisible();
-  await expect(page.getByTestId('posture-protocol-context')).toContainText('本方案中的安排');
+  await page.getByRole('button', { name: /动作说明/ }).click();
+  await expect(page.getByTestId('posture-protocol-context')).toContainText('当前姿态方案');
   await expect(page.getByTestId('posture-protocol-context')).toContainText('肩胛控制');
   await expect(page.getByTestId('posture-protocol-context')).toContainText('3 组');
   await expect(page.getByText('保持均匀呼吸。')).toBeVisible();
-  await expect(page.getByTestId('contextual-alternatives')).toHaveCount(0);
+  await page.getByRole('button', { name: '关闭动作说明' }).click();
 
   await page.getByTestId('posture-detail-back').click();
   await expect(page).toHaveURL(/\/workout-log/);
@@ -56,6 +57,7 @@ test('shows context-specific stage, confidence and limitations on posture action
   await openPostureProtocol(page, 'OROFACIAL_001');
   await page.getByTestId('posture-action-EX_SUBOCCIPITAL_SELF_MASSAGE').click();
 
+  await page.getByRole('button', { name: /动作说明/ }).click();
   const context = page.getByTestId('posture-protocol-context');
   await expect(context).toContainText('颈部准备');
   await expect(context).toContainText('180-300 秒');

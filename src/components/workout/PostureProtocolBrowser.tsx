@@ -1,80 +1,90 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import type { PostureProtocol } from '../../types/posture';
+import type { PostureProtocol, PostureProtocolStep } from '../../types/posture';
 import {
-  getAddableProtocolItems,
+  formatDose,
+  getPostureCategoryProtocolCount,
   getPostureStandardExerciseById,
-  getVisiblePostureIssues,
+  getProtocolExerciseSteps,
+  getRequiredProtocolSelectionGroups,
+  getSelectedAddableProtocolSteps,
   getVisiblePostureProtocols,
-  getVisiblePostureProtocolsForIssue,
+  getVisiblePostureProtocolsForCategory,
   postureDataset
 } from '../../utils/postureProtocols';
 
-type BrowserView = 'issues' | 'protocols' | 'detail';
+type BrowserView = 'categories' | 'protocols' | 'detail';
 
 interface PostureProtocolBrowserProps {
   initialProtocolId?: string | null;
-  initialIssueId?: string | null;
+  initialCategoryId?: string | null;
   initialScrollTop?: number;
   onBackToExercises: () => void;
-  onAddProtocol: (protocolId: string) => boolean;
+  onAddProtocol: (protocolId: string, selectedExerciseIds?: string[]) => boolean;
 }
 
 export default function PostureProtocolBrowser({
   initialProtocolId,
-  initialIssueId,
+  initialCategoryId,
   initialScrollTop = 0,
   onBackToExercises,
   onAddProtocol
 }: PostureProtocolBrowserProps) {
-  const issues = useMemo(() => getVisiblePostureIssues(postureDataset), []);
   const initialProtocol = initialProtocolId
-    ? getVisiblePostureProtocols(postureDataset).find(({ id }) => id === initialProtocolId)
+    ? getVisiblePostureProtocols().find(({ id }) => id === initialProtocolId)
     : undefined;
-  const [view, setView] = useState<BrowserView>(initialProtocol ? 'detail' : 'issues');
-  const [selectedIssueId, setSelectedIssueId] = useState(initialIssueId ?? initialProtocol?.targetIssueIds[0] ?? '');
+  const [view, setView] = useState<BrowserView>(initialProtocol ? 'detail' : 'categories');
+  const [selectedCategoryId, setSelectedCategoryId] = useState(initialCategoryId ?? initialProtocol?.category ?? '');
   const [selectedProtocolId, setSelectedProtocolId] = useState(initialProtocol?.id ?? '');
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
   const [adding, setAdding] = useState(false);
   const [scrollTop, setScrollTop] = useState(initialScrollTop);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const selectedProtocols = selectedIssueId ? getVisiblePostureProtocolsForIssue(selectedIssueId) : [];
+  const selectedProtocols = selectedCategoryId ? getVisiblePostureProtocolsForCategory(selectedCategoryId) : [];
   const selectedProtocol = selectedProtocolId
     ? selectedProtocols.find(({ id }) => id === selectedProtocolId) ?? initialProtocol
     : undefined;
+  const selectedExerciseIds = Object.values(selectedVariants);
+  const requiredSelectionGroups = selectedProtocol ? getRequiredProtocolSelectionGroups(selectedProtocol) : [];
+  const selectionComplete = requiredSelectionGroups.every((groupId) => Boolean(selectedVariants[groupId]));
+  const addableSteps = selectedProtocol
+    ? getSelectedAddableProtocolSteps(selectedProtocol, selectedExerciseIds)
+    : [];
 
   useEffect(() => {
     if (view !== 'detail' || !scrollRef.current) return;
     scrollRef.current.scrollTop = initialScrollTop;
   }, [initialScrollTop, view]);
 
-  const openIssue = (issueId: string) => {
-    const protocols = getVisiblePostureProtocolsForIssue(issueId);
-    setSelectedIssueId(issueId);
-    if (protocols.length === 1) {
-      setSelectedProtocolId(protocols[0].id);
-      setView('detail');
-    } else {
-      setSelectedProtocolId('');
-      setView('protocols');
-    }
+  const openCategory = (categoryId: string) => {
+    setSelectedCategoryId(categoryId);
+    setSelectedProtocolId('');
+    setSelectedVariants({});
+    setView('protocols');
+  };
+
+  const openProtocol = (protocolId: string) => {
+    setSelectedProtocolId(protocolId);
+    setSelectedVariants({});
+    setAdding(false);
+    setView('detail');
   };
 
   const goBack = () => {
-    if (view === 'issues') {
+    setAdding(false);
+    if (view === 'categories') {
       onBackToExercises();
-      return;
-    }
-    if (view === 'detail' && selectedProtocols.length > 1) {
+    } else if (view === 'protocols') {
+      setView('categories');
+    } else {
       setView('protocols');
-      return;
     }
-    setView('issues');
   };
 
   const addProtocol = () => {
-    if (!selectedProtocol || adding) return;
+    if (!selectedProtocol || adding || !selectionComplete) return;
     setAdding(true);
-    const added = onAddProtocol(selectedProtocol.id);
+    const added = onAddProtocol(selectedProtocol.id, selectedExerciseIds);
     if (!added) setAdding(false);
   };
 
@@ -83,13 +93,14 @@ export default function PostureProtocolBrowser({
       <div className="shrink-0 border-b border-white/10 px-4 py-3 sm:px-5">
         <button
           type="button"
+          data-testid="posture-browser-back"
           onClick={goBack}
-          className="min-h-11 rounded-full border border-white/12 px-3 text-xs font-bold text-zinc-300 transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-lime-300/60"
+          className="min-h-11 rounded-full border border-white/12 px-3 text-xs font-bold text-zinc-300 transition hover:bg-white/[0.06] active:bg-white/[0.1] focus:outline-none focus:ring-2 focus:ring-lime-300/60"
         >
-          ← {view === 'issues' ? '返回动作列表' : '返回上一层'}
+          ← {view === 'categories' ? '返回动作列表' : '返回上一层'}
         </button>
-        <p className="mt-2 text-sm text-zinc-400">
-          {view === 'issues' ? '选择需要改善的体态问题' : view === 'protocols' ? '选择一套体态改善方案' : '查看动作安排后整体加入当前训练'}
+        <p className="mt-2 text-sm text-zinc-300">
+          {view === 'categories' ? '选择训练方向' : view === 'protocols' ? '选择一套体态改善方案' : '查看全部阶段后加入当前训练'}
         </p>
       </div>
 
@@ -99,34 +110,34 @@ export default function PostureProtocolBrowser({
         className="min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden px-4 py-4 sm:px-5"
         style={{ scrollPaddingBottom: '1rem' }}
       >
-        {view === 'issues' ? (
-          <IssueList issues={issues} onSelect={openIssue} />
+        {view === 'categories' ? (
+          <CategoryList onSelect={openCategory} />
         ) : view === 'protocols' ? (
-          <ProtocolList
-            protocols={selectedProtocols}
-            onSelect={(protocolId) => {
-              setSelectedProtocolId(protocolId);
-              setView('detail');
-            }}
-          />
+          <ProtocolList protocols={selectedProtocols} onSelect={openProtocol} />
         ) : selectedProtocol ? (
-          <ProtocolDetail protocol={selectedProtocol} issueId={selectedIssueId} scrollTop={scrollTop} />
+          <ProtocolDetail
+            protocol={selectedProtocol}
+            categoryId={selectedCategoryId}
+            scrollTop={scrollTop}
+            selectedVariants={selectedVariants}
+            onSelectVariant={(groupId, exerciseId) => setSelectedVariants((current) => ({ ...current, [groupId]: exerciseId }))}
+          />
         ) : (
-          <p className="py-10 text-center text-sm text-zinc-500">当前没有可展示方案</p>
+          <p className="py-10 text-center text-sm text-zinc-400">当前没有可展示方案</p>
         )}
       </div>
 
       {view === 'detail' && selectedProtocol ? (
         <div data-testid="posture-protocol-footer" className="shrink-0 border-t border-white/10 bg-[#111410] px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3 sm:px-5">
-          <p data-testid="posture-add-summary" className="mb-2 text-center text-xs font-semibold text-zinc-400">
-            将添加 {getAddableProtocolItems(selectedProtocol).length} 个动作
+          <p data-testid="posture-add-summary" className="mb-2 text-center text-xs font-semibold text-zinc-300">
+            {selectionComplete ? `将添加 ${addableSteps.length} 个动作` : '请先选择一种器械变式'}
           </p>
           <button
             type="button"
             data-testid="add-posture-protocol"
-            disabled={adding}
+            disabled={adding || !selectionComplete}
             onClick={addProtocol}
-            className="min-h-12 w-full rounded-xl bg-lime-300 px-4 text-sm font-black text-[#10130d] transition hover:bg-lime-200 active:scale-[0.99] disabled:cursor-wait disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-lime-100"
+            className="min-h-12 w-full rounded-xl bg-lime-300 px-4 text-sm font-black text-[#10130d] transition hover:bg-lime-200 active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-lime-100"
           >
             {adding ? '正在加入…' : '加入当前训练'}
           </button>
@@ -136,137 +147,233 @@ export default function PostureProtocolBrowser({
   );
 }
 
-function IssueList({ issues, onSelect }: { issues: ReturnType<typeof getVisiblePostureIssues>; onSelect: (issueId: string) => void }) {
+function CategoryList({ onSelect }: { onSelect: (categoryId: string) => void }) {
+  const guidance = postureDataset.guidanceMaterials.find(({ visibility }) => visibility === 'primary');
+  const categories = postureDataset.categories.filter(({ id }) => getPostureCategoryProtocolCount(id) > 0);
   return (
-    <div className="space-y-2">
-      {issues.map((issue) => (
-        <button
-          key={issue.id}
-          type="button"
-          data-testid={`posture-issue-${issue.id}`}
-          onClick={() => onSelect(issue.id)}
-          className="flex min-h-[76px] w-full min-w-0 items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.025] p-3 text-left transition hover:border-lime-300/30 hover:bg-lime-300/[0.035] focus:outline-none focus:ring-2 focus:ring-lime-300/55"
-        >
-          <span className="min-w-0 flex-1">
-            <strong className="block text-sm font-black text-zinc-100">{issue.name}</strong>
-            <span className="mt-1 block text-xs leading-5 text-zinc-500">{issue.description}</span>
-            <span className="mt-1 block text-[11px] font-semibold text-lime-300/80">{issue.protocolCount} 套可用方案</span>
-          </span>
-          <span aria-hidden="true" className="shrink-0 text-lg text-zinc-500">›</span>
-        </button>
-      ))}
+    <div>
+      {guidance ? (
+        <aside data-testid="posture-guidance" className="mb-5 rounded-2xl bg-lime-300/[0.07] px-4 py-3 text-sm leading-6 text-zinc-200">
+          <strong className="block text-sm font-black text-lime-300">{guidance.title}</strong>
+          <p className="mt-1 text-wrap-pretty">{guidance.content[3]}，训练目标优先放在舒适度、活动能力和力量表现。</p>
+        </aside>
+      ) : null}
+      <div className="divide-y divide-white/[0.08] rounded-2xl border border-white/10 bg-white/[0.025]">
+        {categories.map((category) => {
+          const count = getPostureCategoryProtocolCount(category.id);
+          return (
+            <button
+              key={category.id}
+              type="button"
+              data-testid={`posture-category-${category.id}`}
+              data-category-id={category.id}
+              onClick={() => onSelect(category.id)}
+              className="flex min-h-[76px] w-full min-w-0 items-center gap-3 px-4 py-3 text-left transition first:rounded-t-2xl last:rounded-b-2xl hover:bg-lime-300/[0.04] active:bg-lime-300/[0.08] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-lime-300/55"
+            >
+              <span className="min-w-0 flex-1">
+                <strong className="block text-sm font-black text-zinc-100">{category.name}</strong>
+                <span className="mt-1 block text-xs leading-5 text-zinc-400">{category.description}</span>
+              </span>
+              <span className="shrink-0 text-xs font-bold text-lime-300">{count} 套方案</span>
+              <span aria-hidden="true" className="shrink-0 text-lg text-zinc-400">›</span>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
 
 function ProtocolList({ protocols, onSelect }: { protocols: PostureProtocol[]; onSelect: (protocolId: string) => void }) {
   return (
-    <div className="space-y-2">
+    <div className="divide-y divide-white/[0.08] rounded-2xl border border-white/10 bg-white/[0.025]">
       {protocols.map((protocol) => (
         <button
           key={protocol.id}
           type="button"
+          data-testid={`posture-protocol-${protocol.id}`}
+          data-protocol-id={protocol.id}
           onClick={() => onSelect(protocol.id)}
-          className="flex min-h-[84px] w-full min-w-0 items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.025] p-3 text-left focus:outline-none focus:ring-2 focus:ring-lime-300/55"
+          className="flex min-h-[92px] w-full min-w-0 items-center gap-3 px-4 py-3 text-left transition first:rounded-t-2xl last:rounded-b-2xl hover:bg-lime-300/[0.04] active:bg-lime-300/[0.08] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-lime-300/55"
         >
           <span className="min-w-0 flex-1">
-            <strong className="block text-sm font-black text-zinc-100">{protocol.name}</strong>
-            <span className="mt-1 block text-xs leading-5 text-zinc-500">{protocol.summary}</span>
-            <span className="mt-1 block text-[11px] font-semibold text-lime-300/80">{getAddableProtocolItems(protocol).length} 个动作</span>
+            <strong className="block text-sm font-black leading-5 text-zinc-100">{protocol.title}</strong>
+            <span className="mt-1 block text-xs leading-5 text-zinc-400">{protocol.userFacingGoal}</span>
+            <span className="mt-1 block text-[11px] font-semibold text-lime-300">{countProtocolActions(protocol)} 个动作</span>
           </span>
-          <span aria-hidden="true" className="text-lg text-zinc-500">›</span>
+          <span aria-hidden="true" className="shrink-0 text-lg text-zinc-400">›</span>
         </button>
       ))}
     </div>
   );
 }
 
-function ProtocolDetail({ protocol, issueId, scrollTop }: { protocol: PostureProtocol; issueId: string; scrollTop: number }) {
-  const issueNames = protocol.targetIssueIds.flatMap((id) => {
-    const issue = postureDataset.postureIssues.find((item) => item.id === id);
-    return issue ? [issue.name] : [];
-  });
-  const items = getAddableProtocolItems(protocol);
-  const sourceEntries = Object.entries(protocol.sourceOriginal).filter(
-    ([key, value]) => key !== 'claimsNotForPublicCopy' && (typeof value === 'string' || typeof value === 'number')
-  );
-  const theoryItems = (protocol.theoryIds ?? []).flatMap((theoryId) => {
-    const theory = postureDataset.theoryMaterials.find(
-      ({ id, status, appEligibility }) => id === theoryId && status === 'ready' && appEligibility === 'released'
-    );
-    return theory ? [theory] : [];
-  });
-
+function ProtocolDetail({
+  protocol,
+  categoryId,
+  scrollTop,
+  selectedVariants,
+  onSelectVariant
+}: {
+  protocol: PostureProtocol;
+  categoryId: string;
+  scrollTop: number;
+  selectedVariants: Record<string, string>;
+  onSelectVariant: (groupId: string, exerciseId: string) => void;
+}) {
+  const stages = useMemo(() => groupSteps(protocol.steps), [protocol.steps]);
   return (
-    <article data-testid="posture-protocol-detail" className="min-w-0 space-y-4 pb-2">
-      <div>
-        <h3 className="text-wrap-balance text-xl font-black leading-7 text-white">{protocol.name}</h3>
+    <article data-testid="posture-protocol-detail" className="min-w-0 pb-2">
+      <header className="pb-5">
+        <h3 className="text-wrap-balance text-xl font-black leading-7 text-white">{protocol.title}</h3>
         <div className="mt-2 flex flex-wrap gap-1.5">
-          {issueNames.map((name) => <span key={name} className="rounded-full bg-lime-300/10 px-2.5 py-1 text-xs font-bold text-lime-300">{name}</span>)}
+          {protocol.targetIssues.map((name) => <span key={name} className="rounded-full bg-lime-300/10 px-2.5 py-1 text-xs font-bold text-lime-300">{name}</span>)}
         </div>
-        <p className="mt-3 text-sm leading-6 text-zinc-400">{protocol.summary}</p>
-        <p className="mt-2 text-xs font-semibold text-zinc-500">{items.length} 个动作</p>
+        <p className="mt-3 text-wrap-pretty text-sm leading-6 text-zinc-300">{protocol.userFacingGoal}</p>
+        <p className="mt-2 text-xs font-semibold text-zinc-400">{countProtocolActions(protocol)} 个训练动作</p>
+      </header>
+
+      <div className="border-y border-white/10">
+        {stages.map(({ key, label, steps }) => (
+          <section key={key} data-testid="posture-stage" className="py-4 not-last:border-b not-last:border-white/[0.08]">
+            <h4 className="mb-2 text-sm font-black text-zinc-100">{label}</h4>
+            <div className="space-y-2">
+              {steps.map((step) => step.kind === 'observation'
+                ? <ObservationStep key={step.id} step={step} />
+                : <ExerciseStep
+                    key={step.id}
+                    protocol={protocol}
+                    step={step}
+                    categoryId={categoryId}
+                    scrollTop={scrollTop}
+                    selected={Boolean(step.selectionGroupId && step.exerciseId && selectedVariants[step.selectionGroupId] === step.exerciseId)}
+                    onSelectVariant={onSelectVariant}
+                  />)}
+            </div>
+          </section>
+        ))}
       </div>
 
-      <ol className="space-y-2">
-        {items.map((item, index) => {
-          const exercise = getPostureStandardExerciseById(item.exerciseId);
-          if (!exercise) return null;
-          const query = new URLSearchParams({
-            from: 'posture',
-            postureProtocolId: protocol.id,
-            postureIssueId: issueId || protocol.targetIssueIds[0] || '',
-            postureScroll: String(Math.round(scrollTop))
-          });
-          return (
-            <li key={item.exerciseId} data-testid="posture-protocol-action" className="rounded-2xl border border-white/10 bg-black/20 p-3">
-              <Link
-                data-testid={`posture-action-${item.exerciseId}`}
-                to={`/exercises/${item.exerciseId}?${query.toString()}`}
-                className="flex min-h-11 min-w-0 items-start gap-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-lime-300/55"
-              >
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lime-300 text-sm font-black text-[#10130d]">{index + 1}</span>
-                <span className="min-w-0 flex-1">
-                  <strong className="block text-sm font-black text-zinc-100">{exercise.name}</strong>
-                  <span className="mt-1 block text-xs leading-5 text-zinc-500">{item.roleExplanation}</span>
-                  <span className="mt-1 block text-[11px] font-semibold text-zinc-400">{item.prescription.rawText || '视频未说明'}</span>
-                </span>
-                <span aria-hidden="true" className="text-zinc-500">›</span>
-              </Link>
-            </li>
-          );
-        })}
-      </ol>
-
-      {theoryItems.length > 0 ? (
-        <details className="rounded-xl border border-white/10 bg-black/15 px-3 py-2.5">
-          <summary className="cursor-pointer text-sm font-bold text-zinc-300">为什么这样练</summary>
-          <div className="mt-3 space-y-3 text-xs leading-5 text-zinc-400">
-            {theoryItems.map((theory) => <p key={theory.id}>{theory.name}</p>)}
-          </div>
+      {protocol.limitations.length > 0 ? (
+        <details className="mt-4 rounded-xl border border-white/10 px-3 py-2.5">
+          <summary className="min-h-7 cursor-pointer text-sm font-bold text-zinc-200">注意事项</summary>
+          <ul className="mt-3 space-y-1.5 text-xs leading-5 text-zinc-300">
+            {protocol.limitations.map((limitation) => <li key={limitation}>• {limitation}</li>)}
+          </ul>
         </details>
       ) : null}
 
-      <details className="rounded-xl border border-white/10 bg-black/15 px-3 py-2.5">
-        <summary className="cursor-pointer text-sm font-bold text-zinc-300">来源与原始说明</summary>
-        <dl className="mt-3 space-y-2 text-xs leading-5 text-zinc-400">
-          {sourceEntries.map(([key, value]) => (
-            <div key={key}>
-              <dt className="font-bold text-zinc-500">{sourceLabel(key)}</dt>
-              <dd className="mt-0.5 break-words">{String(value)}</dd>
-            </div>
-          ))}
-        </dl>
-      </details>
+      {protocol.sourceUrl ? (
+        <details className="mt-3 rounded-xl border border-white/10 px-3 py-2.5">
+          <summary className="min-h-7 cursor-pointer text-sm font-bold text-zinc-200">来源</summary>
+          <p className="mt-3 break-all text-xs leading-5 text-zinc-400">{protocol.sourceUrl}</p>
+        </details>
+      ) : null}
     </article>
   );
 }
 
-function sourceLabel(key: string) {
-  if (key === 'creator') return '来源作者';
-  if (key === 'videoTitle') return '原视频';
-  if (key === 'videoDuration') return '视频时长';
-  if (key === 'coreClaim') return '来源原始说明';
-  if (key === 'sourceFile') return '来源文件';
-  return key;
+function ObservationStep({ step }: { step: PostureProtocolStep }) {
+  const observation = postureDataset.observations.find(({ id }) => id === step.observationId);
+  if (!observation) return null;
+  return (
+    <div data-testid="posture-observation" className="rounded-xl bg-sky-300/[0.07] px-3 py-3">
+      <div className="flex items-center gap-2">
+        <span className="rounded-full bg-sky-300/10 px-2 py-1 text-[11px] font-bold text-sky-200">观察</span>
+        <strong className="text-sm font-black text-zinc-100">{observation.name}</strong>
+      </div>
+      <p className="mt-2 text-xs leading-5 text-zinc-300">{observation.purpose}</p>
+      <p className="mt-1 text-[11px] leading-5 text-zinc-400">{observation.limitation}</p>
+    </div>
+  );
+}
+
+function ExerciseStep({
+  protocol,
+  step,
+  categoryId,
+  scrollTop,
+  selected,
+  onSelectVariant
+}: {
+  protocol: PostureProtocol;
+  step: PostureProtocolStep;
+  categoryId: string;
+  scrollTop: number;
+  selected: boolean;
+  onSelectVariant: (groupId: string, exerciseId: string) => void;
+}) {
+  const exercise = step.exerciseId ? getPostureStandardExerciseById(step.exerciseId) : undefined;
+  if (!exercise || !step.exerciseId) return null;
+  const query = new URLSearchParams({
+    from: 'posture',
+    postureProtocolId: protocol.id,
+    postureCategoryId: categoryId,
+    postureScroll: String(Math.round(scrollTop))
+  });
+  const lowConfidence = step.dose?.confidence === 'low' || step.dose?.confidence === 'mediumLow';
+  const content = (
+    <>
+      <span className="min-w-0 flex-1">
+        <span className="flex flex-wrap items-center gap-1.5">
+          <strong className="text-sm font-black text-zinc-100">{exercise.name}</strong>
+          {step.optional ? <span data-testid="posture-optional-step" className="rounded-full bg-amber-300/10 px-2 py-0.5 text-[11px] font-bold text-amber-200">可选</span> : null}
+        </span>
+        <span className="mt-1 block text-xs leading-5 text-zinc-300">{formatDose(step.dose)}</span>
+        {lowConfidence ? <span className="mt-1 block text-[11px] leading-4 text-amber-200">来源剂量，低置信度，不自动作为训练推荐</span> : null}
+        {exercise.visualReviewRequired ? <span className="mt-1 block text-[11px] leading-4 text-zinc-400">动作轨迹需要画面复核</span> : null}
+      </span>
+    </>
+  );
+
+  if (step.selectionGroupId) {
+    return (
+      <div data-testid="posture-protocol-action" className={`rounded-xl border px-3 py-3 ${selected ? 'border-lime-300/45 bg-lime-300/[0.07]' : 'border-white/10 bg-black/15'}`}>
+        <button
+          type="button"
+          role="radio"
+          aria-checked={selected}
+          data-testid={`posture-variant-${step.exerciseId}`}
+          data-variant-choice="true"
+          data-exercise-id={step.exerciseId}
+          onClick={() => onSelectVariant(step.selectionGroupId!, step.exerciseId!)}
+          className="flex min-h-11 w-full items-start gap-3 text-left focus:outline-none focus:ring-2 focus:ring-lime-300/55"
+        >
+          <span aria-hidden="true" className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${selected ? 'border-lime-300 bg-lime-300 text-[#10130d]' : 'border-zinc-500'}`}>{selected ? '✓' : ''}</span>
+          {content}
+        </button>
+        <Link data-testid={`posture-action-${step.exerciseId}`} to={`/exercises/${step.exerciseId}?${query.toString()}`} className="mt-2 inline-flex min-h-11 items-center rounded-lg px-2 text-xs font-bold text-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/55">查看动作详情</Link>
+      </div>
+    );
+  }
+
+  return (
+    <div data-testid="posture-protocol-action" data-exercise-id={step.exerciseId}>
+      <Link
+        data-testid={`posture-action-${step.exerciseId}`}
+        to={`/exercises/${step.exerciseId}?${query.toString()}`}
+        className="flex min-h-14 items-start gap-3 rounded-xl bg-black/15 px-3 py-3 transition hover:bg-white/[0.04] active:bg-white/[0.07] focus:outline-none focus:ring-2 focus:ring-lime-300/55"
+      >
+        {content}
+        <span aria-hidden="true" className="shrink-0 text-zinc-400">›</span>
+      </Link>
+    </div>
+  );
+}
+
+function groupSteps(steps: PostureProtocolStep[]) {
+  const groups: Array<{ key: string; label: string; steps: PostureProtocolStep[] }> = [];
+  for (const step of [...steps].sort((left, right) => left.order - right.order)) {
+    const key = `${step.groupKey}:${step.groupLabel}`;
+    const existing = groups.find((group) => group.key === key);
+    if (existing) existing.steps.push(step);
+    else groups.push({ key, label: step.groupLabel, steps: [step] });
+  }
+  return groups;
+}
+
+function countProtocolActions(protocol: PostureProtocol) {
+  const steps = getProtocolExerciseSteps(protocol);
+  const selectionGroups = new Set(steps.flatMap(({ selectionGroupId }) => selectionGroupId ? [selectionGroupId] : []));
+  return steps.filter(({ selectionGroupId }) => !selectionGroupId).length + selectionGroups.size;
 }

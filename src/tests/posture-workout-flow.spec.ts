@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 const ACTIVE_WORKOUT_KEY = 'musclemap.activeWorkout.v0.7';
 
-test('browses a released posture protocol in the existing picker and reuses action details', async ({ page }) => {
+test('browses categories, guidance and every stage in the existing picker', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await startEmptyWorkout(page);
   await openPicker(page);
@@ -17,29 +17,107 @@ test('browses a released posture protocol in the existing picker and reuses acti
   await postureEntry.click();
   const browser = page.getByTestId('posture-browser');
   await expect(page.getByTestId('exercise-picker-sheet').getByRole('heading', { name: '体态改善' })).toBeVisible();
-  await expect(browser).toContainText('选择需要改善的体态问题');
-  await expect(page.getByTestId('posture-issue-humeral-anterior-translation')).toBeVisible();
-  await expect(page.getByTestId('posture-issue-shoulder-clicking-discomfort')).toBeVisible();
-  await expect(page.getByTestId('posture-issue-winged-scapula')).toHaveCount(0);
+  await expect(browser).toContainText('选择训练方向');
+  await expect(page.getByTestId('posture-guidance')).toContainText('外观差异不等于疾病');
+  await expect(page.locator('[data-category-id]')).toHaveCount(8);
+  await expect(page.getByTestId('posture-category-shoulder_scapula')).toContainText('2 套方案');
+  await expect(page.getByTestId('posture-category-orofacial')).toContainText('1 套方案');
 
-  await page.getByTestId('posture-issue-humeral-anterior-translation').click();
+  await page.getByTestId('posture-category-shoulder_scapula').click();
+  await expect(page.locator('[data-protocol-id]')).toHaveCount(2);
+  await page.getByTestId('posture-protocol-SHOULDER_001').click();
   const detail = page.getByTestId('posture-protocol-detail');
-  await expect(detail).toContainText('肩部弹响/不适与肩胛控制方案');
-  await expect(detail.getByTestId('posture-protocol-action')).toHaveCount(2);
-  await expect(detail).not.toContainText('冈下肌与小圆肌局部压放松');
-  await expect(detail).not.toContainText('80%');
+  await expect(detail).toContainText('肩胛控制与肩部不适辅助方案');
+  await expect(detail.getByTestId('posture-stage')).toHaveCount(3);
+  await expect(detail).toContainText('软组织准备');
+  await expect(detail).toContainText('肩胛控制');
+  await expect(detail).toContainText('上举协同');
+  await expect(detail.getByTestId('posture-protocol-action')).toHaveCount(3);
+  await expect(detail.getByTestId('posture-optional-step')).toContainText('可选');
+  await expect(detail).not.toContainText('改善肩部弹响');
+  await expect(page.getByTestId('posture-add-summary')).toContainText('将添加 2 个动作');
 
-  await page.getByTestId('posture-action-quadruped-scapular-protraction-stability').click();
-  await expect(page).toHaveURL(/\/exercises\/quadruped-scapular-protraction-stability/);
-  await expect(page.getByRole('heading', { name: '四点跪姿肩胛前伸稳定' })).toBeVisible();
+  await page.getByTestId('posture-action-EX_SCAP_QUADRUPED_PROTRACTION').click();
+  await expect(page).toHaveURL(/\/exercises\/EX_SCAP_QUADRUPED_PROTRACTION/);
+  await expect(page.getByRole('heading', { name: '四点跪姿肩胛前伸控制' })).toBeVisible();
   await expect(page.getByTestId('posture-protocol-context')).toContainText('本方案中的安排');
+  await expect(page.getByTestId('posture-protocol-context')).toContainText('肩胛控制');
   await expect(page.getByTestId('posture-protocol-context')).toContainText('3 组');
-  await expect(page.getByText('保持姿势时均匀呼吸；视频未给出固定呼吸次数。')).toBeVisible();
+  await expect(page.getByText('保持均匀呼吸。')).toBeVisible();
   await expect(page.getByTestId('contextual-alternatives')).toHaveCount(0);
 
   await page.getByTestId('posture-detail-back').click();
   await expect(page).toHaveURL(/\/workout-log/);
   await expect(page.getByTestId('posture-protocol-detail')).toBeVisible();
+});
+
+test('shows context-specific stage, confidence and limitations on posture action detail', async ({ page }) => {
+  await startEmptyWorkout(page);
+  await openPostureProtocol(page, 'OROFACIAL_001');
+  await page.getByTestId('posture-action-EX_SUBOCCIPITAL_SELF_MASSAGE').click();
+
+  const context = page.getByTestId('posture-protocol-context');
+  await expect(context).toContainText('颈部准备');
+  await expect(context).toContainText('180-300 秒');
+  await expect(context).toContainText('低置信度');
+  await expect(context).toContainText('不能矫正骨性脸型');
+});
+
+test('shows observations and missing doses without counting or inventing them', async ({ page }) => {
+  await startEmptyWorkout(page);
+  await openPostureProtocol(page, 'PELVIS_001');
+  await expect(page.getByTestId('posture-observation')).toHaveCount(2);
+  await expect(page.getByTestId('posture-protocol-action')).toHaveCount(5);
+  await expect(page.getByTestId('posture-add-summary')).toContainText('将添加 5 个动作');
+
+  await page.getByTestId('posture-browser-back').click();
+  await page.getByTestId('posture-browser-back').click();
+  await page.getByTestId('posture-category-cervical_head').click();
+  await page.getByTestId('posture-protocol-CERVICAL_002').click();
+  await expect(page.getByTestId('posture-protocol-detail').getByText('剂量未说明')).toHaveCount(3);
+});
+
+test('requires one equipment variant for the low-angle abduction protocol', async ({ page }) => {
+  await startEmptyWorkout(page);
+  await openPostureProtocol(page, 'SHOULDER_002');
+  await expect(page.getByTestId('add-posture-protocol')).toBeDisabled();
+  await expect(page.locator('[data-variant-choice]')).toHaveCount(2);
+  await page.getByTestId('posture-variant-EX_LOW_ANGLE_ABDUCTION_CABLE').click();
+  await expect(page.getByTestId('add-posture-protocol')).toBeEnabled();
+  await expect(page.getByTestId('posture-add-summary')).toContainText('将添加 1 个动作');
+});
+
+test('records duration only for a posture action with an explicit duration dose', async ({ page }) => {
+  await startEmptyWorkout(page);
+  await openPostureProtocol(page, 'PELVIS_002');
+  await page.getByTestId('add-posture-protocol').click();
+
+  const current = page.getByTestId('current-exercise-card');
+  await expect(current.getByTestId('set-duration-input')).toHaveCount(1);
+  await expect(current.getByTestId('set-reps-input')).toHaveCount(0);
+  await current.getByTestId('set-duration-input').fill('45');
+  await page.getByTestId('end-active-workout').click();
+
+  await expect(page).toHaveURL(/\/workout-history\//);
+  await expect(page.getByTestId('workout-history-set')).toContainText('45 秒');
+  await page.getByTestId('edit-workout-log').click();
+  await expect(page.getByTestId('history-set-duration-input')).toHaveCount(1);
+  await expect(page.getByTestId('history-set-reps-input')).toHaveCount(0);
+  await page.getByTestId('history-set-duration-input').fill('50');
+  await page.getByTestId('save-workout-log').click();
+  await expect(page.getByTestId('workout-history-set')).toContainText('50 秒');
+});
+
+test('keeps protocol stages and observations in the active workout group', async ({ page }) => {
+  await startEmptyWorkout(page);
+  await openPostureProtocol(page, 'PELVIS_001');
+  await page.getByTestId('add-posture-protocol').click();
+
+  const group = page.getByTestId('posture-protocol-group');
+  await expect(group.getByTestId('posture-group-stage')).toHaveCount(4);
+  await expect(group.getByTestId('posture-group-observation')).toHaveCount(2);
+  await expect(group).toContainText('观察不计入训练动作');
+  await expect(group).toContainText('5 个训练动作');
 });
 
 test('adds a protocol snapshot, persists it, marks edits and deletes the whole group', async ({ page }) => {
@@ -53,9 +131,10 @@ test('adds a protocol snapshot, persists it, marks edits and deletes the whole g
 
   await expect(page.getByTestId('exercise-picker-sheet')).toBeHidden();
   const group = page.getByTestId('posture-protocol-group');
-  await expect(group).toContainText('肩部弹响/不适与肩胛控制方案');
-  await expect(group).toContainText('2 个动作');
-  await expect(page.getByTestId('save-status')).toContainText('已加入「肩部弹响/不适与肩胛控制方案」');
+  await expect(group).toContainText('肩胛控制与肩部不适辅助方案');
+  await expect(group).toContainText('2 个训练动作');
+  await expect(group.getByTestId('posture-group-stage')).toHaveCount(3);
+  await expect(page.getByTestId('save-status')).toContainText('已加入「肩胛控制与肩部不适辅助方案」');
 
   const stored = await page.evaluate((key) => JSON.parse(window.localStorage.getItem(key) ?? 'null'), ACTIVE_WORKOUT_KEY);
   expect(stored.postureProtocolGroups).toHaveLength(1);
@@ -80,9 +159,10 @@ test('completed workout history retains the posture protocol snapshot', async ({
 
   await expect(page).toHaveURL(/\/workout-history\//);
   const historyGroup = page.getByTestId('workout-history-posture-group');
-  await expect(historyGroup).toContainText('肩部弹响/不适与肩胛控制方案');
-  await expect(historyGroup).toContainText('肱骨前移');
-  await expect(historyGroup).toContainText('四点跪姿肩胛前伸稳定');
+  await expect(historyGroup).toContainText('肩胛控制与肩部不适辅助方案');
+  await expect(historyGroup).toContainText('肩部弹响或不适');
+  await expect(historyGroup).toContainText('四点跪姿肩胛前伸控制');
+  await expect(historyGroup.getByTestId('posture-history-stage')).toHaveCount(3);
   await expect(historyGroup).toContainText('3 组');
 });
 
@@ -118,9 +198,19 @@ async function openPicker(page: Page) {
   await expect(page.getByTestId('exercise-picker-sheet')).toBeVisible();
 }
 
-async function openPostureProtocol(page: Page) {
+async function openPostureProtocol(page: Page, protocolId = 'SHOULDER_001') {
   await openPicker(page);
   await page.getByTestId('open-posture-picker').click();
-  await page.getByTestId('posture-issue-humeral-anterior-translation').click();
+  const categoryId = protocolId.startsWith('SHOULDER')
+    ? 'shoulder_scapula'
+    : protocolId.startsWith('PELVIS')
+      ? 'pelvis_lumbopelvic'
+      : protocolId.startsWith('CERVICAL')
+        ? 'cervical_head'
+        : protocolId.startsWith('OROFACIAL')
+          ? 'orofacial'
+        : 'shoulder_scapula';
+  await page.getByTestId(`posture-category-${categoryId}`).click();
+  await page.getByTestId(`posture-protocol-${protocolId}`).click();
   await expect(page.getByTestId('posture-protocol-detail')).toBeVisible();
 }

@@ -12,9 +12,9 @@ type ExercisePickerSheetProps = {
   open: boolean;
   existingExerciseIds: Set<string>;
   onAddExercise: (exerciseId: string) => boolean;
-  onAddPostureProtocol: (protocolId: string) => boolean;
+  onAddPostureProtocol: (protocolId: string, selectedExerciseIds?: string[]) => boolean;
   initialPostureProtocolId?: string | null;
-  initialPostureIssueId?: string | null;
+  initialPostureCategoryId?: string | null;
   initialPostureScrollTop?: number;
   onClose: () => void;
 };
@@ -22,7 +22,7 @@ type ExercisePickerSheetProps = {
 const defaultMuscleId = 'latissimus-dorsi';
 const transitionMs = 250;
 
-export default function ExercisePickerSheet({ open, existingExerciseIds, onAddExercise, onAddPostureProtocol, initialPostureProtocolId, initialPostureIssueId, initialPostureScrollTop, onClose }: ExercisePickerSheetProps) {
+export default function ExercisePickerSheet({ open, existingExerciseIds, onAddExercise, onAddPostureProtocol, initialPostureProtocolId, initialPostureCategoryId, initialPostureScrollTop, onClose }: ExercisePickerSheetProps) {
   const [mounted, setMounted] = useState(open);
   const [entered, setEntered] = useState(false);
   const [query, setQuery] = useState('');
@@ -270,7 +270,7 @@ export default function ExercisePickerSheet({ open, existingExerciseIds, onAddEx
           ) : (
             <PostureProtocolBrowser
               initialProtocolId={initialPostureProtocolId}
-              initialIssueId={initialPostureIssueId}
+              initialCategoryId={initialPostureCategoryId}
               initialScrollTop={initialPostureScrollTop}
               onBackToExercises={() => setMode('list')}
               onAddProtocol={onAddPostureProtocol}

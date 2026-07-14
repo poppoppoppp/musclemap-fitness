@@ -52,6 +52,7 @@ export interface WorkoutSet {
   setIndex: number;
   weight?: number;
   reps?: number;
+  durationSeconds?: number;
   rir?: number;
   completed: boolean;
   restSeconds?: number;

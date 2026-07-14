@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import DumbbellIcon from '../components/icons/DumbbellIcon';
 import WorkoutMuscleMap2D from '../components/workout/WorkoutMuscleMap2D';
 import { exercises, getExerciseById } from '../data/exercises';
-import type { PosturePrescription, PostureProtocolWorkoutSnapshot } from '../types/posture';
+import type { PosturePrescription, PostureProtocolStepSnapshot, PostureProtocolWorkoutSnapshot } from '../types/posture';
 import type { WorkoutLog, WorkoutLogExercise, WorkoutSet } from '../types/workout';
 import {
   countValidSets,
@@ -18,6 +18,7 @@ import {
   validateWorkoutLog
 } from '../utils/workoutHistory';
 import { estimateWorkoutCalories, getWorkedMusclesFromWorkout } from '../utils/workoutSummary';
+import { formatDose } from '../utils/postureProtocols';
 
 const muscleNames: Record<string, string> = {
   chest: '胸部', back: '背部', shoulders: '肩部', biceps: '二头肌', triceps: '三头肌', abs: '腹部', obliques: '腹斜肌',
@@ -165,7 +166,8 @@ function MuscleText({ label, muscles, className }: { label: string; muscles: str
 
 function ExerciseRow({ exercise, editing, onChange, onDelete }: { exercise: WorkoutLogExercise; editing: boolean; onChange: (exercise: WorkoutLogExercise) => void; onDelete: () => void }) {
   const detail = getExerciseById(exercise.exerciseId);
-  const updateSet = (index: number, key: 'weight' | 'reps', value: string) => onChange({ ...exercise, sets: exercise.sets.map((set, setIndex) => setIndex === index ? { ...set, [key]: value === '' ? undefined : Number(value) } : set) });
+  const durationMode = exercise.sets.some(({ durationSeconds }) => durationSeconds !== undefined);
+  const updateSet = (index: number, key: 'weight' | 'reps' | 'durationSeconds', value: string) => onChange({ ...exercise, sets: exercise.sets.map((set, setIndex) => setIndex === index ? { ...set, [key]: value === '' ? undefined : Number(value) } : set) });
   return (
     <details data-testid="workout-detail-exercise-row" open={editing || undefined} className="group rounded-2xl border border-white/10 bg-black/10 p-2.5">
       <summary className="flex min-h-14 cursor-pointer list-none items-center gap-3">
@@ -174,7 +176,30 @@ function ExerciseRow({ exercise, editing, onChange, onDelete }: { exercise: Work
         <span aria-hidden="true" className="text-zinc-600 transition group-open:rotate-90">›</span>
       </summary>
       <div className="mt-2 border-t border-white/[0.07] pt-3">
-        {editing ? <div className="space-y-2">{exercise.sets.map((set, index) => <div key={set.id} data-testid="history-set-row" className="grid grid-cols-[24px_minmax(0,1fr)_minmax(0,1fr)_36px] items-center gap-2"><span className="text-center text-xs text-zinc-500">{index + 1}</span><input data-testid="history-set-weight-input" inputMode="decimal" type="number" min="0" step="any" aria-label={`第 ${index + 1} 组重量`} value={set.weight ?? ''} onChange={(event) => updateSet(index, 'weight', event.target.value)} placeholder="kg" className="h-11 min-w-0 rounded-lg border border-white/10 bg-[#111411] px-2 text-center outline-none focus:border-lime-300" /><input data-testid="history-set-reps-input" inputMode="numeric" type="number" min="0" step="1" aria-label={`第 ${index + 1} 组次数`} value={set.reps ?? ''} onChange={(event) => updateSet(index, 'reps', event.target.value)} placeholder="次" className="h-11 min-w-0 rounded-lg border border-white/10 bg-[#111411] px-2 text-center outline-none focus:border-lime-300" /><button type="button" data-testid="delete-history-set" onClick={() => onChange({ ...exercise, sets: exercise.sets.filter((_, setIndex) => setIndex !== index) })} aria-label={`删除第 ${index + 1} 组`} className="h-9 rounded-lg text-red-300/70">×</button></div>)}<button type="button" data-testid="add-history-set" onClick={() => onChange({ ...exercise, sets: [...exercise.sets, newSet(exercise.sets.length)] })} className="min-h-11 w-full rounded-xl border border-lime-300/20 text-sm font-bold text-lime-300">+ 添加一组</button><textarea data-testid="workout-exercise-notes-input" value={exercise.notes ?? ''} onChange={(event) => onChange({ ...exercise, notes: event.target.value })} rows={2} placeholder="动作备注" className="w-full resize-y rounded-xl border border-white/10 bg-[#111411] p-3 text-sm outline-none focus:border-lime-300" /><button type="button" data-testid="delete-history-exercise" onClick={onDelete} className="min-h-10 w-full rounded-xl border border-red-400/20 text-sm font-bold text-red-300/80">删除此动作</button></div> : <div className="space-y-1 text-xs text-zinc-500">{exercise.sets.filter((set) => set.weight !== undefined || set.reps !== undefined).map((set) => <p key={set.id}>第 {set.setIndex} 组 · {[set.weight !== undefined ? `${set.weight}kg` : '', set.reps !== undefined ? `${set.reps} 次` : ''].filter(Boolean).join(' · ')}</p>)}{exercise.notes?.trim() ? <p className="mt-2 whitespace-pre-wrap text-zinc-400">备注：{exercise.notes}</p> : null}</div>}
+        {editing ? (
+          <div className="space-y-2">
+            {exercise.sets.map((set, index) => (
+              <div key={set.id} data-testid="history-set-row" className={`grid ${durationMode ? 'grid-cols-[24px_minmax(0,1fr)_36px]' : 'grid-cols-[24px_minmax(0,1fr)_minmax(0,1fr)_36px]'} items-center gap-2`}>
+                <span className="text-center text-xs text-zinc-500">{index + 1}</span>
+                {durationMode ? (
+                  <input data-testid="history-set-duration-input" inputMode="numeric" type="number" min="1" step="1" aria-label={`第 ${index + 1} 组时长（秒）`} value={set.durationSeconds ?? ''} onChange={(event) => updateSet(index, 'durationSeconds', event.target.value)} placeholder="秒" className="h-11 min-w-0 rounded-lg border border-white/10 bg-[#111411] px-2 text-center outline-none focus:border-lime-300" />
+                ) : <>
+                  <input data-testid="history-set-weight-input" inputMode="decimal" type="number" min="0" step="any" aria-label={`第 ${index + 1} 组重量`} value={set.weight ?? ''} onChange={(event) => updateSet(index, 'weight', event.target.value)} placeholder="kg" className="h-11 min-w-0 rounded-lg border border-white/10 bg-[#111411] px-2 text-center outline-none focus:border-lime-300" />
+                  <input data-testid="history-set-reps-input" inputMode="numeric" type="number" min="0" step="1" aria-label={`第 ${index + 1} 组次数`} value={set.reps ?? ''} onChange={(event) => updateSet(index, 'reps', event.target.value)} placeholder="次" className="h-11 min-w-0 rounded-lg border border-white/10 bg-[#111411] px-2 text-center outline-none focus:border-lime-300" />
+                </>}
+                <button type="button" data-testid="delete-history-set" onClick={() => onChange({ ...exercise, sets: exercise.sets.filter((_, setIndex) => setIndex !== index) })} aria-label={`删除第 ${index + 1} 组`} className="h-9 rounded-lg text-red-300/70">×</button>
+              </div>
+            ))}
+            <button type="button" data-testid="add-history-set" onClick={() => onChange({ ...exercise, sets: [...exercise.sets, newSet(exercise.sets.length)] })} className="min-h-11 w-full rounded-xl border border-lime-300/20 text-sm font-bold text-lime-300">+ 添加一组</button>
+            <textarea data-testid="workout-exercise-notes-input" value={exercise.notes ?? ''} onChange={(event) => onChange({ ...exercise, notes: event.target.value })} rows={2} placeholder="动作备注" className="w-full resize-y rounded-xl border border-white/10 bg-[#111411] p-3 text-sm outline-none focus:border-lime-300" />
+            <button type="button" data-testid="delete-history-exercise" onClick={onDelete} className="min-h-10 w-full rounded-xl border border-red-400/20 text-sm font-bold text-red-300/80">删除此动作</button>
+          </div>
+        ) : (
+          <div data-testid="workout-history-set" className="space-y-1 text-xs text-zinc-500">
+            {exercise.sets.filter((set) => set.weight !== undefined || set.reps !== undefined || set.durationSeconds !== undefined).map((set) => <p key={set.id}>第 {set.setIndex} 组 · {[set.weight !== undefined ? `${set.weight}kg` : '', set.reps !== undefined ? `${set.reps} 次` : '', set.durationSeconds !== undefined ? `${set.durationSeconds} 秒` : ''].filter(Boolean).join(' · ')}</p>)}
+            {exercise.notes?.trim() ? <p className="mt-2 whitespace-pre-wrap text-zinc-400">备注：{exercise.notes}</p> : null}
+          </div>
+        )}
       </div>
     </details>
   );
@@ -199,6 +224,7 @@ function formatWorkoutDate(value: string): string {
 }
 
 function PostureHistoryGroup({ group }: { group: PostureProtocolWorkoutSnapshot }) {
+  const stages = getHistoryStages(group);
   return (
     <details data-testid="workout-history-posture-group" open className="rounded-2xl border border-lime-300/20 bg-lime-300/[0.035] p-4">
       <summary className="cursor-pointer list-none focus:outline-none focus:ring-2 focus:ring-lime-300/50">
@@ -211,21 +237,61 @@ function PostureHistoryGroup({ group }: { group: PostureProtocolWorkoutSnapshot 
           {group.isModified ? <span className="shrink-0 rounded-full bg-amber-300/10 px-2 py-1 text-[11px] font-bold text-amber-200">已修改</span> : null}
         </span>
       </summary>
-      <ol className="mt-3 space-y-2 border-t border-white/[0.08] pt-3">
-        {group.exerciseSnapshots.map((snapshot, index) => (
-          <li key={snapshot.instanceId} className="rounded-xl bg-black/20 p-3">
-            <div className="flex gap-2">
-              <span className="text-xs font-black text-lime-300">{index + 1}.</span>
-              <span className="min-w-0">
-                <strong className="block text-sm text-zinc-200">{snapshot.nameSnapshot}</strong>
-                <span className="mt-1 block text-xs text-zinc-500">{formatPosturePrescription(snapshot.prescription)}</span>
-              </span>
+      {group.limitationsSnapshot?.length ? <p className="mt-3 text-[11px] leading-5 text-zinc-600">适用边界：{group.limitationsSnapshot.join(' · ')}</p> : null}
+      <div className="mt-3 space-y-3 border-t border-white/[0.08] pt-3">
+        {stages.map((stage) => (
+          <section key={stage.key} data-testid="posture-history-stage" className="rounded-xl border border-white/[0.07] bg-black/15 p-2.5">
+            <h3 className="px-1 text-xs font-black text-zinc-300">{stage.label}</h3>
+            <div className="mt-2 space-y-2">
+              {stage.steps.map((step) => step.kind === 'observation' ? (
+                <article key={step.id} data-testid="posture-history-observation" className="rounded-lg border border-sky-300/15 bg-sky-300/[0.035] p-2.5">
+                  <div className="flex items-center justify-between gap-2"><strong className="text-xs text-sky-100">{step.titleSnapshot}</strong><span className="shrink-0 text-[10px] font-bold text-sky-300/70">观察记录</span></div>
+                  {step.purposeSnapshot ? <p className="mt-1 text-[11px] leading-5 text-zinc-400">{step.purposeSnapshot}</p> : null}
+                  {step.limitationSnapshot ? <p className="mt-1 text-[11px] leading-5 text-zinc-600">限制：{step.limitationSnapshot}</p> : null}
+                </article>
+              ) : (
+                <article key={step.id} className="rounded-lg bg-black/25 p-2.5">
+                  <div className="flex items-start justify-between gap-2"><strong className="text-xs leading-5 text-zinc-200">{step.titleSnapshot}</strong>{!step.includedInWorkout ? <span className="shrink-0 text-[10px] font-bold text-zinc-600">未加入</span> : null}</div>
+                  <p className="mt-1 text-[11px] leading-5 text-zinc-500">{step.dose ? formatDose(step.dose) : getLegacyHistoryDose(group, step)}</p>
+                  {step.dose?.confidence === 'low' || step.dose?.confidence === 'mediumLow' ? <p className="mt-1 text-[10px] font-bold text-amber-200">剂量置信度较低，未自动填写计划</p> : null}
+                  {step.visualReviewRequired ? <p className="mt-1 text-[10px] font-bold text-amber-200">动作图示待人工复核</p> : null}
+                </article>
+              ))}
             </div>
-          </li>
+          </section>
         ))}
-      </ol>
+      </div>
     </details>
   );
+}
+
+function getHistoryStages(group: PostureProtocolWorkoutSnapshot) {
+  const steps = group.stepSnapshots ?? group.exerciseSnapshots.map<PostureProtocolStepSnapshot>((snapshot) => ({
+    id: snapshot.instanceId,
+    order: snapshot.order,
+    groupKey: snapshot.groupKey ?? 'protocol',
+    groupLabel: snapshot.groupLabel ?? '方案动作',
+    kind: 'exercise',
+    titleSnapshot: snapshot.nameSnapshot,
+    exerciseId: snapshot.exerciseId,
+    exerciseInstanceId: snapshot.instanceId,
+    includedInWorkout: true,
+    dose: snapshot.dose,
+    visualReviewRequired: snapshot.visualReviewRequired,
+    visualReviewNote: snapshot.visualReviewNote
+  }));
+  const stages: Array<{ key: string; label: string; steps: PostureProtocolStepSnapshot[] }> = [];
+  for (const step of [...steps].sort((left, right) => left.order - right.order)) {
+    const current = stages.find(({ key }) => key === step.groupKey);
+    if (current) current.steps.push(step);
+    else stages.push({ key: step.groupKey, label: step.groupLabel, steps: [step] });
+  }
+  return stages;
+}
+
+function getLegacyHistoryDose(group: PostureProtocolWorkoutSnapshot, step: PostureProtocolStepSnapshot) {
+  const snapshot = group.exerciseSnapshots.find(({ instanceId }) => instanceId === step.exerciseInstanceId);
+  return snapshot ? formatPosturePrescription(snapshot.prescription) : '剂量未说明';
 }
 
 function formatPosturePrescription(prescription: PosturePrescription) {

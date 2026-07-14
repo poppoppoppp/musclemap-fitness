@@ -1,0 +1,671 @@
+{
+  "schemaVersion": "2.0.0",
+  "datasetName": "MuscleMap Fitness full posture dataset",
+  "language": "zh-CN",
+  "categories": [
+    { "id": "shoulder_scapula", "name": "肩部与肩胛", "description": "肩部活动与肩胛控制练习。" },
+    { "id": "pelvis_lumbopelvic", "name": "骨盆与腰盆", "description": "腰盆观察、活动与控制练习。" },
+    { "id": "cervical_head", "name": "颈部与头部", "description": "头颈位置、活动与轻阻力控制练习。" },
+    { "id": "upper_posture", "name": "上半身体态", "description": "靠墙对齐与胸肩前侧活动。" },
+    { "id": "thoracic", "name": "胸椎活动", "description": "胸椎区域屈伸、旋转与放松准备。" },
+    { "id": "winged_scapula", "name": "翼状肩胛", "description": "肩胛前伸与闭链稳定控制练习。" },
+    { "id": "ribcage_breathing", "name": "肋骨外翻与呼吸", "description": "呼气胸廓控制与躯干稳定练习。" },
+    { "id": "orofacial", "name": "辅助护理", "description": "轻度颈侧与口颌肌肉自我护理。" }
+  ],
+  "exerciseFamilies": [
+    {
+      "id": "FAM_SCAPULAR_PROTRACTION",
+      "name": "肩胛前伸控制",
+      "variantIds": [
+        "EX_SCAP_WALL_PROTRACTION",
+        "EX_SCAP_ELEVATED_PROTRACTION",
+        "EX_SCAP_QUADRUPED_PROTRACTION",
+        "EX_SCAP_BEAR_HOVER_PROTRACTION"
+      ]
+    },
+    {
+      "id": "FAM_LOW_ANGLE_SHOULDER_ABDUCTION",
+      "name": "低角度肩外展",
+      "variantIds": ["EX_LOW_ANGLE_ABDUCTION_CABLE", "EX_LOW_ANGLE_ABDUCTION_DUMBBELL"]
+    },
+    {
+      "id": "FAM_CERVICAL_RETRACTION",
+      "name": "颈部回缩",
+      "variantIds": [
+        "EX_TOWEL_RESISTED_CERVICAL_RETRACTION_ISOMETRIC",
+        "EX_CERVICAL_RETRACTION_SMALL_EXTENSION",
+        "EX_STANDING_CERVICAL_RETRACTION_HOLD"
+      ]
+    },
+    {
+      "id": "FAM_ANTERIOR_CHEST_STRETCH",
+      "name": "胸肩前侧活动",
+      "variantIds": ["EX_DOORWAY_ANTERIOR_CHEST_STRETCH", "EX_WALL_ELBOW_CHEST_SHOULDER_STRETCH"]
+    }
+  ],
+  "observations": [
+    {
+      "id": "OBS_PELVIS_WALL_LUMBAR_GAP",
+      "name": "靠墙腰部空隙观察",
+      "purpose": "自然站立靠墙，观察腰部与墙面之间的空隙。",
+      "limitation": "只能作为体态观察，不能确诊骨盆前倾。"
+    },
+    {
+      "id": "OBS_PELVIS_SUPINE_LUMBAR_GAP",
+      "name": "仰卧腰部空隙观察",
+      "purpose": "自然仰卧，观察腰部与地面之间的空隙。",
+      "limitation": "受体型、床面和主动用力影响，不能确诊骨盆前倾。"
+    },
+    {
+      "id": "OBS_CERVICAL_SIDE_VIEW_HEAD_POSITION",
+      "name": "侧面头部位置观察",
+      "purpose": "自然站立，从侧面观察耳部相对肩部的位置。",
+      "limitation": "只描述头部前移倾向，不能诊断颈椎结构或曲度。"
+    },
+    {
+      "id": "OBS_OROFACIAL_SUPINE_BODY_CONTACT",
+      "name": "仰卧身体接触感主观观察",
+      "purpose": "自然仰卧，主观比较肩部、臀部接触感和头部自然偏向。",
+      "limitation": "不能判断颈椎旋转、脊柱侧弯或大小脸病因。"
+    }
+  ],
+  "standardExercises": [
+    {
+      "id": "EX_POSTERIOR_SHOULDER_PRESSURE_RELEASE",
+      "name": "肩后侧局部按压放松",
+      "legacyIds": ["infraspinatus-teres-minor-local-pressure-release"],
+      "category": "shoulder_scapula",
+      "equipment": ["按摩球或手指"],
+      "instructions": ["轻度按压肩胛后外侧软组织区域。", "以可耐受酸胀为限。", "避免压迫骨性突起。"],
+      "stopConditions": ["出现麻木或放射痛时停止。"],
+      "dataQuality": "medium"
+    },
+    {
+      "id": "EX_SCAP_QUADRUPED_PROTRACTION",
+      "name": "四点跪姿肩胛前伸控制",
+      "legacyIds": ["quadruped-scapular-protraction-stability"],
+      "familyId": "FAM_SCAPULAR_PROTRACTION",
+      "difficultyRank": 3,
+      "category": "shoulder_scapula",
+      "equipment": ["瑜伽垫"],
+      "startPosition": "四点跪姿，双手位于肩部下方，膝盖着地。",
+      "instructions": ["保持肘关节角度基本不变。", "主动推地，让胸廓远离地面，肩胛骨向前、向外滑动。", "缓慢回到起始位置。"],
+      "cues": ["不做成普通俯卧撑。", "不耸肩、塌腰或头部前探。"],
+      "breathing": "保持均匀呼吸。",
+      "dataQuality": "high"
+    },
+    {
+      "id": "EX_SCAP_BEAR_HOVER_PROTRACTION",
+      "name": "熊爬悬停肩胛前伸控制",
+      "familyId": "FAM_SCAPULAR_PROTRACTION",
+      "variantOf": "EX_SCAP_QUADRUPED_PROTRACTION",
+      "difficultyRank": 4,
+      "category": "shoulder_scapula",
+      "equipment": ["瑜伽垫"],
+      "startPosition": "四点跪姿基础上双膝轻微离地。",
+      "instructions": ["保持膝盖悬停。", "维持肩胛前伸与大臂外旋要求。"],
+      "cues": ["不塌腰。", "不耸肩。"],
+      "dataQuality": "medium"
+    },
+    {
+      "id": "EX_SCAP_BAND_POSTERIOR_TILT_ELEVATION",
+      "name": "弹力带辅助肩胛后倾上举",
+      "legacyIds": ["band-assisted-scapular-posterior-tilt-raise"],
+      "category": "shoulder_scapula",
+      "equipment": ["弹力带"],
+      "startPosition": "弹力带提供辅助阻力，肩部保持放松。",
+      "instructions": ["在弹力带辅助下抬高手臂。", "练习肩胛后倾与上举配合。", "受控回到起始位置。"],
+      "cues": ["动作以肩胛控制为主。", "避免耸肩和腰部代偿。"],
+      "breathing": "动作过程中保持均匀呼吸。",
+      "dataQuality": "medium"
+    },
+    {
+      "id": "EX_LOW_ANGLE_ABDUCTION_CABLE",
+      "name": "低位龙门架单侧低角度肩外展",
+      "familyId": "FAM_LOW_ANGLE_SHOULDER_ABDUCTION",
+      "category": "shoulder_scapula",
+      "equipment": ["龙门架"],
+      "instructions": ["单侧完成约 0 至 15 或 20 度的肩外展。", "使用轻负荷并控制还原。"],
+      "cues": ["头部轻度向训练侧对侧侧屈。", "颈部不旋转。", "不耸肩或用躯干摆动。"],
+      "dataQuality": "medium"
+    },
+    {
+      "id": "EX_LOW_ANGLE_ABDUCTION_DUMBBELL",
+      "name": "轻哑铃单侧低角度肩外展",
+      "familyId": "FAM_LOW_ANGLE_SHOULDER_ABDUCTION",
+      "variantOf": "EX_LOW_ANGLE_ABDUCTION_CABLE",
+      "category": "shoulder_scapula",
+      "equipment": ["轻哑铃"],
+      "instructions": ["单侧完成约 0 至 15 或 20 度的肩外展。", "使用轻负荷并控制还原。"],
+      "cues": ["头部轻度向训练侧对侧侧屈。", "颈部不旋转。", "不耸肩或用躯干摆动。"],
+      "dataQuality": "medium"
+    },
+    {
+      "id": "EX_HALF_KNEEL_HIP_FLEXOR_STRETCH",
+      "name": "半跪姿髋前侧拉伸",
+      "category": "pelvis_lumbopelvic",
+      "equipment": ["瑜伽垫"],
+      "startPosition": "半跪姿，躯干相对直立。",
+      "instructions": ["轻度收紧后侧臀部。", "缓慢移动至髋前侧出现可耐受牵拉。"],
+      "cues": ["不塌腰顶胯。"],
+      "dataQuality": "high"
+    },
+    {
+      "id": "EX_DOUBLE_KNEE_TO_CHEST",
+      "name": "仰卧双膝抱胸",
+      "category": "pelvis_lumbopelvic",
+      "equipment": ["瑜伽垫"],
+      "startPosition": "自然仰卧。",
+      "instructions": ["双膝缓慢靠近胸部。", "保持肩颈放松。"],
+      "dataQuality": "high"
+    },
+    {
+      "id": "EX_SUPINE_POSTERIOR_PELVIC_TILT",
+      "name": "仰卧骨盆后倾控制",
+      "category": "pelvis_lumbopelvic",
+      "equipment": ["瑜伽垫"],
+      "startPosition": "仰卧屈膝，双脚踩地。",
+      "instructions": ["主动控制骨盆向后倾。", "受控回到自然位置。"],
+      "cues": ["动作来自骨盆。", "不抬臀做成臀桥。", "不强行用力压腰。"],
+      "dataQuality": "high"
+    },
+    {
+      "id": "EX_GLUTE_BRIDGE",
+      "name": "双腿臀桥",
+      "libraryExerciseId": "glute-bridge",
+      "category": "pelvis_lumbopelvic",
+      "equipment": ["自重"],
+      "cues": ["避免腰椎过伸。", "避免顶肋。", "膝盖保持稳定。"],
+      "dataQuality": "high"
+    },
+    {
+      "id": "EX_BAND_LOWER_LIMB_OPPOSITION_CRUNCH",
+      "name": "弹力带下肢对抗卷腹",
+      "category": "pelvis_lumbopelvic",
+      "equipment": ["弹力带", "瑜伽垫"],
+      "visualReviewRequired": true,
+      "visualReviewNote": "具体弹力带设置缺少完整画面，需要复核。",
+      "dataQuality": "medium"
+    },
+    {
+      "id": "EX_SINGLE_KNEE_TO_CHEST",
+      "name": "仰卧单膝抱胸",
+      "category": "pelvis_lumbopelvic",
+      "equipment": ["瑜伽垫"],
+      "startPosition": "自然仰卧。",
+      "instructions": ["一侧膝盖缓慢靠近胸部。", "完成后换侧。"],
+      "cues": ["肩颈放松。", "不猛拉。", "不让骨盆大幅旋转。"],
+      "dataQuality": "medium"
+    },
+    {
+      "id": "EX_SCM_STRETCH",
+      "name": "胸锁乳突肌区域拉伸",
+      "category": "cervical_head",
+      "equipment": ["自重"],
+      "visualReviewRequired": true,
+      "visualReviewNote": "具体头部旋转和侧屈方向需要画面复核。",
+      "dataQuality": "medium"
+    },
+    {
+      "id": "EX_SUBOCCIPITAL_SELF_MASSAGE",
+      "name": "枕下区域轻柔自我按揉",
+      "category": "cervical_head",
+      "equipment": ["双手"],
+      "instructions": ["在枕骨下缘和后发际线区域轻柔按揉。", "使用小范围操作。"],
+      "cues": ["不大力压迫。"],
+      "stopConditions": ["出现头晕时停止。"],
+      "dataQuality": "high"
+    },
+    {
+      "id": "EX_TOWEL_CERVICAL_EXTENSION",
+      "name": "毛巾辅助颈部后伸活动",
+      "category": "cervical_head",
+      "equipment": ["毛巾"],
+      "visualReviewRequired": true,
+      "visualReviewNote": "毛巾位置和具体轨迹需要画面复核。",
+      "dataQuality": "medium"
+    },
+    {
+      "id": "EX_TOWEL_RESISTED_CERVICAL_RETRACTION_ISOMETRIC",
+      "name": "毛巾抗阻颈部回缩等长控制",
+      "familyId": "FAM_CERVICAL_RETRACTION",
+      "category": "cervical_head",
+      "equipment": ["毛巾"],
+      "instructions": ["使用毛巾提供轻阻力。", "维持颈部回缩等长控制。"],
+      "cues": ["不用力仰头。", "不耸肩。", "不憋气。"],
+      "dataQuality": "high"
+    },
+    {
+      "id": "EX_CERVICAL_RETRACTION_SMALL_EXTENSION",
+      "name": "颈部水平回缩与小幅后伸",
+      "familyId": "FAM_CERVICAL_RETRACTION",
+      "variantOf": "EX_TOWEL_RESISTED_CERVICAL_RETRACTION_ISOMETRIC",
+      "category": "cervical_head",
+      "equipment": ["自重"],
+      "dataQuality": "mediumLow"
+    },
+    {
+      "id": "EX_ASSISTED_CERVICAL_SIDE_BEND_STRETCH",
+      "name": "辅助式单侧颈部侧屈拉伸",
+      "category": "cervical_head",
+      "equipment": ["双手"],
+      "dataQuality": "mediumLow"
+    },
+    {
+      "id": "EX_WALL_SCAPULAR_RETRACTION_ISOMETRIC",
+      "name": "靠墙肩胛后缩等长控制",
+      "category": "cervical_head",
+      "equipment": ["墙面"],
+      "dataQuality": "mediumLow"
+    },
+    {
+      "id": "EX_WALL_FIVE_POINT_ALIGNMENT",
+      "name": "靠墙五点对齐与颈肩回缩保持",
+      "category": "upper_posture",
+      "equipment": ["墙面"],
+      "startPosition": "自然站立靠墙。",
+      "instructions": ["在可耐受范围内保持靠墙对齐。", "维持颈肩回缩控制。"],
+      "cues": ["不强行压平所有脊柱曲线。", "不过度夹肩胛。", "不仰头贴墙。", "不顶肋。"],
+      "dataQuality": "medium"
+    },
+    {
+      "id": "EX_WALL_ELBOW_CHEST_SHOULDER_STRETCH",
+      "name": "墙面肘支撑胸肩前侧拉伸",
+      "familyId": "FAM_ANTERIOR_CHEST_STRETCH",
+      "category": "upper_posture",
+      "equipment": ["墙面"],
+      "dataQuality": "medium"
+    },
+    {
+      "id": "EX_STANDING_CERVICAL_RETRACTION_HOLD",
+      "name": "站姿颈部水平回缩保持",
+      "familyId": "FAM_CERVICAL_RETRACTION",
+      "variantOf": "EX_TOWEL_RESISTED_CERVICAL_RETRACTION_ISOMETRIC",
+      "category": "upper_posture",
+      "equipment": ["自重"],
+      "dataQuality": "medium"
+    },
+    {
+      "id": "EX_MASSETER_SELF_MASSAGE",
+      "name": "咬肌区域轻柔自我按摩",
+      "category": "orofacial",
+      "equipment": ["双手"],
+      "instructions": ["上下牙齿自然分开。", "使用轻度压力按摩咬肌区域。"],
+      "cues": ["不咬紧牙关。", "不因为某侧脸看起来更大就自动增加剂量。"],
+      "dataQuality": "mediumLow"
+    },
+    {
+      "id": "EX_TEMPORALIS_CONTACT_CONTROLLED_OPENING",
+      "name": "双侧颞肌接触式控制张口",
+      "category": "orofacial",
+      "equipment": ["双手"],
+      "instructions": ["双手轻触太阳穴附近。", "缓慢张口并尽量保持下颌轨迹居中。"],
+      "cues": ["不强行张到最大。"],
+      "stopConditions": ["出现关节卡住、明显疼痛或张口受限时停止。"],
+      "dataQuality": "mediumLow"
+    },
+    {
+      "id": "EX_FOAM_ROLL_THORACIC",
+      "name": "泡沫轴胸椎后侧滚动",
+      "category": "thoracic",
+      "equipment": ["泡沫轴"],
+      "instructions": ["只滚动中上背胸椎区域。", "缓慢滚动，在紧张点按来源剂量停留。"],
+      "cues": ["避开颈椎和腰椎。", "不快速猛滚。", "头部不大幅后仰。"],
+      "stopConditions": ["严重骨质疏松或近期脊柱损伤需谨慎。"],
+      "dataQuality": "mediumHigh"
+    },
+    {
+      "id": "EX_QUADRUPED_THORACIC_FLEX_EXTENSION",
+      "name": "四点跪姿胸椎屈伸控制",
+      "category": "thoracic",
+      "equipment": ["瑜伽垫"],
+      "startPosition": "四点跪姿，骨盆相对稳定。",
+      "instructions": ["重点活动中上背完成屈伸。", "受控回到自然位置。"],
+      "cues": ["不依靠腰椎塌陷完成。", "不耸肩或快速摆动。"],
+      "dataQuality": "mediumHigh"
+    },
+    {
+      "id": "EX_QUADRUPED_THORACIC_ROTATION",
+      "name": "四点跪姿手扶头胸椎旋转",
+      "category": "thoracic",
+      "equipment": ["瑜伽垫"],
+      "startPosition": "四点跪姿，一手扶头。",
+      "instructions": ["保持骨盆尽量稳定。", "由胸椎带动旋转。"],
+      "cues": ["不甩动手臂。", "不追求极限角度。"],
+      "dataQuality": "mediumHigh"
+    },
+    {
+      "id": "EX_DOORWAY_ANTERIOR_CHEST_STRETCH",
+      "name": "门框胸前侧静态拉伸",
+      "familyId": "FAM_ANTERIOR_CHEST_STRETCH",
+      "category": "winged_scapula",
+      "equipment": ["门框"],
+      "startPosition": "肘关节约 90 度接触门框。",
+      "instructions": ["身体缓慢向远离固定手臂方向移动或轻度旋转。", "感受胸肩前侧牵拉。"],
+      "cues": ["不耸肩。", "不猛然转体。"],
+      "dataQuality": "mediumHigh"
+    },
+    {
+      "id": "EX_SCAP_WALL_PROTRACTION",
+      "name": "墙面肩胛俯卧撑",
+      "familyId": "FAM_SCAPULAR_PROTRACTION",
+      "difficultyRank": 1,
+      "category": "winged_scapula",
+      "equipment": ["墙面"],
+      "startPosition": "面向墙面站立，双手完整接触墙面。",
+      "instructions": ["保持肘关节角度基本不变。", "将胸廓推离墙面，让肩胛骨向前、向外滑动。"],
+      "cues": ["不做成墙壁俯卧撑。", "不耸肩、顶肋、塌腰或头部前探。"],
+      "dataQuality": "mediumHigh"
+    },
+    {
+      "id": "EX_SCAP_ELEVATED_PROTRACTION",
+      "name": "高位支撑肩胛俯卧撑",
+      "familyId": "FAM_SCAPULAR_PROTRACTION",
+      "variantOf": "EX_SCAP_WALL_PROTRACTION",
+      "difficultyRank": 2,
+      "category": "winged_scapula",
+      "equipment": ["稳固桌面或高位支撑面"],
+      "startPosition": "双手支撑稳固桌面或高位支撑面。",
+      "instructions": ["保持肘关节角度基本不变。", "主动将胸廓推离支撑面，让肩胛骨向前、向外滑动。", "缓慢受控回到起始位置。"],
+      "cues": ["不弯肘做成俯卧撑。", "不塌腰、耸肩或头部前探。", "不主动追求菱形肌夹紧感。"],
+      "dataQuality": "mediumHigh"
+    },
+    {
+      "id": "EX_SUPINE_EXHALE_RIBCAGE_CONTROL",
+      "name": "仰卧屈膝呼气胸廓控制",
+      "category": "ribcage_breathing",
+      "equipment": ["瑜伽垫"],
+      "startPosition": "仰卧屈膝，双脚踩地，一手放上胸，一手放下侧肋弓。",
+      "instructions": ["鼻吸气，感受下侧胸廓向侧方和后方扩张。", "嘴缓慢呼气，感受腹壁收紧和肋弓向内、向下回落。", "呼气末端短暂停留。"],
+      "breathing": "鼻吸气，嘴缓慢呼气。",
+      "cues": ["不主动耸肩或大幅抬高上胸。", "不强行压平腰椎。", "不要求胸口完全不动。", "不长期持续强力收肋。"],
+      "stopConditions": ["胸痛、呼吸困难或明显眩晕时停止。"],
+      "dataQuality": "mediumHigh"
+    },
+    {
+      "id": "EX_CONTRALATERAL_DEAD_BUG",
+      "name": "仰卧对侧死虫",
+      "libraryExerciseId": "dead-bug",
+      "category": "ribcage_breathing",
+      "equipment": ["瑜伽垫"],
+      "instructions": ["先保持胸廓和骨盆稳定。", "呼气时下放一侧手臂和对侧腿。", "受控回到起始位置后换侧。"],
+      "cues": ["下放范围以腰盆位置可以维持为限。", "不让腰部拱起或肋骨明显上翻。", "不快速甩动四肢。"],
+      "dataQuality": "mediumHigh"
+    }
+  ],
+  "protocols": [
+    {
+      "id": "SHOULDER_001",
+      "title": "肩胛控制与肩部不适辅助方案",
+      "category": "shoulder_scapula",
+      "tags": ["肩胛控制", "肩部训练辅助"],
+      "protocolTier": "core",
+      "completeness": "partial",
+      "dataQuality": "medium",
+      "targetIssues": ["肩部弹响或不适", "推肩、卧推、划船时肩部控制不足", "肩胛稳定不足"],
+      "userFacingGoal": "改善肩胛前伸、后倾和上举过程中的控制能力，作为肩部训练辅助。",
+      "visibility": "primary",
+      "steps": [
+        { "id": "SHOULDER_001_1", "order": 1, "groupKey": "release", "groupLabel": "软组织准备", "kind": "exercise", "exerciseId": "EX_POSTERIOR_SHOULDER_PRESSURE_RELEASE", "optional": true, "dose": {}, "notes": ["以可耐受酸胀为限。"] },
+        { "id": "SHOULDER_001_2", "order": 2, "groupKey": "control", "groupLabel": "肩胛控制", "kind": "exercise", "exerciseId": "EX_SCAP_QUADRUPED_PROTRACTION", "dose": { "sets": 3 }, "notes": ["次数未说明。", "标准化进阶为熊爬悬停肩胛前伸控制。"] },
+        { "id": "SHOULDER_001_3", "order": 3, "groupKey": "integration", "groupLabel": "上举协同", "kind": "exercise", "exerciseId": "EX_SCAP_BAND_POSTERIOR_TILT_ELEVATION", "dose": {} }
+      ],
+      "sourceClaims": ["改善肩部弹响", "改善推拉动作肩部不适", "提高肩胛控制"],
+      "limitations": ["大部分动作缺少剂量。", "不能诊断肩袖撕裂、撞击或关节损伤。"]
+    },
+    {
+      "id": "SHOULDER_002",
+      "title": "单侧低角度肩外展激活方案",
+      "sourceUrl": "https://v.douyin.com/ZrKoa-L2Lrk/",
+      "category": "shoulder_scapula",
+      "tags": ["低角度肩外展", "轻负荷"],
+      "protocolTier": "adjunct",
+      "completeness": "partial",
+      "dataQuality": "medium",
+      "targetIssues": ["肩外展初始阶段控制不足", "视频所称冈上肌激活不足"],
+      "userFacingGoal": "以轻负荷、小幅度方式练习肩外展初始阶段控制。",
+      "visibility": "primary",
+      "steps": [
+        { "id": "SHOULDER_002_A", "order": 1, "groupKey": "activation", "groupLabel": "低角度外展", "kind": "exercise", "exerciseId": "EX_LOW_ANGLE_ABDUCTION_CABLE", "selectionGroupId": "SHOULDER_002_VARIANT", "dose": { "reps": 30, "load": "轻负荷" } },
+        { "id": "SHOULDER_002_B", "order": 2, "groupKey": "activation", "groupLabel": "低角度外展", "kind": "exercise", "exerciseId": "EX_LOW_ANGLE_ABDUCTION_DUMBBELL", "selectionGroupId": "SHOULDER_002_VARIANT", "dose": { "reps": 30, "load": "轻负荷" } }
+      ],
+      "sourceClaims": ["激活冈上肌", "减少三角肌和斜方肌代偿"],
+      "limitations": ["不能根据动作感受诊断冈上肌无力。", "不是完整的肩部体态纠正方案。"]
+    },
+    {
+      "id": "PELVIS_001",
+      "title": "骨盆前倾倾向的放松与控制方案",
+      "sourceUrl": "https://v.douyin.com/ykBOBqH2B_s/",
+      "category": "pelvis_lumbopelvic",
+      "tags": ["腰盆控制", "髋前侧活动"],
+      "protocolTier": "core",
+      "completeness": "complete",
+      "dataQuality": "high",
+      "targetIssues": ["骨盆前倾倾向", "小腹突出或假翘臀外观", "久坐久站腰部紧张", "腰盆控制不足"],
+      "userFacingGoal": "通过髋前侧活动、骨盆控制、臀部和腹部训练，提高腰盆控制能力。",
+      "visibility": "primary",
+      "steps": [
+        { "id": "PELVIS_001_1", "order": 1, "groupKey": "observation", "groupLabel": "体态观察", "kind": "observation", "observationId": "OBS_PELVIS_WALL_LUMBAR_GAP" },
+        { "id": "PELVIS_001_2", "order": 2, "groupKey": "observation", "groupLabel": "体态观察", "kind": "observation", "observationId": "OBS_PELVIS_SUPINE_LUMBAR_GAP" },
+        { "id": "PELVIS_001_3", "order": 3, "groupKey": "mobility", "groupLabel": "放松活动", "kind": "exercise", "exerciseId": "EX_HALF_KNEEL_HIP_FLEXOR_STRETCH", "dose": { "durationRangeSeconds": [30, 60], "frequency": "每天", "mode": "静态" } },
+        { "id": "PELVIS_001_4", "order": 4, "groupKey": "mobility", "groupLabel": "放松活动", "kind": "exercise", "exerciseId": "EX_DOUBLE_KNEE_TO_CHEST", "dose": { "durationRangeSeconds": [30, 60], "frequency": "每天", "mode": "静态" } },
+        { "id": "PELVIS_001_5", "order": 5, "groupKey": "pelvic_control", "groupLabel": "骨盆控制", "kind": "exercise", "exerciseId": "EX_SUPINE_POSTERIOR_PELVIC_TILT", "dose": { "reps": 30, "frequency": "每天", "mode": "动态" } },
+        { "id": "PELVIS_001_6", "order": 6, "groupKey": "stability", "groupLabel": "强化稳定", "kind": "exercise", "exerciseId": "EX_GLUTE_BRIDGE", "dose": { "reps": 30, "frequency": "每天" } },
+        { "id": "PELVIS_001_7", "order": 7, "groupKey": "stability", "groupLabel": "强化稳定", "kind": "exercise", "exerciseId": "EX_BAND_LOWER_LIMB_OPPOSITION_CRUNCH", "dose": { "reps": 30, "frequency": "每天" } }
+      ],
+      "sourceClaims": ["髋屈肌和腰背紧张", "腹部、臀部和腿后侧薄弱", "先松解再强化能够改善骨盆前倾"],
+      "limitations": ["两个观察动作不能确诊骨盆前倾。", "组数未说明。", "不能根据外观自动判断某块肌肉紧张或无力。"],
+      "theoryIds": ["THEORY_001"]
+    },
+    {
+      "id": "PELVIS_002",
+      "title": "仰卧单膝抱胸腰盆放松",
+      "sourceUrl": "https://v.douyin.com/kdvAeKbI5Bs/",
+      "category": "pelvis_lumbopelvic",
+      "tags": ["腰盆放松", "低难度"],
+      "protocolTier": "adjunct",
+      "completeness": "complete",
+      "dataQuality": "medium",
+      "targetIssues": ["腰盆区域主观紧张", "臀后侧紧张", "久坐后腰部僵硬"],
+      "userFacingGoal": "提供低难度的腰盆和臀后侧放松。",
+      "visibility": "primary",
+      "steps": [
+        { "id": "PELVIS_002_1", "order": 1, "groupKey": "release", "groupLabel": "放松", "kind": "exercise", "exerciseId": "EX_SINGLE_KNEE_TO_CHEST", "dose": { "durationSeconds": 60, "sets": 1, "mode": "每侧", "frequency": "每天" } }
+      ],
+      "sourceClaims": ["同时改善骨盆前倾和骨盆后倾", "改善腰肌劳损"],
+      "limitations": ["只能定位为一般腰盆放松。", "不能替代腰痛评估。"]
+    },
+    {
+      "id": "CERVICAL_001",
+      "title": "头前移倾向的颈部放松与毛巾控制方案",
+      "sourceUrl": "https://v.douyin.com/jF6FM_bP0DY/",
+      "category": "cervical_head",
+      "tags": ["头颈控制", "辅助放松"],
+      "protocolTier": "core",
+      "completeness": "complete",
+      "dataQuality": "high",
+      "targetIssues": ["头前移倾向", "颈部前探", "枕下紧张", "颈前侧紧张", "颈部控制不足"],
+      "userFacingGoal": "通过颈部软组织放松、活动和轻阻力控制，改善头颈位置控制。",
+      "visibility": "primary",
+      "steps": [
+        { "id": "CERVICAL_001_1", "order": 1, "groupKey": "observation", "groupLabel": "体态观察", "kind": "observation", "observationId": "OBS_CERVICAL_SIDE_VIEW_HEAD_POSITION" },
+        { "id": "CERVICAL_001_2", "order": 2, "groupKey": "release", "groupLabel": "放松准备", "kind": "exercise", "exerciseId": "EX_SCM_STRETCH", "dose": { "durationSeconds": 30, "mode": "每侧", "frequency": "每天" } },
+        { "id": "CERVICAL_001_3", "order": 3, "groupKey": "release", "groupLabel": "放松准备", "kind": "exercise", "exerciseId": "EX_SUBOCCIPITAL_SELF_MASSAGE", "dose": { "durationSeconds": 30, "mode": "每侧", "frequency": "每天" } },
+        { "id": "CERVICAL_001_4", "order": 4, "groupKey": "mobility", "groupLabel": "活动控制", "kind": "exercise", "exerciseId": "EX_TOWEL_CERVICAL_EXTENSION", "dose": { "durationRangeSeconds": [30, 60], "frequency": "每天" } },
+        { "id": "CERVICAL_001_5", "order": 5, "groupKey": "mobility", "groupLabel": "活动控制", "kind": "exercise", "exerciseId": "EX_TOWEL_RESISTED_CERVICAL_RETRACTION_ISOMETRIC", "dose": { "durationRangeSeconds": [30, 60], "frequency": "每天" } }
+      ],
+      "sourceClaims": [],
+      "limitations": ["侧面观察不能诊断颈椎曲度。", "毛巾动作具体方向需要画面复核。", "出现眩晕、麻木或放射痛时停止。"]
+    },
+    {
+      "id": "CERVICAL_002",
+      "title": "颈部回缩与靠墙肩胛控制方案",
+      "sourceUrl": "https://v.douyin.com/PtR9AY7Hoe0/",
+      "category": "cervical_head",
+      "tags": ["颈部回缩", "靠墙控制"],
+      "protocolTier": "core",
+      "completeness": "limited",
+      "dataQuality": "mediumLow",
+      "targetIssues": ["头前移倾向", "颈侧紧张", "颈肩联合控制不足"],
+      "userFacingGoal": "练习颈部回缩、颈侧活动和靠墙肩胛控制。",
+      "visibility": "primary",
+      "steps": [
+        { "id": "CERVICAL_002_1", "order": 1, "groupKey": "cervical_control", "groupLabel": "颈部控制", "kind": "exercise", "exerciseId": "EX_CERVICAL_RETRACTION_SMALL_EXTENSION", "dose": {} },
+        { "id": "CERVICAL_002_2", "order": 2, "groupKey": "cervical_mobility", "groupLabel": "颈部活动", "kind": "exercise", "exerciseId": "EX_ASSISTED_CERVICAL_SIDE_BEND_STRETCH", "dose": {} },
+        { "id": "CERVICAL_002_3", "order": 3, "groupKey": "scapular_control", "groupLabel": "肩胛控制", "kind": "exercise", "exerciseId": "EX_WALL_SCAPULAR_RETRACTION_ISOMETRIC", "dose": {} }
+      ],
+      "sourceClaims": ["改善头前移", "改善双下巴和下颌线"],
+      "limitations": ["外观营销宣称不得作为方案目标。", "完全缺少动作剂量。"]
+    },
+    {
+      "id": "UPPER_POSTURE_001",
+      "title": "头前移与圆肩含胸靠墙控制方案",
+      "sourceUrl": "https://v.douyin.com/9deT52mtiFo/",
+      "category": "upper_posture",
+      "tags": ["靠墙对齐", "胸肩活动"],
+      "protocolTier": "core",
+      "completeness": "complete",
+      "dataQuality": "medium",
+      "targetIssues": ["头前移与圆肩同时存在", "含胸倾向", "上半身体态控制不足", "胸肩前侧紧张"],
+      "userFacingGoal": "练习靠墙对齐、胸肩前侧活动和颈部回缩控制。",
+      "visibility": "primary",
+      "steps": [
+        { "id": "UPPER_POSTURE_001_1", "order": 1, "groupKey": "alignment", "groupLabel": "对齐控制", "kind": "exercise", "exerciseId": "EX_WALL_FIVE_POINT_ALIGNMENT", "dose": { "durationSeconds": 60, "sets": 1, "frequency": "每天", "source": "suspectedOnScreenText", "confidence": "medium" } },
+        { "id": "UPPER_POSTURE_001_2", "order": 2, "groupKey": "chest_mobility", "groupLabel": "胸前活动", "kind": "exercise", "exerciseId": "EX_WALL_ELBOW_CHEST_SHOULDER_STRETCH", "dose": { "durationRangeSeconds": [40, 60], "sets": 1, "frequency": "每天", "source": "suspectedOnScreenText", "confidence": "medium" } },
+        { "id": "UPPER_POSTURE_001_3", "order": 3, "groupKey": "cervical_control", "groupLabel": "颈部控制", "kind": "exercise", "exerciseId": "EX_STANDING_CERVICAL_RETRACTION_HOLD", "dose": { "durationSeconds": 30, "sets": 1, "frequency": "每天", "source": "suspectedOnScreenText", "confidence": "medium" } }
+      ],
+      "sourceClaims": [],
+      "limitations": ["剂量疑似来自画面文字。", "不能承诺结构性驼背或圆肩永久矫正。"],
+      "theoryIds": ["THEORY_002"]
+    },
+    {
+      "id": "OROFACIAL_001",
+      "title": "颈侧放松与咀嚼肌自我护理方案",
+      "sourceUrl": "https://v.douyin.com/4-1WIXP8Y0M/",
+      "category": "orofacial",
+      "tags": ["辅助护理", "口颌控制"],
+      "protocolTier": "secondary",
+      "completeness": "complete",
+      "dataQuality": "mediumLow",
+      "targetIssues": ["咬肌主观紧张", "颞肌区域主观不适", "轻度张口控制", "颈侧紧张"],
+      "userFacingGoal": "用于轻度颈侧与口颌肌肉自我护理，不作为大小脸或脸歪矫正。",
+      "visibility": "secondary",
+      "steps": [
+        { "id": "OROFACIAL_001_1", "order": 1, "groupKey": "observation", "groupLabel": "主观观察", "kind": "observation", "observationId": "OBS_OROFACIAL_SUPINE_BODY_CONTACT" },
+        { "id": "OROFACIAL_001_2", "order": 2, "groupKey": "cervical_prep", "groupLabel": "颈部准备", "kind": "exercise", "exerciseId": "EX_SUBOCCIPITAL_SELF_MASSAGE", "dose": { "durationRangeSeconds": [180, 300], "frequency": "每天", "source": "suspectedOnScreenText", "confidence": "low" } },
+        { "id": "OROFACIAL_001_3", "order": 3, "groupKey": "cervical_prep", "groupLabel": "颈部准备", "kind": "exercise", "exerciseId": "EX_ASSISTED_CERVICAL_SIDE_BEND_STRETCH", "dose": { "durationSeconds": 30, "mode": "每侧", "frequency": "每天", "source": "suspectedOnScreenText", "confidence": "mediumLow" } },
+        { "id": "OROFACIAL_001_4", "order": 4, "groupKey": "orofacial_release", "groupLabel": "口颌放松", "kind": "exercise", "exerciseId": "EX_MASSETER_SELF_MASSAGE", "dose": { "durationSeconds": 30, "mode": "每侧", "frequency": "每天", "source": "suspectedOnScreenText", "confidence": "mediumLow" } },
+        { "id": "OROFACIAL_001_5", "order": 5, "groupKey": "opening_control", "groupLabel": "张口控制", "kind": "exercise", "exerciseId": "EX_TEMPORALIS_CONTACT_CONTROLLED_OPENING", "dose": { "reps": 10, "holdSeconds": 5, "frequency": "每天", "source": "suspectedOnScreenText", "confidence": "mediumLow" } }
+      ],
+      "sourceClaims": ["改善大小脸", "改善脸歪", "改善高低耳", "调整颈椎后面部不对称会改善"],
+      "limitations": ["外观宣称不得显示为确定效果。", "不能矫正骨性脸型。", "不能调整下颌骨位置。", "不作为体态改善首页核心入口。"]
+    },
+    {
+      "id": "THORACIC_001",
+      "title": "胸椎滚轴放松与四点跪活动方案",
+      "sourceUrl": "https://v.douyin.com/AKyW9P466Fs/",
+      "category": "thoracic",
+      "tags": ["胸椎活动", "训练前准备"],
+      "protocolTier": "core",
+      "completeness": "complete",
+      "dataQuality": "mediumHigh",
+      "targetIssues": ["胸椎僵硬", "中上背紧张", "胸椎屈伸活动不足", "胸椎旋转活动不足", "推胸或划船前活动准备", "视频所称胸曲偏直倾向"],
+      "userFacingGoal": "提高胸椎区域的屈伸和旋转活动，并作为推拉训练前的活动准备。",
+      "visibility": "primary",
+      "steps": [
+        { "id": "THORACIC_001_1", "order": 1, "groupKey": "release", "groupLabel": "放松准备", "kind": "exercise", "exerciseId": "EX_FOAM_ROLL_THORACIC", "dose": { "reps": 10, "holdSeconds": 20, "frequency": "每天", "source": "suspectedOnScreenText", "confidence": "medium", "notes": "滚动 10 次，紧张点每处停留 20 秒。" } },
+        { "id": "THORACIC_001_2", "order": 2, "groupKey": "flex_extension", "groupLabel": "屈伸活动", "kind": "exercise", "exerciseId": "EX_QUADRUPED_THORACIC_FLEX_EXTENSION", "dose": { "reps": 10, "frequency": "每天", "source": "suspectedOnScreenText", "confidence": "medium" } },
+        { "id": "THORACIC_001_3", "order": 3, "groupKey": "rotation", "groupLabel": "旋转活动", "kind": "exercise", "exerciseId": "EX_QUADRUPED_THORACIC_ROTATION", "dose": { "durationSeconds": 30, "mode": "每侧，保持形式待复核", "frequency": "每天", "source": "suspectedOnScreenText", "confidence": "mediumLow", "notes": "可能是终末位保持 30 秒，也可能是重复操作总时长。" } }
+      ],
+      "sourceClaims": ["恢复正常胸椎生理弧度", "改善呼吸", "缓解肩颈不适", "提高推胸和划船发力"],
+      "limitations": ["无可靠的胸曲过直筛查。", "活动度训练不等于改变结构性曲度。", "视频称包含前胸拉伸，但实际没有独立前胸拉伸动作。"],
+      "theoryIds": ["THEORY_002"]
+    },
+    {
+      "id": "WINGED_SCAPULA_001",
+      "title": "胸前侧活动与墙面肩胛前伸控制方案",
+      "sourceUrl": "https://v.douyin.com/DIlTZrCeiY0/",
+      "category": "winged_scapula",
+      "tags": ["胸前活动", "肩胛前伸"],
+      "protocolTier": "core",
+      "completeness": "complete",
+      "dataQuality": "mediumHigh",
+      "targetIssues": ["肩胛内侧缘翘起倾向", "抬手时肩胛控制不足", "胸肩前侧紧张", "视频所称翼状肩胛"],
+      "userFacingGoal": "通过胸前侧活动和墙面肩胛前伸练习，提高肩胛控制能力。",
+      "visibility": "primary",
+      "steps": [
+        { "id": "WINGED_SCAPULA_001_1", "order": 1, "groupKey": "chest_mobility", "groupLabel": "胸前活动", "kind": "exercise", "exerciseId": "EX_DOORWAY_ANTERIOR_CHEST_STRETCH", "dose": { "durationSeconds": 30, "sets": 1, "mode": "每侧", "frequency": "每天", "source": "suspectedOnScreenText", "confidence": "medium" } },
+        { "id": "WINGED_SCAPULA_001_2", "order": 2, "groupKey": "scapular_control", "groupLabel": "肩胛控制", "kind": "exercise", "exerciseId": "EX_SCAP_WALL_PROTRACTION", "dose": { "reps": 15, "frequency": "每天", "source": "suspectedOnScreenText", "confidence": "medium" } }
+      ],
+      "sourceClaims": ["胸小肌紧张和前锯肌无力是翼状肩胛根源", "每日训练能使肩胛骨不再翘起"],
+      "limitations": ["无独立筛查。", "翼状肩胛原因不能统一归为胸小肌紧和前锯肌弱。", "不承诺消除所有肩胛翘起。"],
+      "theoryIds": ["THEORY_002"]
+    },
+    {
+      "id": "WINGED_SCAPULA_002",
+      "title": "高位支撑肩胛前伸控制方案",
+      "sourceUrl": "https://v.douyin.com/VFRESA00DMo/",
+      "category": "winged_scapula",
+      "tags": ["闭链稳定", "肩胛前伸"],
+      "protocolTier": "core",
+      "completeness": "complete",
+      "dataQuality": "mediumHigh",
+      "targetIssues": ["肩胛内侧缘翘起倾向", "肩胛缝主观不适", "闭链肩胛稳定不足"],
+      "userFacingGoal": "通过高位支撑肩胛前伸练习，提高肩胛稳定和前伸控制。",
+      "visibility": "primary",
+      "steps": [
+        { "id": "WINGED_SCAPULA_002_1", "order": 1, "groupKey": "scapular_control", "groupLabel": "肩胛控制", "kind": "exercise", "exerciseId": "EX_SCAP_ELEVATED_PROTRACTION", "dose": { "reps": "15-20", "sets": "3-5", "frequency": "每天", "source": "source", "notes": "这是视频源剂量，不应设为所有用户的全局默认剂量。" } }
+      ],
+      "sourceClaims": ["精准激活菱形肌", "收紧外翻肩胛", "缓解肩胛缝疼痛"],
+      "limitations": ["肩胛前伸不应标为菱形肌专项。", "肩胛内侧疼痛不能判定翼状肩胛。", "一个动作不能处理所有翼状肩胛原因。"],
+      "theoryIds": ["THEORY_002"]
+    },
+    {
+      "id": "RIB_FLARE_001",
+      "title": "仰卧呼气胸廓控制与死虫稳定方案",
+      "sourceUrl": "https://v.douyin.com/dCXtWmZ7Lvk/",
+      "category": "ribcage_breathing",
+      "tags": ["呼吸控制", "死虫稳定"],
+      "protocolTier": "core",
+      "completeness": "complete",
+      "dataQuality": "mediumHigh",
+      "targetIssues": ["动作中肋弓上抬倾向", "过度挺胸顶肋", "腰腹控制不足", "视频所称肋骨外翻"],
+      "userFacingGoal": "练习呼气时胸廓回落，以及四肢运动中的胸廓和腰盆稳定。",
+      "visibility": "primary",
+      "steps": [
+        { "id": "RIB_FLARE_001_1", "order": 1, "groupKey": "breathing", "groupLabel": "呼吸控制", "kind": "exercise", "exerciseId": "EX_SUPINE_EXHALE_RIBCAGE_CONTROL", "dose": { "durationSeconds": 60, "holdSeconds": 2, "frequency": "每天", "notes": "呼气末端约停留 2 秒。" } },
+        { "id": "RIB_FLARE_001_2", "order": 2, "groupKey": "dynamic_stability", "groupLabel": "动态稳定", "kind": "exercise", "exerciseId": "EX_CONTRALATERAL_DEAD_BUG", "dose": { "repsPerSide": 10, "frequency": "每天", "notes": "左右共 20 次交替。" } }
+      ],
+      "sourceClaims": ["错误胸式呼吸和腹横肌无力导致肋骨外翻", "训练可以收紧肋弓和上腹", "可以缓解腰酸并恢复胸廓中立"],
+      "limitations": ["肋弓外观不是统一诊断。", "不能根据外观推断腹横肌必然无力。", "不鼓励全天持续收紧腹部和肋骨。", "胸痛、呼吸困难或明显眩晕时停止。"],
+      "theoryIds": ["THEORY_002"]
+    }
+  ],
+  "theoryMaterials": [
+    {
+      "id": "THEORY_001",
+      "title": "骨盆前倾与肩部撞击的处理思路",
+      "sourceUrl": "https://v.douyin.com/YZmnBpUQT2U/",
+      "visibility": "internal",
+      "content": ["视频从髋前侧与腰背活动、臀部和腹部训练讨论骨盆方向。", "视频从胸前活动和肩胛相关肌群讨论肩部方向。"],
+      "limitations": ["无动作和剂量，不作为独立训练方案。", "大圆肌和小圆肌功能不同，不能合并为同一强化目标。", "视频部分肩部解剖表达不精确。"]
+    },
+    {
+      "id": "THEORY_002",
+      "title": "上半身复合体态三阶段处理框架",
+      "sourceUrl": "https://v.douyin.com/FuQ8WNx4BdQ/",
+      "visibility": "internal",
+      "content": ["胸肩前侧活动。", "胸廓呼吸与胸椎活动。", "躯干和肩胛稳定。"],
+      "limitations": ["四类表现不能直接归为同一个病因。", "无筛查和统一动作剂量。", "三阶段不是强制顺序。", "不能宣称胸廓改变后其他结构会自动复位。"]
+    }
+  ],
+  "guidanceMaterials": [
+    {
+      "id": "GUIDANCE_001",
+      "title": "体态焦虑与长期改善观念",
+      "sourceUrl": "https://v.douyin.com/g5O6EBTPNFU/",
+      "visibility": "primary",
+      "content": ["不必对所有体态差异过度焦虑。", "部分问题确实需要主动改善。", "规律作息、合理饮食和稳定心态有助于长期整体状态。", "外观差异不等于疾病。", "训练目标优先放在舒适度、活动能力和力量表现。"]
+    }
+  ]
+}

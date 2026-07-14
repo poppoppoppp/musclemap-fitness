@@ -1,10 +1,12 @@
 import type { ActiveWorkout, ActiveWorkoutExercise, ActiveWorkoutSet, ActiveWorkoutSource } from '../types/activeWorkout';
-import type { PostureDataset, PostureProtocolExerciseSnapshot, PostureProtocolWorkoutSnapshot } from '../types/posture';
+import type { PostureDataset, PostureDose, PostureProtocolExerciseSnapshot, PostureProtocolStepSnapshot, PostureProtocolWorkoutSnapshot } from '../types/posture';
 import type { GeneratedPlan, GeneratedPlanItem, GeneratedWorkoutDay, WorkoutLog, WorkoutLogExercise, WorkoutSet } from '../types/workout';
 import {
-  getAddableProtocolItems,
+  formatDose,
   getPostureProtocolById,
   getPostureStandardExerciseById,
+  getRequiredProtocolSelectionGroups,
+  getSelectedAddableProtocolSteps,
   isProtocolVisibleInApp,
   postureDataset
 } from './postureProtocols';
@@ -59,62 +61,120 @@ export function addPostureProtocolToActiveWorkout(
   workout: ActiveWorkout,
   protocolId: string,
   now = new Date(),
-  dataset: PostureDataset = postureDataset
+  dataset: PostureDataset = postureDataset,
+  selectedExerciseIds: string[] = []
 ): ActiveWorkout {
   const protocol = getPostureProtocolById(protocolId, dataset);
   if (!protocol || !isProtocolVisibleInApp(protocol, dataset)) return workout;
 
+  const selected = new Set(selectedExerciseIds);
+  const hasRequiredSelections = getRequiredProtocolSelectionGroups(protocol).every((groupId) =>
+    protocol.steps.filter((step) => step.selectionGroupId === groupId && step.exerciseId && selected.has(step.exerciseId)).length === 1
+  );
+  if (!hasRequiredSelections) return workout;
+
   const instanceId = createId('posture-protocol');
   const addedAt = now.toISOString();
-  const targetIssueNamesSnapshot = protocol.targetIssueIds.flatMap((issueId) => {
-    const issue = dataset.postureIssues.find(({ id }) => id === issueId);
-    return issue ? [issue.name] : [];
-  });
-  const items = getAddableProtocolItems(protocol, dataset);
+  const includedSteps = getSelectedAddableProtocolSteps(protocol, selectedExerciseIds);
+  const includedStepIds = new Set(includedSteps.map(({ id }) => id));
   const addedExercises: ActiveWorkoutExercise[] = [];
   const exerciseSnapshots: PostureProtocolExerciseSnapshot[] = [];
+  const stepSnapshots: PostureProtocolStepSnapshot[] = [];
 
-  for (const item of items) {
-    const standardExercise = getPostureStandardExerciseById(item.exerciseId, dataset);
+  for (const step of [...protocol.steps].sort((left, right) => left.order - right.order)) {
+    if (step.kind === 'observation') {
+      const observation = dataset.observations.find(({ id }) => id === step.observationId);
+      if (!observation) continue;
+      stepSnapshots.push({
+        id: step.id,
+        order: step.order,
+        groupKey: step.groupKey,
+        groupLabel: step.groupLabel,
+        kind: 'observation',
+        titleSnapshot: observation.name,
+        observationId: observation.id,
+        includedInWorkout: false,
+        purposeSnapshot: observation.purpose,
+        limitationSnapshot: observation.limitation
+      });
+      continue;
+    }
+
+    if (!step.exerciseId) continue;
+    const standardExercise = getPostureStandardExerciseById(step.exerciseId, dataset);
     if (!standardExercise) continue;
-    const exercise = createActiveWorkoutExercise(
-      item.exerciseId,
-      workout.exercises.length + addedExercises.length,
-      'posture',
-      item.prescription.sets ?? 1
-    );
-    exercise.postureProtocolInstanceId = instanceId;
-    const planned = {
-      ...(item.prescription.sets !== null ? { sets: item.prescription.sets } : {}),
-      ...(item.prescription.reps !== null ? { repRange: String(item.prescription.reps) } : {}),
-      ...(item.prescription.restSeconds !== null ? { restSeconds: item.prescription.restSeconds } : {}),
-      ...(item.prescription.rawText ? { note: item.prescription.rawText } : {})
-    };
-    if (Object.keys(planned).length > 0) exercise.planned = planned;
-    addedExercises.push(exercise);
-    exerciseSnapshots.push({
-      instanceId: exercise.id,
-      exerciseId: item.exerciseId,
-      nameSnapshot: standardExercise.name,
-      order: item.order,
-      roleInProtocol: item.roleInProtocol,
-      roleExplanation: item.roleExplanation,
-      prescription: { ...item.prescription },
-      specialCues: [...item.specialCues],
-      sourceOriginalText: item.sourceOriginalText
+    const includedInWorkout = includedStepIds.has(step.id);
+    let exercise: ActiveWorkoutExercise | undefined;
+    if (includedInWorkout) {
+      exercise = createActiveWorkoutExercise(
+        step.exerciseId,
+        workout.exercises.length + addedExercises.length,
+        'posture',
+        getInitialPostureSetCount(step.dose)
+      );
+      exercise.postureProtocolInstanceId = instanceId;
+      if (step.dose?.durationSeconds !== undefined || step.dose?.durationRangeSeconds !== undefined) {
+        exercise.setEntryMode = 'duration';
+      }
+      const planned = getPosturePlannedDose(step.dose);
+      if (planned) exercise.planned = planned;
+      addedExercises.push(exercise);
+
+      const item = protocol.exerciseItems.find((candidate) => candidate.exerciseId === step.exerciseId && candidate.order === step.order);
+      if (item) {
+        exerciseSnapshots.push({
+          instanceId: exercise.id,
+          exerciseId: step.exerciseId,
+          nameSnapshot: standardExercise.name,
+          order: step.order,
+          roleInProtocol: step.groupKey,
+          roleExplanation: step.groupLabel,
+          prescription: { ...item.prescription },
+          specialCues: [...(step.notes ?? [])],
+          sourceOriginalText: item.sourceOriginalText,
+          groupKey: step.groupKey,
+          groupLabel: step.groupLabel,
+          dose: cloneDose(step.dose),
+          doseConfidence: step.dose?.confidence,
+          visualReviewRequired: standardExercise.visualReviewRequired,
+          visualReviewNote: standardExercise.visualReviewNote
+        });
+      }
+    }
+
+    stepSnapshots.push({
+      id: step.id,
+      order: step.order,
+      groupKey: step.groupKey,
+      groupLabel: step.groupLabel,
+      kind: 'exercise',
+      titleSnapshot: standardExercise.name,
+      exerciseId: step.exerciseId,
+      exerciseInstanceId: exercise?.id,
+      includedInWorkout,
+      optional: step.optional,
+      selectionGroupId: step.selectionGroupId,
+      dose: cloneDose(step.dose),
+      notes: step.notes ? [...step.notes] : undefined,
+      visualReviewRequired: standardExercise.visualReviewRequired,
+      visualReviewNote: standardExercise.visualReviewNote
     });
   }
+
+  if (addedExercises.length === 0) return workout;
 
   const group: PostureProtocolWorkoutSnapshot = {
     instanceId,
     sourceProtocolId: protocol.id,
-    nameSnapshot: protocol.name,
-    targetIssueNamesSnapshot,
+    nameSnapshot: protocol.title,
+    targetIssueNamesSnapshot: [...protocol.targetIssues],
+    limitationsSnapshot: [...protocol.limitations],
     addedAt,
     isModified: false,
     order: workout.postureProtocolGroups?.length ?? 0,
     exerciseInstanceIds: addedExercises.map(({ id }) => id),
-    exerciseSnapshots
+    exerciseSnapshots,
+    stepSnapshots
   };
 
   return touch({
@@ -302,7 +362,7 @@ export function updateActiveWorkoutSet(
   workout: ActiveWorkout,
   activeExerciseId: string,
   setId: string,
-  key: 'weight' | 'reps',
+  key: 'weight' | 'reps' | 'durationSeconds',
   value: string
 ): ActiveWorkout {
   return updateExercise(workout, activeExerciseId, (exercise) => {
@@ -405,7 +465,7 @@ function updateExercise(
   });
 }
 
-function updateSetValue(set: ActiveWorkoutSet, key: 'weight' | 'reps', value: string): ActiveWorkoutSet {
+function updateSetValue(set: ActiveWorkoutSet, key: 'weight' | 'reps' | 'durationSeconds', value: string): ActiveWorkoutSet {
   const trimmed = value.trim();
   if (trimmed === '') {
     const { [key]: _removed, ...rest } = set;
@@ -418,7 +478,8 @@ function normalizeSet(set: ActiveWorkoutSet, setIndex: number): { set?: WorkoutS
   if (set.weight !== undefined && (!Number.isFinite(set.weight) || set.weight < 0)) return { error: 'invalid-number' };
   if (set.reps !== undefined && (!Number.isFinite(set.reps) || set.reps <= 0)) return { error: 'invalid-number' };
   if (set.reps !== undefined && !Number.isInteger(set.reps)) return { error: 'integer-reps' };
-  if (set.weight === undefined && set.reps === undefined) return {};
+  if (set.durationSeconds !== undefined && (!Number.isFinite(set.durationSeconds) || set.durationSeconds <= 0)) return { error: 'invalid-number' };
+  if (set.weight === undefined && set.reps === undefined && set.durationSeconds === undefined) return {};
 
   return {
     set: {
@@ -426,6 +487,7 @@ function normalizeSet(set: ActiveWorkoutSet, setIndex: number): { set?: WorkoutS
       setIndex,
       weight: set.weight,
       reps: set.reps,
+      durationSeconds: set.durationSeconds,
       completed: true,
       restSeconds: set.restSeconds
     }
@@ -437,6 +499,41 @@ function createActiveWorkoutSet(setIndex: number): ActiveWorkoutSet {
     id: createId('active-set'),
     setIndex,
     completed: false
+  };
+}
+
+function getInitialPostureSetCount(dose: PostureDose | undefined) {
+  if (typeof dose?.sets === 'number') return dose.sets;
+  if (typeof dose?.sets === 'string') {
+    const first = Number.parseInt(dose.sets, 10);
+    if (Number.isFinite(first) && first > 0) return first;
+  }
+  return 1;
+}
+
+function getPosturePlannedDose(dose: PostureDose | undefined): ActiveWorkoutExercise['planned'] | undefined {
+  if (!dose || Object.keys(dose).length === 0 || dose.confidence === 'low' || dose.confidence === 'mediumLow') return undefined;
+  const repRange = dose.repsPerSide !== undefined
+    ? `每侧 ${dose.repsPerSide}`
+    : dose.reps !== undefined
+      ? String(dose.reps)
+      : undefined;
+  const note = formatDose(dose);
+  const planned = {
+    ...(typeof dose.sets === 'number' ? { sets: dose.sets } : {}),
+    ...(repRange ? { repRange } : {}),
+    ...(dose.durationSeconds !== undefined ? { durationSeconds: dose.durationSeconds } : {}),
+    ...(dose.durationRangeSeconds !== undefined ? { durationRangeSeconds: [...dose.durationRangeSeconds] as [number, number] } : {}),
+    ...(note !== '剂量未说明' ? { note } : {})
+  };
+  return Object.keys(planned).length > 0 ? planned : undefined;
+}
+
+function cloneDose(dose: PostureDose | undefined): PostureDose | undefined {
+  if (!dose) return undefined;
+  return {
+    ...dose,
+    durationRangeSeconds: dose.durationRangeSeconds ? [...dose.durationRangeSeconds] as [number, number] : undefined
   };
 }
 
@@ -460,7 +557,7 @@ function reindexSets(sets: ActiveWorkoutSet[]) {
 }
 
 function hasAnyDisplayableSetValue(exercise: ActiveWorkoutExercise) {
-  return exercise.sets.some((set) => set.weight !== undefined || set.reps !== undefined);
+  return exercise.sets.some((set) => set.weight !== undefined || set.reps !== undefined || set.durationSeconds !== undefined);
 }
 
 function touch(workout: ActiveWorkout): ActiveWorkout {
@@ -506,6 +603,9 @@ function updateGroupsAfterExerciseRemoval(
         const snapshot = snapshotById.get(id);
         return snapshot ? [{ ...snapshot, order: order + 1 }] : [];
       }),
+      stepSnapshots: group.stepSnapshots?.map((snapshot) => snapshot.exerciseInstanceId === activeExerciseId
+        ? { ...snapshot, includedInWorkout: false, exerciseInstanceId: undefined }
+        : snapshot),
       isModified: true
     }];
   }).map((group, order) => ({ ...group, order }));
@@ -516,11 +616,18 @@ function clonePostureGroups(groups: PostureProtocolWorkoutSnapshot[] | undefined
   return groups.map((group) => ({
     ...group,
     targetIssueNamesSnapshot: [...group.targetIssueNamesSnapshot],
+    limitationsSnapshot: group.limitationsSnapshot ? [...group.limitationsSnapshot] : undefined,
     exerciseInstanceIds: [...group.exerciseInstanceIds],
     exerciseSnapshots: group.exerciseSnapshots.map((snapshot) => ({
       ...snapshot,
       prescription: { ...snapshot.prescription },
-      specialCues: [...snapshot.specialCues]
+      specialCues: [...snapshot.specialCues],
+      dose: cloneDose(snapshot.dose)
+    })),
+    stepSnapshots: group.stepSnapshots?.map((snapshot) => ({
+      ...snapshot,
+      dose: cloneDose(snapshot.dose),
+      notes: snapshot.notes ? [...snapshot.notes] : undefined
     }))
   }));
 }

@@ -7,6 +7,7 @@ import {
   postureDataset
 } from '../utils/postureProtocols';
 import type { PostureDataset, PostureProtocol } from '../types/posture';
+import type { ActiveWorkoutSet } from '../types/activeWorkout';
 import { exercises, getExerciseById } from '../data/exercises';
 import {
   addPostureProtocolToActiveWorkout,
@@ -20,48 +21,46 @@ import {
   updateActiveWorkoutSet
 } from '../utils/activeWorkout';
 
-test('only centrally released ready protocols enter the V0.1 interface', () => {
-  expect(getVisiblePostureProtocols(postureDataset).map(({ id }) => id)).toEqual(['SHOULDER_001']);
-
-  const conditional = postureDataset.protocols.find(({ id }) => id === 'THORACIC_001');
-  const metadataOnly = postureDataset.protocols.find(({ id }) => id === 'SHOULDER_002');
-  expect(conditional && isProtocolVisibleInApp(conditional, postureDataset)).toBe(false);
-  expect(metadataOnly && isProtocolVisibleInApp(metadataOnly, postureDataset)).toBe(false);
+test('all twelve supplied training protocols enter the v0.2 interface', () => {
+  expect(getVisiblePostureProtocols(postureDataset).map(({ id }) => id)).toEqual([
+    'SHOULDER_001',
+    'SHOULDER_002',
+    'PELVIS_001',
+    'PELVIS_002',
+    'CERVICAL_001',
+    'CERVICAL_002',
+    'UPPER_POSTURE_001',
+    'OROFACIAL_001',
+    'THORACIC_001',
+    'WINGED_SCAPULA_001',
+    'WINGED_SCAPULA_002',
+    'RIB_FLARE_001'
+  ]);
+  expect(getVisiblePostureProtocols(postureDataset).every((protocol) => isProtocolVisibleInApp(protocol, postureDataset))).toBe(true);
 });
 
-test('visible posture issues are deduplicated and count only released protocols', () => {
-  expect(getVisiblePostureIssues(postureDataset)).toEqual([
-    expect.objectContaining({ id: 'humeral-anterior-translation', protocolCount: 1 }),
-    expect.objectContaining({ id: 'shoulder-clicking-discomfort', protocolCount: 1 })
-  ]);
+test('legacy issue adapter remains deduplicated for old return links', () => {
+  const issues = getVisiblePostureIssues(postureDataset);
+  expect(new Set(issues.map(({ id }) => id)).size).toBe(issues.length);
+  expect(issues.find(({ id }) => id === '肩部弹响或不适')?.protocolCount).toBe(1);
 });
 
 test('addable exercises follow positive order and exclude optional or held items', () => {
   const shoulder = postureDataset.protocols.find(({ id }) => id === 'SHOULDER_001');
   expect(shoulder).toBeTruthy();
   expect(getAddableProtocolItems(shoulder!, postureDataset).map(({ exerciseId, order }) => ({ exerciseId, order }))).toEqual([
-    { exerciseId: 'quadruped-scapular-protraction-stability', order: 1 },
-    { exerciseId: 'band-assisted-scapular-posterior-tilt-raise', order: 2 }
+    { exerciseId: 'EX_SCAP_QUADRUPED_PROTRACTION', order: 2 },
+    { exerciseId: 'EX_SCAP_BAND_POSTERIOR_TILT_ELEVATION', order: 3 }
   ]);
   expect(getAddableProtocolItems(shoulder!, postureDataset).map(({ exerciseId }) => exerciseId)).not.toContain(
-    'infraspinatus-teres-minor-local-pressure-release'
+    'EX_POSTERIOR_SHOULDER_PRESSURE_RELEASE'
   );
 });
 
 test('protocol visibility requires a real addable exercise and handles empty data', () => {
-  const protocol: PostureProtocol = {
-    id: 'EMPTY_READY',
-    name: '空方案',
-    status: 'ready',
-    appEligibility: 'review_before_release',
-    targetIssueIds: [],
-    summary: '',
-    sourceOriginal: {},
-    exerciseItems: []
-  };
+  const protocol: PostureProtocol = { ...structuredClone(postureDataset.protocols[0]), id: 'EMPTY_READY', steps: [], exerciseItems: [] };
   const emptyDataset: PostureDataset = {
-    schemaVersion: 'test',
-    datasetName: 'test',
+    ...structuredClone(postureDataset),
     postureIssues: [],
     standardExercises: [],
     protocols: [],
@@ -85,35 +84,81 @@ test('adding a protocol creates an independent ordered workout snapshot', () => 
 
   expect(group).toMatchObject({
     sourceProtocolId: 'SHOULDER_001',
-    nameSnapshot: '肩部弹响/不适与肩胛控制方案',
-    targetIssueNamesSnapshot: ['肱骨前移', '肩部弹响或不适'],
+    nameSnapshot: '肩胛控制与肩部不适辅助方案',
+    targetIssueNamesSnapshot: ['肩部弹响或不适', '推肩、卧推、划船时肩部控制不足', '肩胛稳定不足'],
     isModified: false,
     order: 0
   });
   expect(group?.exerciseSnapshots.map(({ exerciseId, order, nameSnapshot }) => ({ exerciseId, order, nameSnapshot }))).toEqual([
     {
-      exerciseId: 'quadruped-scapular-protraction-stability',
-      order: 1,
-      nameSnapshot: '四点跪姿肩胛前伸稳定'
+      exerciseId: 'EX_SCAP_QUADRUPED_PROTRACTION',
+      order: 2,
+      nameSnapshot: '四点跪姿肩胛前伸控制'
     },
     {
-      exerciseId: 'band-assisted-scapular-posterior-tilt-raise',
-      order: 2,
+      exerciseId: 'EX_SCAP_BAND_POSTERIOR_TILT_ELEVATION',
+      order: 3,
       nameSnapshot: '弹力带辅助肩胛后倾上举'
     }
   ]);
   expect(added.exercises.map(({ exerciseId, postureProtocolInstanceId }) => ({ exerciseId, postureProtocolInstanceId }))).toEqual([
-    { exerciseId: 'quadruped-scapular-protraction-stability', postureProtocolInstanceId: group?.instanceId },
-    { exerciseId: 'band-assisted-scapular-posterior-tilt-raise', postureProtocolInstanceId: group?.instanceId }
+    { exerciseId: 'EX_SCAP_QUADRUPED_PROTRACTION', postureProtocolInstanceId: group?.instanceId },
+    { exerciseId: 'EX_SCAP_BAND_POSTERIOR_TILT_ELEVATION', postureProtocolInstanceId: group?.instanceId }
   ]);
   expect(added.exercises[0].planned?.sets).toBe(3);
   expect(added.exercises[1].planned?.sets).toBeUndefined();
 
   group?.exerciseSnapshots[0].specialCues.push('本地修改');
-  const sourceCueList = postureDataset.protocols
-    .find(({ id }) => id === 'SHOULDER_001')
-    ?.exerciseItems.find(({ order }) => order === 1)?.specialCues;
-  expect(sourceCueList).not.toContain('本地修改');
+  const sourceNotes = postureDataset.protocols.find(({ id }) => id === 'SHOULDER_001')?.steps[1].notes;
+  expect(sourceNotes).not.toContain('本地修改');
+});
+
+test('observations and excluded optional steps stay in the protocol snapshot only', () => {
+  const added = addPostureProtocolToActiveWorkout(createManualActiveWorkout(), 'PELVIS_001');
+  const group = added.postureProtocolGroups![0];
+
+  expect(added.exercises).toHaveLength(5);
+  expect(group.exerciseSnapshots).toHaveLength(5);
+  expect(group.stepSnapshots).toHaveLength(7);
+  expect(group.stepSnapshots?.filter(({ kind }) => kind === 'observation')).toHaveLength(2);
+  expect(group.stepSnapshots?.filter(({ kind }) => kind === 'observation').every(({ includedInWorkout }) => !includedInWorkout)).toBe(true);
+
+  const shoulder = addPostureProtocolToActiveWorkout(createManualActiveWorkout(), 'SHOULDER_001');
+  const shoulderGroup = shoulder.postureProtocolGroups![0];
+  expect(shoulderGroup.stepSnapshots?.find(({ optional }) => optional)).toMatchObject({
+    exerciseId: 'EX_POSTERIOR_SHOULDER_PRESSURE_RELEASE',
+    includedInWorkout: false
+  });
+});
+
+test('a required variant adds exactly the selected exercise', () => {
+  const workout = createManualActiveWorkout();
+  expect(addPostureProtocolToActiveWorkout(workout, 'SHOULDER_002')).toBe(workout);
+
+  const added = addPostureProtocolToActiveWorkout(
+    workout,
+    'SHOULDER_002',
+    new Date('2026-07-14T08:00:00.000Z'),
+    postureDataset,
+    ['EX_LOW_ANGLE_ABDUCTION_CABLE']
+  );
+  expect(added.exercises.map(({ exerciseId }) => exerciseId)).toEqual(['EX_LOW_ANGLE_ABDUCTION_CABLE']);
+  expect(added.postureProtocolGroups?.[0].exerciseSnapshots).toHaveLength(1);
+});
+
+test('an explicit duration dose can be recorded and archived without reps', () => {
+  const added = addPostureProtocolToActiveWorkout(createManualActiveWorkout(), 'PELVIS_002');
+  const exercise = added.exercises[0];
+
+  expect(exercise.planned).toMatchObject({ sets: 1, durationSeconds: 60 });
+  (exercise.sets[0] as ActiveWorkoutSet & { durationSeconds?: number }).durationSeconds = 45;
+
+  const archived = archiveActiveWorkout(added, new Date('2026-07-14T09:00:00.000Z'));
+  expect(archived.ok).toBe(true);
+  if (!archived.ok) return;
+  expect(archived.log.exercises[0].sets).toEqual([
+    expect.objectContaining({ durationSeconds: 45, completed: true })
+  ]);
 });
 
 test('editing, deleting and reordering protocol exercises marks the group modified', () => {
@@ -130,6 +175,11 @@ test('editing, deleting and reordering protocol exercises marks the group modifi
 
   const removed = removeExerciseFromActiveWorkout(added, firstExercise.id);
   expect(removed.postureProtocolGroups?.[0].exerciseInstanceIds).not.toContain(firstExercise.id);
+  expect(removed.postureProtocolGroups?.[0].stepSnapshots?.find(({ exerciseInstanceId }) => exerciseInstanceId === firstExercise.id)).toBeUndefined();
+  expect(removed.postureProtocolGroups?.[0].stepSnapshots?.find(({ exerciseId }) => exerciseId === firstExercise.exerciseId)).toMatchObject({
+    includedInWorkout: false,
+    exerciseInstanceId: undefined
+  });
   expect(removed.postureProtocolGroups?.[0].isModified).toBe(true);
 });
 
@@ -161,14 +211,15 @@ test('archive retains protocol names, issue labels, action context and user para
   if (!archived.ok) return;
   expect(archived.log.postureProtocolGroups?.[0]).toMatchObject({
     sourceProtocolId: 'SHOULDER_001',
-    nameSnapshot: '肩部弹响/不适与肩胛控制方案',
-    targetIssueNamesSnapshot: ['肱骨前移', '肩部弹响或不适'],
+    nameSnapshot: '肩胛控制与肩部不适辅助方案',
+    targetIssueNamesSnapshot: ['肩部弹响或不适', '推肩、卧推、划船时肩部控制不足', '肩胛稳定不足'],
     isModified: true
   });
   expect(archived.log.postureProtocolGroups?.[0].exerciseSnapshots[0]).toMatchObject({
-    nameSnapshot: '四点跪姿肩胛前伸稳定',
+    nameSnapshot: '四点跪姿肩胛前伸控制',
     prescription: expect.objectContaining({ sets: 3 })
   });
+  expect(archived.log.postureProtocolGroups?.[0].stepSnapshots).toHaveLength(3);
   expect(archived.log.exercises[0]).toMatchObject({
     postureProtocolInstanceId: archived.log.postureProtocolGroups?.[0].instanceId,
     sets: [expect.objectContaining({ reps: 10 })]
@@ -195,18 +246,13 @@ test('standard posture actions reuse exercise details without entering the ordin
 
   expect(exercises.some(({ id }) => id === exercise?.id)).toBe(false);
   expect(exercise).toMatchObject({
-    name: '四点跪姿肩胛前伸稳定',
+    name: '四点跪姿肩胛前伸控制',
     equipment: ['瑜伽垫'],
-    steps: [
-      '保持大臂外旋。',
-      '主动将肩胛骨向外展开，使胸口远离地面。',
-      '将上背部尽可能顶高，在该位置保持并配合均匀呼吸。',
-      '控制肩胛回到自然位置。'
-    ],
+    steps: ['保持肘关节角度基本不变。', '主动推地，让胸廓远离地面，肩胛骨向前、向外滑动。', '缓慢回到起始位置。'],
     postureDetails: expect.objectContaining({
-      breathing: '保持姿势时均匀呼吸；视频未给出固定呼吸次数。',
-      verificationStatus: '待科学核验'
+      breathing: '保持均匀呼吸。',
+      verificationStatus: '已按提供资料标准化'
     })
   });
-  expect(getExerciseById('kneeling-posterior-thoracic-expansion-breathing')).toBeUndefined();
+  expect(getExerciseById('kneeling-posterior-thoracic-expansion-breathing')).toBeDefined();
 });

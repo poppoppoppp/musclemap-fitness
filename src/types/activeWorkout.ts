@@ -24,11 +24,14 @@ export interface ActiveWorkoutExercise {
   order: number;
   source: ActiveWorkoutSource;
   postureProtocolInstanceId?: string;
+  setEntryMode?: 'reps' | 'duration';
   startedAt?: string;
   endedAt?: string;
   planned?: {
     sets?: number;
     repRange?: string;
+    durationSeconds?: number;
+    durationRangeSeconds?: [number, number];
     restSeconds?: number;
     note?: string;
   };
@@ -41,6 +44,7 @@ export interface ActiveWorkoutSet {
   setIndex: number;
   weight?: number;
   reps?: number;
+  durationSeconds?: number;
   completed?: boolean;
   restSeconds?: number;
 }

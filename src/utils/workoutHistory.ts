@@ -61,6 +61,7 @@ export function validateWorkoutLog(log: WorkoutLog): string | null {
     for (const set of exercise.sets) {
       if (set.weight !== undefined && (typeof set.weight !== 'number' || !Number.isFinite(set.weight) || set.weight < 0)) return '重量必须是有效的非负数';
       if (set.reps !== undefined && (typeof set.reps !== 'number' || !Number.isFinite(set.reps) || set.reps < 0 || !Number.isInteger(set.reps))) return '次数必须是非负整数';
+      if (set.durationSeconds !== undefined && (typeof set.durationSeconds !== 'number' || !Number.isFinite(set.durationSeconds) || set.durationSeconds <= 0)) return '时长必须是有效的正数';
     }
     if (!exercise.sets.some(isValidWorkoutSet)) return '每个动作至少需要保留一个有效组';
   }
@@ -85,7 +86,7 @@ export function countValidSets(log: WorkoutLog): number {
 }
 
 export function isValidWorkoutSet(set: WorkoutSet): boolean {
-  return isDisplayableNumber(set.weight) || isDisplayableNumber(set.reps);
+  return isDisplayableNumber(set.weight) || isDisplayableNumber(set.reps) || isDisplayableNumber(set.durationSeconds);
 }
 
 export function formatWorkoutDuration(durationSeconds: unknown): string {
@@ -104,11 +105,17 @@ export function summarizeWorkoutExercise(exercise: WorkoutLogExercise): string {
   const parts = [`${sets.length} 组`];
   const weights = sets.map((set) => set.weight).filter(isDisplayableNumber);
   const reps = sets.map((set) => set.reps).filter(isDisplayableNumber);
+  const durations = sets.map((set) => set.durationSeconds).filter(isDisplayableNumber);
   if (weights.length) parts.push(`最高 ${formatNumber(Math.max(...weights))}kg`);
   if (reps.length) {
     const min = Math.min(...reps);
     const max = Math.max(...reps);
     parts.push(`${min === max ? min : `${min}–${max}`} 次`);
+  }
+  if (durations.length) {
+    const min = Math.min(...durations);
+    const max = Math.max(...durations);
+    parts.push(`${min === max ? min : `${min}–${max}`} 秒`);
   }
   return parts.join(' · ');
 }
@@ -123,10 +130,12 @@ export function formatWorkoutSet(set: WorkoutSet): string | null {
   const setIndex = typeof set.setIndex === 'number' && Number.isFinite(set.setIndex) ? set.setIndex : 1;
   const hasWeight = isDisplayableNumber(set.weight);
   const hasReps = isDisplayableNumber(set.reps);
+  const hasDuration = isDisplayableNumber(set.durationSeconds);
 
   if (hasWeight && hasReps) return `第 ${setIndex} 组：${set.weight}kg x ${set.reps} 次`;
   if (hasWeight) return `第 ${setIndex} 组：${set.weight}kg`;
   if (hasReps) return `第 ${setIndex} 组：${set.reps} 次`;
+  if (hasDuration) return `第 ${setIndex} 组：${set.durationSeconds} 秒`;
   return null;
 }
 

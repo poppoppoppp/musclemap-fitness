@@ -11,7 +11,7 @@ interface CompletedExercisesListProps {
   pendingExercises?: ActiveWorkoutExercise[];
   onAddSet: (exerciseId: string) => void;
   onDeleteSet: (exerciseId: string, setId: string) => void;
-  onSetChange: (exerciseId: string, setId: string, key: 'weight' | 'reps', value: string) => void;
+  onSetChange: (exerciseId: string, setId: string, key: 'weight' | 'reps' | 'durationSeconds', value: string) => void;
   onNotesChange: (exerciseId: string, notes: string) => void;
   onDeleteExercise: (exerciseId: string) => void;
 }
@@ -64,7 +64,7 @@ function CompletedExerciseItem({ exercise, onAddSet, onDeleteSet, onSetChange, o
           <Link to={getWorkoutExerciseDetailHref(exercise)} className="text-sm font-bold text-zinc-400 transition hover:text-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/50">查看动作详情</Link>
           {elapsed ? <span data-testid="current-exercise-timer" className="font-mono text-xs font-bold text-zinc-500 tabular-nums">用时 {elapsed}</span> : null}
         </div>
-        <WorkoutSetTable exerciseId={exercise.id} weightType={detail?.weightType} sets={exercise.sets} onSetChange={onSetChange} onDeleteSet={onDeleteSet} />
+        <WorkoutSetTable exerciseId={exercise.id} weightType={detail?.weightType} entryMode={exercise.setEntryMode} sets={exercise.sets} onSetChange={onSetChange} onDeleteSet={onDeleteSet} />
         <div className="mt-3 flex gap-2">
           <button type="button" onClick={() => onAddSet(exercise.id)} data-testid="add-set" className="min-h-11 flex-1 rounded-xl border border-lime-300/25 text-sm font-bold text-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/50">+ 添加一组</button>
           <button type="button" onClick={() => onDeleteExercise(exercise.id)} data-testid="delete-workout-exercise" className="min-h-11 rounded-xl border border-red-300/20 px-3 text-sm font-bold text-red-300 focus:outline-none focus:ring-2 focus:ring-red-300/40">删除动作</button>
@@ -87,7 +87,7 @@ function PendingExerciseItem({ exercise, onAddSet, onDeleteSet, onSetChange, onN
       </summary>
       <div className="border-t border-white/[0.07] px-3 pb-3 pt-2.5">
         {exercise.planned ? <p className="text-xs leading-5 text-zinc-500">计划建议：{[`${exercise.planned.sets ?? exercise.sets.length} 组`, exercise.planned.repRange ? `${exercise.planned.repRange} 次` : '', exercise.planned.restSeconds !== undefined ? `休息 ${exercise.planned.restSeconds} 秒` : '', exercise.planned.note ?? ''].filter(Boolean).join(' · ')}</p> : null}
-        <WorkoutSetTable exerciseId={exercise.id} weightType={detail?.weightType} sets={exercise.sets} onSetChange={onSetChange} onDeleteSet={onDeleteSet} />
+        <WorkoutSetTable exerciseId={exercise.id} weightType={detail?.weightType} entryMode={exercise.setEntryMode} sets={exercise.sets} onSetChange={onSetChange} onDeleteSet={onDeleteSet} />
         <div className="mt-3 flex gap-2">
           <button type="button" onClick={() => onAddSet(exercise.id)} data-testid="add-set" className="min-h-11 flex-1 rounded-xl border border-lime-300/20 text-sm font-bold text-lime-300/80 focus:outline-none focus:ring-2 focus:ring-lime-300/45">+ 添加一组</button>
           <button type="button" onClick={() => onDeleteExercise(exercise.id)} data-testid="delete-workout-exercise" className="min-h-11 rounded-xl border border-red-300/15 px-3 text-sm font-bold text-red-300/80 focus:outline-none focus:ring-2 focus:ring-red-300/35">删除动作</button>
@@ -99,10 +99,11 @@ function PendingExerciseItem({ exercise, onAddSet, onDeleteSet, onSetChange, onN
 }
 
 export function formatExerciseSummary(exercise: ActiveWorkoutExercise) {
-  const sets = exercise.sets.filter((set) => isDisplayableNumber(set.weight) || isDisplayableNumber(set.reps));
+  const sets = exercise.sets.filter((set) => isDisplayableNumber(set.weight) || isDisplayableNumber(set.reps) || isDisplayableNumber(set.durationSeconds));
   if (sets.length === 0) return `已完成 ${exercise.sets.length} 组`;
   const weights = sets.map((set) => set.weight).filter(isDisplayableNumber);
   const reps = sets.map((set) => set.reps).filter(isDisplayableNumber);
+  const durations = sets.map((set) => set.durationSeconds).filter(isDisplayableNumber);
   const details: string[] = [`${sets.length} 组`];
   if (weights.length > 0) details.push(`${formatNumber(Math.max(...weights))}kg`);
   if (reps.length > 0) {
@@ -110,6 +111,7 @@ export function formatExerciseSummary(exercise: ActiveWorkoutExercise) {
     const maximum = Math.max(...reps);
     details.push(weights.length > 0 ? `× ${minimum === maximum ? minimum : `${minimum}–${maximum}`}` : `${minimum === maximum ? minimum : `${minimum}–${maximum}`} 次`);
   }
+  if (durations.length > 0) details.push(`${Math.min(...durations) === Math.max(...durations) ? durations[0] : `${Math.min(...durations)}–${Math.max(...durations)}`} 秒`);
   return details.join(' · ').replace(' · ×', ' ×');
 }
 

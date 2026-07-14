@@ -80,3 +80,11 @@
 | Posture protocols: implement data filtering and workout snapshots | completed |
 | Posture protocols: implement picker, detail reuse, workout groups, and history | completed |
 | Posture protocols: full regression, build, and mobile visual QA | completed |
+| Full posture dataset: audit current schema, catalog reuse, snapshots, and visibility gate | completed |
+| Full posture dataset: confirm canonical data-file strategy | completed |
+| Full posture dataset: compare implementation approaches and approve design | completed |
+| Full posture dataset: write design and implementation plan | completed |
+| Full posture dataset: implement data validation with TDD | completed |
+| Full posture dataset: integrate categories, stages, observations, and exercise reuse | completed |
+| Full posture dataset: adapt workout snapshots and history compatibility | completed |
+| Full posture dataset: run full tests, build, and mobile visual QA | completed |

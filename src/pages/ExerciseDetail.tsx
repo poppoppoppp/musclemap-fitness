@@ -10,14 +10,14 @@ import { getExerciseTrajectoryByExerciseId } from '../data/exerciseTrajectories'
 import { getMuscleById } from '../data/muscles';
 import type { ActiveWorkout } from '../types/activeWorkout';
 import type { Exercise } from '../types/exercise';
-import type { PosturePrescription } from '../types/posture';
+import type { PostureDose, PostureDoseConfidence, PosturePrescription } from '../types/posture';
 import {
   addExerciseToExistingActiveWorkout,
   isExerciseInActiveWorkout,
   readActiveWorkout,
   startWorkoutWithExercise
 } from '../utils/activeWorkout';
-import { getPostureProtocolById, isProtocolVisibleInApp, postureDataset } from '../utils/postureProtocols';
+import { formatDose, getPostureProtocolById, getPostureStandardExerciseById, isProtocolVisibleInApp, postureDataset } from '../utils/postureProtocols';
 
 type AlternativeMatch = {
   exercise: Exercise;
@@ -262,15 +262,21 @@ type ResolvedPostureContext = {
   issueNames: string[];
   order: number;
   prescription: PosturePrescription;
+  dose?: PostureDose;
+  doseConfidence?: PostureDoseConfidence;
+  groupLabel?: string;
   roleExplanation: string;
   specialCues: string[];
+  limitations: string[];
+  visualReviewRequired?: boolean;
+  visualReviewNote?: string;
 };
 
 function getExerciseBackTarget(searchParams: URLSearchParams) {
   if (searchParams.get('from') === 'workout') return '/workout-log';
   if (searchParams.get('from') !== 'posture') return '/exercises';
   const query = new URLSearchParams({ picker: 'posture' });
-  for (const key of ['postureProtocolId', 'postureIssueId', 'postureScroll']) {
+  for (const key of ['postureProtocolId', 'postureCategoryId', 'postureIssueId', 'postureScroll']) {
     const value = searchParams.get(key);
     if (value) query.set(key, value);
   }
@@ -282,7 +288,9 @@ function getPostureContext(exerciseId: string, searchParams: URLSearchParams): R
   if (protocolId) {
     const protocol = getPostureProtocolById(protocolId);
     const item = protocol?.exerciseItems.find((candidate) => candidate.exerciseId === exerciseId);
+    const step = protocol?.steps.find((candidate) => candidate.kind === 'exercise' && candidate.exerciseId === exerciseId);
     if (!protocol || !isProtocolVisibleInApp(protocol) || !item) return null;
+    const standardExercise = getPostureStandardExerciseById(exerciseId);
     return {
       protocolName: protocol.name,
       issueNames: protocol.targetIssueIds.flatMap((issueId) => {
@@ -291,8 +299,14 @@ function getPostureContext(exerciseId: string, searchParams: URLSearchParams): R
       }),
       order: item.order,
       prescription: { ...item.prescription },
+      dose: step?.dose ? { ...step.dose, durationRangeSeconds: step.dose.durationRangeSeconds ? [...step.dose.durationRangeSeconds] : undefined } : undefined,
+      doseConfidence: step?.dose?.confidence,
+      groupLabel: step?.groupLabel,
       roleExplanation: item.roleExplanation,
-      specialCues: [...item.specialCues]
+      specialCues: [...item.specialCues],
+      limitations: [...protocol.limitations],
+      visualReviewRequired: standardExercise?.visualReviewRequired,
+      visualReviewNote: standardExercise?.visualReviewNote
     };
   }
 
@@ -303,14 +317,23 @@ function getPostureContext(exerciseId: string, searchParams: URLSearchParams): R
   const snapshot = group?.exerciseSnapshots.find((item) =>
     activeExerciseId ? item.instanceId === activeExerciseId : item.exerciseId === exerciseId
   );
+  const stepSnapshot = group?.stepSnapshots?.find((item) =>
+    activeExerciseId ? item.exerciseInstanceId === activeExerciseId : item.exerciseId === exerciseId
+  );
   if (!group || !snapshot) return null;
   return {
     protocolName: group.nameSnapshot,
     issueNames: [...group.targetIssueNamesSnapshot],
     order: snapshot.order,
     prescription: { ...snapshot.prescription },
+    dose: stepSnapshot?.dose ? { ...stepSnapshot.dose, durationRangeSeconds: stepSnapshot.dose.durationRangeSeconds ? [...stepSnapshot.dose.durationRangeSeconds] : undefined } : snapshot.dose,
+    doseConfidence: stepSnapshot?.dose?.confidence ?? snapshot.doseConfidence,
+    groupLabel: stepSnapshot?.groupLabel ?? snapshot.groupLabel,
     roleExplanation: snapshot.roleExplanation,
-    specialCues: [...snapshot.specialCues]
+    specialCues: [...snapshot.specialCues],
+    limitations: [...(group.limitationsSnapshot ?? [])],
+    visualReviewRequired: stepSnapshot?.visualReviewRequired ?? snapshot.visualReviewRequired,
+    visualReviewNote: stepSnapshot?.visualReviewNote ?? snapshot.visualReviewNote
   };
 }
 
@@ -323,9 +346,13 @@ function PostureProtocolContextCard({ context }: { context: ResolvedPostureConte
         <p className="mt-2 text-sm text-app-muted">{context.issueNames.join(' · ')}</p>
         <dl className="mt-4 grid gap-3 text-sm">
           <div><dt className="font-semibold text-app-text">当前顺序</dt><dd className="mt-1 text-app-muted">第 {context.order} 个动作</dd></div>
-          <div><dt className="font-semibold text-app-text">本次处方</dt><dd className="mt-1 text-app-muted">{formatPosturePrescription(context.prescription)}</dd></div>
+          {context.groupLabel ? <div><dt className="font-semibold text-app-text">方案阶段</dt><dd className="mt-1 text-app-muted">{context.groupLabel}</dd></div> : null}
+          <div><dt className="font-semibold text-app-text">本次处方</dt><dd className="mt-1 text-app-muted">{context.dose ? formatDose(context.dose) : formatPosturePrescription(context.prescription)}</dd></div>
+          {context.doseConfidence === 'low' || context.doseConfidence === 'mediumLow' ? <div><dt className="font-semibold text-app-text">剂量置信度</dt><dd className="mt-1 text-amber-700">低置信度，仅保留原始信息，不自动填写训练计划</dd></div> : null}
           <div><dt className="font-semibold text-app-text">方案作用</dt><dd className="mt-1 text-app-muted">{context.roleExplanation}</dd></div>
           {context.specialCues.length ? <div><dt className="font-semibold text-app-text">专项提示</dt><dd className="mt-1 text-app-muted">{context.specialCues.join(' · ')}</dd></div> : null}
+          {context.limitations.length ? <div><dt className="font-semibold text-app-text">适用边界</dt><dd className="mt-1 text-app-muted">{context.limitations.join(' · ')}</dd></div> : null}
+          {context.visualReviewRequired ? <div><dt className="font-semibold text-app-text">图示状态</dt><dd className="mt-1 text-amber-700">动作图示待人工复核{context.visualReviewNote ? `：${context.visualReviewNote}` : ''}</dd></div> : null}
         </dl>
       </section>
     </Card>

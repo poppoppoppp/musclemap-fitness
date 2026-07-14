@@ -87,8 +87,8 @@ export default function ActiveWorkoutView({ workout, onChange, onArchive, onDisc
     return true;
   };
 
-  const handleAddPostureProtocol = (protocolId: string) => {
-    const nextWorkout = addPostureProtocolToActiveWorkout(workout, protocolId);
+  const handleAddPostureProtocol = (protocolId: string, selectedExerciseIds: string[] = []) => {
+    const nextWorkout = addPostureProtocolToActiveWorkout(workout, protocolId, new Date(), undefined, selectedExerciseIds);
     if (nextWorkout === workout) return false;
     const group = nextWorkout.postureProtocolGroups?.at(-1);
     onChange(nextWorkout);
@@ -108,7 +108,7 @@ export default function ActiveWorkoutView({ workout, onChange, onArchive, onDisc
     setPickerOpen(false);
     if (searchParams.get('picker') !== 'posture') return;
     const next = new URLSearchParams(searchParams);
-    for (const key of ['picker', 'postureProtocolId', 'postureIssueId', 'postureScroll']) next.delete(key);
+    for (const key of ['picker', 'postureProtocolId', 'postureIssueId', 'postureCategoryId', 'postureScroll']) next.delete(key);
     setSearchParams(next, { replace: true });
   };
 
@@ -140,7 +140,7 @@ export default function ActiveWorkoutView({ workout, onChange, onArchive, onDisc
   const sharedExerciseProps = {
     onAddSet: (exerciseId: string) => onChange(addSetToActiveWorkoutExercise(workout, exerciseId)),
     onDeleteSet: (exerciseId: string, setId: string) => onChange(removeSetFromActiveWorkoutExercise(workout, exerciseId, setId)),
-    onSetChange: (exerciseId: string, setId: string, key: 'weight' | 'reps', value: string) => onChange(updateActiveWorkoutSet(workout, exerciseId, setId, key, value)),
+    onSetChange: (exerciseId: string, setId: string, key: 'weight' | 'reps' | 'durationSeconds', value: string) => onChange(updateActiveWorkoutSet(workout, exerciseId, setId, key, value)),
     onNotesChange: (exerciseId: string, notes: string) => onChange(updateActiveWorkoutExerciseNotes(workout, exerciseId, notes)),
     onDeleteExercise: handleDeleteExercise
   };
@@ -195,7 +195,7 @@ export default function ActiveWorkoutView({ workout, onChange, onArchive, onDisc
           onAddExercise={handleAddExercise}
           onAddPostureProtocol={handleAddPostureProtocol}
           initialPostureProtocolId={searchParams.get('postureProtocolId')}
-          initialPostureIssueId={searchParams.get('postureIssueId')}
+          initialPostureCategoryId={searchParams.get('postureCategoryId') ?? searchParams.get('postureIssueId')}
           initialPostureScrollTop={Number(searchParams.get('postureScroll') ?? 0)}
           onClose={closePicker}
         />

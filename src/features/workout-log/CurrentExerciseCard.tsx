@@ -12,7 +12,7 @@ interface CurrentExerciseCardProps {
   totalExercises: number;
   onAddSet: (exerciseId: string) => void;
   onDeleteSet: (exerciseId: string, setId: string) => void;
-  onSetChange: (exerciseId: string, setId: string, key: 'weight' | 'reps', value: string) => void;
+  onSetChange: (exerciseId: string, setId: string, key: 'weight' | 'reps' | 'durationSeconds', value: string) => void;
   onNotesChange: (exerciseId: string, notes: string) => void;
   onDeleteExercise: (exerciseId: string) => void;
   onEndExercise: (exerciseId: string) => void;
@@ -61,7 +61,7 @@ export default function CurrentExerciseCard({ exercise, position, totalExercises
         </details>
       ) : null}
 
-      <WorkoutSetTable exerciseId={exercise.id} weightType={detail?.weightType} sets={exercise.sets} onSetChange={onSetChange} onDeleteSet={onDeleteSet} />
+      <WorkoutSetTable exerciseId={exercise.id} weightType={detail?.weightType} entryMode={exercise.setEntryMode} sets={exercise.sets} onSetChange={onSetChange} onDeleteSet={onDeleteSet} />
 
       <div className="mt-3 grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-2.5">
         <button type="button" onClick={() => onAddSet(exercise.id)} data-testid="add-set" className="min-h-12 rounded-xl border border-lime-300/30 bg-black/20 px-2 text-sm font-black text-lime-300 transition hover:border-lime-300/55 hover:bg-lime-300/[0.05] focus:outline-none focus:ring-2 focus:ring-lime-300/50">+ 添加一组</button>
@@ -122,6 +122,8 @@ function formatPlannedExercise(exercise: ActiveWorkoutExercise) {
   const parts = [
     `${exercise.planned?.sets ?? exercise.sets.length} 组`,
     exercise.planned?.repRange ? `${exercise.planned.repRange} 次` : '',
+    exercise.planned?.durationSeconds !== undefined ? `${exercise.planned.durationSeconds} 秒` : '',
+    exercise.planned?.durationRangeSeconds ? `${exercise.planned.durationRangeSeconds[0]}–${exercise.planned.durationRangeSeconds[1]} 秒` : '',
     exercise.planned?.restSeconds !== undefined ? `休息 ${exercise.planned.restSeconds} 秒` : '',
     exercise.planned?.note ?? ''
   ].filter(Boolean);

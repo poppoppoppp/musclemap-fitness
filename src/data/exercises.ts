@@ -834,23 +834,31 @@ function mapPostureExercise(id: string): Exercise | undefined {
   if (!isPostureExerciseVisibleInApp(id)) return undefined;
   const exercise = getPostureStandardExerciseById(id);
   if (!exercise || exercise.appEligibility === 'hold') return undefined;
+  const libraryExercise = exercise.libraryExerciseId
+    ? exercises.find(({ id: libraryId }) => libraryId === exercise.libraryExerciseId)
+    : undefined;
   return {
-    id: exercise.id,
+    ...(libraryExercise ?? {}),
+    id,
     name: exercise.name,
-    nameEn: exercise.aliases.join(' / '),
-    primaryMuscles: [],
-    secondaryMuscles: [],
+    nameEn: exercise.aliases.join(' / ') || libraryExercise?.nameEn || exercise.name,
+    primaryMuscles: libraryExercise?.primaryMuscles ?? [],
+    secondaryMuscles: libraryExercise?.secondaryMuscles ?? [],
     equipment: [...exercise.equipment],
-    difficulty: 'beginner',
-    force: 'static',
-    mechanic: 'isolation',
+    difficulty: libraryExercise?.difficulty ?? 'beginner',
+    force: libraryExercise?.force ?? 'static',
+    mechanic: libraryExercise?.mechanic ?? 'isolation',
     category: 'posture',
-    weightType: 'bodyweight',
-    steps: [...exercise.standardized.executionSteps],
-    cues: [...exercise.standardized.keyCues],
-    commonMistakes: [...exercise.standardized.commonErrors],
+    weightType: libraryExercise?.weightType ?? 'bodyweight',
+    steps: exercise.standardized.executionSteps.length > 0
+      ? [...exercise.standardized.executionSteps]
+      : [...(libraryExercise?.steps ?? [])],
+    cues: [...(libraryExercise?.cues ?? []), ...exercise.standardized.keyCues],
+    commonMistakes: exercise.standardized.commonErrors.length > 0
+      ? [...exercise.standardized.commonErrors]
+      : [...(libraryExercise?.commonMistakes ?? [])],
     alternatives: [],
-    tags: [exercise.category, ...exercise.aliases],
+    tags: [...new Set([...(libraryExercise?.tags ?? []), exercise.category, ...exercise.aliases])],
     postureDetails: {
       startPosition: exercise.standardized.startPosition,
       breathing: exercise.standardized.breathing,

@@ -1,0 +1,54 @@
+{
+  "batchId": "back-001",
+  "sourceFile": "public/exercise-media-source/back-001.png",
+  "layout": {
+    "rows": 3,
+    "columns": 2,
+    "stageOrder": ["start", "peak"]
+  },
+  "output": {
+    "width": 640,
+    "height": 800,
+    "format": "webp",
+    "quality": 88,
+    "background": "#f7f6f2"
+  },
+  "exercises": [
+    {
+      "row": 1,
+      "column": 1,
+      "exerciseId": "lat-pulldown",
+      "name": "高位下拉"
+    },
+    {
+      "row": 1,
+      "column": 2,
+      "exerciseId": "pull-up",
+      "name": "引体向上"
+    },
+    {
+      "row": 2,
+      "column": 1,
+      "exerciseId": "one-arm-dumbbell-row",
+      "name": "单臂哑铃划船"
+    },
+    {
+      "row": 2,
+      "column": 2,
+      "exerciseId": "seated-row",
+      "name": "坐姿划船"
+    },
+    {
+      "row": 3,
+      "column": 1,
+      "exerciseId": "barbell-row",
+      "name": "杠铃划船"
+    },
+    {
+      "row": 3,
+      "column": 2,
+      "exerciseId": "chest-supported-row",
+      "name": "胸托划船"
+    }
+  ]
+}

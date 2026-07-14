@@ -140,6 +140,34 @@ test('places the action bar in the document flow on desktop', async ({ page }) =
   expect(position).toBe('static');
 });
 
+test('loads the back-001 start and peak assets on all six exercise detail pages', async ({ page }) => {
+  const exerciseIds = [
+    'lat-pulldown',
+    'pull-up',
+    'one-arm-dumbbell-row',
+    'seated-row',
+    'barbell-row',
+    'chest-supported-row'
+  ];
+
+  for (const exerciseId of exerciseIds) {
+    await page.goto(`/exercises/${exerciseId}`);
+    const images = page.getByTestId('exercise-media-stage').locator('img');
+
+    await expect(images).toHaveCount(2);
+    await expect(images.nth(0)).toHaveAttribute('src', `/exercise-media/${exerciseId}/start.webp`);
+    await expect(images.nth(1)).toHaveAttribute('src', `/exercise-media/${exerciseId}/peak.webp`);
+    await expect.poll(() => images.evaluateAll((elements) => elements.map((element) => {
+      const image = element as HTMLImageElement;
+      return { width: image.naturalWidth, height: image.naturalHeight, objectFit: getComputedStyle(image).objectFit };
+    }))).toEqual([
+      { width: 640, height: 800, objectFit: 'contain' },
+      { width: 640, height: 800, objectFit: 'contain' }
+    ]);
+    await expect(page.getByTestId('exercise-media-placeholder')).toHaveCount(0);
+  }
+});
+
 async function seedWorkout(page: Page, exerciseIds: string[]) {
   await page.addInitScript(({ key, ids }) => {
     const timestamp = new Date().toISOString();

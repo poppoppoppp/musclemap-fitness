@@ -94,3 +94,9 @@
 | Exercise detail redesign: add failing behavior tests | completed |
 | Exercise detail redesign: implement data, components, and interactions | completed |
 | Exercise detail redesign: build, regression, and visual QA | completed |
+| Exercise media back-001: audit data, media paths, dependencies, and tests | completed |
+| Exercise media back-001: approve supplied mapping and processing design | completed |
+| Exercise media back-001: write implementation plan | completed |
+| Exercise media back-001: add failing processor tests | completed |
+| Exercise media back-001: implement processor, config, and outputs | completed |
+| Exercise media back-001: verify files, page mapping, and build | completed |

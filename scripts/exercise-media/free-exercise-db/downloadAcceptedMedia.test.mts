@@ -51,13 +51,29 @@ function overrides() {
   };
 }
 
-test('buildAcceptedJobs stops before work unless accepted count is exactly 47 by default', () => {
-  assert.throws(() => buildAcceptedJobs({
-    overrides: overrides(),
-    appExerciseIds: new Set(['accepted-exercise']),
-    sourceExercises: [source],
-    matches: [match]
-  }), /accepted 数量必须为 47，实际为 1/);
+test('buildAcceptedJobs dynamically processes every accepted decision without a fixed count', () => {
+  const secondSource = { ...source, id: 'Source_Two', images: ['Source_Two/0.jpg', 'Source_Two/1.jpg'] };
+  const secondMatch = {
+    exercise: { exerciseId: 'second-exercise' },
+    bestCandidate: {
+      sourceId: 'Source_Two',
+      startImageUrl: `https://raw.githubusercontent.com/yuhonas/free-exercise-db/${FIXED_SOURCE_COMMIT}/exercises/Source_Two/0.jpg`,
+      peakImageUrl: `https://raw.githubusercontent.com/yuhonas/free-exercise-db/${FIXED_SOURCE_COMMIT}/exercises/Source_Two/1.jpg`
+    },
+    topCandidates: []
+  };
+  const dynamicOverrides = overrides();
+  dynamicOverrides.accepted['second-exercise'] = 'Source_Two';
+
+  const result = buildAcceptedJobs({
+    overrides: dynamicOverrides,
+    appExerciseIds: new Set(['accepted-exercise', 'second-exercise']),
+    sourceExercises: [source, secondSource],
+    matches: [match, secondMatch]
+  });
+
+  assert.equal(result.failures.length, 0);
+  assert.deepEqual(result.jobs.map((job) => job.exerciseId), ['accepted-exercise', 'second-exercise']);
 });
 
 test('buildAcceptedJobs only creates jobs from accepted decisions and pins both URLs to the fixed commit', () => {
@@ -369,6 +385,24 @@ test('processAcceptedMedia treats pre-existing output as a conflict and does not
   assert.equal(result.downloadedImages, 0);
   assert.equal(await readFile(path.join(target, 'start.webp'), 'utf8'), 'keep-me');
   assert.equal(result.exercises[0].status, 'conflict');
+});
+
+test('processAcceptedMedia skips any pre-existing complete pair without requiring a manifest and never fetches', async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), 'musclemap-free-db-existing-pair-'));
+  const target = path.join(root, 'public', 'exercise-media', 'accepted-exercise');
+  await mkdir(target, { recursive: true });
+  await writeFile(path.join(target, 'start.webp'), 'existing-start');
+  await writeFile(path.join(target, 'peak.webp'), 'existing-peak');
+
+  const result = await processAcceptedMedia(processFixture(root, (async () => { throw new Error('complete pair must not fetch'); }) as typeof fetch));
+
+  assert.equal(result.existingSkippedExercises, 1);
+  assert.equal(result.conflictSkippedExercises, 0);
+  assert.equal(result.downloadedImages, 0);
+  assert.equal(result.newlyCompletedExercises, 0);
+  assert.equal(await readFile(path.join(target, 'start.webp'), 'utf8'), 'existing-start');
+  assert.equal(await readFile(path.join(target, 'peak.webp'), 'utf8'), 'existing-peak');
+  assert.equal(result.exercises[0].status, 'existing');
 });
 
 async function hashFileForTest(filePath: string) {

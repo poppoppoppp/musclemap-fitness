@@ -175,10 +175,9 @@ export interface AcceptedMediaRunSummary {
 }
 
 export function buildAcceptedJobs(options: BuildAcceptedJobsOptions): { jobs: AcceptedMediaJob[]; failures: AcceptedMediaFailure[] } {
-  const expectedCount = options.expectedAcceptedCount ?? 47;
   const accepted = Object.entries(options.overrides.accepted).sort(([left], [right]) => left.localeCompare(right));
-  if (accepted.length !== expectedCount) {
-    throw new Error(`accepted 数量必须为 ${expectedCount}，实际为 ${accepted.length}`);
+  if (options.expectedAcceptedCount !== undefined && accepted.length !== options.expectedAcceptedCount) {
+    throw new Error(`accepted 数量必须为 ${options.expectedAcceptedCount}，实际为 ${accepted.length}`);
   }
 
   const sources = new Map(options.sourceExercises.map((exercise) => [exercise.id, exercise]));
@@ -264,6 +263,13 @@ export async function processAcceptedMedia(options: ProcessAcceptedMediaOptions)
   };
 
   for (const job of built.jobs) {
+    const targetDirectory = path.join(mediaRoot, job.exerciseId);
+    if (await exists(path.join(targetDirectory, 'start.webp')) && await exists(path.join(targetDirectory, 'peak.webp'))) {
+      summary.existingSkippedExercises += 1;
+      summary.exercises.push({ exerciseId: job.exerciseId, sourceId: job.sourceId, status: 'existing' });
+      continue;
+    }
+
     const existing = manifest.exercises[job.exerciseId];
     if (existing && existing.sourceId === job.sourceId && await manifestOutputsMatch(options.projectRoot, existing)) {
       summary.existingSkippedExercises += 1;
@@ -271,7 +277,6 @@ export async function processAcceptedMedia(options: ProcessAcceptedMediaOptions)
       continue;
     }
 
-    const targetDirectory = path.join(mediaRoot, job.exerciseId);
     if (await exists(targetDirectory)) {
       const reason = `目标目录已存在但没有匹配且可验证的 manifest，未覆盖：${targetDirectory}`;
       summary.conflictSkippedExercises += 1;

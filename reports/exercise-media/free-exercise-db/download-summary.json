@@ -1,31 +1,76 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-15T10:35:28.731Z",
+  "generatedAt": "2026-07-15T12:22:34.506Z",
   "sourceCommit": "b0eed061e1c832b3ed815fbaa4b45b3cdc14df49",
   "cachePath": "D:\\AI\\FreeExerciseDB-cache\\images",
-  "acceptedTotal": 47,
-  "validAccepted": 47,
-  "downloadedImages": 0,
+  "acceptedTotal": 117,
+  "validAccepted": 117,
+  "downloadedImages": 2,
   "cachedReusedImages": 0,
-  "convertedImages": 0,
-  "existingSkippedExercises": 47,
+  "convertedImages": 2,
+  "existingSkippedExercises": 116,
   "conflictSkippedExercises": 0,
   "downloadFailedExercises": 0,
   "corruptImageExercises": 0,
   "failedExercises": 0,
-  "newlyCompletedExercises": 0,
-  "downloadedBytes": 0,
-  "outputBytes": 0,
-  "integratedAcceptedExercises": 47,
-  "cachedAcceptedImages": 94,
-  "cachedAcceptedBytes": 6186615,
-  "integratedWebpImages": 94,
-  "integratedWebpBytes": 3980010,
+  "newlyCompletedExercises": 1,
+  "downloadedBytes": 70877,
+  "outputBytes": 53200,
+  "integratedAcceptedExercises": 117,
+  "cachedAcceptedImages": 234,
+  "cachedAcceptedBytes": 15316969,
+  "integratedWebpImages": 234,
+  "integratedWebpBytes": 9893558,
   "failures": [],
   "exercises": [
     {
+      "exerciseId": "alternating-dumbbell-curl",
+      "sourceId": "Dumbbell_Alternate_Bicep_Curl",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "alternating-dumbbell-press",
+      "sourceId": "Standing_Alternating_Dumbbell_Press",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "arnold-press",
+      "sourceId": "Arnold_Dumbbell_Press",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "assisted-pull-up",
+      "sourceId": "Band_Assisted_Pull-Up",
+      "status": "existing"
+    },
+    {
       "exerciseId": "back-extension",
       "sourceId": "Hyperextensions_Back_Extensions",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "band-hip-adduction",
+      "sourceId": "Band_Hip_Adductions",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "band-lateral-raise",
+      "sourceId": "Lateral_Raise_-_With_Bands",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "band-pull-apart",
+      "sourceId": "Band_Pull_Apart",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "band-shoulder-press",
+      "sourceId": "Shoulder_Press_-_With_Bands",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "barbell-clean-and-press",
+      "sourceId": "Clean_and_Press",
       "status": "existing"
     },
     {
@@ -34,8 +79,18 @@
       "status": "existing"
     },
     {
+      "exerciseId": "barbell-good-morning",
+      "sourceId": "Stiff_Leg_Barbell_Good_Morning",
+      "status": "existing"
+    },
+    {
       "exerciseId": "barbell-hip-thrust",
       "sourceId": "Barbell_Hip_Thrust",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "barbell-overhead-press",
+      "sourceId": "Standing_Military_Press",
       "status": "existing"
     },
     {
@@ -44,8 +99,58 @@
       "status": "existing"
     },
     {
+      "exerciseId": "barbell-wrist-curl",
+      "sourceId": "Palms-Up_Barbell_Wrist_Curl_Over_A_Bench",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "bench-dip",
+      "sourceId": "Bench_Dips",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "bent-over-reverse-fly",
+      "sourceId": "Reverse_Flyes",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "bilateral-dumbbell-row",
+      "sourceId": "Bent_Over_Two-Dumbbell_Row",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "cable-chest-fly",
+      "sourceId": "Cable_Crossover",
+      "status": "existing"
+    },
+    {
       "exerciseId": "cable-front-raise",
       "sourceId": "Front_Cable_Raise",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "cable-hip-adduction",
+      "sourceId": "Cable_Hip_Adduction",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "cable-kickback",
+      "sourceId": "One-Legged_Cable_Kickback",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "cable-overhead-triceps-extension",
+      "sourceId": "Cable_Rope_Overhead_Triceps_Extension",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "cable-pull-through",
+      "sourceId": "Pull_Through",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "cable-skull-crusher",
+      "sourceId": "Low_Cable_Triceps_Extension",
       "status": "existing"
     },
     {
@@ -56,6 +161,11 @@
     {
       "exerciseId": "cable-wrist-curl",
       "sourceId": "Cable_Wrist_Curl",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "captains-chair-knee-raise",
+      "sourceId": "Knee_Hip_Raise_On_Parallel_Bars",
       "status": "existing"
     },
     {
@@ -89,8 +199,28 @@
       "status": "existing"
     },
     {
+      "exerciseId": "decline-machine-chest-press",
+      "sourceId": "Leverage_Decline_Chest_Press",
+      "status": "existing"
+    },
+    {
       "exerciseId": "decline-push-up",
       "sourceId": "Decline_Push-Up",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "decline-sit-up",
+      "sourceId": "Decline_Crunch",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "dip-triceps-focus",
+      "sourceId": "Parallel_Bar_Dip",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "donkey-kick",
+      "sourceId": "Glute_Kickback",
       "status": "existing"
     },
     {
@@ -99,8 +229,23 @@
       "status": "existing"
     },
     {
+      "exerciseId": "dumbbell-curl",
+      "sourceId": "Dumbbell_Alternate_Bicep_Curl",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "dumbbell-floor-press",
+      "sourceId": "Dumbbell_Floor_Press",
+      "status": "existing"
+    },
+    {
       "exerciseId": "dumbbell-front-raise",
       "sourceId": "Front_Dumbbell_Raise",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "dumbbell-lateral-raise",
+      "sourceId": "Side_Lateral_Raise",
       "status": "existing"
     },
     {
@@ -114,6 +259,21 @@
       "status": "existing"
     },
     {
+      "exerciseId": "dumbbell-skull-crusher",
+      "sourceId": "Dumbbell_Tricep_Extension_-Pronated_Grip",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "dumbbell-split-squat",
+      "sourceId": "Split_Squat_with_Dumbbells",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "EX_GLUTE_BRIDGE",
+      "sourceId": "Butt_Lift_Bridge",
+      "status": "existing"
+    },
+    {
       "exerciseId": "ez-bar-curl",
       "sourceId": "EZ-Bar_Curl",
       "status": "existing"
@@ -121,6 +281,11 @@
     {
       "exerciseId": "face-pull",
       "sourceId": "Face_Pull",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "feet-elevated-inverted-row",
+      "sourceId": "Inverted_Row",
       "status": "existing"
     },
     {
@@ -144,8 +309,33 @@
       "status": "existing"
     },
     {
+      "exerciseId": "hammer-curl",
+      "sourceId": "Cross_Body_Hammer_Curl",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "hang-clean",
+      "sourceId": "Clean",
+      "status": "existing"
+    },
+    {
       "exerciseId": "hanging-leg-raise",
       "sourceId": "Hanging_Leg_Raise",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "high-to-low-cable-fly",
+      "sourceId": "Cable_Iron_Cross",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "incline-barbell-bench-press",
+      "sourceId": "Barbell_Incline_Bench_Press_-_Medium_Grip",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "incline-dumbbell-bench-press",
+      "sourceId": "Incline_Dumbbell_Press",
       "status": "existing"
     },
     {
@@ -159,13 +349,73 @@
       "status": "existing"
     },
     {
+      "exerciseId": "incline-lateral-raise",
+      "sourceId": "One-Arm_Incline_Lateral_Raise",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "incline-machine-chest-press",
+      "sourceId": "Leverage_Incline_Chest_Press",
+      "status": "existing"
+    },
+    {
       "exerciseId": "incline-push-up",
       "sourceId": "Incline_Push-Up",
       "status": "existing"
     },
     {
+      "exerciseId": "inverted-row",
+      "sourceId": "Inverted_Row",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "kettlebell-clean",
+      "sourceId": "Kettlebell_Dead_Clean",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "kneeling-cable-crunch",
+      "sourceId": "Cable_Crunch",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "leg-extension",
+      "sourceId": "Leg_Extensions",
+      "status": "existing"
+    },
+    {
       "exerciseId": "leg-press",
       "sourceId": "Leg_Press",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "leg-press-calf-raise",
+      "sourceId": "Calf_Press",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "low-to-high-cable-fly",
+      "sourceId": "Low_Cable_Crossover",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "machine-chest-press",
+      "sourceId": "Machine_Bench_Press",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "machine-crunch",
+      "sourceId": "Ab_Crunch_Machine",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "machine-preacher-curl",
+      "sourceId": "Machine_Preacher_Curls",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "machine-shoulder-press",
+      "sourceId": "Leverage_Shoulder_Press",
       "status": "existing"
     },
     {
@@ -176,6 +426,16 @@
     {
       "exerciseId": "plank",
       "sourceId": "Plank",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "plate-front-raise",
+      "sourceId": "Front_Plate_Raise",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "plate-pinch",
+      "sourceId": "Plate_Pinch",
       "status": "existing"
     },
     {
@@ -209,6 +469,11 @@
       "status": "existing"
     },
     {
+      "exerciseId": "seated-barbell-shoulder-press",
+      "sourceId": "Barbell_Shoulder_Press",
+      "status": "existing"
+    },
+    {
       "exerciseId": "seated-calf-raise",
       "sourceId": "Seated_Calf_Raise",
       "status": "existing"
@@ -219,13 +484,53 @@
       "status": "existing"
     },
     {
+      "exerciseId": "side-plank",
+      "sourceId": "Side_Bridge",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "single-arm-cable-fly",
+      "sourceId": "Single-Arm_Cable_Crossover",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "single-arm-cable-pushdown",
+      "sourceId": "Cable_One_Arm_Tricep_Extension",
+      "status": "existing"
+    },
+    {
       "exerciseId": "single-arm-dumbbell-press",
       "sourceId": "Dumbbell_One-Arm_Shoulder_Press",
       "status": "existing"
     },
     {
+      "exerciseId": "single-arm-overhead-dumbbell-extension",
+      "sourceId": "Dumbbell_One-Arm_Triceps_Extension",
+      "status": "existing"
+    },
+    {
       "exerciseId": "single-leg-glute-bridge",
       "sourceId": "Single_Leg_Glute_Bridge",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "sled-push",
+      "sourceId": "Sled_Push",
+      "status": "created",
+      "start": {
+        "sourceSha256": "8a8df3556275dcb9f52174ccfaf63348bff972e3b80f67566fc98617e3f101ac",
+        "outputSha256": "5cc0c7f14048c3b1ee2011dac0b53f51f72786501acc2d6e62314b5d653905db",
+        "bytes": 25142
+      },
+      "peak": {
+        "sourceSha256": "f4e0bd2d9ca8c8b0e3c3abe3769dff347a979d960769ea3d403bfdb9d8834b19",
+        "outputSha256": "c956ab4b736848f96572cf4347e2519abb98bef2a773dde0ab7d5bb37c1f89b9",
+        "bytes": 28058
+      }
+    },
+    {
+      "exerciseId": "smith-decline-bench-press",
+      "sourceId": "Smith_Machine_Decline_Press",
       "status": "existing"
     },
     {
@@ -239,13 +544,58 @@
       "status": "existing"
     },
     {
+      "exerciseId": "smith-machine-row",
+      "sourceId": "Smith_Machine_Bent_Over_Row",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "smith-romanian-deadlift",
+      "sourceId": "Smith_Machine_Stiff-Legged_Deadlift",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "smith-shoulder-press",
+      "sourceId": "Smith_Machine_Overhead_Shoulder_Press",
+      "status": "existing"
+    },
+    {
       "exerciseId": "smith-squat",
       "sourceId": "Smith_Machine_Squat",
       "status": "existing"
     },
     {
+      "exerciseId": "squat",
+      "sourceId": "Barbell_Squat",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "stability-ball-crunch",
+      "sourceId": "Exercise_Ball_Crunch",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "stability-ball-knee-tuck",
+      "sourceId": "Exercise_Ball_Pull-In",
+      "status": "existing"
+    },
+    {
       "exerciseId": "stability-ball-leg-curl",
       "sourceId": "Ball_Leg_Curl",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "standing-cable-crunch",
+      "sourceId": "Standing_Rope_Crunch",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "standing-calf-raise",
+      "sourceId": "Standing_Dumbbell_Calf_Raise",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "step-up",
+      "sourceId": "Dumbbell_Step_Ups",
       "status": "existing"
     },
     {
@@ -256,6 +606,16 @@
     {
       "exerciseId": "superman",
       "sourceId": "Superman",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "walking-lunge",
+      "sourceId": "Bodyweight_Walking_Lunge",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "wide-grip-push-up",
+      "sourceId": "Push-Up_Wide",
       "status": "existing"
     }
   ]

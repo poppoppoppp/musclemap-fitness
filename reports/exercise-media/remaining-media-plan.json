@@ -1,0 +1,3215 @@
+{
+  "generatedAt": "2026-07-15T12:24:37.712Z",
+  "scope": {
+    "exerciseSource": "当前 App 运行时动作全集（核心动作 + App 可见体态方案动作，按 exerciseId 去重）",
+    "mediaDirectory": "public/exercise-media/{exerciseId}/",
+    "completeDefinition": "start.webp 与 peak.webp 均存在；缺少任一文件即计入剩余动作"
+  },
+  "summary": {
+    "totalExercises": 291,
+    "completeMediaExercises": 123,
+    "remainingExercises": 168,
+    "categoryCounts": {
+      "高频基础力量动作": 82,
+      "可共用已有图片的轻微变式": 21,
+      "体态、康复、呼吸、拉伸动作": 39,
+      "冷门或特殊器械动作，暂缓处理": 26
+    },
+    "highPriorityCount": 82,
+    "reusableImageSavings": 21
+  },
+  "exercises": [
+    {
+      "exerciseId": "ab-wheel-rollout",
+      "name": "健腹轮跪姿滚动",
+      "nameEn": "Kneeling Ab Wheel Rollout",
+      "equipment": [
+        "健腹轮"
+      ],
+      "primaryMuscles": [
+        "腹横肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "band-chest-fly",
+      "name": "弹力带夹胸",
+      "nameEn": "Band Chest Fly",
+      "equipment": [
+        "弹力带"
+      ],
+      "primaryMuscles": [
+        "胸大肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "band-chest-press",
+      "name": "弹力带推胸",
+      "nameEn": "Band Chest Press",
+      "equipment": [
+        "弹力带"
+      ],
+      "primaryMuscles": [
+        "胸大肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "band-row",
+      "name": "弹力带划船",
+      "nameEn": "Band Row",
+      "equipment": [
+        "弹力带"
+      ],
+      "primaryMuscles": [
+        "菱形肌",
+        "斜方肌中下束"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "bar-hang",
+      "name": "单杠悬垂",
+      "nameEn": "Dead Hang",
+      "equipment": [
+        "单杠"
+      ],
+      "primaryMuscles": [
+        "前臂屈肌群"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "barbell-bench-press",
+      "name": "杠铃卧推",
+      "nameEn": "Barbell Bench Press",
+      "equipment": [
+        "杠铃",
+        "卧推凳"
+      ],
+      "primaryMuscles": [
+        "胸大肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "barbell-floor-press",
+      "name": "杠铃地板卧推",
+      "nameEn": "Barbell Floor Press",
+      "equipment": [
+        "杠铃"
+      ],
+      "primaryMuscles": [
+        "胸大肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "barbell-reverse-wrist-curl",
+      "name": "杠铃伸腕",
+      "nameEn": "Barbell Reverse Wrist Curl",
+      "equipment": [
+        "杠铃"
+      ],
+      "primaryMuscles": [
+        "前臂伸肌群"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "barbell-thruster",
+      "name": "杠铃深蹲推举",
+      "nameEn": "Barbell Thruster",
+      "equipment": [
+        "杠铃"
+      ],
+      "primaryMuscles": [
+        "股四头肌",
+        "前束三角肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "bicycle-crunch",
+      "name": "自行车卷腹",
+      "nameEn": "Bicycle Crunch",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "腹直肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "bulgarian-split-squat",
+      "name": "保加利亚分腿蹲",
+      "nameEn": "Bulgarian Split Squat",
+      "equipment": [
+        "哑铃",
+        "卧推凳"
+      ],
+      "primaryMuscles": [
+        "股四头肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "burpee",
+      "name": "波比跳",
+      "nameEn": "Burpee",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "股四头肌",
+        "胸大肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "cable-curl",
+      "name": "绳索弯举",
+      "nameEn": "Cable Curl",
+      "equipment": [
+        "绳索器械"
+      ],
+      "primaryMuscles": [
+        "肱二头肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "cable-lateral-raise",
+      "name": "绳索侧平举",
+      "nameEn": "Cable Lateral Raise",
+      "equipment": [
+        "绳索器械"
+      ],
+      "primaryMuscles": [
+        "中束三角肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "cable-rear-delt-row",
+      "name": "绳索后束划船",
+      "nameEn": "Cable Rear Delt Row",
+      "equipment": [
+        "绳索器械"
+      ],
+      "primaryMuscles": [
+        "后束三角肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "cable-romanian-deadlift",
+      "name": "绳索罗马尼亚硬拉",
+      "nameEn": "Cable Romanian Deadlift",
+      "equipment": [
+        "绳索器械"
+      ],
+      "primaryMuscles": [
+        "腘绳肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "cable-upright-row",
+      "name": "绳索直立划船",
+      "nameEn": "Cable Upright Row",
+      "equipment": [
+        "绳索器械"
+      ],
+      "primaryMuscles": [
+        "中束三角肌",
+        "斜方肌上束"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "cable-woodchop",
+      "name": "绳索伐木转体",
+      "nameEn": "Cable Woodchop",
+      "equipment": [
+        "绳索器械"
+      ],
+      "primaryMuscles": [
+        "腹斜肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "concentration-curl",
+      "name": "哑铃集中弯举",
+      "nameEn": "Dumbbell Concentration Curl",
+      "equipment": [
+        "哑铃"
+      ],
+      "primaryMuscles": [
+        "肱二头肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "copenhagen-plank",
+      "name": "哥本哈根侧桥",
+      "nameEn": "Copenhagen Plank",
+      "equipment": [
+        "自重",
+        "卧推凳"
+      ],
+      "primaryMuscles": [
+        "髋内收肌群",
+        "腹斜肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "cossack-squat",
+      "name": "哥萨克深蹲",
+      "nameEn": "Cossack Squat",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "髋内收肌群",
+        "股四头肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "crunch",
+      "name": "卷腹",
+      "nameEn": "Crunch",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "腹直肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "deadlift",
+      "name": "硬拉",
+      "nameEn": "Deadlift",
+      "equipment": [
+        "杠铃"
+      ],
+      "primaryMuscles": [
+        "竖脊肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "decline-dumbbell-fly",
+      "name": "下斜哑铃飞鸟",
+      "nameEn": "Decline Dumbbell Fly",
+      "equipment": [
+        "哑铃",
+        "卧推凳"
+      ],
+      "primaryMuscles": [
+        "胸大肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "diamond-push-up",
+      "name": "钻石俯卧撑",
+      "nameEn": "Diamond Push-up",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "肱三头肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "dumbbell-chest-fly",
+      "name": "平板哑铃飞鸟",
+      "nameEn": "Flat Dumbbell Fly",
+      "equipment": [
+        "哑铃",
+        "卧推凳"
+      ],
+      "primaryMuscles": [
+        "胸大肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "dumbbell-farmer-hold",
+      "name": "哑铃农夫静态握持",
+      "nameEn": "Dumbbell Farmer Hold",
+      "equipment": [
+        "哑铃"
+      ],
+      "primaryMuscles": [
+        "前臂屈肌群"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "dumbbell-pullover-back",
+      "name": "哑铃直臂上拉",
+      "nameEn": "Dumbbell Pullover",
+      "equipment": [
+        "哑铃",
+        "卧推凳"
+      ],
+      "primaryMuscles": [
+        "背阔肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "dumbbell-reverse-wrist-curl",
+      "name": "哑铃伸腕",
+      "nameEn": "Dumbbell Reverse Wrist Curl",
+      "equipment": [
+        "哑铃"
+      ],
+      "primaryMuscles": [
+        "前臂伸肌群"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "dumbbell-thruster",
+      "name": "哑铃深蹲推举",
+      "nameEn": "Dumbbell Thruster",
+      "equipment": [
+        "哑铃"
+      ],
+      "primaryMuscles": [
+        "股四头肌",
+        "前束三角肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "dumbbell-wrist-curl",
+      "name": "哑铃屈腕",
+      "nameEn": "Dumbbell Wrist Curl",
+      "equipment": [
+        "哑铃"
+      ],
+      "primaryMuscles": [
+        "前臂屈肌群"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "frog-pump",
+      "name": "蛙式臀桥",
+      "nameEn": "Frog Pump",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "臀大肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "half-kneeling-pallof-press",
+      "name": "半跪姿绳索抗旋推",
+      "nameEn": "Half-kneeling Pallof Press",
+      "equipment": [
+        "绳索器械"
+      ],
+      "primaryMuscles": [
+        "腹斜肌",
+        "腹横肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "handstand-push-up",
+      "name": "倒立撑",
+      "nameEn": "Handstand Push-up",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "前束三角肌",
+        "中束三角肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "hanging-windshield-wiper",
+      "name": "悬垂雨刷式摆腿",
+      "nameEn": "Hanging Windshield Wiper",
+      "equipment": [
+        "单杠"
+      ],
+      "primaryMuscles": [
+        "腹斜肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "high-cable-curl",
+      "name": "绳索高位弯举",
+      "nameEn": "High Cable Curl",
+      "equipment": [
+        "绳索器械"
+      ],
+      "primaryMuscles": [
+        "肱二头肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "hollow-body-hold",
+      "name": "中空支撑",
+      "nameEn": "Hollow Body Hold",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "腹横肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "incline-dumbbell-fly",
+      "name": "上斜哑铃飞鸟",
+      "nameEn": "Incline Dumbbell Fly",
+      "equipment": [
+        "哑铃",
+        "卧推凳"
+      ],
+      "primaryMuscles": [
+        "胸大肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "kettlebell-clean-and-press",
+      "name": "壶铃翻举推举",
+      "nameEn": "Kettlebell Clean and Press",
+      "equipment": [
+        "壶铃"
+      ],
+      "primaryMuscles": [
+        "前束三角肌",
+        "臀大肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "kettlebell-row",
+      "name": "壶铃划船",
+      "nameEn": "Kettlebell Row",
+      "equipment": [
+        "壶铃"
+      ],
+      "primaryMuscles": [
+        "背阔肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "kettlebell-snatch",
+      "name": "壶铃抓举",
+      "nameEn": "Kettlebell Snatch",
+      "equipment": [
+        "壶铃"
+      ],
+      "primaryMuscles": [
+        "臀大肌",
+        "腘绳肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "kettlebell-swing",
+      "name": "壶铃摆动",
+      "nameEn": "Kettlebell Swing",
+      "equipment": [
+        "壶铃"
+      ],
+      "primaryMuscles": [
+        "臀大肌",
+        "腘绳肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "kneeling-single-arm-pulldown",
+      "name": "跪姿单臂下拉",
+      "nameEn": "Kneeling Single-arm Pulldown",
+      "equipment": [
+        "绳索器械"
+      ],
+      "primaryMuscles": [
+        "背阔肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "leaning-dumbbell-lateral-raise",
+      "name": "侧倾哑铃侧平举",
+      "nameEn": "Leaning Dumbbell Lateral Raise",
+      "equipment": [
+        "哑铃"
+      ],
+      "primaryMuscles": [
+        "中束三角肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "lunge",
+      "name": "弓步蹲",
+      "nameEn": "Lunge",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "股四头肌",
+        "臀大肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "lying-leg-raise",
+      "name": "仰卧举腿",
+      "nameEn": "Lying Leg Raise",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "腹直肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "lying-triceps-extension",
+      "name": "仰卧臂屈伸",
+      "nameEn": "Lying Triceps Extension",
+      "equipment": [
+        "杠铃",
+        "卧推凳"
+      ],
+      "primaryMuscles": [
+        "肱三头肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "machine-high-row",
+      "name": "器械高位划船",
+      "nameEn": "Machine High Row",
+      "equipment": [
+        "胸托划船机"
+      ],
+      "primaryMuscles": [
+        "背阔肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "machine-hip-abduction",
+      "name": "器械髋外展",
+      "nameEn": "Machine Hip Abduction",
+      "equipment": [
+        "髋外展机"
+      ],
+      "primaryMuscles": [
+        "髋外展肌群"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "machine-hip-adduction",
+      "name": "器械髋内收",
+      "nameEn": "Machine Hip Adduction",
+      "equipment": [
+        "髋内收机"
+      ],
+      "primaryMuscles": [
+        "髋内收肌群"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "machine-hip-thrust",
+      "name": "器械臀推",
+      "nameEn": "Machine Hip Thrust",
+      "equipment": [
+        "臀推机"
+      ],
+      "primaryMuscles": [
+        "臀大肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "machine-lateral-raise",
+      "name": "器械侧平举",
+      "nameEn": "Machine Lateral Raise",
+      "equipment": [
+        "固定器械"
+      ],
+      "primaryMuscles": [
+        "中束三角肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "machine-standing-calf-raise",
+      "name": "器械站姿提踵",
+      "nameEn": "Machine Standing Calf Raise",
+      "equipment": [
+        "站姿提踵机"
+      ],
+      "primaryMuscles": [
+        "小腿三头肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "mountain-climber",
+      "name": "登山跑",
+      "nameEn": "Mountain Climber",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "腹横肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "nordic-hamstring-curl",
+      "name": "北欧腿弯举",
+      "nameEn": "Nordic Hamstring Curl",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "腘绳肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "overhead-dumbbell-triceps-extension",
+      "name": "双手哑铃过顶臂屈伸",
+      "nameEn": "Two-hand Dumbbell Overhead Triceps Extension",
+      "equipment": [
+        "哑铃"
+      ],
+      "primaryMuscles": [
+        "肱三头肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "pallof-press",
+      "name": "站姿绳索抗旋推",
+      "nameEn": "Standing Pallof Press",
+      "equipment": [
+        "绳索器械"
+      ],
+      "primaryMuscles": [
+        "腹斜肌",
+        "腹横肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "pec-deck-fly",
+      "name": "蝴蝶机夹胸",
+      "nameEn": "Pec Deck Fly",
+      "equipment": [
+        "蝴蝶机"
+      ],
+      "primaryMuscles": [
+        "胸大肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "pike-push-up",
+      "name": "折刀俯卧撑",
+      "nameEn": "Pike Push-up",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "前束三角肌",
+        "中束三角肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "plank-shoulder-tap",
+      "name": "平板支撑交替触肩",
+      "nameEn": "Plank Shoulder Tap",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "腹横肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "push-up",
+      "name": "俯卧撑",
+      "nameEn": "Push-up",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "胸大肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "rack-pull",
+      "name": "架上硬拉",
+      "nameEn": "Rack Pull",
+      "equipment": [
+        "杠铃",
+        "深蹲架"
+      ],
+      "primaryMuscles": [
+        "竖脊肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "rear-delt-machine-fly",
+      "name": "蝴蝶机反向飞鸟",
+      "nameEn": "Reverse Pec Deck Fly",
+      "equipment": [
+        "蝴蝶机"
+      ],
+      "primaryMuscles": [
+        "后束三角肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "renegade-row",
+      "name": "俯卧撑位哑铃划船",
+      "nameEn": "Renegade Row",
+      "equipment": [
+        "哑铃"
+      ],
+      "primaryMuscles": [
+        "背阔肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "reverse-fly",
+      "name": "反向飞鸟",
+      "nameEn": "Reverse Pec Deck Fly",
+      "equipment": [
+        "绳索器械"
+      ],
+      "primaryMuscles": [
+        "后束三角肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "reverse-lunge",
+      "name": "后撤弓步蹲",
+      "nameEn": "Reverse Lunge",
+      "equipment": [
+        "自重",
+        "哑铃"
+      ],
+      "primaryMuscles": [
+        "股四头肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "romanian-deadlift",
+      "name": "罗马尼亚硬拉",
+      "nameEn": "Romanian Deadlift",
+      "equipment": [
+        "杠铃",
+        "哑铃"
+      ],
+      "primaryMuscles": [
+        "竖脊肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "single-arm-cable-row",
+      "name": "单臂绳索划船",
+      "nameEn": "Single-arm Cable Row",
+      "equipment": [
+        "绳索器械"
+      ],
+      "primaryMuscles": [
+        "背阔肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "single-arm-cable-shoulder-press",
+      "name": "单臂绳索肩推",
+      "nameEn": "Single-arm Cable Shoulder Press",
+      "equipment": [
+        "绳索器械"
+      ],
+      "primaryMuscles": [
+        "前束三角肌",
+        "中束三角肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "single-arm-lat-pulldown",
+      "name": "单臂高位下拉",
+      "nameEn": "Single-arm Lat Pulldown",
+      "equipment": [
+        "高位下拉器"
+      ],
+      "primaryMuscles": [
+        "背阔肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "single-arm-machine-chest-press",
+      "name": "单臂器械推胸",
+      "nameEn": "Single-arm Machine Chest Press",
+      "equipment": [
+        "推胸器"
+      ],
+      "primaryMuscles": [
+        "胸大肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "single-leg-calf-raise",
+      "name": "单腿提踵",
+      "nameEn": "Single-leg Calf Raise",
+      "equipment": [
+        "自重",
+        "哑铃"
+      ],
+      "primaryMuscles": [
+        "小腿三头肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "single-leg-romanian-deadlift",
+      "name": "单腿罗马尼亚硬拉",
+      "nameEn": "Single-leg Romanian Deadlift",
+      "equipment": [
+        "哑铃"
+      ],
+      "primaryMuscles": [
+        "腘绳肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "sliding-leg-curl",
+      "name": "滑垫腿弯举",
+      "nameEn": "Sliding Leg Curl",
+      "equipment": [
+        "滑垫"
+      ],
+      "primaryMuscles": [
+        "腘绳肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "spider-curl",
+      "name": "蜘蛛弯举",
+      "nameEn": "Spider Curl",
+      "equipment": [
+        "哑铃",
+        "卧推凳"
+      ],
+      "primaryMuscles": [
+        "肱二头肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "standing-cable-row",
+      "name": "站姿绳索划船",
+      "nameEn": "Standing Cable Row",
+      "equipment": [
+        "绳索器械"
+      ],
+      "primaryMuscles": [
+        "菱形肌",
+        "斜方肌中下束"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "t-bar-row",
+      "name": "T杠划船",
+      "nameEn": "T-bar Row",
+      "equipment": [
+        "T杠"
+      ],
+      "primaryMuscles": [
+        "背阔肌",
+        "菱形肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "toe-touch-crunch",
+      "name": "触足卷腹",
+      "nameEn": "Toe-touch Crunch",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "腹直肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "upright-row",
+      "name": "杠铃直立划船",
+      "nameEn": "Barbell Upright Row",
+      "equipment": [
+        "杠铃"
+      ],
+      "primaryMuscles": [
+        "中束三角肌",
+        "斜方肌上束"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "v-up",
+      "name": "V 字两头起",
+      "nameEn": "V-up",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "腹直肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "weighted-push-up",
+      "name": "负重俯卧撑",
+      "nameEn": "Weighted Push-up",
+      "equipment": [
+        "自重",
+        "杠铃片"
+      ],
+      "primaryMuscles": [
+        "胸大肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "weighted-sit-up",
+      "name": "负重仰卧起坐",
+      "nameEn": "Weighted Sit-up",
+      "equipment": [
+        "杠铃片"
+      ],
+      "primaryMuscles": [
+        "腹直肌"
+      ],
+      "category": "高频基础力量动作",
+      "recommendedAction": "优先继续检索其他可靠图库；核对动作名称、器械和 start/peak 阶段后再接入。",
+      "baseExerciseId": null,
+      "priority": "high",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "alternating-dumbbell-bench-press",
+      "name": "交替哑铃卧推",
+      "nameEn": "Alternating Dumbbell Bench Press",
+      "equipment": [
+        "哑铃",
+        "卧推凳"
+      ],
+      "primaryMuscles": [
+        "胸大肌"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 dumbbell-bench-press（哑铃卧推）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "dumbbell-bench-press",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "band-straight-arm-pulldown",
+      "name": "弹力带直臂下拉",
+      "nameEn": "Band Straight-arm Pulldown",
+      "equipment": [
+        "弹力带"
+      ],
+      "primaryMuscles": [
+        "背阔肌"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 straight-arm-pulldown（直臂下拉）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "straight-arm-pulldown",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "dumbbell-hip-thrust",
+      "name": "哑铃臀推",
+      "nameEn": "Dumbbell Hip Thrust",
+      "equipment": [
+        "哑铃",
+        "卧推凳"
+      ],
+      "primaryMuscles": [
+        "臀大肌"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 barbell-hip-thrust（杠铃臀推）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "barbell-hip-thrust",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_CONTRALATERAL_DEAD_BUG",
+      "name": "仰卧对侧死虫",
+      "nameEn": "Dead Bug",
+      "equipment": [
+        "瑜伽垫"
+      ],
+      "primaryMuscles": [
+        "腹横肌"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 dead-bug（死虫）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "dead-bug",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "hanging-knee-raise",
+      "name": "悬垂屈膝举腿",
+      "nameEn": "Hanging Knee Raise",
+      "equipment": [
+        "单杠"
+      ],
+      "primaryMuscles": [
+        "腹直肌"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 hanging-leg-raise（悬垂举腿）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "hanging-leg-raise",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "leg-curl",
+      "name": "腿弯举",
+      "nameEn": "Leg Curl",
+      "equipment": [
+        "腿弯举机"
+      ],
+      "primaryMuscles": [
+        "腘绳肌"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 seated-leg-curl（坐姿腿弯举）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "seated-leg-curl",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "machine-low-row",
+      "name": "器械低位划船",
+      "nameEn": "Machine Low Row",
+      "equipment": [
+        "坐姿划船器"
+      ],
+      "primaryMuscles": [
+        "菱形肌",
+        "斜方肌中下束"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 seated-row（坐姿划船）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "seated-row",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "narrow-grip-pulldown",
+      "name": "窄握下拉",
+      "nameEn": "Narrow-grip Pulldown",
+      "equipment": [
+        "高位下拉器"
+      ],
+      "primaryMuscles": [
+        "背阔肌"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 lat-pulldown（高位下拉）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "lat-pulldown",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "neutral-grip-pull-up",
+      "name": "对握引体向上",
+      "nameEn": "Neutral-grip Pull-up",
+      "equipment": [
+        "单杠"
+      ],
+      "primaryMuscles": [
+        "背阔肌"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 pull-up（引体向上）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "pull-up",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "neutral-grip-seated-row",
+      "name": "坐姿对握划船",
+      "nameEn": "Neutral-grip Seated Row",
+      "equipment": [
+        "坐姿划船器"
+      ],
+      "primaryMuscles": [
+        "背阔肌"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 seated-row（坐姿划船）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "seated-row",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "pendlay-row",
+      "name": "彭德雷划船",
+      "nameEn": "Pendlay Row",
+      "equipment": [
+        "杠铃"
+      ],
+      "primaryMuscles": [
+        "菱形肌",
+        "斜方肌中下束"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 barbell-row（杠铃划船）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "barbell-row",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "reverse-grip-lat-pulldown",
+      "name": "反握高位下拉",
+      "nameEn": "Reverse-grip Lat Pulldown",
+      "equipment": [
+        "高位下拉器"
+      ],
+      "primaryMuscles": [
+        "背阔肌"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 lat-pulldown（高位下拉）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "lat-pulldown",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "seal-row",
+      "name": "俯卧杠铃划船",
+      "nameEn": "Seal Row",
+      "equipment": [
+        "杠铃",
+        "卧推凳"
+      ],
+      "primaryMuscles": [
+        "菱形肌",
+        "斜方肌中下束"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 chest-supported-row（胸托划船）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "chest-supported-row",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "single-leg-curl",
+      "name": "单腿器械弯举",
+      "nameEn": "Single-leg Curl",
+      "equipment": [
+        "腿弯举机"
+      ],
+      "primaryMuscles": [
+        "腘绳肌"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 seated-leg-curl（坐姿腿弯举）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "seated-leg-curl",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "smith-hip-thrust",
+      "name": "史密斯机臀推",
+      "nameEn": "Smith Machine Hip Thrust",
+      "equipment": [
+        "史密斯机",
+        "卧推凳"
+      ],
+      "primaryMuscles": [
+        "臀大肌"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 barbell-hip-thrust（杠铃臀推）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "barbell-hip-thrust",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "straight-bar-pushdown",
+      "name": "直杆下压",
+      "nameEn": "Straight-bar Pushdown",
+      "equipment": [
+        "绳索器械"
+      ],
+      "primaryMuscles": [
+        "肱三头肌"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 cable-triceps-pushdown（绳索下压）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "cable-triceps-pushdown",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "underhand-barbell-row",
+      "name": "反握杠铃划船",
+      "nameEn": "Underhand Barbell Row",
+      "equipment": [
+        "杠铃"
+      ],
+      "primaryMuscles": [
+        "背阔肌"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 barbell-row（杠铃划船）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "barbell-row",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "underhand-seated-row",
+      "name": "坐姿反握划船",
+      "nameEn": "Underhand Seated Row",
+      "equipment": [
+        "坐姿划船器"
+      ],
+      "primaryMuscles": [
+        "背阔肌"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 seated-row（坐姿划船）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "seated-row",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "wide-grip-lat-pulldown",
+      "name": "宽握高位下拉",
+      "nameEn": "Wide-grip Lat Pulldown",
+      "equipment": [
+        "高位下拉器"
+      ],
+      "primaryMuscles": [
+        "背阔肌"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 lat-pulldown（高位下拉）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "lat-pulldown",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "wide-grip-pull-up",
+      "name": "宽握引体向上",
+      "nameEn": "Wide-grip Pull-up",
+      "equipment": [
+        "单杠"
+      ],
+      "primaryMuscles": [
+        "背阔肌"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 pull-up（引体向上）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "pull-up",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "wide-grip-seated-row",
+      "name": "坐姿宽握划船",
+      "nameEn": "Wide-grip Seated Row",
+      "equipment": [
+        "坐姿划船器",
+        "绳索器械"
+      ],
+      "primaryMuscles": [
+        "斜方肌中下束",
+        "菱形肌"
+      ],
+      "category": "可共用已有图片的轻微变式",
+      "recommendedAction": "复用 seated-row（坐姿划船）的现有双图；接入时用文字说明握法、器械或单/双侧差异。",
+      "baseExerciseId": "seated-row",
+      "priority": "medium",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "band-lateral-walk",
+      "name": "弹力带侧向行走",
+      "nameEn": "Band Lateral Walk",
+      "equipment": [
+        "弹力带"
+      ],
+      "primaryMuscles": [
+        "髋外展肌群"
+      ],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "bird-dog",
+      "name": "鸟狗式",
+      "nameEn": "Bird Dog",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "腹横肌"
+      ],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "cable-hip-abduction",
+      "name": "绳索髋外展",
+      "nameEn": "Cable Hip Abduction",
+      "equipment": [
+        "绳索器械"
+      ],
+      "primaryMuscles": [
+        "髋外展肌群"
+      ],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "clamshell",
+      "name": "蚌式开合",
+      "nameEn": "Clamshell",
+      "equipment": [
+        "弹力带"
+      ],
+      "primaryMuscles": [
+        "髋外展肌群"
+      ],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "dumbbell-pronation",
+      "name": "哑铃前臂旋前",
+      "nameEn": "Dumbbell Forearm Pronation",
+      "equipment": [
+        "哑铃"
+      ],
+      "primaryMuscles": [
+        "前臂伸肌群"
+      ],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "dumbbell-supination",
+      "name": "哑铃前臂旋后",
+      "nameEn": "Dumbbell Forearm Supination",
+      "equipment": [
+        "哑铃"
+      ],
+      "primaryMuscles": [
+        "前臂屈肌群"
+      ],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_ASSISTED_CERVICAL_SIDE_BEND_STRETCH",
+      "name": "辅助式单侧颈部侧屈拉伸",
+      "nameEn": "辅助式单侧颈部侧屈拉伸",
+      "equipment": [
+        "双手"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_BAND_LOWER_LIMB_OPPOSITION_CRUNCH",
+      "name": "弹力带下肢对抗卷腹",
+      "nameEn": "弹力带下肢对抗卷腹",
+      "equipment": [
+        "弹力带",
+        "瑜伽垫"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_CERVICAL_RETRACTION_SMALL_EXTENSION",
+      "name": "颈部水平回缩与小幅后伸",
+      "nameEn": "颈部水平回缩与小幅后伸",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_DOORWAY_ANTERIOR_CHEST_STRETCH",
+      "name": "门框胸前侧静态拉伸",
+      "nameEn": "门框胸前侧静态拉伸",
+      "equipment": [
+        "门框"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_DOUBLE_KNEE_TO_CHEST",
+      "name": "仰卧双膝抱胸",
+      "nameEn": "仰卧双膝抱胸",
+      "equipment": [
+        "瑜伽垫"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_FOAM_ROLL_THORACIC",
+      "name": "泡沫轴胸椎后侧滚动",
+      "nameEn": "泡沫轴胸椎后侧滚动",
+      "equipment": [
+        "泡沫轴"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_HALF_KNEEL_HIP_FLEXOR_STRETCH",
+      "name": "半跪姿髋前侧拉伸",
+      "nameEn": "半跪姿髋前侧拉伸",
+      "equipment": [
+        "瑜伽垫"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_LOW_ANGLE_ABDUCTION_CABLE",
+      "name": "低位龙门架单侧低角度肩外展",
+      "nameEn": "低位龙门架单侧低角度肩外展",
+      "equipment": [
+        "龙门架"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_LOW_ANGLE_ABDUCTION_DUMBBELL",
+      "name": "轻哑铃单侧低角度肩外展",
+      "nameEn": "轻哑铃单侧低角度肩外展",
+      "equipment": [
+        "轻哑铃"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_MASSETER_SELF_MASSAGE",
+      "name": "咬肌区域轻柔自我按摩",
+      "nameEn": "咬肌区域轻柔自我按摩",
+      "equipment": [
+        "双手"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_POSTERIOR_SHOULDER_PRESSURE_RELEASE",
+      "name": "肩后侧局部按压放松",
+      "nameEn": "肩后侧局部按压放松",
+      "equipment": [
+        "按摩球或手指"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_QUADRUPED_THORACIC_FLEX_EXTENSION",
+      "name": "四点跪姿胸椎屈伸控制",
+      "nameEn": "四点跪姿胸椎屈伸控制",
+      "equipment": [
+        "瑜伽垫"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_QUADRUPED_THORACIC_ROTATION",
+      "name": "四点跪姿手扶头胸椎旋转",
+      "nameEn": "四点跪姿手扶头胸椎旋转",
+      "equipment": [
+        "瑜伽垫"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_SCAP_BAND_POSTERIOR_TILT_ELEVATION",
+      "name": "弹力带辅助肩胛后倾上举",
+      "nameEn": "弹力带辅助肩胛后倾上举",
+      "equipment": [
+        "弹力带"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_SCAP_ELEVATED_PROTRACTION",
+      "name": "高位支撑肩胛俯卧撑",
+      "nameEn": "高位支撑肩胛俯卧撑",
+      "equipment": [
+        "稳固桌面或高位支撑面"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_SCAP_QUADRUPED_PROTRACTION",
+      "name": "四点跪姿肩胛前伸控制",
+      "nameEn": "四点跪姿肩胛前伸控制",
+      "equipment": [
+        "瑜伽垫"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_SCAP_WALL_PROTRACTION",
+      "name": "墙面肩胛俯卧撑",
+      "nameEn": "墙面肩胛俯卧撑",
+      "equipment": [
+        "墙面"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_SCM_STRETCH",
+      "name": "胸锁乳突肌区域拉伸",
+      "nameEn": "胸锁乳突肌区域拉伸",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_SINGLE_KNEE_TO_CHEST",
+      "name": "仰卧单膝抱胸",
+      "nameEn": "仰卧单膝抱胸",
+      "equipment": [
+        "瑜伽垫"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_STANDING_CERVICAL_RETRACTION_HOLD",
+      "name": "站姿颈部水平回缩保持",
+      "nameEn": "站姿颈部水平回缩保持",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_SUBOCCIPITAL_SELF_MASSAGE",
+      "name": "枕下区域轻柔自我按揉",
+      "nameEn": "枕下区域轻柔自我按揉",
+      "equipment": [
+        "双手"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_SUPINE_EXHALE_RIBCAGE_CONTROL",
+      "name": "仰卧屈膝呼气胸廓控制",
+      "nameEn": "仰卧屈膝呼气胸廓控制",
+      "equipment": [
+        "瑜伽垫"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_SUPINE_POSTERIOR_PELVIC_TILT",
+      "name": "仰卧骨盆后倾控制",
+      "nameEn": "仰卧骨盆后倾控制",
+      "equipment": [
+        "瑜伽垫"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_TEMPORALIS_CONTACT_CONTROLLED_OPENING",
+      "name": "双侧颞肌接触式控制张口",
+      "nameEn": "双侧颞肌接触式控制张口",
+      "equipment": [
+        "双手"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_TOWEL_CERVICAL_EXTENSION",
+      "name": "毛巾辅助颈部后伸活动",
+      "nameEn": "毛巾辅助颈部后伸活动",
+      "equipment": [
+        "毛巾"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_TOWEL_RESISTED_CERVICAL_RETRACTION_ISOMETRIC",
+      "name": "毛巾抗阻颈部回缩等长控制",
+      "nameEn": "毛巾抗阻颈部回缩等长控制",
+      "equipment": [
+        "毛巾"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_WALL_ELBOW_CHEST_SHOULDER_STRETCH",
+      "name": "墙面肘支撑胸肩前侧拉伸",
+      "nameEn": "墙面肘支撑胸肩前侧拉伸",
+      "equipment": [
+        "墙面"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_WALL_FIVE_POINT_ALIGNMENT",
+      "name": "靠墙五点对齐与颈肩回缩保持",
+      "nameEn": "靠墙五点对齐与颈肩回缩保持",
+      "equipment": [
+        "墙面"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "EX_WALL_SCAPULAR_RETRACTION_ISOMETRIC",
+      "name": "靠墙肩胛后缩等长控制",
+      "nameEn": "靠墙肩胛后缩等长控制",
+      "equipment": [
+        "墙面"
+      ],
+      "primaryMuscles": [],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "prone-w-raise",
+      "name": "俯卧 W Raise",
+      "nameEn": "Prone W Raise",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "斜方肌中下束",
+        "后束三角肌"
+      ],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "side-lying-hip-abduction",
+      "name": "侧卧髋外展",
+      "nameEn": "Side-lying Hip Abduction",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "髋外展肌群"
+      ],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "side-lying-hip-adduction",
+      "name": "侧卧髋内收",
+      "nameEn": "Side-lying Hip Adduction",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "髋内收肌群"
+      ],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "y-raise",
+      "name": "Y Raise",
+      "nameEn": "Y Raise",
+      "equipment": [
+        "哑铃",
+        "弹力带"
+      ],
+      "primaryMuscles": [
+        "斜方肌中下束"
+      ],
+      "category": "体态、康复、呼吸、拉伸动作",
+      "recommendedAction": "单独规划专业体态/康复素材；优先采用可信专业来源，不与常规力量动作共图。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "battle-rope-slams",
+      "name": "战绳双臂砸绳",
+      "nameEn": "Battle Rope Slams",
+      "equipment": [
+        "战绳"
+      ],
+      "primaryMuscles": [
+        "前束三角肌",
+        "腹直肌"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "behind-back-cable-lateral-raise",
+      "name": "身后绳索侧平举",
+      "nameEn": "Behind-the-back Cable Lateral Raise",
+      "equipment": [
+        "绳索器械"
+      ],
+      "primaryMuscles": [
+        "中束三角肌"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "behind-back-wrist-curl",
+      "name": "身后杠铃屈腕",
+      "nameEn": "Behind-the-back Barbell Wrist Curl",
+      "equipment": [
+        "杠铃"
+      ],
+      "primaryMuscles": [
+        "前臂屈肌群"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "belt-squat",
+      "name": "腰带深蹲",
+      "nameEn": "Belt Squat",
+      "equipment": [
+        "腰带深蹲机"
+      ],
+      "primaryMuscles": [
+        "股四头肌"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "cable-reverse-wrist-curl",
+      "name": "绳索伸腕",
+      "nameEn": "Cable Reverse Wrist Curl",
+      "equipment": [
+        "绳索器械"
+      ],
+      "primaryMuscles": [
+        "前臂伸肌群"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "donkey-calf-raise",
+      "name": "俯身提踵",
+      "nameEn": "Donkey Calf Raise",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "小腿三头肌"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "half-kneeling-landmine-press",
+      "name": "半跪姿地雷架推举",
+      "nameEn": "Half-kneeling Landmine Press",
+      "equipment": [
+        "地雷架",
+        "杠铃"
+      ],
+      "primaryMuscles": [
+        "前束三角肌"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "landmine-press",
+      "name": "地雷架推举",
+      "nameEn": "Landmine Press",
+      "equipment": [
+        "地雷架",
+        "杠铃"
+      ],
+      "primaryMuscles": [
+        "前束三角肌"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "landmine-rotation",
+      "name": "地雷架转体",
+      "nameEn": "Landmine Rotation",
+      "equipment": [
+        "地雷架",
+        "杠铃"
+      ],
+      "primaryMuscles": [
+        "腹斜肌"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "landmine-row",
+      "name": "地雷架双臂划船",
+      "nameEn": "Landmine Row",
+      "equipment": [
+        "地雷架",
+        "杠铃"
+      ],
+      "primaryMuscles": [
+        "菱形肌",
+        "斜方肌中下束"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "lying-cable-lateral-raise",
+      "name": "侧卧绳索侧平举",
+      "nameEn": "Lying Cable Lateral Raise",
+      "equipment": [
+        "绳索器械"
+      ],
+      "primaryMuscles": [
+        "中束三角肌"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "machine-pullover",
+      "name": "器械直臂上拉",
+      "nameEn": "Machine Pullover",
+      "equipment": [
+        "固定器械"
+      ],
+      "primaryMuscles": [
+        "背阔肌"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "meadows-row",
+      "name": "梅多斯划船",
+      "nameEn": "Meadows Row",
+      "equipment": [
+        "地雷架",
+        "杠铃"
+      ],
+      "primaryMuscles": [
+        "背阔肌"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "pendulum-squat",
+      "name": "摆动式深蹲",
+      "nameEn": "Pendulum Squat",
+      "equipment": [
+        "摆动深蹲机"
+      ],
+      "primaryMuscles": [
+        "股四头肌"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "plate-loaded-chest-press",
+      "name": "杠片式器械推胸",
+      "nameEn": "Plate-loaded Chest Press",
+      "equipment": [
+        "推胸器",
+        "杠铃片"
+      ],
+      "primaryMuscles": [
+        "胸大肌"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "single-arm-landmine-row",
+      "name": "地雷架单臂划船",
+      "nameEn": "Single-arm Landmine Row",
+      "equipment": [
+        "地雷架",
+        "杠铃"
+      ],
+      "primaryMuscles": [
+        "背阔肌"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "sissy-squat",
+      "name": "西斯深蹲",
+      "nameEn": "Sissy Squat",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "股四头肌"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "squat-position-calf-raise",
+      "name": "深蹲姿提踵",
+      "nameEn": "Squat-position Calf Raise",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "小腿三头肌"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "stability-ball-rollout",
+      "name": "健身球前滚",
+      "nameEn": "Stability Ball Rollout",
+      "equipment": [
+        "健身球"
+      ],
+      "primaryMuscles": [
+        "腹横肌"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "standing-ab-wheel-rollout",
+      "name": "健腹轮站姿滚动",
+      "nameEn": "Standing Ab Wheel Rollout",
+      "equipment": [
+        "健腹轮"
+      ],
+      "primaryMuscles": [
+        "腹横肌"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "sternum-pull-up",
+      "name": "胸触杠引体向上",
+      "nameEn": "Sternum Pull-up",
+      "equipment": [
+        "单杠"
+      ],
+      "primaryMuscles": [
+        "菱形肌",
+        "斜方肌中下束"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "towel-hang",
+      "name": "毛巾悬垂",
+      "nameEn": "Towel Hang",
+      "equipment": [
+        "单杠"
+      ],
+      "primaryMuscles": [
+        "前臂屈肌群"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "towel-row",
+      "name": "毛巾划船",
+      "nameEn": "Towel Row",
+      "equipment": [
+        "自重"
+      ],
+      "primaryMuscles": [
+        "背阔肌",
+        "菱形肌"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "trx-body-saw",
+      "name": "TRX 锯式平板支撑",
+      "nameEn": "TRX Body Saw",
+      "equipment": [
+        "TRX 悬挂带"
+      ],
+      "primaryMuscles": [
+        "腹横肌"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "trx-row",
+      "name": "TRX 划船",
+      "nameEn": "TRX Row",
+      "equipment": [
+        "TRX 悬挂带"
+      ],
+      "primaryMuscles": [
+        "菱形肌",
+        "斜方肌中下束"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    },
+    {
+      "exerciseId": "wrist-roller",
+      "name": "卷绳器腕屈伸",
+      "nameEn": "Wrist Roller",
+      "equipment": [
+        "腕力器"
+      ],
+      "primaryMuscles": [
+        "前臂屈肌群",
+        "前臂伸肌群"
+      ],
+      "category": "冷门或特殊器械动作，暂缓处理",
+      "recommendedAction": "暂缓处理；待高频动作覆盖后，再按对应器械或专项训练来源补齐。",
+      "baseExerciseId": null,
+      "priority": "low",
+      "missingStages": [
+        "start",
+        "peak"
+      ]
+    }
+  ]
+}

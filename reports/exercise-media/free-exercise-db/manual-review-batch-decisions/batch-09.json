@@ -1,0 +1,13 @@
+{
+  "batchNumber": 9,
+  "decisions": [
+    {"exerciseId":"hang-clean","sourceId":null,"decision":"proposed-rejected","visualEvidence":["Clean 与 Power Clean 图片都从地面起始，Clean Deadlift 不含接杠，均未表现 hang 起始"],"differences":["缺少杠铃从大腿悬垂位置开始的 Hang Clean"],"risks":["地面 Clean 与 Hang Clean 起始姿态不同"]},
+    {"exerciseId":"hanging-knee-raise","sourceId":"Hanging_Leg_Raise","decision":"proposed-forced","visualEvidence":["单独查看原图确认：双手悬垂，peak 时双膝明显屈曲抬至髋前，而非直腿举"],"differences":["数据库名称写 Hanging Leg Raise，但画面实际为 bent-knee raise"],"risks":["名称与画面不一致，需以视觉为准由用户确认"]},
+    {"exerciseId":"hanging-windshield-wiper","sourceId":null,"decision":"proposed-rejected","visualEvidence":["候选只展示悬垂抬腿、Hanging Pike 或地面触踵，没有双腿左右摆动"],"differences":["缺少 Windshield Wiper 的横向旋转轨迹"],"risks":["抬腿不能代表左右摆动"]},
+    {"exerciseId":"high-cable-curl","sourceId":null,"decision":"proposed-rejected","visualEvidence":["候选为牧师凳、机器或仰卧弯举，没有高位滑轮、上臂外展的 High Cable Curl"],"differences":["滑轮高度与身体姿态不一致"],"risks":["普通 Cable Curl 会误导器械设置"]},
+    {"exerciseId":"high-to-low-cable-fly","sourceId":null,"decision":"proposed-rejected","visualEvidence":["Low Cable Crossover 方向为低到高，普通 Crossover 为水平，Iron Cross 也未表现高到低斜线"],"differences":["动作方向与目标 high-to-low 不一致"],"risks":["绳索高度和轨迹错误"]},
+    {"exerciseId":"hollow-body-hold","sourceId":null,"decision":"proposed-rejected","visualEvidence":["候选为交叉卷腹、平板和站姿腹式真空，没有仰卧肩腿离地的 Hollow Hold"],"differences":["支撑姿态和等长动作形态均不同"],"risks":["普通核心动作不能替代 Hollow Body Hold"]},
+    {"exerciseId":"incline-barbell-bench-press","sourceId":"Barbell_Incline_Bench_Press_-_Medium_Grip","decision":"proposed-accepted","visualEvidence":["上斜凳杠铃由上胸推至伸肘，器械、角度和中等握距均合理"],"differences":["候选明确中等握距"],"risks":[]},
+    {"exerciseId":"incline-dumbbell-bench-press","sourceId":"Incline_Dumbbell_Press","decision":"proposed-accepted","visualEvidence":["上斜凳双哑铃推举，凳面角度与动作轨迹一致"],"differences":[],"risks":[]}
+  ]
+}

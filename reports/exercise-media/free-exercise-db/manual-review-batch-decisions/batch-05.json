@@ -1,0 +1,13 @@
+{
+  "batchNumber": 5,
+  "decisions": [
+    {"exerciseId":"cable-rear-delt-row","sourceId":"Cable_Rope_Rear-Delt_Rows","decision":"proposed-forced","visualEvidence":["站姿面向滑轮，以绳把向上胸拉并外展肘部，后束划船轨迹一致"],"differences":["候选明确使用 rope 附件"],"risks":["算法 variant 冲突来自把手附件，需用户确认"]},
+    {"exerciseId":"cable-reverse-wrist-curl","sourceId":null,"decision":"proposed-rejected","visualEvidence":["候选为反握肘屈、普通腕屈和反向卷腹，没有绳索腕伸"],"differences":["关节动作或动作部位不一致"],"risks":["Reverse Cable Curl 不能代表 Reverse Wrist Curl"]},
+    {"exerciseId":"cable-romanian-deadlift","sourceId":null,"decision":"proposed-rejected","visualEvidence":["候选为史密斯直腿硬拉、史密斯高翻和 Glute Ham Raise，没有绳索 RDL"],"differences":["器械全部不符合绳索器械"],"risks":["机器和绳索的阻力方向不同"]},
+    {"exerciseId":"cable-skull-crusher","sourceId":"Low_Cable_Triceps_Extension","decision":"proposed-forced","visualEvidence":["单独查看原图确认：仰卧平凳、低位绳索从头后伸肘至手臂垂直，正是 Cable Skull Crusher"],"differences":["数据库使用 Low Cable Triceps Extension 泛化名称"],"risks":["名称不同但视觉、支撑面和轨迹一致"]},
+    {"exerciseId":"cable-upright-row","sourceId":"Upright_Cable_Row","decision":"proposed-accepted","visualEvidence":["站姿低位绳索直杆沿身体向上拉，肘部高于手，轨迹一致"],"differences":[],"risks":[]},
+    {"exerciseId":"cable-woodchop","sourceId":null,"decision":"proposed-rejected","visualEvidence":["单独查看 Cable Judo Flip，动作从直立变为前屈下拉，没有躯干旋转斜劈；其他为俄罗斯转体和卷腹"],"differences":["候选缺少 Woodchop 的对角旋转轨迹"],"risks":["髋铰链下拉会误导木砍动作方向"]},
+    {"exerciseId":"captains-chair-knee-raise","sourceId":"Knee_Hip_Raise_On_Parallel_Bars","decision":"proposed-forced","visualEvidence":["图片展示前臂和背部支撑于双杠式 Captain Chair，屈膝抬向躯干"],"differences":["数据库名称使用 Parallel Bars，而画面实际具有 Captain Chair 支撑垫"],"risks":["命名差异需用户确认，但视觉器械和动作一致"]},
+    {"exerciseId":"concentration-curl","sourceId":null,"decision":"proposed-rejected","visualEvidence":["候选为站姿弯举、交替弯举和牧师凳锤式弯举，没有坐姿肘抵大腿"],"differences":["缺少 Concentration Curl 的坐姿单臂支撑"],"risks":["普通弯举姿态会误导动作设置"]}
+  ]
+}

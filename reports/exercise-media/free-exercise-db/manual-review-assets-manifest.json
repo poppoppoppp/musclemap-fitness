@@ -1,0 +1,4126 @@
+{
+  "version": 1,
+  "generatedAt": "2026-07-15T09:31:13.962Z",
+  "cacheRoot": "D:\\AI\\FreeExerciseDB-cache\\manual-review",
+  "outputRoot": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets",
+  "uniqueSourceCount": 242,
+  "imageCount": 484,
+  "mode": "hard-link",
+  "additionalBytes": 0,
+  "sources": {
+    "3_4_Sit-Up": {
+      "exerciseId": "bird-dog",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bird-dog\\3_4_Sit-Up\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\3_4_Sit-Up\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 38047
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bird-dog\\3_4_Sit-Up\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\3_4_Sit-Up\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 39230
+        }
+      }
+    },
+    "Ab_Crunch_Machine": {
+      "exerciseId": "machine-crunch",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\machine-crunch\\Ab_Crunch_Machine\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Ab_Crunch_Machine\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 84612
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\machine-crunch\\Ab_Crunch_Machine\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Ab_Crunch_Machine\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 82997
+        }
+      }
+    },
+    "Ab_Roller": {
+      "exerciseId": "trx-body-saw",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\trx-body-saw\\Ab_Roller\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Ab_Roller\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 58646
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\trx-body-saw\\Ab_Roller\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Ab_Roller\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 61976
+        }
+      }
+    },
+    "Air_Bike": {
+      "exerciseId": "mountain-climber",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\mountain-climber\\Air_Bike\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Air_Bike\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 62771
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\mountain-climber\\Air_Bike\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Air_Bike\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 64017
+        }
+      }
+    },
+    "Alternate_Hammer_Curl": {
+      "exerciseId": "hammer-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hammer-curl\\Alternate_Hammer_Curl\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Alternate_Hammer_Curl\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 58965
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hammer-curl\\Alternate_Hammer_Curl\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Alternate_Hammer_Curl\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 58120
+        }
+      }
+    },
+    "Alternate_Heel_Touchers": {
+      "exerciseId": "hanging-windshield-wiper",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hanging-windshield-wiper\\Alternate_Heel_Touchers\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Alternate_Heel_Touchers\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 61685
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hanging-windshield-wiper\\Alternate_Heel_Touchers\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Alternate_Heel_Touchers\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 60807
+        }
+      }
+    },
+    "Alternating_Cable_Shoulder_Press": {
+      "exerciseId": "single-arm-cable-shoulder-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\single-arm-cable-shoulder-press\\Alternating_Cable_Shoulder_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Alternating_Cable_Shoulder_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 44800
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\single-arm-cable-shoulder-press\\Alternating_Cable_Shoulder_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Alternating_Cable_Shoulder_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 45486
+        }
+      }
+    },
+    "Anti-Gravity_Press": {
+      "exerciseId": "barbell-clean-and-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-clean-and-press\\Anti-Gravity_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Anti-Gravity_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 47218
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-clean-and-press\\Anti-Gravity_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Anti-Gravity_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 47052
+        }
+      }
+    },
+    "Arnold_Dumbbell_Press": {
+      "exerciseId": "arnold-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\arnold-press\\Arnold_Dumbbell_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Arnold_Dumbbell_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 54330
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\arnold-press\\Arnold_Dumbbell_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Arnold_Dumbbell_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 55084
+        }
+      }
+    },
+    "Ball_Leg_Curl": {
+      "exerciseId": "sliding-leg-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\sliding-leg-curl\\Ball_Leg_Curl\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Ball_Leg_Curl\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 95703
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\sliding-leg-curl\\Ball_Leg_Curl\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Ball_Leg_Curl\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 95811
+        }
+      }
+    },
+    "Band_Assisted_Pull-Up": {
+      "exerciseId": "assisted-pull-up",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\assisted-pull-up\\Band_Assisted_Pull-Up\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Band_Assisted_Pull-Up\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 95314
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\assisted-pull-up\\Band_Assisted_Pull-Up\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Band_Assisted_Pull-Up\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 100304
+        }
+      }
+    },
+    "Band_Hip_Adductions": {
+      "exerciseId": "band-hip-adduction",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\band-hip-adduction\\Band_Hip_Adductions\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Band_Hip_Adductions\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 49204
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\band-hip-adduction\\Band_Hip_Adductions\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Band_Hip_Adductions\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 48929
+        }
+      }
+    },
+    "Band_Pull_Apart": {
+      "exerciseId": "band-pull-apart",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\band-pull-apart\\Band_Pull_Apart\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Band_Pull_Apart\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 67230
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\band-pull-apart\\Band_Pull_Apart\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Band_Pull_Apart\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 67007
+        }
+      }
+    },
+    "Barbell_Ab_Rollout": {
+      "exerciseId": "weighted-sit-up",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\weighted-sit-up\\Barbell_Ab_Rollout\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Ab_Rollout\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 57389
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\weighted-sit-up\\Barbell_Ab_Rollout\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Ab_Rollout\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 56977
+        }
+      }
+    },
+    "Barbell_Ab_Rollout_-_On_Knees": {
+      "exerciseId": "weighted-sit-up",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\weighted-sit-up\\Barbell_Ab_Rollout_-_On_Knees\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Ab_Rollout_-_On_Knees\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 68009
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\weighted-sit-up\\Barbell_Ab_Rollout_-_On_Knees\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Ab_Rollout_-_On_Knees\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 70535
+        }
+      }
+    },
+    "Barbell_Bench_Press_-_Medium_Grip": {
+      "exerciseId": "barbell-bench-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-bench-press\\Barbell_Bench_Press_-_Medium_Grip\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Bench_Press_-_Medium_Grip\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 72816
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-bench-press\\Barbell_Bench_Press_-_Medium_Grip\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Bench_Press_-_Medium_Grip\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 72202
+        }
+      }
+    },
+    "Barbell_Curl": {
+      "exerciseId": "barbell-reverse-wrist-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-reverse-wrist-curl\\Barbell_Curl\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Curl\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 60608
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-reverse-wrist-curl\\Barbell_Curl\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Curl\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 62920
+        }
+      }
+    },
+    "Barbell_Deadlift": {
+      "exerciseId": "barbell-good-morning",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-good-morning\\Barbell_Deadlift\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Deadlift\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 69854
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-good-morning\\Barbell_Deadlift\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Deadlift\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 67563
+        }
+      }
+    },
+    "Barbell_Full_Squat": {
+      "exerciseId": "barbell-thruster",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-thruster\\Barbell_Full_Squat\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Full_Squat\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 71421
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-thruster\\Barbell_Full_Squat\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Full_Squat\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 70167
+        }
+      }
+    },
+    "Barbell_Guillotine_Bench_Press": {
+      "exerciseId": "barbell-bench-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-bench-press\\Barbell_Guillotine_Bench_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Guillotine_Bench_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 73798
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-bench-press\\Barbell_Guillotine_Bench_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Guillotine_Bench_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 75145
+        }
+      }
+    },
+    "Barbell_Incline_Bench_Press_-_Medium_Grip": {
+      "exerciseId": "incline-barbell-bench-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\incline-barbell-bench-press\\Barbell_Incline_Bench_Press_-_Medium_Grip\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Incline_Bench_Press_-_Medium_Grip\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 72311
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\incline-barbell-bench-press\\Barbell_Incline_Bench_Press_-_Medium_Grip\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Incline_Bench_Press_-_Medium_Grip\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 71198
+        }
+      }
+    },
+    "Barbell_Lunge": {
+      "exerciseId": "barbell-thruster",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-thruster\\Barbell_Lunge\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Lunge\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 65140
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-thruster\\Barbell_Lunge\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Lunge\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 70466
+        }
+      }
+    },
+    "Barbell_Rear_Delt_Row": {
+      "exerciseId": "upright-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\upright-row\\Barbell_Rear_Delt_Row\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Rear_Delt_Row\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 68940
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\upright-row\\Barbell_Rear_Delt_Row\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Rear_Delt_Row\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 67903
+        }
+      }
+    },
+    "Barbell_Shoulder_Press": {
+      "exerciseId": "barbell-clean-and-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-clean-and-press\\Barbell_Shoulder_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Shoulder_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 70631
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-clean-and-press\\Barbell_Shoulder_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Shoulder_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 69354
+        }
+      }
+    },
+    "Barbell_Shrug": {
+      "exerciseId": "upright-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\upright-row\\Barbell_Shrug\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Shrug\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 60819
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\upright-row\\Barbell_Shrug\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Shrug\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 62383
+        }
+      }
+    },
+    "Barbell_Side_Bend": {
+      "exerciseId": "weighted-sit-up",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\weighted-sit-up\\Barbell_Side_Bend\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Side_Bend\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 63408
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\weighted-sit-up\\Barbell_Side_Bend\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Side_Bend\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 62938
+        }
+      }
+    },
+    "Barbell_Squat": {
+      "exerciseId": "belt-squat",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\belt-squat\\Barbell_Squat\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Squat\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 72823
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\belt-squat\\Barbell_Squat\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Barbell_Squat\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 71334
+        }
+      }
+    },
+    "Bench_Dips": {
+      "exerciseId": "bench-dip",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bench-dip\\Bench_Dips\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bench_Dips\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 58381
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bench-dip\\Bench_Dips\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bench_Dips\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 58433
+        }
+      }
+    },
+    "Bench_Press_-_With_Bands": {
+      "exerciseId": "band-chest-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\band-chest-press\\Bench_Press_-_With_Bands\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bench_Press_-_With_Bands\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 72390
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\band-chest-press\\Bench_Press_-_With_Bands\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bench_Press_-_With_Bands\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 72007
+        }
+      }
+    },
+    "Bent_Over_Barbell_Row": {
+      "exerciseId": "landmine-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\landmine-row\\Bent_Over_Barbell_Row\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bent_Over_Barbell_Row\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 64589
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\landmine-row\\Bent_Over_Barbell_Row\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bent_Over_Barbell_Row\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 66556
+        }
+      }
+    },
+    "Bent_Over_Two-Arm_Long_Bar_Row": {
+      "exerciseId": "landmine-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\landmine-row\\Bent_Over_Two-Arm_Long_Bar_Row\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bent_Over_Two-Arm_Long_Bar_Row\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 67373
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\landmine-row\\Bent_Over_Two-Arm_Long_Bar_Row\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bent_Over_Two-Arm_Long_Bar_Row\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 66395
+        }
+      }
+    },
+    "Bent_Over_Two-Dumbbell_Row": {
+      "exerciseId": "bilateral-dumbbell-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bilateral-dumbbell-row\\Bent_Over_Two-Dumbbell_Row\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bent_Over_Two-Dumbbell_Row\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 68272
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bilateral-dumbbell-row\\Bent_Over_Two-Dumbbell_Row\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bent_Over_Two-Dumbbell_Row\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 66341
+        }
+      }
+    },
+    "Bent_Over_Two-Dumbbell_Row_With_Palms_In": {
+      "exerciseId": "bilateral-dumbbell-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bilateral-dumbbell-row\\Bent_Over_Two-Dumbbell_Row_With_Palms_In\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bent_Over_Two-Dumbbell_Row_With_Palms_In\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 56467
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bilateral-dumbbell-row\\Bent_Over_Two-Dumbbell_Row_With_Palms_In\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bent_Over_Two-Dumbbell_Row_With_Palms_In\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 55788
+        }
+      }
+    },
+    "Bent-Arm_Barbell_Pullover": {
+      "exerciseId": "assisted-pull-up",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\assisted-pull-up\\Bent-Arm_Barbell_Pullover\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bent-Arm_Barbell_Pullover\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 62520
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\assisted-pull-up\\Bent-Arm_Barbell_Pullover\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bent-Arm_Barbell_Pullover\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 64205
+        }
+      }
+    },
+    "Bent-Knee_Hip_Raise": {
+      "exerciseId": "hanging-knee-raise",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hanging-knee-raise\\Bent-Knee_Hip_Raise\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bent-Knee_Hip_Raise\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 67782
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hanging-knee-raise\\Bent-Knee_Hip_Raise\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bent-Knee_Hip_Raise\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 64378
+        }
+      }
+    },
+    "Bodyweight_Mid_Row": {
+      "exerciseId": "seal-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\seal-row\\Bodyweight_Mid_Row\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bodyweight_Mid_Row\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 37732
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\seal-row\\Bodyweight_Mid_Row\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bodyweight_Mid_Row\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 37346
+        }
+      }
+    },
+    "Bodyweight_Squat": {
+      "exerciseId": "belt-squat",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\belt-squat\\Bodyweight_Squat\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bodyweight_Squat\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 37986
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\belt-squat\\Bodyweight_Squat\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bodyweight_Squat\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 41546
+        }
+      }
+    },
+    "Bodyweight_Walking_Lunge": {
+      "exerciseId": "walking-lunge",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\walking-lunge\\Bodyweight_Walking_Lunge\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bodyweight_Walking_Lunge\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 77155
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\walking-lunge\\Bodyweight_Walking_Lunge\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bodyweight_Walking_Lunge\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 76877
+        }
+      }
+    },
+    "Bottoms_Up": {
+      "exerciseId": "v-up",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\v-up\\Bottoms_Up\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bottoms_Up\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 37111
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\v-up\\Bottoms_Up\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Bottoms_Up\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 37842
+        }
+      }
+    },
+    "Box_Squat": {
+      "exerciseId": "squat",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\squat\\Box_Squat\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Box_Squat\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 53764
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\squat\\Box_Squat\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Box_Squat\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 55405
+        }
+      }
+    },
+    "Butt_Lift_Bridge": {
+      "exerciseId": "EX_GLUTE_BRIDGE",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\EX_GLUTE_BRIDGE\\Butt_Lift_Bridge\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Butt_Lift_Bridge\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 57056
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\EX_GLUTE_BRIDGE\\Butt_Lift_Bridge\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Butt_Lift_Bridge\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 58796
+        }
+      }
+    },
+    "Cable_Chest_Press": {
+      "exerciseId": "cable-chest-fly",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-chest-fly\\Cable_Chest_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Chest_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 70215
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-chest-fly\\Cable_Chest_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Chest_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 71498
+        }
+      }
+    },
+    "Cable_Crossover": {
+      "exerciseId": "cable-chest-fly",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-chest-fly\\Cable_Crossover\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Crossover\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 74524
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-chest-fly\\Cable_Crossover\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Crossover\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 76451
+        }
+      }
+    },
+    "Cable_Crunch": {
+      "exerciseId": "cable-woodchop",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-woodchop\\Cable_Crunch\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Crunch\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 67271
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-woodchop\\Cable_Crunch\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Crunch\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 65445
+        }
+      }
+    },
+    "Cable_Hip_Adduction": {
+      "exerciseId": "cable-hip-adduction",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-hip-adduction\\Cable_Hip_Adduction\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Hip_Adduction\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 72125
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-hip-adduction\\Cable_Hip_Adduction\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Hip_Adduction\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 72259
+        }
+      }
+    },
+    "Cable_Iron_Cross": {
+      "exerciseId": "high-to-low-cable-fly",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\high-to-low-cable-fly\\Cable_Iron_Cross\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Iron_Cross\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 43142
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\high-to-low-cable-fly\\Cable_Iron_Cross\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Iron_Cross\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 44148
+        }
+      }
+    },
+    "Cable_Judo_Flip": {
+      "exerciseId": "cable-woodchop",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-woodchop\\Cable_Judo_Flip\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Judo_Flip\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 912417
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-woodchop\\Cable_Judo_Flip\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Judo_Flip\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 919342
+        }
+      }
+    },
+    "Cable_One_Arm_Tricep_Extension": {
+      "exerciseId": "single-arm-cable-pushdown",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\single-arm-cable-pushdown\\Cable_One_Arm_Tricep_Extension\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_One_Arm_Tricep_Extension\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 64356
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\single-arm-cable-pushdown\\Cable_One_Arm_Tricep_Extension\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_One_Arm_Tricep_Extension\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 61969
+        }
+      }
+    },
+    "Cable_Preacher_Curl": {
+      "exerciseId": "cable-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-curl\\Cable_Preacher_Curl\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Preacher_Curl\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 88090
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-curl\\Cable_Preacher_Curl\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Preacher_Curl\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 87322
+        }
+      }
+    },
+    "Cable_Rear_Delt_Fly": {
+      "exerciseId": "cable-rear-delt-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-rear-delt-row\\Cable_Rear_Delt_Fly\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Rear_Delt_Fly\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 53497
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-rear-delt-row\\Cable_Rear_Delt_Fly\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Rear_Delt_Fly\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 56065
+        }
+      }
+    },
+    "Cable_Reverse_Crunch": {
+      "exerciseId": "cable-reverse-wrist-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-reverse-wrist-curl\\Cable_Reverse_Crunch\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Reverse_Crunch\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 88705
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-reverse-wrist-curl\\Cable_Reverse_Crunch\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Reverse_Crunch\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 88806
+        }
+      }
+    },
+    "Cable_Rope_Overhead_Triceps_Extension": {
+      "exerciseId": "cable-overhead-triceps-extension",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-overhead-triceps-extension\\Cable_Rope_Overhead_Triceps_Extension\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Rope_Overhead_Triceps_Extension\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 88076
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-overhead-triceps-extension\\Cable_Rope_Overhead_Triceps_Extension\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Rope_Overhead_Triceps_Extension\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 87578
+        }
+      }
+    },
+    "Cable_Rope_Rear-Delt_Rows": {
+      "exerciseId": "cable-rear-delt-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-rear-delt-row\\Cable_Rope_Rear-Delt_Rows\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Rope_Rear-Delt_Rows\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 92530
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-rear-delt-row\\Cable_Rope_Rear-Delt_Rows\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Rope_Rear-Delt_Rows\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 93094
+        }
+      }
+    },
+    "Cable_Russian_Twists": {
+      "exerciseId": "cable-woodchop",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-woodchop\\Cable_Russian_Twists\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Russian_Twists\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 138200
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-woodchop\\Cable_Russian_Twists\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Russian_Twists\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 141014
+        }
+      }
+    },
+    "Cable_Seated_Crunch": {
+      "exerciseId": "kneeling-cable-crunch",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kneeling-cable-crunch\\Cable_Seated_Crunch\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Seated_Crunch\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 69234
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kneeling-cable-crunch\\Cable_Seated_Crunch\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Seated_Crunch\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 69679
+        }
+      }
+    },
+    "Cable_Shoulder_Press": {
+      "exerciseId": "single-arm-cable-shoulder-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\single-arm-cable-shoulder-press\\Cable_Shoulder_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Shoulder_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 72616
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\single-arm-cable-shoulder-press\\Cable_Shoulder_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Shoulder_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 71463
+        }
+      }
+    },
+    "Cable_Wrist_Curl": {
+      "exerciseId": "cable-reverse-wrist-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-reverse-wrist-curl\\Cable_Wrist_Curl\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Wrist_Curl\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 63432
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-reverse-wrist-curl\\Cable_Wrist_Curl\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cable_Wrist_Curl\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 63812
+        }
+      }
+    },
+    "Calf_Press": {
+      "exerciseId": "leg-press-calf-raise",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\leg-press-calf-raise\\Calf_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Calf_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 124744
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\leg-press-calf-raise\\Calf_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Calf_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 126333
+        }
+      }
+    },
+    "Calf_Press_On_The_Leg_Press_Machine": {
+      "exerciseId": "leg-press-calf-raise",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\leg-press-calf-raise\\Calf_Press_On_The_Leg_Press_Machine\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Calf_Press_On_The_Leg_Press_Machine\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 80324
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\leg-press-calf-raise\\Calf_Press_On_The_Leg_Press_Machine\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Calf_Press_On_The_Leg_Press_Machine\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 80578
+        }
+      }
+    },
+    "Carioca_Quick_Step": {
+      "exerciseId": "band-hip-adduction",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\band-hip-adduction\\Carioca_Quick_Step\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Carioca_Quick_Step\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 54028
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\band-hip-adduction\\Carioca_Quick_Step\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Carioca_Quick_Step\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 54791
+        }
+      }
+    },
+    "Chain_Press": {
+      "exerciseId": "band-chest-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\band-chest-press\\Chain_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Chain_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 45232
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\band-chest-press\\Chain_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Chain_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 41300
+        }
+      }
+    },
+    "Chair_Squat": {
+      "exerciseId": "belt-squat",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\belt-squat\\Chair_Squat\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Chair_Squat\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 45369
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\belt-squat\\Chair_Squat\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Chair_Squat\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 43369
+        }
+      }
+    },
+    "Clean": {
+      "exerciseId": "hang-clean",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hang-clean\\Clean\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Clean\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 46632
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hang-clean\\Clean\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Clean\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 48907
+        }
+      }
+    },
+    "Clean_and_Press": {
+      "exerciseId": "barbell-clean-and-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-clean-and-press\\Clean_and_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Clean_and_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 72708
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-clean-and-press\\Clean_and_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Clean_and_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 77675
+        }
+      }
+    },
+    "Clean_Deadlift": {
+      "exerciseId": "hang-clean",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hang-clean\\Clean_Deadlift\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Clean_Deadlift\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 51699
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hang-clean\\Clean_Deadlift\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Clean_Deadlift\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 48916
+        }
+      }
+    },
+    "Clock_Push-Up": {
+      "exerciseId": "wide-grip-push-up",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\wide-grip-push-up\\Clock_Push-Up\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Clock_Push-Up\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 35420
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\wide-grip-push-up\\Clock_Push-Up\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Clock_Push-Up\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 34586
+        }
+      }
+    },
+    "Cross_Body_Hammer_Curl": {
+      "exerciseId": "hammer-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hammer-curl\\Cross_Body_Hammer_Curl\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cross_Body_Hammer_Curl\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 56254
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hammer-curl\\Cross_Body_Hammer_Curl\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cross_Body_Hammer_Curl\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 56265
+        }
+      }
+    },
+    "Cross-Body_Crunch": {
+      "exerciseId": "crunch",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\crunch\\Cross-Body_Crunch\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cross-Body_Crunch\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 61069
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\crunch\\Cross-Body_Crunch\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cross-Body_Crunch\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 62634
+        }
+      }
+    },
+    "Crunch_-_Legs_On_Exercise_Ball": {
+      "exerciseId": "crunch",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\crunch\\Crunch_-_Legs_On_Exercise_Ball\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Crunch_-_Legs_On_Exercise_Ball\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 56464
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\crunch\\Crunch_-_Legs_On_Exercise_Ball\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Crunch_-_Legs_On_Exercise_Ball\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 57154
+        }
+      }
+    },
+    "Cuban_Press": {
+      "exerciseId": "arnold-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\arnold-press\\Cuban_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cuban_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 57995
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\arnold-press\\Cuban_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Cuban_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 56488
+        }
+      }
+    },
+    "Dead_Bug": {
+      "exerciseId": "bar-hang",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bar-hang\\Dead_Bug\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dead_Bug\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 45381
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bar-hang\\Dead_Bug\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dead_Bug\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 46759
+        }
+      }
+    },
+    "Deadlift_with_Bands": {
+      "exerciseId": "barbell-good-morning",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-good-morning\\Deadlift_with_Bands\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Deadlift_with_Bands\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 44320
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-good-morning\\Deadlift_with_Bands\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Deadlift_with_Bands\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 44690
+        }
+      }
+    },
+    "Deadlift_with_Chains": {
+      "exerciseId": "deadlift",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\deadlift\\Deadlift_with_Chains\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Deadlift_with_Chains\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 52795
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\deadlift\\Deadlift_with_Chains\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Deadlift_with_Chains\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 50055
+        }
+      }
+    },
+    "Decline_Barbell_Bench_Press": {
+      "exerciseId": "barbell-bench-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-bench-press\\Decline_Barbell_Bench_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Decline_Barbell_Bench_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 84500
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-bench-press\\Decline_Barbell_Bench_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Decline_Barbell_Bench_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 90450
+        }
+      }
+    },
+    "Decline_Crunch": {
+      "exerciseId": "decline-sit-up",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\decline-sit-up\\Decline_Crunch\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Decline_Crunch\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 62845
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\decline-sit-up\\Decline_Crunch\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Decline_Crunch\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 60558
+        }
+      }
+    },
+    "Decline_Dumbbell_Bench_Press": {
+      "exerciseId": "decline-dumbbell-fly",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\decline-dumbbell-fly\\Decline_Dumbbell_Bench_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Decline_Dumbbell_Bench_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 54163
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\decline-dumbbell-fly\\Decline_Dumbbell_Bench_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Decline_Dumbbell_Bench_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 54302
+        }
+      }
+    },
+    "Decline_Dumbbell_Flyes": {
+      "exerciseId": "decline-dumbbell-fly",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\decline-dumbbell-fly\\Decline_Dumbbell_Flyes\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Decline_Dumbbell_Flyes\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 55297
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\decline-dumbbell-fly\\Decline_Dumbbell_Flyes\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Decline_Dumbbell_Flyes\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 54362
+        }
+      }
+    },
+    "Decline_Dumbbell_Triceps_Extension": {
+      "exerciseId": "overhead-dumbbell-triceps-extension",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\overhead-dumbbell-triceps-extension\\Decline_Dumbbell_Triceps_Extension\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Decline_Dumbbell_Triceps_Extension\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 46226
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\overhead-dumbbell-triceps-extension\\Decline_Dumbbell_Triceps_Extension\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Decline_Dumbbell_Triceps_Extension\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 42795
+        }
+      }
+    },
+    "Decline_Oblique_Crunch": {
+      "exerciseId": "decline-sit-up",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\decline-sit-up\\Decline_Oblique_Crunch\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Decline_Oblique_Crunch\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 51669
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\decline-sit-up\\Decline_Oblique_Crunch\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Decline_Oblique_Crunch\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 53447
+        }
+      }
+    },
+    "Decline_Push-Up": {
+      "exerciseId": "decline-dumbbell-fly",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\decline-dumbbell-fly\\Decline_Push-Up\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Decline_Push-Up\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 60911
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\decline-dumbbell-fly\\Decline_Push-Up\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Decline_Push-Up\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 63201
+        }
+      }
+    },
+    "Decline_Smith_Press": {
+      "exerciseId": "decline-machine-chest-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\decline-machine-chest-press\\Decline_Smith_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Decline_Smith_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 51565
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\decline-machine-chest-press\\Decline_Smith_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Decline_Smith_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 50239
+        }
+      }
+    },
+    "Dips_-_Triceps_Version": {
+      "exerciseId": "dip-triceps-focus",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dip-triceps-focus\\Dips_-_Triceps_Version\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dips_-_Triceps_Version\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 71969
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dip-triceps-focus\\Dips_-_Triceps_Version\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dips_-_Triceps_Version\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 73290
+        }
+      }
+    },
+    "Double_Kettlebell_Push_Press": {
+      "exerciseId": "kettlebell-clean-and-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kettlebell-clean-and-press\\Double_Kettlebell_Push_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Double_Kettlebell_Push_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 36000
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kettlebell-clean-and-press\\Double_Kettlebell_Push_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Double_Kettlebell_Push_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 36011
+        }
+      }
+    },
+    "Dumbbell_Alternate_Bicep_Curl": {
+      "exerciseId": "dumbbell-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-curl\\Dumbbell_Alternate_Bicep_Curl\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Alternate_Bicep_Curl\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 57561
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-curl\\Dumbbell_Alternate_Bicep_Curl\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Alternate_Bicep_Curl\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 57418
+        }
+      }
+    },
+    "Dumbbell_Bench_Press": {
+      "exerciseId": "incline-dumbbell-bench-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\incline-dumbbell-bench-press\\Dumbbell_Bench_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Bench_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 63319
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\incline-dumbbell-bench-press\\Dumbbell_Bench_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Bench_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 64120
+        }
+      }
+    },
+    "Dumbbell_Bicep_Curl": {
+      "exerciseId": "dumbbell-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-curl\\Dumbbell_Bicep_Curl\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Bicep_Curl\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 57223
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-curl\\Dumbbell_Bicep_Curl\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Bicep_Curl\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 58066
+        }
+      }
+    },
+    "Dumbbell_Clean": {
+      "exerciseId": "dumbbell-farmer-hold",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-farmer-hold\\Dumbbell_Clean\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Clean\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 44202
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-farmer-hold\\Dumbbell_Clean\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Clean\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 37077
+        }
+      }
+    },
+    "Dumbbell_Floor_Press": {
+      "exerciseId": "dumbbell-floor-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-floor-press\\Dumbbell_Floor_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Floor_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 44549
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-floor-press\\Dumbbell_Floor_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Floor_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 45309
+        }
+      }
+    },
+    "Dumbbell_Incline_Row": {
+      "exerciseId": "bilateral-dumbbell-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bilateral-dumbbell-row\\Dumbbell_Incline_Row\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Incline_Row\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 98338
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bilateral-dumbbell-row\\Dumbbell_Incline_Row\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Incline_Row\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 99049
+        }
+      }
+    },
+    "Dumbbell_Incline_Shoulder_Raise": {
+      "exerciseId": "incline-lateral-raise",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\incline-lateral-raise\\Dumbbell_Incline_Shoulder_Raise\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Incline_Shoulder_Raise\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 53252
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\incline-lateral-raise\\Dumbbell_Incline_Shoulder_Raise\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Incline_Shoulder_Raise\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 53073
+        }
+      }
+    },
+    "Dumbbell_Lunges": {
+      "exerciseId": "dumbbell-thruster",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-thruster\\Dumbbell_Lunges\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Lunges\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 55460
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-thruster\\Dumbbell_Lunges\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Lunges\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 61678
+        }
+      }
+    },
+    "Dumbbell_One-Arm_Triceps_Extension": {
+      "exerciseId": "single-arm-overhead-dumbbell-extension",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\single-arm-overhead-dumbbell-extension\\Dumbbell_One-Arm_Triceps_Extension\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_One-Arm_Triceps_Extension\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 51224
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\single-arm-overhead-dumbbell-extension\\Dumbbell_One-Arm_Triceps_Extension\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_One-Arm_Triceps_Extension\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 45009
+        }
+      }
+    },
+    "Dumbbell_Scaption": {
+      "exerciseId": "dumbbell-lateral-raise",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-lateral-raise\\Dumbbell_Scaption\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Scaption\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 64408
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-lateral-raise\\Dumbbell_Scaption\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Scaption\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 65280
+        }
+      }
+    },
+    "Dumbbell_Shoulder_Press": {
+      "exerciseId": "arnold-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\arnold-press\\Dumbbell_Shoulder_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Shoulder_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 62474
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\arnold-press\\Dumbbell_Shoulder_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Shoulder_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 63882
+        }
+      }
+    },
+    "Dumbbell_Shrug": {
+      "exerciseId": "dumbbell-pronation",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-pronation\\Dumbbell_Shrug\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Shrug\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 52882
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-pronation\\Dumbbell_Shrug\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Shrug\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 53460
+        }
+      }
+    },
+    "Dumbbell_Side_Bend": {
+      "exerciseId": "dumbbell-pronation",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-pronation\\Dumbbell_Side_Bend\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Side_Bend\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 53390
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-pronation\\Dumbbell_Side_Bend\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Side_Bend\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 54722
+        }
+      }
+    },
+    "Dumbbell_Squat": {
+      "exerciseId": "bulgarian-split-squat",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bulgarian-split-squat\\Dumbbell_Squat\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Squat\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 51929
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bulgarian-split-squat\\Dumbbell_Squat\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Squat\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 52938
+        }
+      }
+    },
+    "Dumbbell_Step_Ups": {
+      "exerciseId": "step-up",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\step-up\\Dumbbell_Step_Ups\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Step_Ups\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 70516
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\step-up\\Dumbbell_Step_Ups\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Step_Ups\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 70840
+        }
+      }
+    },
+    "Dumbbell_Tricep_Extension_-Pronated_Grip": {
+      "exerciseId": "dumbbell-skull-crusher",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-skull-crusher\\Dumbbell_Tricep_Extension_-Pronated_Grip\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Tricep_Extension_-Pronated_Grip\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 100256
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-skull-crusher\\Dumbbell_Tricep_Extension_-Pronated_Grip\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Dumbbell_Tricep_Extension_-Pronated_Grip\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 99983
+        }
+      }
+    },
+    "Exercise_Ball_Crunch": {
+      "exerciseId": "stability-ball-crunch",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\stability-ball-crunch\\Exercise_Ball_Crunch\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Exercise_Ball_Crunch\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 66663
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\stability-ball-crunch\\Exercise_Ball_Crunch\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Exercise_Ball_Crunch\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 67410
+        }
+      }
+    },
+    "Exercise_Ball_Pull-In": {
+      "exerciseId": "stability-ball-crunch",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\stability-ball-crunch\\Exercise_Ball_Pull-In\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Exercise_Ball_Pull-In\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 65233
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\stability-ball-crunch\\Exercise_Ball_Pull-In\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Exercise_Ball_Pull-In\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 61836
+        }
+      }
+    },
+    "External_Rotation_with_Band": {
+      "exerciseId": "band-pull-apart",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\band-pull-apart\\External_Rotation_with_Band\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\External_Rotation_with_Band\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 80956
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\band-pull-apart\\External_Rotation_with_Band\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\External_Rotation_with_Band\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 81085
+        }
+      }
+    },
+    "Flat_Bench_Lying_Leg_Raise": {
+      "exerciseId": "lying-leg-raise",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\lying-leg-raise\\Flat_Bench_Lying_Leg_Raise\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Flat_Bench_Lying_Leg_Raise\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 63658
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\lying-leg-raise\\Flat_Bench_Lying_Leg_Raise\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Flat_Bench_Lying_Leg_Raise\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 63835
+        }
+      }
+    },
+    "Freehand_Jump_Squat": {
+      "exerciseId": "cossack-squat",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cossack-squat\\Freehand_Jump_Squat\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Freehand_Jump_Squat\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 69522
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cossack-squat\\Freehand_Jump_Squat\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Freehand_Jump_Squat\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 66114
+        }
+      }
+    },
+    "Front_Cable_Raise": {
+      "exerciseId": "plate-front-raise",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\plate-front-raise\\Front_Cable_Raise\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Front_Cable_Raise\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 72036
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\plate-front-raise\\Front_Cable_Raise\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Front_Cable_Raise\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 71867
+        }
+      }
+    },
+    "Front_Plate_Raise": {
+      "exerciseId": "plate-front-raise",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\plate-front-raise\\Front_Plate_Raise\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Front_Plate_Raise\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 58323
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\plate-front-raise\\Front_Plate_Raise\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Front_Plate_Raise\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 58549
+        }
+      }
+    },
+    "Gironda_Sternum_Chins": {
+      "exerciseId": "dumbbell-pullover-back",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-pullover-back\\Gironda_Sternum_Chins\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Gironda_Sternum_Chins\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 43528
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-pullover-back\\Gironda_Sternum_Chins\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Gironda_Sternum_Chins\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 40294
+        }
+      }
+    },
+    "Glute_Ham_Raise": {
+      "exerciseId": "cable-romanian-deadlift",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-romanian-deadlift\\Glute_Ham_Raise\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Glute_Ham_Raise\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 42247
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-romanian-deadlift\\Glute_Ham_Raise\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Glute_Ham_Raise\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 36712
+        }
+      }
+    },
+    "Glute_Kickback": {
+      "exerciseId": "EX_GLUTE_BRIDGE",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\EX_GLUTE_BRIDGE\\Glute_Kickback\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Glute_Kickback\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 67875
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\EX_GLUTE_BRIDGE\\Glute_Kickback\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Glute_Kickback\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 68709
+        }
+      }
+    },
+    "Hammer_Grip_Incline_DB_Bench_Press": {
+      "exerciseId": "incline-dumbbell-bench-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\incline-dumbbell-bench-press\\Hammer_Grip_Incline_DB_Bench_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Hammer_Grip_Incline_DB_Bench_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 59477
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\incline-dumbbell-bench-press\\Hammer_Grip_Incline_DB_Bench_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Hammer_Grip_Incline_DB_Bench_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 60493
+        }
+      }
+    },
+    "Hanging_Leg_Raise": {
+      "exerciseId": "hanging-knee-raise",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hanging-knee-raise\\Hanging_Leg_Raise\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Hanging_Leg_Raise\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 51687
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hanging-knee-raise\\Hanging_Leg_Raise\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Hanging_Leg_Raise\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 56061
+        }
+      }
+    },
+    "Hanging_Pike": {
+      "exerciseId": "hanging-windshield-wiper",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hanging-windshield-wiper\\Hanging_Pike\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Hanging_Pike\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 41481
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hanging-windshield-wiper\\Hanging_Pike\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Hanging_Pike\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 34066
+        }
+      }
+    },
+    "Hip_Flexion_with_Band": {
+      "exerciseId": "band-hip-adduction",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\band-hip-adduction\\Hip_Flexion_with_Band\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Hip_Flexion_with_Band\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 47209
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\band-hip-adduction\\Hip_Flexion_with_Band\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Hip_Flexion_with_Band\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 49122
+        }
+      }
+    },
+    "Incline_Dumbbell_Flyes": {
+      "exerciseId": "incline-dumbbell-fly",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\incline-dumbbell-fly\\Incline_Dumbbell_Flyes\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Incline_Dumbbell_Flyes\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 60080
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\incline-dumbbell-fly\\Incline_Dumbbell_Flyes\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Incline_Dumbbell_Flyes\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 59395
+        }
+      }
+    },
+    "Incline_Dumbbell_Press": {
+      "exerciseId": "incline-dumbbell-bench-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\incline-dumbbell-bench-press\\Incline_Dumbbell_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Incline_Dumbbell_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 61978
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\incline-dumbbell-bench-press\\Incline_Dumbbell_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Incline_Dumbbell_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 61629
+        }
+      }
+    },
+    "Incline_Push-Up_Wide": {
+      "exerciseId": "wide-grip-push-up",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\wide-grip-push-up\\Incline_Push-Up_Wide\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Incline_Push-Up_Wide\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 43174
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\wide-grip-push-up\\Incline_Push-Up_Wide\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Incline_Push-Up_Wide\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 43821
+        }
+      }
+    },
+    "Internal_Rotation_with_Band": {
+      "exerciseId": "band-pull-apart",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\band-pull-apart\\Internal_Rotation_with_Band\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Internal_Rotation_with_Band\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 68593
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\band-pull-apart\\Internal_Rotation_with_Band\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Internal_Rotation_with_Band\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 71117
+        }
+      }
+    },
+    "Inverted_Row": {
+      "exerciseId": "feet-elevated-inverted-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\feet-elevated-inverted-row\\Inverted_Row\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Inverted_Row\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 57494
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\feet-elevated-inverted-row\\Inverted_Row\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Inverted_Row\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 59968
+        }
+      }
+    },
+    "Inverted_Row_with_Straps": {
+      "exerciseId": "feet-elevated-inverted-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\feet-elevated-inverted-row\\Inverted_Row_with_Straps\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Inverted_Row_with_Straps\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 64313
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\feet-elevated-inverted-row\\Inverted_Row_with_Straps\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Inverted_Row_with_Straps\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 64242
+        }
+      }
+    },
+    "Isometric_Chest_Squeezes": {
+      "exerciseId": "bar-hang",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bar-hang\\Isometric_Chest_Squeezes\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Isometric_Chest_Squeezes\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 38999
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bar-hang\\Isometric_Chest_Squeezes\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Isometric_Chest_Squeezes\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 37768
+        }
+      }
+    },
+    "Kettlebell_Arnold_Press": {
+      "exerciseId": "kettlebell-clean-and-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kettlebell-clean-and-press\\Kettlebell_Arnold_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Kettlebell_Arnold_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 34476
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kettlebell-clean-and-press\\Kettlebell_Arnold_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Kettlebell_Arnold_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 35474
+        }
+      }
+    },
+    "Kettlebell_Dead_Clean": {
+      "exerciseId": "kettlebell-clean",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kettlebell-clean\\Kettlebell_Dead_Clean\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Kettlebell_Dead_Clean\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 34618
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kettlebell-clean\\Kettlebell_Dead_Clean\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Kettlebell_Dead_Clean\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 32073
+        }
+      }
+    },
+    "Kettlebell_Hang_Clean": {
+      "exerciseId": "kettlebell-clean",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kettlebell-clean\\Kettlebell_Hang_Clean\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Kettlebell_Hang_Clean\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 34252
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kettlebell-clean\\Kettlebell_Hang_Clean\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Kettlebell_Hang_Clean\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 34503
+        }
+      }
+    },
+    "Kettlebell_Seesaw_Press": {
+      "exerciseId": "kettlebell-clean-and-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kettlebell-clean-and-press\\Kettlebell_Seesaw_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Kettlebell_Seesaw_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 35522
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kettlebell-clean-and-press\\Kettlebell_Seesaw_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Kettlebell_Seesaw_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 36001
+        }
+      }
+    },
+    "Kipping_Muscle_Up": {
+      "exerciseId": "dumbbell-pullover-back",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-pullover-back\\Kipping_Muscle_Up\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Kipping_Muscle_Up\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 60360
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-pullover-back\\Kipping_Muscle_Up\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Kipping_Muscle_Up\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 59627
+        }
+      }
+    },
+    "Knee_Hip_Raise_On_Parallel_Bars": {
+      "exerciseId": "hanging-knee-raise",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hanging-knee-raise\\Knee_Hip_Raise_On_Parallel_Bars\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Knee_Hip_Raise_On_Parallel_Bars\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 72644
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hanging-knee-raise\\Knee_Hip_Raise_On_Parallel_Bars\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Knee_Hip_Raise_On_Parallel_Bars\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 72108
+        }
+      }
+    },
+    "Kneeling_Cable_Crunch_With_Alternating_Oblique_Twists": {
+      "exerciseId": "kneeling-cable-crunch",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kneeling-cable-crunch\\Kneeling_Cable_Crunch_With_Alternating_Oblique_Twists\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Kneeling_Cable_Crunch_With_Alternating_Oblique_Twists\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 64932
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kneeling-cable-crunch\\Kneeling_Cable_Crunch_With_Alternating_Oblique_Twists\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Kneeling_Cable_Crunch_With_Alternating_Oblique_Twists\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 66985
+        }
+      }
+    },
+    "Kneeling_High_Pulley_Row": {
+      "exerciseId": "kneeling-single-arm-pulldown",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kneeling-single-arm-pulldown\\Kneeling_High_Pulley_Row\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Kneeling_High_Pulley_Row\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 41060
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kneeling-single-arm-pulldown\\Kneeling_High_Pulley_Row\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Kneeling_High_Pulley_Row\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 43207
+        }
+      }
+    },
+    "Kneeling_Single-Arm_High_Pulley_Row": {
+      "exerciseId": "kneeling-single-arm-pulldown",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kneeling-single-arm-pulldown\\Kneeling_Single-Arm_High_Pulley_Row\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Kneeling_Single-Arm_High_Pulley_Row\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 44216
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kneeling-single-arm-pulldown\\Kneeling_Single-Arm_High_Pulley_Row\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Kneeling_Single-Arm_High_Pulley_Row\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 44589
+        }
+      }
+    },
+    "Lateral_Raise_-_With_Bands": {
+      "exerciseId": "band-lateral-raise",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\band-lateral-raise\\Lateral_Raise_-_With_Bands\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Lateral_Raise_-_With_Bands\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 60418
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\band-lateral-raise\\Lateral_Raise_-_With_Bands\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Lateral_Raise_-_With_Bands\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 63808
+        }
+      }
+    },
+    "Leg_Extensions": {
+      "exerciseId": "leg-extension",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\leg-extension\\Leg_Extensions\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Leg_Extensions\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 81219
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\leg-extension\\Leg_Extensions\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Leg_Extensions\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 82758
+        }
+      }
+    },
+    "Leg_Lift": {
+      "exerciseId": "donkey-kick",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\donkey-kick\\Leg_Lift\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Leg_Lift\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 55007
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\donkey-kick\\Leg_Lift\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Leg_Lift\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 55537
+        }
+      }
+    },
+    "Leg_Press": {
+      "exerciseId": "leg-extension",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\leg-extension\\Leg_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Leg_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 84753
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\leg-extension\\Leg_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Leg_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 83900
+        }
+      }
+    },
+    "Leverage_Chest_Press": {
+      "exerciseId": "incline-machine-chest-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\incline-machine-chest-press\\Leverage_Chest_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Leverage_Chest_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 35357
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\incline-machine-chest-press\\Leverage_Chest_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Leverage_Chest_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 35095
+        }
+      }
+    },
+    "Leverage_Decline_Chest_Press": {
+      "exerciseId": "decline-machine-chest-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\decline-machine-chest-press\\Leverage_Decline_Chest_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Leverage_Decline_Chest_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 50803
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\decline-machine-chest-press\\Leverage_Decline_Chest_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Leverage_Decline_Chest_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 52756
+        }
+      }
+    },
+    "Leverage_High_Row": {
+      "exerciseId": "smith-machine-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\smith-machine-row\\Leverage_High_Row\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Leverage_High_Row\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 61381
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\smith-machine-row\\Leverage_High_Row\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Leverage_High_Row\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 65401
+        }
+      }
+    },
+    "Leverage_Incline_Chest_Press": {
+      "exerciseId": "incline-machine-chest-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\incline-machine-chest-press\\Leverage_Incline_Chest_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Leverage_Incline_Chest_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 58409
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\incline-machine-chest-press\\Leverage_Incline_Chest_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Leverage_Incline_Chest_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 58604
+        }
+      }
+    },
+    "Leverage_Iso_Row": {
+      "exerciseId": "machine-high-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\machine-high-row\\Leverage_Iso_Row\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Leverage_Iso_Row\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 57969
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\machine-high-row\\Leverage_Iso_Row\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Leverage_Iso_Row\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 61444
+        }
+      }
+    },
+    "Leverage_Shoulder_Press": {
+      "exerciseId": "machine-shoulder-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\machine-shoulder-press\\Leverage_Shoulder_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Leverage_Shoulder_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 51067
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\machine-shoulder-press\\Leverage_Shoulder_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Leverage_Shoulder_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 50713
+        }
+      }
+    },
+    "London_Bridges": {
+      "exerciseId": "dumbbell-pullover-back",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-pullover-back\\London_Bridges\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\London_Bridges\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 48378
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-pullover-back\\London_Bridges\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\London_Bridges\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 46263
+        }
+      }
+    },
+    "Low_Cable_Crossover": {
+      "exerciseId": "cable-chest-fly",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-chest-fly\\Low_Cable_Crossover\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Low_Cable_Crossover\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 39895
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-chest-fly\\Low_Cable_Crossover\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Low_Cable_Crossover\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 40322
+        }
+      }
+    },
+    "Low_Cable_Triceps_Extension": {
+      "exerciseId": "cable-overhead-triceps-extension",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-overhead-triceps-extension\\Low_Cable_Triceps_Extension\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Low_Cable_Triceps_Extension\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 84630
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-overhead-triceps-extension\\Low_Cable_Triceps_Extension\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Low_Cable_Triceps_Extension\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 84994
+        }
+      }
+    },
+    "Low_Pulley_Row_To_Neck": {
+      "exerciseId": "cable-upright-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-upright-row\\Low_Pulley_Row_To_Neck\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Low_Pulley_Row_To_Neck\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 68995
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-upright-row\\Low_Pulley_Row_To_Neck\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Low_Pulley_Row_To_Neck\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 69723
+        }
+      }
+    },
+    "Lower_Back_Curl": {
+      "exerciseId": "copenhagen-plank",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\copenhagen-plank\\Lower_Back_Curl\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Lower_Back_Curl\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 30356
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\copenhagen-plank\\Lower_Back_Curl\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Lower_Back_Curl\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 31938
+        }
+      }
+    },
+    "Lying_Cable_Curl": {
+      "exerciseId": "cable-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-curl\\Lying_Cable_Curl\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Lying_Cable_Curl\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 59183
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-curl\\Lying_Cable_Curl\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Lying_Cable_Curl\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 59012
+        }
+      }
+    },
+    "Machine_Bench_Press": {
+      "exerciseId": "machine-chest-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\machine-chest-press\\Machine_Bench_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Machine_Bench_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 73844
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\machine-chest-press\\Machine_Bench_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Machine_Bench_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 72789
+        }
+      }
+    },
+    "Machine_Bicep_Curl": {
+      "exerciseId": "cable-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-curl\\Machine_Bicep_Curl\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Machine_Bicep_Curl\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 96958
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-curl\\Machine_Bicep_Curl\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Machine_Bicep_Curl\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 97022
+        }
+      }
+    },
+    "Machine_Preacher_Curls": {
+      "exerciseId": "machine-preacher-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\machine-preacher-curl\\Machine_Preacher_Curls\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Machine_Preacher_Curls\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 93638
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\machine-preacher-curl\\Machine_Preacher_Curls\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Machine_Preacher_Curls\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 92812
+        }
+      }
+    },
+    "Machine_Shoulder_Military_Press": {
+      "exerciseId": "machine-shoulder-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\machine-shoulder-press\\Machine_Shoulder_Military_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Machine_Shoulder_Military_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 74210
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\machine-shoulder-press\\Machine_Shoulder_Military_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Machine_Shoulder_Military_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 73860
+        }
+      }
+    },
+    "Machine_Triceps_Extension": {
+      "exerciseId": "cable-skull-crusher",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-skull-crusher\\Machine_Triceps_Extension\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Machine_Triceps_Extension\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 80362
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-skull-crusher\\Machine_Triceps_Extension\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Machine_Triceps_Extension\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 79262
+        }
+      }
+    },
+    "Neck_Press": {
+      "exerciseId": "barbell-floor-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-floor-press\\Neck_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Neck_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 74040
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-floor-press\\Neck_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Neck_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 73699
+        }
+      }
+    },
+    "One_Arm_Dumbbell_Bench_Press": {
+      "exerciseId": "alternating-dumbbell-bench-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\alternating-dumbbell-bench-press\\One_Arm_Dumbbell_Bench_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\One_Arm_Dumbbell_Bench_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 66261
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\alternating-dumbbell-bench-press\\One_Arm_Dumbbell_Bench_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\One_Arm_Dumbbell_Bench_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 65818
+        }
+      }
+    },
+    "One_Arm_Dumbbell_Preacher_Curl": {
+      "exerciseId": "alternating-dumbbell-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\alternating-dumbbell-curl\\One_Arm_Dumbbell_Preacher_Curl\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\One_Arm_Dumbbell_Preacher_Curl\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 47289
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\alternating-dumbbell-curl\\One_Arm_Dumbbell_Preacher_Curl\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\One_Arm_Dumbbell_Preacher_Curl\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 47557
+        }
+      }
+    },
+    "One_Arm_Lat_Pulldown": {
+      "exerciseId": "kneeling-single-arm-pulldown",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kneeling-single-arm-pulldown\\One_Arm_Lat_Pulldown\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\One_Arm_Lat_Pulldown\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 60564
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kneeling-single-arm-pulldown\\One_Arm_Lat_Pulldown\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\One_Arm_Lat_Pulldown\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 63863
+        }
+      }
+    },
+    "One_Arm_Pronated_Dumbbell_Triceps_Extension": {
+      "exerciseId": "single-arm-overhead-dumbbell-extension",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\single-arm-overhead-dumbbell-extension\\One_Arm_Pronated_Dumbbell_Triceps_Extension\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\One_Arm_Pronated_Dumbbell_Triceps_Extension\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 69050
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\single-arm-overhead-dumbbell-extension\\One_Arm_Pronated_Dumbbell_Triceps_Extension\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\One_Arm_Pronated_Dumbbell_Triceps_Extension\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 68312
+        }
+      }
+    },
+    "One_Arm_Supinated_Dumbbell_Triceps_Extension": {
+      "exerciseId": "single-arm-overhead-dumbbell-extension",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\single-arm-overhead-dumbbell-extension\\One_Arm_Supinated_Dumbbell_Triceps_Extension\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\One_Arm_Supinated_Dumbbell_Triceps_Extension\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 65332
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\single-arm-overhead-dumbbell-extension\\One_Arm_Supinated_Dumbbell_Triceps_Extension\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\One_Arm_Supinated_Dumbbell_Triceps_Extension\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 64615
+        }
+      }
+    },
+    "One_Knee_To_Chest": {
+      "exerciseId": "cable-pull-through",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-pull-through\\One_Knee_To_Chest\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\One_Knee_To_Chest\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 33136
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-pull-through\\One_Knee_To_Chest\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\One_Knee_To_Chest\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 31082
+        }
+      }
+    },
+    "One-Arm_Incline_Lateral_Raise": {
+      "exerciseId": "incline-lateral-raise",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\incline-lateral-raise\\One-Arm_Incline_Lateral_Raise\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\One-Arm_Incline_Lateral_Raise\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 55734
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\incline-lateral-raise\\One-Arm_Incline_Lateral_Raise\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\One-Arm_Incline_Lateral_Raise\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 59944
+        }
+      }
+    },
+    "One-Legged_Cable_Kickback": {
+      "exerciseId": "cable-pull-through",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-pull-through\\One-Legged_Cable_Kickback\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\One-Legged_Cable_Kickback\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 74142
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-pull-through\\One-Legged_Cable_Kickback\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\One-Legged_Cable_Kickback\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 75672
+        }
+      }
+    },
+    "Open_Palm_Kettlebell_Clean": {
+      "exerciseId": "kettlebell-clean",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kettlebell-clean\\Open_Palm_Kettlebell_Clean\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Open_Palm_Kettlebell_Clean\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 35586
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\kettlebell-clean\\Open_Palm_Kettlebell_Clean\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Open_Palm_Kettlebell_Clean\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 34710
+        }
+      }
+    },
+    "Otis-Up": {
+      "exerciseId": "trx-body-saw",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\trx-body-saw\\Otis-Up\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Otis-Up\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 40594
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\trx-body-saw\\Otis-Up\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Otis-Up\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 40690
+        }
+      }
+    },
+    "Palms-Down_Wrist_Curl_Over_A_Bench": {
+      "exerciseId": "barbell-wrist-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-wrist-curl\\Palms-Down_Wrist_Curl_Over_A_Bench\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Palms-Down_Wrist_Curl_Over_A_Bench\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 69159
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-wrist-curl\\Palms-Down_Wrist_Curl_Over_A_Bench\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Palms-Down_Wrist_Curl_Over_A_Bench\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 70271
+        }
+      }
+    },
+    "Palms-Up_Barbell_Wrist_Curl_Over_A_Bench": {
+      "exerciseId": "barbell-reverse-wrist-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-reverse-wrist-curl\\Palms-Up_Barbell_Wrist_Curl_Over_A_Bench\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Palms-Up_Barbell_Wrist_Curl_Over_A_Bench\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 66388
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-reverse-wrist-curl\\Palms-Up_Barbell_Wrist_Curl_Over_A_Bench\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Palms-Up_Barbell_Wrist_Curl_Over_A_Bench\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 67327
+        }
+      }
+    },
+    "Parallel_Bar_Dip": {
+      "exerciseId": "bench-dip",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bench-dip\\Parallel_Bar_Dip\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Parallel_Bar_Dip\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 53482
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bench-dip\\Parallel_Bar_Dip\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Parallel_Bar_Dip\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 49592
+        }
+      }
+    },
+    "Plank": {
+      "exerciseId": "copenhagen-plank",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\copenhagen-plank\\Plank\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Plank\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 43296
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\copenhagen-plank\\Plank\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Plank\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 43135
+        }
+      }
+    },
+    "Plate_Pinch": {
+      "exerciseId": "plate-pinch",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\plate-pinch\\Plate_Pinch\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Plate_Pinch\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 55483
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\plate-pinch\\Plate_Pinch\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Plate_Pinch\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 57288
+        }
+      }
+    },
+    "Plate_Twist": {
+      "exerciseId": "trx-body-saw",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\trx-body-saw\\Plate_Twist\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Plate_Twist\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 55533
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\trx-body-saw\\Plate_Twist\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Plate_Twist\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 58719
+        }
+      }
+    },
+    "Plyo_Push-up": {
+      "exerciseId": "push-up",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\push-up\\Plyo_Push-up\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Plyo_Push-up\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 53226
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\push-up\\Plyo_Push-up\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Plyo_Push-up\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 52649
+        }
+      }
+    },
+    "Power_Clean": {
+      "exerciseId": "hang-clean",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hang-clean\\Power_Clean\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Power_Clean\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 70183
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hang-clean\\Power_Clean\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Power_Clean\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 70360
+        }
+      }
+    },
+    "Preacher_Curl": {
+      "exerciseId": "machine-preacher-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\machine-preacher-curl\\Preacher_Curl\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Preacher_Curl\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 59261
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\machine-preacher-curl\\Preacher_Curl\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Preacher_Curl\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 59522
+        }
+      }
+    },
+    "Preacher_Hammer_Dumbbell_Curl": {
+      "exerciseId": "hammer-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hammer-curl\\Preacher_Hammer_Dumbbell_Curl\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Preacher_Hammer_Dumbbell_Curl\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 54487
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hammer-curl\\Preacher_Hammer_Dumbbell_Curl\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Preacher_Hammer_Dumbbell_Curl\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 53461
+        }
+      }
+    },
+    "Pull_Through": {
+      "exerciseId": "cable-pull-through",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-pull-through\\Pull_Through\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Pull_Through\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 39927
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-pull-through\\Pull_Through\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Pull_Through\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 33667
+        }
+      }
+    },
+    "Push_Press": {
+      "exerciseId": "landmine-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\landmine-press\\Push_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Push_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 31807
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\landmine-press\\Push_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Push_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 32112
+        }
+      }
+    },
+    "Push_Up_to_Side_Plank": {
+      "exerciseId": "push-up",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\push-up\\Push_Up_to_Side_Plank\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Push_Up_to_Side_Plank\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 40866
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\push-up\\Push_Up_to_Side_Plank\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Push_Up_to_Side_Plank\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 42449
+        }
+      }
+    },
+    "Push-Up_Wide": {
+      "exerciseId": "wide-grip-push-up",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\wide-grip-push-up\\Push-Up_Wide\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Push-Up_Wide\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 38369
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\wide-grip-push-up\\Push-Up_Wide\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Push-Up_Wide\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 36418
+        }
+      }
+    },
+    "Rack_Pull_with_Bands": {
+      "exerciseId": "rack-pull",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\rack-pull\\Rack_Pull_with_Bands\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Rack_Pull_with_Bands\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 46351
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\rack-pull\\Rack_Pull_with_Bands\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Rack_Pull_with_Bands\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 44843
+        }
+      }
+    },
+    "Rack_Pulls": {
+      "exerciseId": "rack-pull",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\rack-pull\\Rack_Pulls\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Rack_Pulls\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 44236
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\rack-pull\\Rack_Pulls\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Rack_Pulls\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 45236
+        }
+      }
+    },
+    "Reverse_Barbell_Curl": {
+      "exerciseId": "barbell-reverse-wrist-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-reverse-wrist-curl\\Reverse_Barbell_Curl\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Reverse_Barbell_Curl\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 57755
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-reverse-wrist-curl\\Reverse_Barbell_Curl\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Reverse_Barbell_Curl\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 58110
+        }
+      }
+    },
+    "Reverse_Cable_Curl": {
+      "exerciseId": "cable-reverse-wrist-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-reverse-wrist-curl\\Reverse_Cable_Curl\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Reverse_Cable_Curl\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 78043
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-reverse-wrist-curl\\Reverse_Cable_Curl\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Reverse_Cable_Curl\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 78421
+        }
+      }
+    },
+    "Reverse_Flyes": {
+      "exerciseId": "bent-over-reverse-fly",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bent-over-reverse-fly\\Reverse_Flyes\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Reverse_Flyes\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 56640
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bent-over-reverse-fly\\Reverse_Flyes\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Reverse_Flyes\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 58189
+        }
+      }
+    },
+    "Reverse_Flyes_With_External_Rotation": {
+      "exerciseId": "bent-over-reverse-fly",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bent-over-reverse-fly\\Reverse_Flyes_With_External_Rotation\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Reverse_Flyes_With_External_Rotation\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 54672
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bent-over-reverse-fly\\Reverse_Flyes_With_External_Rotation\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Reverse_Flyes_With_External_Rotation\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 55944
+        }
+      }
+    },
+    "Russian_Twist": {
+      "exerciseId": "bird-dog",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bird-dog\\Russian_Twist\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Russian_Twist\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 70925
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bird-dog\\Russian_Twist\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Russian_Twist\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 70973
+        }
+      }
+    },
+    "Seated_Barbell_Military_Press": {
+      "exerciseId": "seated-barbell-shoulder-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\seated-barbell-shoulder-press\\Seated_Barbell_Military_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Seated_Barbell_Military_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 89915
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\seated-barbell-shoulder-press\\Seated_Barbell_Military_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Seated_Barbell_Military_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 94038
+        }
+      }
+    },
+    "Seated_Leg_Curl": {
+      "exerciseId": "sliding-leg-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\sliding-leg-curl\\Seated_Leg_Curl\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Seated_Leg_Curl\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 91213
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\sliding-leg-curl\\Seated_Leg_Curl\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Seated_Leg_Curl\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 91286
+        }
+      }
+    },
+    "See-Saw_Press_Alternating_Side_Press": {
+      "exerciseId": "alternating-dumbbell-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\alternating-dumbbell-press\\See-Saw_Press_Alternating_Side_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\See-Saw_Press_Alternating_Side_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 56644
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\alternating-dumbbell-press\\See-Saw_Press_Alternating_Side_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\See-Saw_Press_Alternating_Side_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 57232
+        }
+      }
+    },
+    "Shotgun_Row": {
+      "exerciseId": "single-arm-cable-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\single-arm-cable-row\\Shotgun_Row\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Shotgun_Row\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 36417
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\single-arm-cable-row\\Shotgun_Row\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Shotgun_Row\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 37411
+        }
+      }
+    },
+    "Shoulder_Press_-_With_Bands": {
+      "exerciseId": "band-lateral-raise",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\band-lateral-raise\\Shoulder_Press_-_With_Bands\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Shoulder_Press_-_With_Bands\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 65053
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\band-lateral-raise\\Shoulder_Press_-_With_Bands\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Shoulder_Press_-_With_Bands\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 64965
+        }
+      }
+    },
+    "Side_Bridge": {
+      "exerciseId": "copenhagen-plank",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\copenhagen-plank\\Side_Bridge\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Side_Bridge\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 69518
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\copenhagen-plank\\Side_Bridge\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Side_Bridge\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 63711
+        }
+      }
+    },
+    "Side_Jackknife": {
+      "exerciseId": "side-plank",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\side-plank\\Side_Jackknife\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Side_Jackknife\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 67158
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\side-plank\\Side_Jackknife\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Side_Jackknife\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 69223
+        }
+      }
+    },
+    "Side_Lateral_Raise": {
+      "exerciseId": "dumbbell-lateral-raise",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-lateral-raise\\Side_Lateral_Raise\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Side_Lateral_Raise\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 57101
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-lateral-raise\\Side_Lateral_Raise\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Side_Lateral_Raise\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 56355
+        }
+      }
+    },
+    "Single_Dumbbell_Raise": {
+      "exerciseId": "dumbbell-lateral-raise",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-lateral-raise\\Single_Dumbbell_Raise\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Single_Dumbbell_Raise\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 37969
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-lateral-raise\\Single_Dumbbell_Raise\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Single_Dumbbell_Raise\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 36373
+        }
+      }
+    },
+    "Single_Leg_Glute_Bridge": {
+      "exerciseId": "EX_GLUTE_BRIDGE",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\EX_GLUTE_BRIDGE\\Single_Leg_Glute_Bridge\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Single_Leg_Glute_Bridge\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 54678
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\EX_GLUTE_BRIDGE\\Single_Leg_Glute_Bridge\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Single_Leg_Glute_Bridge\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 55170
+        }
+      }
+    },
+    "Single-Arm_Cable_Crossover": {
+      "exerciseId": "single-arm-cable-fly",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\single-arm-cable-fly\\Single-Arm_Cable_Crossover\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Single-Arm_Cable_Crossover\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 35506
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\single-arm-cable-fly\\Single-Arm_Cable_Crossover\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Single-Arm_Cable_Crossover\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 35236
+        }
+      }
+    },
+    "Single-Leg_Leg_Extension": {
+      "exerciseId": "leg-extension",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\leg-extension\\Single-Leg_Leg_Extension\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Single-Leg_Leg_Extension\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 90496
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\leg-extension\\Single-Leg_Leg_Extension\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Single-Leg_Leg_Extension\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 88854
+        }
+      }
+    },
+    "Sit-Up": {
+      "exerciseId": "decline-sit-up",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\decline-sit-up\\Sit-Up\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Sit-Up\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 66968
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\decline-sit-up\\Sit-Up\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Sit-Up\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 67166
+        }
+      }
+    },
+    "Sled_Drag_-_Harness": {
+      "exerciseId": "sled-push",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\sled-push\\Sled_Drag_-_Harness\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Sled_Drag_-_Harness\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 32193
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\sled-push\\Sled_Drag_-_Harness\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Sled_Drag_-_Harness\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 30134
+        }
+      }
+    },
+    "Sled_Overhead_Triceps_Extension": {
+      "exerciseId": "cable-overhead-triceps-extension",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-overhead-triceps-extension\\Sled_Overhead_Triceps_Extension\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Sled_Overhead_Triceps_Extension\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 52371
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-overhead-triceps-extension\\Sled_Overhead_Triceps_Extension\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Sled_Overhead_Triceps_Extension\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 54661
+        }
+      }
+    },
+    "Sled_Push": {
+      "exerciseId": "sled-push",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\sled-push\\Sled_Push\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Sled_Push\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 34209
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\sled-push\\Sled_Push\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Sled_Push\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 36668
+        }
+      }
+    },
+    "Sled_Reverse_Flye": {
+      "exerciseId": "bent-over-reverse-fly",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bent-over-reverse-fly\\Sled_Reverse_Flye\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Sled_Reverse_Flye\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 54608
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bent-over-reverse-fly\\Sled_Reverse_Flye\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Sled_Reverse_Flye\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 62835
+        }
+      }
+    },
+    "Sled_Row": {
+      "exerciseId": "feet-elevated-inverted-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\feet-elevated-inverted-row\\Sled_Row\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Sled_Row\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 51496
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\feet-elevated-inverted-row\\Sled_Row\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Sled_Row\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 47524
+        }
+      }
+    },
+    "Smith_Machine_Bench_Press": {
+      "exerciseId": "machine-chest-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\machine-chest-press\\Smith_Machine_Bench_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Smith_Machine_Bench_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 74906
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\machine-chest-press\\Smith_Machine_Bench_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Smith_Machine_Bench_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 74652
+        }
+      }
+    },
+    "Smith_Machine_Bent_Over_Row": {
+      "exerciseId": "smith-machine-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\smith-machine-row\\Smith_Machine_Bent_Over_Row\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Smith_Machine_Bent_Over_Row\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 76200
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\smith-machine-row\\Smith_Machine_Bent_Over_Row\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Smith_Machine_Bent_Over_Row\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 76752
+        }
+      }
+    },
+    "Smith_Machine_Decline_Press": {
+      "exerciseId": "decline-machine-chest-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\decline-machine-chest-press\\Smith_Machine_Decline_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Smith_Machine_Decline_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 49159
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\decline-machine-chest-press\\Smith_Machine_Decline_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Smith_Machine_Decline_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 52589
+        }
+      }
+    },
+    "Smith_Machine_Hang_Power_Clean": {
+      "exerciseId": "cable-romanian-deadlift",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-romanian-deadlift\\Smith_Machine_Hang_Power_Clean\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Smith_Machine_Hang_Power_Clean\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 62448
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-romanian-deadlift\\Smith_Machine_Hang_Power_Clean\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Smith_Machine_Hang_Power_Clean\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 62639
+        }
+      }
+    },
+    "Smith_Machine_Hip_Raise": {
+      "exerciseId": "machine-crunch",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\machine-crunch\\Smith_Machine_Hip_Raise\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Smith_Machine_Hip_Raise\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 65057
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\machine-crunch\\Smith_Machine_Hip_Raise\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Smith_Machine_Hip_Raise\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 64057
+        }
+      }
+    },
+    "Smith_Machine_Incline_Bench_Press": {
+      "exerciseId": "incline-machine-chest-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\incline-machine-chest-press\\Smith_Machine_Incline_Bench_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Smith_Machine_Incline_Bench_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 80605
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\incline-machine-chest-press\\Smith_Machine_Incline_Bench_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Smith_Machine_Incline_Bench_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 79298
+        }
+      }
+    },
+    "Smith_Machine_Overhead_Shoulder_Press": {
+      "exerciseId": "machine-shoulder-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\machine-shoulder-press\\Smith_Machine_Overhead_Shoulder_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Smith_Machine_Overhead_Shoulder_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 86577
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\machine-shoulder-press\\Smith_Machine_Overhead_Shoulder_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Smith_Machine_Overhead_Shoulder_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 85543
+        }
+      }
+    },
+    "Smith_Machine_Stiff-Legged_Deadlift": {
+      "exerciseId": "cable-romanian-deadlift",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-romanian-deadlift\\Smith_Machine_Stiff-Legged_Deadlift\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Smith_Machine_Stiff-Legged_Deadlift\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 90220
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-romanian-deadlift\\Smith_Machine_Stiff-Legged_Deadlift\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Smith_Machine_Stiff-Legged_Deadlift\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 90247
+        }
+      }
+    },
+    "Smith_Machine_Upright_Row": {
+      "exerciseId": "cable-upright-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-upright-row\\Smith_Machine_Upright_Row\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Smith_Machine_Upright_Row\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 80617
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-upright-row\\Smith_Machine_Upright_Row\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Smith_Machine_Upright_Row\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 78481
+        }
+      }
+    },
+    "Split_Squat_with_Dumbbells": {
+      "exerciseId": "bulgarian-split-squat",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bulgarian-split-squat\\Split_Squat_with_Dumbbells\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Split_Squat_with_Dumbbells\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 136429
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bulgarian-split-squat\\Split_Squat_with_Dumbbells\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Split_Squat_with_Dumbbells\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 143547
+        }
+      }
+    },
+    "Squat_Jerk": {
+      "exerciseId": "squat",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\squat\\Squat_Jerk\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Squat_Jerk\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 36938
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\squat\\Squat_Jerk\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Squat_Jerk\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 31657
+        }
+      }
+    },
+    "Squat_with_Plate_Movers": {
+      "exerciseId": "plate-pinch",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\plate-pinch\\Squat_with_Plate_Movers\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Squat_with_Plate_Movers\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 43105
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\plate-pinch\\Squat_with_Plate_Movers\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Squat_with_Plate_Movers\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 42737
+        }
+      }
+    },
+    "Standing_Alternating_Dumbbell_Press": {
+      "exerciseId": "alternating-dumbbell-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\alternating-dumbbell-press\\Standing_Alternating_Dumbbell_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Standing_Alternating_Dumbbell_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 76248
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\alternating-dumbbell-press\\Standing_Alternating_Dumbbell_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Standing_Alternating_Dumbbell_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 76595
+        }
+      }
+    },
+    "Standing_Barbell_Press_Behind_Neck": {
+      "exerciseId": "barbell-overhead-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-overhead-press\\Standing_Barbell_Press_Behind_Neck\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Standing_Barbell_Press_Behind_Neck\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 59862
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-overhead-press\\Standing_Barbell_Press_Behind_Neck\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Standing_Barbell_Press_Behind_Neck\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 60104
+        }
+      }
+    },
+    "Standing_Bradford_Press": {
+      "exerciseId": "barbell-overhead-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-overhead-press\\Standing_Bradford_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Standing_Bradford_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 46478
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-overhead-press\\Standing_Bradford_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Standing_Bradford_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 47212
+        }
+      }
+    },
+    "Standing_Calf_Raises": {
+      "exerciseId": "standing-calf-raise",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\standing-calf-raise\\Standing_Calf_Raises\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Standing_Calf_Raises\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 60966
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\standing-calf-raise\\Standing_Calf_Raises\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Standing_Calf_Raises\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 59984
+        }
+      }
+    },
+    "Standing_Dumbbell_Calf_Raise": {
+      "exerciseId": "standing-calf-raise",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\standing-calf-raise\\Standing_Dumbbell_Calf_Raise\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Standing_Dumbbell_Calf_Raise\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 54681
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\standing-calf-raise\\Standing_Dumbbell_Calf_Raise\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Standing_Dumbbell_Calf_Raise\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 54554
+        }
+      }
+    },
+    "Standing_Dumbbell_Triceps_Extension": {
+      "exerciseId": "standing-calf-raise",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\standing-calf-raise\\Standing_Dumbbell_Triceps_Extension\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Standing_Dumbbell_Triceps_Extension\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 56352
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\standing-calf-raise\\Standing_Dumbbell_Triceps_Extension\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Standing_Dumbbell_Triceps_Extension\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 56376
+        }
+      }
+    },
+    "Standing_Front_Barbell_Raise_Over_Head": {
+      "exerciseId": "plate-front-raise",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\plate-front-raise\\Standing_Front_Barbell_Raise_Over_Head\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Standing_Front_Barbell_Raise_Over_Head\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 58350
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\plate-front-raise\\Standing_Front_Barbell_Raise_Over_Head\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Standing_Front_Barbell_Raise_Over_Head\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 59810
+        }
+      }
+    },
+    "Standing_Leg_Curl": {
+      "exerciseId": "sliding-leg-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\sliding-leg-curl\\Standing_Leg_Curl\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Standing_Leg_Curl\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 88574
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\sliding-leg-curl\\Standing_Leg_Curl\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Standing_Leg_Curl\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 88858
+        }
+      }
+    },
+    "Standing_Military_Press": {
+      "exerciseId": "barbell-overhead-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-overhead-press\\Standing_Military_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Standing_Military_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 56692
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-overhead-press\\Standing_Military_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Standing_Military_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 60380
+        }
+      }
+    },
+    "Standing_Rope_Crunch": {
+      "exerciseId": "standing-cable-crunch",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\standing-cable-crunch\\Standing_Rope_Crunch\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Standing_Rope_Crunch\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 43007
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\standing-cable-crunch\\Standing_Rope_Crunch\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Standing_Rope_Crunch\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 41895
+        }
+      }
+    },
+    "Stiff_Leg_Barbell_Good_Morning": {
+      "exerciseId": "barbell-good-morning",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-good-morning\\Stiff_Leg_Barbell_Good_Morning\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Stiff_Leg_Barbell_Good_Morning\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 71951
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-good-morning\\Stiff_Leg_Barbell_Good_Morning\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Stiff_Leg_Barbell_Good_Morning\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 70571
+        }
+      }
+    },
+    "Stomach_Vacuum": {
+      "exerciseId": "hollow-body-hold",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hollow-body-hold\\Stomach_Vacuum\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Stomach_Vacuum\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 60898
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\hollow-body-hold\\Stomach_Vacuum\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Stomach_Vacuum\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 60865
+        }
+      }
+    },
+    "Suspended_Row": {
+      "exerciseId": "seal-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\seal-row\\Suspended_Row\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Suspended_Row\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 71342
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\seal-row\\Suspended_Row\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Suspended_Row\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 69829
+        }
+      }
+    },
+    "Suspended_Split_Squat": {
+      "exerciseId": "bulgarian-split-squat",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bulgarian-split-squat\\Suspended_Split_Squat\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Suspended_Split_Squat\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 69350
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bulgarian-split-squat\\Suspended_Split_Squat\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Suspended_Split_Squat\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 66461
+        }
+      }
+    },
+    "Svend_Press": {
+      "exerciseId": "barbell-floor-press",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-floor-press\\Svend_Press\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Svend_Press\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 118136
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\barbell-floor-press\\Svend_Press\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Svend_Press\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 114175
+        }
+      }
+    },
+    "T-Bar_Row_with_Handle": {
+      "exerciseId": "landmine-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\landmine-row\\T-Bar_Row_with_Handle\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\T-Bar_Row_with_Handle\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 46113
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\landmine-row\\T-Bar_Row_with_Handle\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\T-Bar_Row_with_Handle\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 44884
+        }
+      }
+    },
+    "Thigh_Adductor": {
+      "exerciseId": "cable-hip-adduction",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-hip-adduction\\Thigh_Adductor\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Thigh_Adductor\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 73875
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-hip-adduction\\Thigh_Adductor\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Thigh_Adductor\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 71410
+        }
+      }
+    },
+    "Tricep_Dumbbell_Kickback": {
+      "exerciseId": "dumbbell-skull-crusher",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-skull-crusher\\Tricep_Dumbbell_Kickback\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Tricep_Dumbbell_Kickback\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 52072
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\dumbbell-skull-crusher\\Tricep_Dumbbell_Kickback\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Tricep_Dumbbell_Kickback\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 50368
+        }
+      }
+    },
+    "Triceps_Pushdown": {
+      "exerciseId": "cable-skull-crusher",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-skull-crusher\\Triceps_Pushdown\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Triceps_Pushdown\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 77630
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-skull-crusher\\Triceps_Pushdown\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Triceps_Pushdown\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 78235
+        }
+      }
+    },
+    "Tuck_Crunch": {
+      "exerciseId": "crunch",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\crunch\\Tuck_Crunch\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Tuck_Crunch\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 59111
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\crunch\\Tuck_Crunch\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Tuck_Crunch\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 56811
+        }
+      }
+    },
+    "Upright_Barbell_Row": {
+      "exerciseId": "upright-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\upright-row\\Upright_Barbell_Row\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Upright_Barbell_Row\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 55002
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\upright-row\\Upright_Barbell_Row\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Upright_Barbell_Row\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 54626
+        }
+      }
+    },
+    "Upright_Cable_Row": {
+      "exerciseId": "cable-upright-row",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-upright-row\\Upright_Cable_Row\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Upright_Cable_Row\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 79735
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cable-upright-row\\Upright_Cable_Row\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Upright_Cable_Row\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 80931
+        }
+      }
+    },
+    "V-Bar_Pullup": {
+      "exerciseId": "assisted-pull-up",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\assisted-pull-up\\V-Bar_Pullup\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\V-Bar_Pullup\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 81787
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\assisted-pull-up\\V-Bar_Pullup\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\V-Bar_Pullup\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 83334
+        }
+      }
+    },
+    "Weighted_Ball_Side_Bend": {
+      "exerciseId": "stability-ball-crunch",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\stability-ball-crunch\\Weighted_Ball_Side_Bend\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Weighted_Ball_Side_Bend\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 64265
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\stability-ball-crunch\\Weighted_Ball_Side_Bend\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Weighted_Ball_Side_Bend\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 67354
+        }
+      }
+    },
+    "Weighted_Bench_Dip": {
+      "exerciseId": "bench-dip",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bench-dip\\Weighted_Bench_Dip\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Weighted_Bench_Dip\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 51534
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\bench-dip\\Weighted_Bench_Dip\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Weighted_Bench_Dip\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 50589
+        }
+      }
+    },
+    "Weighted_Squat": {
+      "exerciseId": "cossack-squat",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cossack-squat\\Weighted_Squat\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Weighted_Squat\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 68506
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\cossack-squat\\Weighted_Squat\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Weighted_Squat\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 67301
+        }
+      }
+    },
+    "Wide-Grip_Rear_Pull-Up": {
+      "exerciseId": "wide-grip-pull-up",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\wide-grip-pull-up\\Wide-Grip_Rear_Pull-Up\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Wide-Grip_Rear_Pull-Up\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 41825
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\wide-grip-pull-up\\Wide-Grip_Rear_Pull-Up\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Wide-Grip_Rear_Pull-Up\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 39273
+        }
+      }
+    },
+    "Wrist_Circles": {
+      "exerciseId": "wrist-roller",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\wrist-roller\\Wrist_Circles\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Wrist_Circles\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 61388
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\wrist-roller\\Wrist_Circles\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Wrist_Circles\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 62335
+        }
+      }
+    },
+    "Wrist_Roller": {
+      "exerciseId": "wrist-roller",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\wrist-roller\\Wrist_Roller\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Wrist_Roller\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 64610
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\wrist-roller\\Wrist_Roller\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Wrist_Roller\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 65413
+        }
+      }
+    },
+    "Zottman_Curl": {
+      "exerciseId": "spider-curl",
+      "stages": {
+        "start": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\spider-curl\\Zottman_Curl\\0.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Zottman_Curl\\0.jpg",
+          "mode": "hard-link",
+          "bytes": 61107
+        },
+        "peak": {
+          "sourceFile": "D:\\AI\\FreeExerciseDB-cache\\manual-review\\spider-curl\\Zottman_Curl\\1.jpg",
+          "outputFile": "D:\\MuscleMap Fitness\\reports\\exercise-media\\free-exercise-db\\manual-review-assets\\Zottman_Curl\\1.jpg",
+          "mode": "hard-link",
+          "bytes": 62050
+        }
+      }
+    }
+  }
+}

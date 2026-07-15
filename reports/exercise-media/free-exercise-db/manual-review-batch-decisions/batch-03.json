@@ -1,0 +1,13 @@
+{
+  "batchNumber": 3,
+  "decisions": [
+    {"exerciseId":"barbell-reverse-wrist-curl","sourceId":null,"decision":"proposed-rejected","visualEvidence":["首选是反握杠铃肘屈，第三项是掌心向上的腕屈，均未展示掌心向下腕伸"],"differences":["肘屈、腕屈与 Reverse Wrist Curl 的腕伸方向不同"],"risks":["动作关节和方向错误"]},
+    {"exerciseId":"barbell-thruster","sourceId":null,"decision":"proposed-rejected","visualEvidence":["三项只展示弓步或深蹲，没有深蹲后连续推举过头的阶段"],"differences":["缺少 Thruster 的头顶推举部分"],"risks":["仅用深蹲图会遗漏动作的一半"]},
+    {"exerciseId":"barbell-wrist-curl","sourceId":"Palms-Up_Barbell_Wrist_Curl_Over_A_Bench","decision":"proposed-accepted","visualEvidence":["前臂支撑在凳上、掌心向上完成杠铃腕屈，start/peak 清楚"],"differences":["候选明确使用卧推凳支撑"],"risks":[]},
+    {"exerciseId":"belt-squat","sourceId":null,"decision":"proposed-rejected","visualEvidence":["候选为杠铃、自重和椅式深蹲，没有腰带深蹲机或髋部负重装置"],"differences":["器械与负重位置完全不同"],"risks":["普通深蹲图会误导机器设置"]},
+    {"exerciseId":"bench-dip","sourceId":"Bench_Dips","decision":"proposed-accepted","visualEvidence":["双手在身后凳面支撑，自重屈伸肘完成 Bench Dip，姿态和器械一致"],"differences":[],"risks":[]},
+    {"exerciseId":"bent-over-reverse-fly","sourceId":null,"decision":"unresolved","visualEvidence":["首选图片展示坐姿俯身哑铃反向飞鸟，轨迹相符但支撑姿态不明确"],"differences":["MuscleMap 仅写 Bent-over，无法确认预期是站姿还是坐姿"],"risks":["坐姿与站姿支撑差异需要用户确认"]},
+    {"exerciseId":"bicycle-crunch","sourceId":null,"decision":"proposed-rejected","visualEvidence":["候选为收膝卷腹、球上卷腹和单次交叉卷腹，没有连续自行车式交替伸腿"],"differences":["缺少双腿交替蹬伸的动作模式"],"risks":["交叉卷腹不能完整代表 Bicycle Crunch"]},
+    {"exerciseId":"bilateral-dumbbell-row","sourceId":"Bent_Over_Two-Dumbbell_Row","decision":"proposed-accepted","visualEvidence":["站姿髋铰链、双手同时将哑铃拉向躯干，双侧方式和轨迹一致"],"differences":[],"risks":[]}
+  ]
+}

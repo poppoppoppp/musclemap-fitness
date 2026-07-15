@@ -30,9 +30,9 @@ test('renders the data-driven guide in the requested order without legacy detail
 });
 
 test('uses silent media fallbacks and safe derived content for legacy exercises', async ({ page }) => {
-  await page.goto('/exercises/plank');
+  await page.goto('/exercises/ab-wheel-rollout');
 
-  await expect(page.getByRole('heading', { name: '平板支撑', level: 1 })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '健腹轮跪姿滚动', level: 1 })).toBeVisible();
   await expect(page.getByTestId('exercise-media-placeholder')).toHaveCount(2);
   await expect(page.getByTestId('exercise-key-cues').locator('li')).toHaveCount(3);
   await expect(page.getByTestId('exercise-troubleshooting').locator('[data-troubleshooting-card]')).toHaveCount(3);

@@ -1,0 +1,13 @@
+{
+  "batchNumber": 4,
+  "decisions": [
+    {"exerciseId":"bird-dog","sourceId":null,"decision":"proposed-rejected","visualEvidence":["候选为俯卧腰背伸展、俄罗斯转体和卷腹，没有四点跪姿对侧手脚伸展"],"differences":["支撑姿态、肢体方向和动作模式均不同"],"risks":["普通核心动作不能代表 Bird Dog 的肩胛与骨盆控制"]},
+    {"exerciseId":"bulgarian-split-squat","sourceId":null,"decision":"proposed-rejected","visualEvidence":["Suspended Split Squat 使用悬吊带，Dumbbell Split Squat 后脚未放在卧推凳上"],"differences":["缺少 Bulgarian Split Squat 的后脚抬高支撑"],"risks":["普通 Split Squat 与 Bulgarian 支撑方式不同"]},
+    {"exerciseId":"cable-chest-fly","sourceId":"Cable_Crossover","decision":"proposed-accepted","visualEvidence":["站姿双侧绳索由外侧合拢至胸前，肩水平内收轨迹和器械一致"],"differences":["数据库使用 Cable Crossover 常见同义名称"],"risks":[]},
+    {"exerciseId":"cable-curl","sourceId":null,"decision":"proposed-rejected","visualEvidence":["候选分别是牧师凳、固定机器和仰卧绳索弯举，没有通用站姿 Cable Curl"],"differences":["坐姿支撑、机器和仰卧姿态均与通用动作不一致"],"risks":["姿态差异会影响动作设置"]},
+    {"exerciseId":"cable-hip-adduction","sourceId":"Cable_Hip_Adduction","decision":"proposed-forced","visualEvidence":["站姿踝带连接绳索，工作腿跨向身体中线，清楚展示髋内收"],"differences":[],"risks":["算法 primary-muscle 冲突来自肌群分类，图片动作本身明确一致"]},
+    {"exerciseId":"cable-kickback","sourceId":"One-Legged_Cable_Kickback","decision":"proposed-forced","visualEvidence":["站姿单腿踝带向后伸髋，器械和 Glute Kickback 轨迹一致"],"differences":["候选名称显式写 One-Legged，目标名称未标单侧但动作本身天然逐腿完成"],"risks":["算法 laterality 冲突需用户确认目标是否默认逐腿"]},
+    {"exerciseId":"cable-overhead-triceps-extension","sourceId":"Cable_Rope_Overhead_Triceps_Extension","decision":"proposed-forced","visualEvidence":["站姿背对滑轮，绳索从头后伸肘至头顶，overhead 方向和阶段一致"],"differences":["候选明确使用 rope 附件"],"risks":["算法 variant 冲突仅涉及把手附件，需用户确认可接受绳把表达"]},
+    {"exerciseId":"cable-pull-through","sourceId":"Pull_Through","decision":"proposed-accepted","visualEvidence":["背对低位滑轮，绳索从两腿间通过并完成髋铰链伸展，动作一致"],"differences":[],"risks":[]}
+  ]
+}

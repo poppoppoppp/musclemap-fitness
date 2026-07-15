@@ -1,0 +1,133 @@
+[
+  {
+    "baseMovement": "",
+    "exerciseIds": [
+      "EX_ASSISTED_CERVICAL_SIDE_BEND_STRETCH",
+      "EX_DOORWAY_ANTERIOR_CHEST_STRETCH",
+      "EX_MASSETER_SELF_MASSAGE",
+      "EX_POSTERIOR_SHOULDER_PRESSURE_RELEASE",
+      "EX_SCAP_ELEVATED_PROTRACTION",
+      "EX_SUBOCCIPITAL_SELF_MASSAGE",
+      "EX_TEMPORALIS_CONTACT_CONTROLLED_OPENING"
+    ],
+    "recommendedSourceId": "Adductor",
+    "textOnlyDifferences": [],
+    "recommendSharing": true,
+    "risk": "仅建议用于握距、把手或轻微站距变式；接入前仍需确认画面没有器械、姿态或单侧差异。"
+  },
+  {
+    "baseMovement": "",
+    "exerciseIds": [
+      "EX_CERVICAL_RETRACTION_SMALL_EXTENSION",
+      "EX_SCM_STRETCH",
+      "EX_STANDING_CERVICAL_RETRACTION_HOLD"
+    ],
+    "recommendedSourceId": "Stomach_Vacuum",
+    "textOnlyDifferences": [],
+    "recommendSharing": true,
+    "risk": "仅建议用于握距、把手或轻微站距变式；接入前仍需确认画面没有器械、姿态或单侧差异。"
+  },
+  {
+    "baseMovement": "",
+    "exerciseIds": [
+      "EX_DOUBLE_KNEE_TO_CHEST",
+      "EX_HALF_KNEEL_HIP_FLEXOR_STRETCH",
+      "EX_QUADRUPED_THORACIC_FLEX_EXTENSION",
+      "EX_QUADRUPED_THORACIC_ROTATION",
+      "EX_SCAP_QUADRUPED_PROTRACTION",
+      "EX_SCAP_WALL_PROTRACTION",
+      "EX_SINGLE_KNEE_TO_CHEST",
+      "EX_SUPINE_EXHALE_RIBCAGE_CONTROL",
+      "EX_SUPINE_POSTERIOR_PELVIC_TILT",
+      "EX_TOWEL_CERVICAL_EXTENSION",
+      "EX_TOWEL_RESISTED_CERVICAL_RETRACTION_ISOMETRIC",
+      "EX_WALL_ELBOW_CHEST_SHOULDER_STRETCH",
+      "EX_WALL_FIVE_POINT_ALIGNMENT",
+      "EX_WALL_SCAPULAR_RETRACTION_ISOMETRIC"
+    ],
+    "recommendedSourceId": "Chair_Leg_Extended_Stretch",
+    "textOnlyDifferences": [],
+    "recommendSharing": true,
+    "risk": "仅建议用于握距、把手或轻微站距变式；接入前仍需确认画面没有器械、姿态或单侧差异。"
+  },
+  {
+    "baseMovement": "barbell bench press",
+    "exerciseIds": [
+      "barbell-bench-press",
+      "close-grip-bench-press"
+    ],
+    "recommendedSourceId": "Barbell_Bench_Press_-_Medium_Grip",
+    "textOnlyDifferences": [
+      "close grip 变式"
+    ],
+    "recommendSharing": true,
+    "risk": "仅建议用于握距、把手或轻微站距变式；接入前仍需确认画面没有器械、姿态或单侧差异。"
+  },
+  {
+    "baseMovement": "dumbbell bench press",
+    "exerciseIds": [
+      "dumbbell-bench-press",
+      "neutral-grip-dumbbell-bench-press"
+    ],
+    "recommendedSourceId": "Dumbbell_Bench_Press",
+    "textOnlyDifferences": [
+      "neutral grip 变式"
+    ],
+    "recommendSharing": true,
+    "risk": "仅建议用于握距、把手或轻微站距变式；接入前仍需确认画面没有器械、姿态或单侧差异。"
+  },
+  {
+    "baseMovement": "glute bridge",
+    "exerciseIds": [
+      "EX_GLUTE_BRIDGE",
+      "glute-bridge"
+    ],
+    "recommendedSourceId": "Butt_Lift_Bridge",
+    "textOnlyDifferences": [],
+    "recommendSharing": true,
+    "risk": "仅建议用于握距、把手或轻微站距变式；接入前仍需确认画面没有器械、姿态或单侧差异。"
+  },
+  {
+    "baseMovement": "lat pulldown",
+    "exerciseIds": [
+      "lat-pulldown",
+      "reverse-grip-lat-pulldown",
+      "wide-grip-lat-pulldown"
+    ],
+    "recommendedSourceId": "Leverage_Iso_Row",
+    "textOnlyDifferences": [
+      "reverse grip 变式",
+      "wide grip 变式"
+    ],
+    "recommendSharing": true,
+    "risk": "仅建议用于握距、把手或轻微站距变式；接入前仍需确认画面没有器械、姿态或单侧差异。"
+  },
+  {
+    "baseMovement": "pullup",
+    "exerciseIds": [
+      "neutral-grip-pull-up",
+      "pull-up",
+      "wide-grip-pull-up"
+    ],
+    "recommendedSourceId": "V-Bar_Pullup",
+    "textOnlyDifferences": [
+      "neutral grip 变式",
+      "wide grip 变式"
+    ],
+    "recommendSharing": true,
+    "risk": "仅建议用于握距、把手或轻微站距变式；接入前仍需确认画面没有器械、姿态或单侧差异。"
+  },
+  {
+    "baseMovement": "pushup",
+    "exerciseIds": [
+      "push-up",
+      "wide-grip-push-up"
+    ],
+    "recommendedSourceId": "Clock_Push-Up",
+    "textOnlyDifferences": [
+      "wide grip 变式"
+    ],
+    "recommendSharing": true,
+    "risk": "仅建议用于握距、把手或轻微站距变式；接入前仍需确认画面没有器械、姿态或单侧差异。"
+  }
+]

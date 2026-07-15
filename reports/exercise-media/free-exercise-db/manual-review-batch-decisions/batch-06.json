@@ -1,0 +1,13 @@
+{
+  "batchNumber": 6,
+  "decisions": [
+    {"exerciseId":"copenhagen-plank","sourceId":null,"decision":"proposed-rejected","visualEvidence":["候选为普通平板、地面侧桥和俯卧腰背伸展，没有上腿放凳支撑的 Copenhagen Plank"],"differences":["缺少侧卧、上腿支撑与内收肌负荷"],"risks":["普通 Plank 会掩盖关键支撑方式"]},
+    {"exerciseId":"cossack-squat","sourceId":null,"decision":"proposed-rejected","visualEvidence":["三项均是矢状面双侧深蹲或跳蹲，没有向一侧下沉、另一腿伸直"],"differences":["缺少 Cossack Squat 的侧向单侧重心转移"],"risks":["普通深蹲不能代表 lateral squat 模式"]},
+    {"exerciseId":"crunch","sourceId":null,"decision":"proposed-rejected","visualEvidence":["候选分别是 Tuck Crunch、球上卷腹和交叉卷腹，均带有目标未指定的明显变式"],"differences":["髋屈、器械或旋转方式不同于通用 Crunch"],"risks":["特定变式可能误导基础动作姿态"]},
+    {"exerciseId":"deadlift","sourceId":"Barbell_Deadlift","decision":"proposed-accepted","visualEvidence":["杠铃从地面经髋膝伸展拉至站立，器械和完整轨迹一致"],"differences":[],"risks":[]},
+    {"exerciseId":"decline-dumbbell-fly","sourceId":"Decline_Dumbbell_Flyes","decision":"proposed-accepted","visualEvidence":["下斜凳仰卧，双哑铃从外展弧线合拢至胸上方，角度和动作一致"],"differences":[],"risks":[]},
+    {"exerciseId":"decline-machine-chest-press","sourceId":"Leverage_Decline_Chest_Press","decision":"proposed-accepted","visualEvidence":["下斜杠杆式推胸机由屈肘推至伸肘，器械类别和下斜方向一致"],"differences":[],"risks":[]},
+    {"exerciseId":"decline-sit-up","sourceId":null,"decision":"unresolved","visualEvidence":["Decline Crunch 图片使用下斜凳且躯干屈曲，但无法从两帧可靠判断是否达到 Sit-up 的完整坐起幅度"],"differences":["Crunch 与 Sit-up 的运动幅度存在关键差异"],"risks":["需要用户判断是否接受较短幅度画面"]},
+    {"exerciseId":"dip-triceps-focus","sourceId":"Dips_-_Triceps_Version","decision":"proposed-accepted","visualEvidence":["双杠直立躯干屈伸肘，图片明确标注并展示 Triceps Version"],"differences":[],"risks":[]}
+  ]
+}

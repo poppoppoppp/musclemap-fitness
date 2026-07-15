@@ -1,0 +1,262 @@
+{
+  "version": 1,
+  "generatedAt": "2026-07-15T10:35:28.731Z",
+  "sourceCommit": "b0eed061e1c832b3ed815fbaa4b45b3cdc14df49",
+  "cachePath": "D:\\AI\\FreeExerciseDB-cache\\images",
+  "acceptedTotal": 47,
+  "validAccepted": 47,
+  "downloadedImages": 0,
+  "cachedReusedImages": 0,
+  "convertedImages": 0,
+  "existingSkippedExercises": 47,
+  "conflictSkippedExercises": 0,
+  "downloadFailedExercises": 0,
+  "corruptImageExercises": 0,
+  "failedExercises": 0,
+  "newlyCompletedExercises": 0,
+  "downloadedBytes": 0,
+  "outputBytes": 0,
+  "integratedAcceptedExercises": 47,
+  "cachedAcceptedImages": 94,
+  "cachedAcceptedBytes": 6186615,
+  "integratedWebpImages": 94,
+  "integratedWebpBytes": 3980010,
+  "failures": [],
+  "exercises": [
+    {
+      "exerciseId": "back-extension",
+      "sourceId": "Hyperextensions_Back_Extensions",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "barbell-curl",
+      "sourceId": "Barbell_Curl",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "barbell-hip-thrust",
+      "sourceId": "Barbell_Hip_Thrust",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "barbell-shrug",
+      "sourceId": "Barbell_Shrug",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "cable-front-raise",
+      "sourceId": "Front_Cable_Raise",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "cable-triceps-pushdown",
+      "sourceId": "Triceps_Pushdown",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "cable-wrist-curl",
+      "sourceId": "Cable_Wrist_Curl",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "chin-up",
+      "sourceId": "Chin-Up",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "close-grip-bench-press",
+      "sourceId": "Close-Grip_Barbell_Bench_Press",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "cross-body-hammer-curl",
+      "sourceId": "Cross_Body_Hammer_Curl",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "dead-bug",
+      "sourceId": "Dead_Bug",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "decline-barbell-bench-press",
+      "sourceId": "Decline_Barbell_Bench_Press",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "decline-dumbbell-bench-press",
+      "sourceId": "Decline_Dumbbell_Bench_Press",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "decline-push-up",
+      "sourceId": "Decline_Push-Up",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "dumbbell-bench-press",
+      "sourceId": "Dumbbell_Bench_Press",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "dumbbell-front-raise",
+      "sourceId": "Front_Dumbbell_Raise",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "dumbbell-shoulder-press",
+      "sourceId": "Dumbbell_Shoulder_Press",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "dumbbell-shrug",
+      "sourceId": "Dumbbell_Shrug",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "ez-bar-curl",
+      "sourceId": "EZ-Bar_Curl",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "face-pull",
+      "sourceId": "Face_Pull",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "front-squat",
+      "sourceId": "Front_Barbell_Squat",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "glute-bridge",
+      "sourceId": "Butt_Lift_Bridge",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "goblet-squat",
+      "sourceId": "Goblet_Squat",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "hack-squat",
+      "sourceId": "Hack_Squat",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "hanging-leg-raise",
+      "sourceId": "Hanging_Leg_Raise",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "incline-dumbbell-curl",
+      "sourceId": "Incline_Dumbbell_Curl",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "incline-dumbbell-row",
+      "sourceId": "Dumbbell_Incline_Row",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "incline-push-up",
+      "sourceId": "Incline_Push-Up",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "leg-press",
+      "sourceId": "Leg_Press",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "neutral-grip-dumbbell-bench-press",
+      "sourceId": "Dumbbell_Bench_Press_with_Neutral_Grip",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "plank",
+      "sourceId": "Plank",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "power-clean",
+      "sourceId": "Power_Clean_from_Blocks",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "preacher-curl",
+      "sourceId": "Preacher_Curl",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "reverse-crunch",
+      "sourceId": "Reverse_Crunch",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "reverse-curl",
+      "sourceId": "Reverse_Barbell_Curl",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "reverse-grip-pushdown",
+      "sourceId": "Reverse_Grip_Triceps_Pushdown",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "russian-twist",
+      "sourceId": "Russian_Twist",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "seated-calf-raise",
+      "sourceId": "Seated_Calf_Raise",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "seated-leg-curl",
+      "sourceId": "Seated_Leg_Curl",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "single-arm-dumbbell-press",
+      "sourceId": "Dumbbell_One-Arm_Shoulder_Press",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "single-leg-glute-bridge",
+      "sourceId": "Single_Leg_Glute_Bridge",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "smith-flat-bench-press",
+      "sourceId": "Smith_Machine_Bench_Press",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "smith-incline-bench-press",
+      "sourceId": "Smith_Machine_Incline_Bench_Press",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "smith-squat",
+      "sourceId": "Smith_Machine_Squat",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "stability-ball-leg-curl",
+      "sourceId": "Ball_Leg_Curl",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "straight-arm-pulldown",
+      "sourceId": "Straight-Arm_Pulldown",
+      "status": "existing"
+    },
+    {
+      "exerciseId": "superman",
+      "sourceId": "Superman",
+      "status": "existing"
+    }
+  ]
+}

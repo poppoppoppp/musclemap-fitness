@@ -1,0 +1,2819 @@
+{
+  "version": 1,
+  "generatedAt": "2026-07-15T09:31:12.941Z",
+  "sourceManualReviewCount": 142,
+  "processedCount": 72,
+  "proposedAccepted": {
+    "alternating-dumbbell-press": {
+      "exerciseId": "alternating-dumbbell-press",
+      "sourceId": "See-Saw_Press_Alternating_Side_Press",
+      "decision": "proposed-accepted",
+      "confidence": 0.715,
+      "visualEvidence": [
+        "图片显示站姿双哑铃一上一下交替肩推，器械、方向和交替方式一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Alternating Dumbbell Press; 器械 哑铃; 主练 anterior-deltoid / lateral-deltoid",
+        "候选: See-Saw Press (Alternating Side Press); 器械 dumbbell; 主练 shoulders",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [
+        "数据库使用 See-Saw Press 同义名称"
+      ],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Standing_Alternating_Dumbbell_Press",
+          "reason": "名称不是精确或明确别名匹配；身体姿态不一致：未注明 ≠ standing"
+        },
+        {
+          "sourceId": "Arnold_Dumbbell_Press",
+          "reason": "名称不是精确或明确别名匹配；侧别/交替方式不一致：alternating ≠ 未注明"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-01.webp",
+      "batchNumber": 1,
+      "updatedAt": "2026-07-15T07:16:15.557Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "arnold-press": {
+      "exerciseId": "arnold-press",
+      "sourceId": "Arnold_Dumbbell_Press",
+      "decision": "proposed-accepted",
+      "confidence": 0.842,
+      "visualEvidence": [
+        "坐姿哑铃由掌心朝内旋转至头顶，start/peak 与 Arnold Press 一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Arnold Press; 器械 哑铃; 主练 anterior-deltoid / lateral-deltoid",
+        "候选: Arnold Dumbbell Press; 器械 dumbbell; 主练 shoulders",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Cuban_Press",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Dumbbell_Shoulder_Press",
+          "reason": "名称不是精确或明确别名匹配"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-01.webp",
+      "batchNumber": 1,
+      "updatedAt": "2026-07-15T07:16:15.557Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "band-hip-adduction": {
+      "exerciseId": "band-hip-adduction",
+      "sourceId": "Band_Hip_Adductions",
+      "decision": "proposed-accepted",
+      "confidence": 0.779,
+      "visualEvidence": [
+        "站姿弹力带固定于踝部，腿从外侧向身体中线内收，阶段清晰"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Band Hip Adduction; 器械 弹力带; 主练 hip-adductors",
+        "候选: Band Hip Adductions; 器械 bands; 主练 adductors",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Carioca_Quick_Step",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致；动作属性存在差异"
+        },
+        {
+          "sourceId": "Hip_Flexion_with_Band",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致；动作属性存在差异；主练肌群冲突：adductors ≠ quadriceps"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-01.webp",
+      "batchNumber": 1,
+      "updatedAt": "2026-07-15T07:16:15.557Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "band-lateral-raise": {
+      "exerciseId": "band-lateral-raise",
+      "sourceId": "Lateral_Raise_-_With_Bands",
+      "decision": "proposed-accepted",
+      "confidence": 0.741,
+      "visualEvidence": [
+        "站姿踩带并向两侧抬臂，器械、姿态和肩外展方向一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Band Lateral Raise; 器械 弹力带; 主练 lateral-deltoid",
+        "候选: Lateral Raise - With Bands; 器械 bands; 主练 shoulders",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Internal_Rotation_with_Band",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Shoulder_Press_-_With_Bands",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-01.webp",
+      "batchNumber": 1,
+      "updatedAt": "2026-07-15T07:16:15.557Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "band-pull-apart": {
+      "exerciseId": "band-pull-apart",
+      "sourceId": "Band_Pull_Apart",
+      "decision": "proposed-accepted",
+      "confidence": 0.827,
+      "visualEvidence": [
+        "站姿双臂在胸前将弹力带水平拉开，start/peak、器械和方向一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Band Pull-apart; 器械 弹力带; 主练 rear-deltoid / middle-lower-trapezius",
+        "候选: Band Pull Apart; 器械 bands; 主练 shoulders",
+        "名称或明确别名一致",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Internal_Rotation_with_Band",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致；动作属性存在差异"
+        },
+        {
+          "sourceId": "External_Rotation_with_Band",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致；动作属性存在差异"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-02.webp",
+      "batchNumber": 2,
+      "updatedAt": "2026-07-15T07:21:38.691Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "band-shoulder-press": {
+      "exerciseId": "band-shoulder-press",
+      "sourceId": "Shoulder_Press_-_With_Bands",
+      "decision": "proposed-accepted",
+      "confidence": 0.741,
+      "visualEvidence": [
+        "站姿踩住弹力带并从肩部推至头顶，阶段和器械一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Band Shoulder Press; 器械 弹力带; 主练 anterior-deltoid / lateral-deltoid",
+        "候选: Shoulder Press - With Bands; 器械 bands; 主练 shoulders",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Internal_Rotation_with_Band",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        },
+        {
+          "sourceId": "Lateral_Raise_-_With_Bands",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-02.webp",
+      "batchNumber": 2,
+      "updatedAt": "2026-07-15T07:21:38.691Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "barbell-bench-press": {
+      "exerciseId": "barbell-bench-press",
+      "sourceId": "Barbell_Bench_Press_-_Medium_Grip",
+      "decision": "proposed-accepted",
+      "confidence": 0.847,
+      "visualEvidence": [
+        "平板凳杠铃由胸前推至肘伸，支撑面、器械和轨迹一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Barbell Bench Press; 器械 杠铃 / 卧推凳; 主练 pectoralis-major",
+        "候选: Barbell Bench Press - Medium Grip; 器械 barbell; 主练 chest",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [
+        "候选名称明确中等握距，属于常规卧推表现"
+      ],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Barbell_Guillotine_Bench_Press",
+          "reason": "名称不是精确或明确别名匹配；关键变式不一致：未注明 ≠ guillotine"
+        },
+        {
+          "sourceId": "Decline_Barbell_Bench_Press",
+          "reason": "名称不是精确或明确别名匹配；凳面角度不一致：未注明 ≠ decline"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-02.webp",
+      "batchNumber": 2,
+      "updatedAt": "2026-07-15T07:21:38.691Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "barbell-clean-and-press": {
+      "exerciseId": "barbell-clean-and-press",
+      "sourceId": "Clean_and_Press",
+      "decision": "proposed-accepted",
+      "confidence": 0.804,
+      "visualEvidence": [
+        "图片展示杠铃从地面翻至肩部并推举过头，复合动作阶段吻合"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Barbell Clean and Press; 器械 杠铃; 主练 anterior-deltoid / gluteus-maximus",
+        "候选: Clean and Press; 器械 barbell; 主练 shoulders",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Barbell_Shoulder_Press",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        },
+        {
+          "sourceId": "Anti-Gravity_Press",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-02.webp",
+      "batchNumber": 2,
+      "updatedAt": "2026-07-15T07:21:38.691Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "barbell-wrist-curl": {
+      "exerciseId": "barbell-wrist-curl",
+      "sourceId": "Palms-Up_Barbell_Wrist_Curl_Over_A_Bench",
+      "decision": "proposed-accepted",
+      "confidence": 0.611,
+      "visualEvidence": [
+        "前臂支撑在凳上、掌心向上完成杠铃腕屈，start/peak 清楚"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Barbell Wrist Curl; 器械 杠铃; 主练 forearm-flexors",
+        "候选: Palms-Up Barbell Wrist Curl Over A Bench; 器械 barbell; 主练 forearms",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [
+        "候选明确使用卧推凳支撑"
+      ],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Barbell_Curl",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        },
+        {
+          "sourceId": "Palms-Down_Wrist_Curl_Over_A_Bench",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-03.webp",
+      "batchNumber": 3,
+      "updatedAt": "2026-07-15T07:27:47.692Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "bench-dip": {
+      "exerciseId": "bench-dip",
+      "sourceId": "Bench_Dips",
+      "decision": "proposed-accepted",
+      "confidence": 0.551,
+      "visualEvidence": [
+        "双手在身后凳面支撑，自重屈伸肘完成 Bench Dip，姿态和器械一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Bench Dip; 器械 自重 / 卧推凳; 主练 triceps-brachii",
+        "候选: Bench Dips; 器械 body only; 主练 triceps",
+        "器械一致",
+        "主练肌群兼容"
+      ],
+      "differences": [],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Weighted_Bench_Dip",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        },
+        {
+          "sourceId": "Parallel_Bar_Dip",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-03.webp",
+      "batchNumber": 3,
+      "updatedAt": "2026-07-15T07:27:47.692Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "bilateral-dumbbell-row": {
+      "exerciseId": "bilateral-dumbbell-row",
+      "sourceId": "Bent_Over_Two-Dumbbell_Row",
+      "decision": "proposed-accepted",
+      "confidence": 0.645,
+      "visualEvidence": [
+        "站姿髋铰链、双手同时将哑铃拉向躯干，双侧方式和轨迹一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Bilateral Dumbbell Row; 器械 哑铃; 主练 rhomboids / middle-lower-trapezius",
+        "候选: Bent Over Two-Dumbbell Row; 器械 dumbbell; 主练 middle back",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Bent_Over_Two-Dumbbell_Row_With_Palms_In",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        },
+        {
+          "sourceId": "Dumbbell_Incline_Row",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致；凳面角度不一致：未注明 ≠ incline"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-03.webp",
+      "batchNumber": 3,
+      "updatedAt": "2026-07-15T07:27:47.692Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "cable-chest-fly": {
+      "exerciseId": "cable-chest-fly",
+      "sourceId": "Cable_Crossover",
+      "decision": "proposed-accepted",
+      "confidence": 0.601,
+      "visualEvidence": [
+        "站姿双侧绳索由外侧合拢至胸前，肩水平内收轨迹和器械一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Cable Chest Fly; 器械 绳索器械; 主练 pectoralis-major",
+        "候选: Cable Crossover; 器械 cable; 主练 chest",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [
+        "数据库使用 Cable Crossover 常见同义名称"
+      ],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Cable_Chest_Press",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        },
+        {
+          "sourceId": "Low_Cable_Crossover",
+          "reason": "名称不是精确或明确别名匹配"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-04.webp",
+      "batchNumber": 4,
+      "updatedAt": "2026-07-15T07:34:40.750Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "cable-pull-through": {
+      "exerciseId": "cable-pull-through",
+      "sourceId": "Pull_Through",
+      "decision": "proposed-accepted",
+      "confidence": 0.839,
+      "visualEvidence": [
+        "背对低位滑轮，绳索从两腿间通过并完成髋铰链伸展，动作一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Cable Pull-through; 器械 绳索器械; 主练 gluteus-maximus",
+        "候选: Pull Through; 器械 cable; 主练 glutes",
+        "器械一致",
+        "主练肌群兼容"
+      ],
+      "differences": [],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "One_Knee_To_Chest",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致；动作属性存在差异"
+        },
+        {
+          "sourceId": "One-Legged_Cable_Kickback",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异；侧别/交替方式不一致：未注明 ≠ unilateral"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-04.webp",
+      "batchNumber": 4,
+      "updatedAt": "2026-07-15T07:34:40.750Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "cable-upright-row": {
+      "exerciseId": "cable-upright-row",
+      "sourceId": "Upright_Cable_Row",
+      "decision": "proposed-accepted",
+      "confidence": 0.843,
+      "visualEvidence": [
+        "站姿低位绳索直杆沿身体向上拉，肘部高于手，轨迹一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Cable Upright Row; 器械 绳索器械; 主练 lateral-deltoid / upper-trapezius",
+        "候选: Upright Cable Row; 器械 cable; 主练 traps",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Smith_Machine_Upright_Row",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        },
+        {
+          "sourceId": "Low_Pulley_Row_To_Neck",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-05.webp",
+      "batchNumber": 5,
+      "updatedAt": "2026-07-15T07:42:54.801Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "deadlift": {
+      "exerciseId": "deadlift",
+      "sourceId": "Barbell_Deadlift",
+      "decision": "proposed-accepted",
+      "confidence": 0.775,
+      "visualEvidence": [
+        "杠铃从地面经髋膝伸展拉至站立，器械和完整轨迹一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Deadlift; 器械 杠铃; 主练 erector-spinae",
+        "候选: Barbell Deadlift; 器械 barbell; 主练 lower back",
+        "器械一致",
+        "主练肌群兼容"
+      ],
+      "differences": [],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Deadlift_with_Bands",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        },
+        {
+          "sourceId": "Deadlift_with_Chains",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-06.webp",
+      "batchNumber": 6,
+      "updatedAt": "2026-07-15T07:50:45.989Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "decline-dumbbell-fly": {
+      "exerciseId": "decline-dumbbell-fly",
+      "sourceId": "Decline_Dumbbell_Flyes",
+      "decision": "proposed-accepted",
+      "confidence": 0.588,
+      "visualEvidence": [
+        "下斜凳仰卧，双哑铃从外展弧线合拢至胸上方，角度和动作一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Decline Dumbbell Fly; 器械 哑铃 / 卧推凳; 主练 pectoralis-major",
+        "候选: Decline Dumbbell Flyes; 器械 dumbbell; 主练 chest",
+        "器械一致",
+        "主练肌群兼容"
+      ],
+      "differences": [],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Decline_Dumbbell_Bench_Press",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        },
+        {
+          "sourceId": "Decline_Push-Up",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致；动作属性存在差异"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-06.webp",
+      "batchNumber": 6,
+      "updatedAt": "2026-07-15T07:50:45.989Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "decline-machine-chest-press": {
+      "exerciseId": "decline-machine-chest-press",
+      "sourceId": "Leverage_Decline_Chest_Press",
+      "decision": "proposed-accepted",
+      "confidence": 0.817,
+      "visualEvidence": [
+        "下斜杠杆式推胸机由屈肘推至伸肘，器械类别和下斜方向一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Decline Machine Chest Press; 器械 推胸器; 主练 pectoralis-major",
+        "候选: Leverage Decline Chest Press; 器械 machine; 主练 chest",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Smith_Machine_Decline_Press",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Decline_Smith_Press",
+          "reason": "名称不是精确或明确别名匹配"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-06.webp",
+      "batchNumber": 6,
+      "updatedAt": "2026-07-15T07:50:45.989Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "dip-triceps-focus": {
+      "exerciseId": "dip-triceps-focus",
+      "sourceId": "Dips_-_Triceps_Version",
+      "decision": "proposed-accepted",
+      "confidence": 0.567,
+      "visualEvidence": [
+        "双杠直立躯干屈伸肘，图片明确标注并展示 Triceps Version"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Triceps Dip; 器械 双杠; 主练 triceps-brachii",
+        "候选: Dips - Triceps Version; 器械 body only; 主练 triceps",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Parallel_Bar_Dip",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致"
+        },
+        {
+          "sourceId": "Weighted_Bench_Dip",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-06.webp",
+      "batchNumber": 6,
+      "updatedAt": "2026-07-15T07:50:45.989Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "donkey-kick": {
+      "exerciseId": "donkey-kick",
+      "sourceId": "Glute_Kickback",
+      "decision": "proposed-accepted",
+      "confidence": 0.551,
+      "visualEvidence": [
+        "四点跪姿单腿屈膝向后上方伸髋，正是自重 Donkey Kick 轨迹"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Donkey Kick; 器械 自重; 主练 gluteus-maximus",
+        "候选: Glute Kickback; 器械 body only; 主练 glutes",
+        "器械一致",
+        "主练肌群兼容"
+      ],
+      "differences": [
+        "数据库使用 Glute Kickback 同义名称"
+      ],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Butt_Lift_Bridge",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Leg_Lift",
+          "reason": "名称不是精确或明确别名匹配"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-07.webp",
+      "batchNumber": 7,
+      "updatedAt": "2026-07-15T08:06:09.117Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "dumbbell-curl": {
+      "exerciseId": "dumbbell-curl",
+      "sourceId": "Dumbbell_Bicep_Curl",
+      "decision": "proposed-accepted",
+      "confidence": 0.822,
+      "visualEvidence": [
+        "站姿双手持哑铃从肘伸至屈肘，器械和动作方向一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Dumbbell Curl; 器械 哑铃; 主练 biceps-brachii",
+        "候选: Dumbbell Bicep Curl; 器械 dumbbell; 主练 biceps",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Dumbbell_Alternate_Bicep_Curl",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Preacher_Hammer_Dumbbell_Curl",
+          "reason": "名称不是精确或明确别名匹配"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-07.webp",
+      "batchNumber": 7,
+      "updatedAt": "2026-07-15T08:06:09.117Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "dumbbell-lateral-raise": {
+      "exerciseId": "dumbbell-lateral-raise",
+      "sourceId": "Side_Lateral_Raise",
+      "decision": "proposed-accepted",
+      "confidence": 0.779,
+      "visualEvidence": [
+        "站姿双哑铃由身体两侧外展至肩高，动作方向一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Dumbbell Lateral Raise; 器械 哑铃; 主练 lateral-deltoid",
+        "候选: Side Lateral Raise; 器械 dumbbell; 主练 shoulders",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [
+        "Side Lateral Raise 为常见同义名称"
+      ],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Single_Dumbbell_Raise",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Dumbbell_Scaption",
+          "reason": "名称不是精确或明确别名匹配"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-07.webp",
+      "batchNumber": 7,
+      "updatedAt": "2026-07-15T08:06:09.117Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "dumbbell-split-squat": {
+      "exerciseId": "dumbbell-split-squat",
+      "sourceId": "Split_Squat_with_Dumbbells",
+      "decision": "proposed-accepted",
+      "confidence": 0.771,
+      "visualEvidence": [
+        "双手持哑铃、前后分腿并垂直下蹲，器械和普通 Split Squat 姿态一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Dumbbell Split Squat; 器械 哑铃; 主练 quadriceps",
+        "候选: Split Squat with Dumbbells; 器械 dumbbell; 主练 quadriceps",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Suspended_Split_Squat",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致"
+        },
+        {
+          "sourceId": "Dumbbell_Squat",
+          "reason": "名称不是精确或明确别名匹配；关键变式不一致：split ≠ 未注明"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-08.webp",
+      "batchNumber": 8,
+      "updatedAt": "2026-07-15T08:18:58.385Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "feet-elevated-inverted-row": {
+      "exerciseId": "feet-elevated-inverted-row",
+      "sourceId": "Inverted_Row",
+      "decision": "proposed-accepted",
+      "confidence": 0.605,
+      "visualEvidence": [
+        "仰身悬垂于横杆下方，双脚放在高处支撑并将胸部拉向杆，抬脚特征可见"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Feet-elevated Inverted Row; 器械 自重; 主练 rhomboids / middle-lower-trapezius",
+        "候选: Inverted Row; 器械 未标注; 主练 middle back",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [
+        "数据库名称未写 Feet-elevated，但图片明确表现抬脚"
+      ],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Inverted_Row_with_Straps",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致；主练肌群映射不完全一致"
+        },
+        {
+          "sourceId": "Sled_Row",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致；主练肌群映射不完全一致"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-08.webp",
+      "batchNumber": 8,
+      "updatedAt": "2026-07-15T08:18:58.385Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "incline-barbell-bench-press": {
+      "exerciseId": "incline-barbell-bench-press",
+      "sourceId": "Barbell_Incline_Bench_Press_-_Medium_Grip",
+      "decision": "proposed-accepted",
+      "confidence": 0.842,
+      "visualEvidence": [
+        "上斜凳杠铃由上胸推至伸肘，器械、角度和中等握距均合理"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Incline Barbell Bench Press; 器械 杠铃 / 卧推凳; 主练 pectoralis-major",
+        "候选: Barbell Incline Bench Press - Medium Grip; 器械 barbell; 主练 chest",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [
+        "候选明确中等握距"
+      ],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Decline_Barbell_Bench_Press",
+          "reason": "名称不是精确或明确别名匹配；凳面角度不一致：incline ≠ decline"
+        },
+        {
+          "sourceId": "Barbell_Bench_Press_-_Medium_Grip",
+          "reason": "名称不是精确或明确别名匹配；凳面角度不一致：incline ≠ 未注明"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-09.webp",
+      "batchNumber": 9,
+      "updatedAt": "2026-07-15T08:27:50.246Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "incline-dumbbell-bench-press": {
+      "exerciseId": "incline-dumbbell-bench-press",
+      "sourceId": "Incline_Dumbbell_Press",
+      "decision": "proposed-accepted",
+      "confidence": 0.874,
+      "visualEvidence": [
+        "上斜凳双哑铃推举，凳面角度与动作轨迹一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Incline Dumbbell Bench Press; 器械 哑铃 / 卧推凳; 主练 pectoralis-major",
+        "候选: Incline Dumbbell Press; 器械 dumbbell; 主练 chest",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [],
+      "risks": [],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Hammer_Grip_Incline_DB_Bench_Press",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Dumbbell_Bench_Press",
+          "reason": "名称不是精确或明确别名匹配；凳面角度不一致：incline ≠ 未注明"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-09.webp",
+      "batchNumber": 9,
+      "updatedAt": "2026-07-15T08:27:50.246Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    }
+  },
+  "proposedForced": {
+    "alternating-dumbbell-curl": {
+      "exerciseId": "alternating-dumbbell-curl",
+      "sourceId": "Dumbbell_Alternate_Bicep_Curl",
+      "decision": "proposed-forced",
+      "confidence": 0.561,
+      "visualEvidence": [
+        "图片明确显示站姿双手持哑铃并左右交替屈肘，start/peak 阶段完整"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Alternating Dumbbell Curl; 器械 哑铃; 主练 biceps-brachii",
+        "候选: Dumbbell Alternate Bicep Curl; 器械 dumbbell; 主练 biceps",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [
+        "数据库名称包含 Alternate，和 MuscleMap 的 Alternating 为命名差异"
+      ],
+      "risks": [
+        "算法 laterality 冲突为误报；画面本身明确展示 alternating"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Dumbbell_Bicep_Curl",
+          "reason": "名称不是精确或明确别名匹配；侧别/交替方式不一致：alternating ≠ 未注明"
+        },
+        {
+          "sourceId": "One_Arm_Dumbbell_Preacher_Curl",
+          "reason": "名称不是精确或明确别名匹配；侧别/交替方式不一致：alternating ≠ unilateral"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-01.webp",
+      "batchNumber": 1,
+      "updatedAt": "2026-07-15T07:16:15.557Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "barbell-good-morning": {
+      "exerciseId": "barbell-good-morning",
+      "sourceId": "Stiff_Leg_Barbell_Good_Morning",
+      "decision": "proposed-forced",
+      "confidence": 0.814,
+      "visualEvidence": [
+        "图片为站姿肩背杠铃的髋铰链前屈与起身，轨迹和支撑姿态一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Barbell Good Morning; 器械 杠铃 / 深蹲架; 主练 erector-spinae",
+        "候选: Stiff Leg Barbell Good Morning; 器械 barbell; 主练 lower back",
+        "器械一致",
+        "主练肌群兼容"
+      ],
+      "differences": [
+        "候选名称包含 Stiff Leg，膝屈程度可能比通用 Good Morning 更小"
+      ],
+      "risks": [
+        "需用户确认是否接受较直腿的画面表达"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Barbell_Deadlift",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        },
+        {
+          "sourceId": "Deadlift_with_Bands",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-02.webp",
+      "batchNumber": 2,
+      "updatedAt": "2026-07-15T07:21:38.691Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "cable-hip-adduction": {
+      "exerciseId": "cable-hip-adduction",
+      "sourceId": "Cable_Hip_Adduction",
+      "decision": "proposed-forced",
+      "confidence": 0.59,
+      "visualEvidence": [
+        "站姿踝带连接绳索，工作腿跨向身体中线，清楚展示髋内收"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Cable Hip Adduction; 器械 绳索器械; 主练 hip-adductors",
+        "候选: Cable Hip Adduction; 器械 cable; 主练 quadriceps",
+        "名称或明确别名一致",
+        "器械一致",
+        "动作属性兼容"
+      ],
+      "differences": [],
+      "risks": [
+        "算法 primary-muscle 冲突来自肌群分类，图片动作本身明确一致"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Thigh_Adductor",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Carioca_Quick_Step",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致；动作属性存在差异"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-04.webp",
+      "batchNumber": 4,
+      "updatedAt": "2026-07-15T07:34:40.750Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "cable-kickback": {
+      "exerciseId": "cable-kickback",
+      "sourceId": "One-Legged_Cable_Kickback",
+      "decision": "proposed-forced",
+      "confidence": 0.662,
+      "visualEvidence": [
+        "站姿单腿踝带向后伸髋，器械和 Glute Kickback 轨迹一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Cable Glute Kickback; 器械 绳索器械; 主练 gluteus-maximus",
+        "候选: One-Legged Cable Kickback; 器械 cable; 主练 glutes",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [
+        "候选名称显式写 One-Legged，目标名称未标单侧但动作本身天然逐腿完成"
+      ],
+      "risks": [
+        "算法 laterality 冲突需用户确认目标是否默认逐腿"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Glute_Kickback",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致；动作属性存在差异；器械冲突：cable/machine ≠ body only"
+        },
+        {
+          "sourceId": "Pull_Through",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异；发力方向冲突：push ≠ pull"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-04.webp",
+      "batchNumber": 4,
+      "updatedAt": "2026-07-15T07:34:40.750Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "cable-overhead-triceps-extension": {
+      "exerciseId": "cable-overhead-triceps-extension",
+      "sourceId": "Cable_Rope_Overhead_Triceps_Extension",
+      "decision": "proposed-forced",
+      "confidence": 0.714,
+      "visualEvidence": [
+        "站姿背对滑轮，绳索从头后伸肘至头顶，overhead 方向和阶段一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Cable Overhead Triceps Extension; 器械 绳索器械; 主练 triceps-brachii",
+        "候选: Cable Rope Overhead Triceps Extension; 器械 cable; 主练 triceps",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [
+        "候选明确使用 rope 附件"
+      ],
+      "risks": [
+        "算法 variant 冲突仅涉及把手附件，需用户确认可接受绳把表达"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Sled_Overhead_Triceps_Extension",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致"
+        },
+        {
+          "sourceId": "Low_Cable_Triceps_Extension",
+          "reason": "名称不是精确或明确别名匹配；关键变式不一致：overhead ≠ 未注明"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-04.webp",
+      "batchNumber": 4,
+      "updatedAt": "2026-07-15T07:34:40.750Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "cable-rear-delt-row": {
+      "exerciseId": "cable-rear-delt-row",
+      "sourceId": "Cable_Rope_Rear-Delt_Rows",
+      "decision": "proposed-forced",
+      "confidence": 0.471,
+      "visualEvidence": [
+        "站姿面向滑轮，以绳把向上胸拉并外展肘部，后束划船轨迹一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Cable Rear Delt Row; 器械 绳索器械; 主练 rear-deltoid",
+        "候选: Cable Rope Rear-Delt Rows; 器械 cable; 主练 shoulders",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [
+        "候选明确使用 rope 附件"
+      ],
+      "risks": [
+        "算法 variant 冲突来自把手附件，需用户确认"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Cable_Rear_Delt_Fly",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        },
+        {
+          "sourceId": "Low_Pulley_Row_To_Neck",
+          "reason": "名称不是精确或明确别名匹配；关键变式不一致：rear ≠ 未注明"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-05.webp",
+      "batchNumber": 5,
+      "updatedAt": "2026-07-15T07:42:54.801Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "cable-skull-crusher": {
+      "exerciseId": "cable-skull-crusher",
+      "sourceId": "Low_Cable_Triceps_Extension",
+      "decision": "proposed-forced",
+      "confidence": 0.651,
+      "visualEvidence": [
+        "单独查看原图确认：仰卧平凳、低位绳索从头后伸肘至手臂垂直，正是 Cable Skull Crusher"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Cable Skull Crusher; 器械 绳索器械 / 卧推凳; 主练 triceps-brachii",
+        "候选: Low Cable Triceps Extension; 器械 cable; 主练 triceps",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [
+        "数据库使用 Low Cable Triceps Extension 泛化名称"
+      ],
+      "risks": [
+        "名称不同但视觉、支撑面和轨迹一致"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Machine_Triceps_Extension",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Triceps_Pushdown",
+          "reason": "名称不是精确或明确别名匹配"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-05.webp",
+      "batchNumber": 5,
+      "updatedAt": "2026-07-15T07:42:54.801Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "captains-chair-knee-raise": {
+      "exerciseId": "captains-chair-knee-raise",
+      "sourceId": "Knee_Hip_Raise_On_Parallel_Bars",
+      "decision": "proposed-forced",
+      "confidence": 0.57,
+      "visualEvidence": [
+        "图片展示前臂和背部支撑于双杠式 Captain Chair，屈膝抬向躯干"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Captain Chair Knee Raise; 器械 双杠; 主练 rectus-abdominis",
+        "候选: Knee/Hip Raise On Parallel Bars; 器械 other; 主练 abdominals",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [
+        "数据库名称使用 Parallel Bars，而画面实际具有 Captain Chair 支撑垫"
+      ],
+      "risks": [
+        "命名差异需用户确认，但视觉器械和动作一致"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Bent-Knee_Hip_Raise",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        },
+        {
+          "sourceId": "Hanging_Leg_Raise",
+          "reason": "名称不是精确或明确别名匹配"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-05.webp",
+      "batchNumber": 5,
+      "updatedAt": "2026-07-15T07:42:54.801Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "dumbbell-floor-press": {
+      "exerciseId": "dumbbell-floor-press",
+      "sourceId": "Dumbbell_Floor_Press",
+      "decision": "proposed-forced",
+      "confidence": 0.573,
+      "visualEvidence": [
+        "仰卧地面、上臂受地面限制并将双哑铃推至伸肘，支撑面和轨迹一致"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Dumbbell Floor Press; 器械 哑铃; 主练 pectoralis-major",
+        "候选: Dumbbell Floor Press; 器械 dumbbell; 主练 triceps",
+        "名称或明确别名一致",
+        "器械一致",
+        "动作属性兼容"
+      ],
+      "differences": [],
+      "risks": [
+        "算法 primary-muscle 冲突为肌群分类差异，视觉动作明确一致"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Dumbbell_Bench_Press",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Incline_Dumbbell_Press",
+          "reason": "名称不是精确或明确别名匹配；凳面角度不一致：未注明 ≠ incline"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-07.webp",
+      "batchNumber": 7,
+      "updatedAt": "2026-07-15T08:06:09.117Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "dumbbell-skull-crusher": {
+      "exerciseId": "dumbbell-skull-crusher",
+      "sourceId": "Dumbbell_Tricep_Extension_-Pronated_Grip",
+      "decision": "proposed-forced",
+      "confidence": 0.642,
+      "visualEvidence": [
+        "单独查看原图确认：仰卧平凳、双哑铃从头侧屈肘位置伸至垂直，Skull Crusher 阶段完整"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Dumbbell Skull Crusher; 器械 哑铃 / 卧推凳; 主练 triceps-brachii",
+        "候选: Dumbbell Tricep Extension -Pronated Grip; 器械 dumbbell; 主练 triceps",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [
+        "数据库使用 Dumbbell Tricep Extension - Pronated Grip 名称"
+      ],
+      "risks": [
+        "名称不同但视觉和支撑面一致"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Tricep_Dumbbell_Kickback",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Dumbbell_Floor_Press",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-07.webp",
+      "batchNumber": 7,
+      "updatedAt": "2026-07-15T08:06:09.117Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "hanging-knee-raise": {
+      "exerciseId": "hanging-knee-raise",
+      "sourceId": "Hanging_Leg_Raise",
+      "decision": "proposed-forced",
+      "confidence": 0.775,
+      "visualEvidence": [
+        "单独查看原图确认：双手悬垂，peak 时双膝明显屈曲抬至髋前，而非直腿举"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Hanging Knee Raise; 器械 单杠; 主练 rectus-abdominis",
+        "候选: Hanging Leg Raise; 器械 body only; 主练 abdominals",
+        "器械一致",
+        "主练肌群兼容",
+        "动作属性兼容"
+      ],
+      "differences": [
+        "数据库名称写 Hanging Leg Raise，但画面实际为 bent-knee raise"
+      ],
+      "risks": [
+        "名称与画面不一致，需以视觉为准由用户确认"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Bent-Knee_Hip_Raise",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        },
+        {
+          "sourceId": "Knee_Hip_Raise_On_Parallel_Bars",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-09.webp",
+      "batchNumber": 9,
+      "updatedAt": "2026-07-15T08:27:50.246Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    }
+  },
+  "proposedReuse": {
+    "EX_GLUTE_BRIDGE": {
+      "exerciseId": "EX_GLUTE_BRIDGE",
+      "sourceId": "Butt_Lift_Bridge",
+      "decision": "proposed-reuse",
+      "confidence": 0.747,
+      "visualEvidence": [
+        "双腿屈膝仰卧并抬髋至肩髋膝成线，与已接入的 glute-bridge 为同一画面动作"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Glute Bridge; 器械 自重; 主练 gluteus-maximus",
+        "候选: Butt Lift (Bridge); 器械 body only; 主练 glutes",
+        "名称或明确别名一致",
+        "器械一致",
+        "主练肌群兼容"
+      ],
+      "differences": [
+        "本条来自 posture 数据集，中文名强调双腿；基础动作 ID 不同"
+      ],
+      "risks": [
+        "共图前用户需确认 posture 条目无需额外康复语境画面"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Single_Leg_Glute_Bridge",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异；侧别/交替方式不一致：未注明 ≠ unilateral；体态/康复动作不能自动映射为普通训练动作"
+        },
+        {
+          "sourceId": "Glute_Kickback",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异；体态/康复动作不能自动映射为普通训练动作"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-08.webp",
+      "batchNumber": 8,
+      "updatedAt": "2026-07-15T08:18:58.385Z",
+      "baseExerciseId": "glute-bridge",
+      "rejectedSourceIds": []
+    }
+  },
+  "proposedRejected": {
+    "alternating-dumbbell-bench-press": {
+      "exerciseId": "alternating-dumbbell-bench-press",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.694,
+      "visualEvidence": [
+        "已查看三组 start/peak；候选分别表现双臂同步卧推、单臂卧推和站姿夹胸推"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Alternating Dumbbell Bench Press; 器械 哑铃 / 卧推凳; 主练 pectoralis-major",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "没有候选表现双哑铃在卧推凳上的交替推举"
+      ],
+      "risks": [
+        "单侧、双侧与交替方式不同会误导动作节奏"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Dumbbell_Bench_Press",
+          "reason": "名称不是精确或明确别名匹配；侧别/交替方式不一致：alternating ≠ 未注明"
+        },
+        {
+          "sourceId": "One_Arm_Dumbbell_Bench_Press",
+          "reason": "名称不是精确或明确别名匹配；侧别/交替方式不一致：alternating ≠ unilateral"
+        },
+        {
+          "sourceId": "Svend_Press",
+          "reason": "名称不是精确或明确别名匹配；侧别/交替方式不一致：alternating ≠ 未注明"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-01.webp",
+      "batchNumber": 1,
+      "updatedAt": "2026-07-15T07:16:15.557Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Dumbbell_Bench_Press",
+        "One_Arm_Dumbbell_Bench_Press",
+        "Svend_Press"
+      ]
+    },
+    "assisted-pull-up": {
+      "exerciseId": "assisted-pull-up",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.726,
+      "visualEvidence": [
+        "首选图片为弹力带辅助引体，其他候选为 V 把引体和杠铃上拉"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Assisted Pull-up; 器械 辅助引体机; 主练 latissimus-dorsi",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "MuscleMap 器械是辅助引体机，候选没有展示机器膝垫或配重辅助"
+      ],
+      "risks": [
+        "弹力带和辅助引体机的支撑方式明显不同"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Band_Assisted_Pull-Up",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致"
+        },
+        {
+          "sourceId": "V-Bar_Pullup",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致"
+        },
+        {
+          "sourceId": "Bent-Arm_Barbell_Pullover",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-01.webp",
+      "batchNumber": 1,
+      "updatedAt": "2026-07-15T07:16:15.557Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Band_Assisted_Pull-Up",
+        "V-Bar_Pullup",
+        "Bent-Arm_Barbell_Pullover"
+      ]
+    },
+    "band-chest-press": {
+      "exerciseId": "band-chest-press",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.651,
+      "visualEvidence": [
+        "首选展示杠铃卧推加弹力带，其他为 Svend Press 与链条卧推"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Band Chest Press; 器械 弹力带; 主练 pectoralis-major",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "均未展示以弹力带作为主要阻力的胸前推举"
+      ],
+      "risks": [
+        "杠铃卧推、站姿夹胸推与弹力带胸推器械和支撑姿态不同"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Bench_Press_-_With_Bands",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Svend_Press",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致"
+        },
+        {
+          "sourceId": "Chain_Press",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-01.webp",
+      "batchNumber": 1,
+      "updatedAt": "2026-07-15T07:16:15.557Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Bench_Press_-_With_Bands",
+        "Svend_Press",
+        "Chain_Press"
+      ]
+    },
+    "bar-hang": {
+      "exerciseId": "bar-hang",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.558,
+      "visualEvidence": [
+        "三组图片分别是 Dead Bug、V 把引体和等长夹胸，没有静态悬垂"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Dead Hang; 器械 单杠; 主练 forearm-flexors",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "候选姿态和动作模式均不符合 Dead Hang"
+      ],
+      "risks": [
+        "使用核心训练或引体图片会误导悬垂动作"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Dead_Bug",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致；动作属性存在差异"
+        },
+        {
+          "sourceId": "V-Bar_Pullup",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致；动作属性存在差异"
+        },
+        {
+          "sourceId": "Isometric_Chest_Squeezes",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-02.webp",
+      "batchNumber": 2,
+      "updatedAt": "2026-07-15T07:21:38.691Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Dead_Bug",
+        "V-Bar_Pullup",
+        "Isometric_Chest_Squeezes"
+      ]
+    },
+    "barbell-floor-press": {
+      "exerciseId": "barbell-floor-press",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.715,
+      "visualEvidence": [
+        "候选均在卧推凳或站姿完成，没有人在地面仰卧进行杠铃推举"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Barbell Floor Press; 器械 杠铃; 主练 pectoralis-major",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "缺少 Floor Press 的地面支撑和受限肘部行程"
+      ],
+      "risks": [
+        "卧推凳与地面支撑方式明显不同"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Barbell_Bench_Press_-_Medium_Grip",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Neck_Press",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Svend_Press",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-02.webp",
+      "batchNumber": 2,
+      "updatedAt": "2026-07-15T07:21:38.691Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Barbell_Bench_Press_-_Medium_Grip",
+        "Neck_Press",
+        "Svend_Press"
+      ]
+    },
+    "barbell-reverse-wrist-curl": {
+      "exerciseId": "barbell-reverse-wrist-curl",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.754,
+      "visualEvidence": [
+        "首选是反握杠铃肘屈，第三项是掌心向上的腕屈，均未展示掌心向下腕伸"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Barbell Reverse Wrist Curl; 器械 杠铃; 主练 forearm-extensors",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "肘屈、腕屈与 Reverse Wrist Curl 的腕伸方向不同"
+      ],
+      "risks": [
+        "动作关节和方向错误"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Reverse_Barbell_Curl",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        },
+        {
+          "sourceId": "Barbell_Curl",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致；关键变式不一致：reverse ≠ 未注明"
+        },
+        {
+          "sourceId": "Palms-Up_Barbell_Wrist_Curl_Over_A_Bench",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致；关键变式不一致：reverse ≠ 未注明"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-03.webp",
+      "batchNumber": 3,
+      "updatedAt": "2026-07-15T07:27:47.692Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Reverse_Barbell_Curl",
+        "Barbell_Curl",
+        "Palms-Up_Barbell_Wrist_Curl_Over_A_Bench"
+      ]
+    },
+    "barbell-thruster": {
+      "exerciseId": "barbell-thruster",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.62,
+      "visualEvidence": [
+        "三项只展示弓步或深蹲，没有深蹲后连续推举过头的阶段"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Barbell Thruster; 器械 杠铃; 主练 quadriceps / anterior-deltoid",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "缺少 Thruster 的头顶推举部分"
+      ],
+      "risks": [
+        "仅用深蹲图会遗漏动作的一半"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Barbell_Lunge",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        },
+        {
+          "sourceId": "Barbell_Squat",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        },
+        {
+          "sourceId": "Barbell_Full_Squat",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-03.webp",
+      "batchNumber": 3,
+      "updatedAt": "2026-07-15T07:27:47.692Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Barbell_Lunge",
+        "Barbell_Squat",
+        "Barbell_Full_Squat"
+      ]
+    },
+    "belt-squat": {
+      "exerciseId": "belt-squat",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.645,
+      "visualEvidence": [
+        "候选为杠铃、自重和椅式深蹲，没有腰带深蹲机或髋部负重装置"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Belt Squat; 器械 腰带深蹲机; 主练 quadriceps",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "器械与负重位置完全不同"
+      ],
+      "risks": [
+        "普通深蹲图会误导机器设置"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Barbell_Squat",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致"
+        },
+        {
+          "sourceId": "Bodyweight_Squat",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致"
+        },
+        {
+          "sourceId": "Chair_Squat",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-03.webp",
+      "batchNumber": 3,
+      "updatedAt": "2026-07-15T07:27:47.692Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Barbell_Squat",
+        "Bodyweight_Squat",
+        "Chair_Squat"
+      ]
+    },
+    "bicycle-crunch": {
+      "exerciseId": "bicycle-crunch",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.712,
+      "visualEvidence": [
+        "候选为收膝卷腹、球上卷腹和单次交叉卷腹，没有连续自行车式交替伸腿"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Bicycle Crunch; 器械 自重; 主练 rectus-abdominis",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "缺少双腿交替蹬伸的动作模式"
+      ],
+      "risks": [
+        "交叉卷腹不能完整代表 Bicycle Crunch"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Tuck_Crunch",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Crunch_-_Legs_On_Exercise_Ball",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Cross-Body_Crunch",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-03.webp",
+      "batchNumber": 3,
+      "updatedAt": "2026-07-15T07:27:47.692Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Tuck_Crunch",
+        "Crunch_-_Legs_On_Exercise_Ball",
+        "Cross-Body_Crunch"
+      ]
+    },
+    "bird-dog": {
+      "exerciseId": "bird-dog",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.561,
+      "visualEvidence": [
+        "候选为俯卧腰背伸展、俄罗斯转体和卷腹，没有四点跪姿对侧手脚伸展"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Bird Dog; 器械 自重; 主练 transverse-abdominis",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "支撑姿态、肢体方向和动作模式均不同"
+      ],
+      "risks": [
+        "普通核心动作不能代表 Bird Dog 的肩胛与骨盆控制"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Lower_Back_Curl",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        },
+        {
+          "sourceId": "Russian_Twist",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        },
+        {
+          "sourceId": "3_4_Sit-Up",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-04.webp",
+      "batchNumber": 4,
+      "updatedAt": "2026-07-15T07:34:40.750Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Lower_Back_Curl",
+        "Russian_Twist",
+        "3_4_Sit-Up"
+      ]
+    },
+    "bulgarian-split-squat": {
+      "exerciseId": "bulgarian-split-squat",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.809,
+      "visualEvidence": [
+        "Suspended Split Squat 使用悬吊带，Dumbbell Split Squat 后脚未放在卧推凳上"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Bulgarian Split Squat; 器械 哑铃 / 卧推凳; 主练 quadriceps",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "缺少 Bulgarian Split Squat 的后脚抬高支撑"
+      ],
+      "risks": [
+        "普通 Split Squat 与 Bulgarian 支撑方式不同"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Suspended_Split_Squat",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Split_Squat_with_Dumbbells",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Dumbbell_Squat",
+          "reason": "名称不是精确或明确别名匹配；关键变式不一致：split ≠ 未注明"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-04.webp",
+      "batchNumber": 4,
+      "updatedAt": "2026-07-15T07:34:40.750Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Suspended_Split_Squat",
+        "Split_Squat_with_Dumbbells",
+        "Dumbbell_Squat"
+      ]
+    },
+    "cable-curl": {
+      "exerciseId": "cable-curl",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.842,
+      "visualEvidence": [
+        "候选分别是牧师凳、固定机器和仰卧绳索弯举，没有通用站姿 Cable Curl"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Cable Curl; 器械 绳索器械; 主练 biceps-brachii",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "坐姿支撑、机器和仰卧姿态均与通用动作不一致"
+      ],
+      "risks": [
+        "姿态差异会影响动作设置"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Cable_Preacher_Curl",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Machine_Bicep_Curl",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Lying_Cable_Curl",
+          "reason": "名称不是精确或明确别名匹配；身体姿态不一致：未注明 ≠ lying"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-04.webp",
+      "batchNumber": 4,
+      "updatedAt": "2026-07-15T07:34:40.750Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Cable_Preacher_Curl",
+        "Machine_Bicep_Curl",
+        "Lying_Cable_Curl"
+      ]
+    },
+    "cable-reverse-wrist-curl": {
+      "exerciseId": "cable-reverse-wrist-curl",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.754,
+      "visualEvidence": [
+        "候选为反握肘屈、普通腕屈和反向卷腹，没有绳索腕伸"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Cable Reverse Wrist Curl; 器械 绳索器械; 主练 forearm-extensors",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "关节动作或动作部位不一致"
+      ],
+      "risks": [
+        "Reverse Cable Curl 不能代表 Reverse Wrist Curl"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Reverse_Cable_Curl",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        },
+        {
+          "sourceId": "Cable_Wrist_Curl",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致；关键变式不一致：reverse ≠ 未注明"
+        },
+        {
+          "sourceId": "Cable_Reverse_Crunch",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-05.webp",
+      "batchNumber": 5,
+      "updatedAt": "2026-07-15T07:42:54.801Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Reverse_Cable_Curl",
+        "Cable_Wrist_Curl",
+        "Cable_Reverse_Crunch"
+      ]
+    },
+    "cable-romanian-deadlift": {
+      "exerciseId": "cable-romanian-deadlift",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.639,
+      "visualEvidence": [
+        "候选为史密斯直腿硬拉、史密斯高翻和 Glute Ham Raise，没有绳索 RDL"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Cable Romanian Deadlift; 器械 绳索器械; 主练 hamstrings",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "器械全部不符合绳索器械"
+      ],
+      "risks": [
+        "机器和绳索的阻力方向不同"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Smith_Machine_Stiff-Legged_Deadlift",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        },
+        {
+          "sourceId": "Smith_Machine_Hang_Power_Clean",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        },
+        {
+          "sourceId": "Glute_Ham_Raise",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-05.webp",
+      "batchNumber": 5,
+      "updatedAt": "2026-07-15T07:42:54.801Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Smith_Machine_Stiff-Legged_Deadlift",
+        "Smith_Machine_Hang_Power_Clean",
+        "Glute_Ham_Raise"
+      ]
+    },
+    "cable-woodchop": {
+      "exerciseId": "cable-woodchop",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.683,
+      "visualEvidence": [
+        "单独查看 Cable Judo Flip，动作从直立变为前屈下拉，没有躯干旋转斜劈；其他为俄罗斯转体和卷腹"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Cable Woodchop; 器械 绳索器械; 主练 obliques",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "候选缺少 Woodchop 的对角旋转轨迹"
+      ],
+      "risks": [
+        "髋铰链下拉会误导木砍动作方向"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Cable_Judo_Flip",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Cable_Russian_Twists",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Cable_Crunch",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-05.webp",
+      "batchNumber": 5,
+      "updatedAt": "2026-07-15T07:42:54.801Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Cable_Judo_Flip",
+        "Cable_Russian_Twists",
+        "Cable_Crunch"
+      ]
+    },
+    "concentration-curl": {
+      "exerciseId": "concentration-curl",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.779,
+      "visualEvidence": [
+        "候选为站姿弯举、交替弯举和牧师凳锤式弯举，没有坐姿肘抵大腿"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Dumbbell Concentration Curl; 器械 哑铃; 主练 biceps-brachii",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "缺少 Concentration Curl 的坐姿单臂支撑"
+      ],
+      "risks": [
+        "普通弯举姿态会误导动作设置"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Dumbbell_Bicep_Curl",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Dumbbell_Alternate_Bicep_Curl",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Preacher_Hammer_Dumbbell_Curl",
+          "reason": "名称不是精确或明确别名匹配"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-05.webp",
+      "batchNumber": 5,
+      "updatedAt": "2026-07-15T07:42:54.801Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Dumbbell_Bicep_Curl",
+        "Dumbbell_Alternate_Bicep_Curl",
+        "Preacher_Hammer_Dumbbell_Curl"
+      ]
+    },
+    "copenhagen-plank": {
+      "exerciseId": "copenhagen-plank",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.642,
+      "visualEvidence": [
+        "候选为普通平板、地面侧桥和俯卧腰背伸展，没有上腿放凳支撑的 Copenhagen Plank"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Copenhagen Plank; 器械 自重 / 卧推凳; 主练 hip-adductors / obliques",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "缺少侧卧、上腿支撑与内收肌负荷"
+      ],
+      "risks": [
+        "普通 Plank 会掩盖关键支撑方式"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Plank",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致；动作属性存在差异"
+        },
+        {
+          "sourceId": "Side_Bridge",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致；动作属性存在差异"
+        },
+        {
+          "sourceId": "Lower_Back_Curl",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致；动作属性存在差异"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-06.webp",
+      "batchNumber": 6,
+      "updatedAt": "2026-07-15T07:50:45.989Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Plank",
+        "Side_Bridge",
+        "Lower_Back_Curl"
+      ]
+    },
+    "cossack-squat": {
+      "exerciseId": "cossack-squat",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.642,
+      "visualEvidence": [
+        "三项均是矢状面双侧深蹲或跳蹲，没有向一侧下沉、另一腿伸直"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Cossack Squat; 器械 自重; 主练 hip-adductors / quadriceps",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "缺少 Cossack Squat 的侧向单侧重心转移"
+      ],
+      "risks": [
+        "普通深蹲不能代表 lateral squat 模式"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Bodyweight_Squat",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        },
+        {
+          "sourceId": "Freehand_Jump_Squat",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        },
+        {
+          "sourceId": "Weighted_Squat",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致；主练肌群映射不完全一致"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-06.webp",
+      "batchNumber": 6,
+      "updatedAt": "2026-07-15T07:50:45.989Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Bodyweight_Squat",
+        "Freehand_Jump_Squat",
+        "Weighted_Squat"
+      ]
+    },
+    "crunch": {
+      "exerciseId": "crunch",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.742,
+      "visualEvidence": [
+        "候选分别是 Tuck Crunch、球上卷腹和交叉卷腹，均带有目标未指定的明显变式"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Crunch; 器械 自重; 主练 rectus-abdominis",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "髋屈、器械或旋转方式不同于通用 Crunch"
+      ],
+      "risks": [
+        "特定变式可能误导基础动作姿态"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Tuck_Crunch",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        },
+        {
+          "sourceId": "Crunch_-_Legs_On_Exercise_Ball",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        },
+        {
+          "sourceId": "Cross-Body_Crunch",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-06.webp",
+      "batchNumber": 6,
+      "updatedAt": "2026-07-15T07:50:45.989Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Tuck_Crunch",
+        "Crunch_-_Legs_On_Exercise_Ball",
+        "Cross-Body_Crunch"
+      ]
+    },
+    "dumbbell-farmer-hold": {
+      "exerciseId": "dumbbell-farmer-hold",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.56,
+      "visualEvidence": [
+        "候选为哑铃高翻、肩胛平面抬举和单哑铃上提，没有双手静态负重站立或行走"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Dumbbell Farmer Hold; 器械 哑铃; 主练 forearm-flexors",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "缺少 Farmer Hold 的静态握持与身体直立"
+      ],
+      "risks": [
+        "动态抬举不能代表负重握持"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Dumbbell_Clean",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致；动作属性存在差异"
+        },
+        {
+          "sourceId": "Dumbbell_Scaption",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致；动作属性存在差异"
+        },
+        {
+          "sourceId": "Single_Dumbbell_Raise",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致；动作属性存在差异"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-07.webp",
+      "batchNumber": 7,
+      "updatedAt": "2026-07-15T08:06:09.117Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Dumbbell_Clean",
+        "Dumbbell_Scaption",
+        "Single_Dumbbell_Raise"
+      ]
+    },
+    "dumbbell-pronation": {
+      "exerciseId": "dumbbell-pronation",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.595,
+      "visualEvidence": [
+        "候选为耸肩、弯举和侧屈，没有前臂旋前的近景或腕部旋转"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Dumbbell Forearm Pronation; 器械 哑铃; 主练 forearm-extensors",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "目标关节动作未出现"
+      ],
+      "risks": [
+        "普通哑铃动作会误导康复/前臂训练"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Dumbbell_Shrug",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        },
+        {
+          "sourceId": "Dumbbell_Bicep_Curl",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        },
+        {
+          "sourceId": "Dumbbell_Side_Bend",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-07.webp",
+      "batchNumber": 7,
+      "updatedAt": "2026-07-15T08:06:09.117Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Dumbbell_Shrug",
+        "Dumbbell_Bicep_Curl",
+        "Dumbbell_Side_Bend"
+      ]
+    },
+    "dumbbell-pullover-back": {
+      "exerciseId": "dumbbell-pullover-back",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.554,
+      "visualEvidence": [
+        "候选为引体、双力臂和悬吊桥，没有仰卧凳上哑铃越头上拉"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Dumbbell Pullover; 器械 哑铃 / 卧推凳; 主练 latissimus-dorsi",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "器械、姿态和动作轨迹均不一致"
+      ],
+      "risks": [
+        "悬吊动作不能代表 Dumbbell Pullover"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Gironda_Sternum_Chins",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        },
+        {
+          "sourceId": "Kipping_Muscle_Up",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        },
+        {
+          "sourceId": "London_Bridges",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-07.webp",
+      "batchNumber": 7,
+      "updatedAt": "2026-07-15T08:06:09.117Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Gironda_Sternum_Chins",
+        "Kipping_Muscle_Up",
+        "London_Bridges"
+      ]
+    },
+    "dumbbell-supination": {
+      "exerciseId": "dumbbell-supination",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.595,
+      "visualEvidence": [
+        "候选为耸肩、弯举和侧屈，没有可辨认的前臂旋后动作"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Dumbbell Forearm Supination; 器械 哑铃; 主练 forearm-flexors",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "目标关节旋转未出现"
+      ],
+      "risks": [
+        "普通哑铃动作不能代表前臂旋后训练"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Dumbbell_Shrug",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        },
+        {
+          "sourceId": "Dumbbell_Bicep_Curl",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        },
+        {
+          "sourceId": "Dumbbell_Side_Bend",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-08.webp",
+      "batchNumber": 8,
+      "updatedAt": "2026-07-15T08:18:58.385Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Dumbbell_Shrug",
+        "Dumbbell_Bicep_Curl",
+        "Dumbbell_Side_Bend"
+      ]
+    },
+    "dumbbell-thruster": {
+      "exerciseId": "dumbbell-thruster",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.62,
+      "visualEvidence": [
+        "候选分别只展示弓步、深蹲或 Arnold Press，没有深蹲接头顶推举"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Dumbbell Thruster; 器械 哑铃; 主练 quadriceps / anterior-deltoid",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "没有任何候选包含 Thruster 的完整两段动作"
+      ],
+      "risks": [
+        "单一深蹲或推举图会遗漏关键阶段"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Dumbbell_Lunges",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        },
+        {
+          "sourceId": "Dumbbell_Squat",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        },
+        {
+          "sourceId": "Arnold_Dumbbell_Press",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-08.webp",
+      "batchNumber": 8,
+      "updatedAt": "2026-07-15T08:18:58.385Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Dumbbell_Lunges",
+        "Dumbbell_Squat",
+        "Arnold_Dumbbell_Press"
+      ]
+    },
+    "dumbbell-wrist-curl": {
+      "exerciseId": "dumbbell-wrist-curl",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.659,
+      "visualEvidence": [
+        "三项均是肘关节弯举，没有前臂固定后的腕屈"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Dumbbell Wrist Curl; 器械 哑铃; 主练 forearm-flexors",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "关节动作不同"
+      ],
+      "risks": [
+        "Bicep Curl 会误导 Wrist Curl"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Dumbbell_Bicep_Curl",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        },
+        {
+          "sourceId": "Dumbbell_Alternate_Bicep_Curl",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        },
+        {
+          "sourceId": "Preacher_Hammer_Dumbbell_Curl",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-08.webp",
+      "batchNumber": 8,
+      "updatedAt": "2026-07-15T08:18:58.385Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Dumbbell_Bicep_Curl",
+        "Dumbbell_Alternate_Bicep_Curl",
+        "Preacher_Hammer_Dumbbell_Curl"
+      ]
+    },
+    "frog-pump": {
+      "exerciseId": "frog-pump",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.584,
+      "visualEvidence": [
+        "候选为普通臀桥、站姿后抬腿和四点跪姿后踢，没有脚掌相对、膝外展的 Frog Pump"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Frog Pump; 器械 自重; 主练 gluteus-maximus",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "缺少蛙式髋外旋起始姿态"
+      ],
+      "risks": [
+        "普通臀桥会掩盖关键脚位"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Butt_Lift_Bridge",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Leg_Lift",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Glute_Kickback",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-08.webp",
+      "batchNumber": 8,
+      "updatedAt": "2026-07-15T08:18:58.385Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Butt_Lift_Bridge",
+        "Leg_Lift",
+        "Glute_Kickback"
+      ]
+    },
+    "hang-clean": {
+      "exerciseId": "hang-clean",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.659,
+      "visualEvidence": [
+        "Clean 与 Power Clean 图片都从地面起始，Clean Deadlift 不含接杠，均未表现 hang 起始"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Barbell Hang Clean; 器械 杠铃; 主练 gluteus-maximus / hamstrings",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "缺少杠铃从大腿悬垂位置开始的 Hang Clean"
+      ],
+      "risks": [
+        "地面 Clean 与 Hang Clean 起始姿态不同"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Clean",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致；动作属性存在差异"
+        },
+        {
+          "sourceId": "Power_Clean",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致；动作属性存在差异"
+        },
+        {
+          "sourceId": "Clean_Deadlift",
+          "reason": "名称不是精确或明确别名匹配；主练肌群映射不完全一致；动作属性存在差异"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-09.webp",
+      "batchNumber": 9,
+      "updatedAt": "2026-07-15T08:27:50.246Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Clean",
+        "Power_Clean",
+        "Clean_Deadlift"
+      ]
+    },
+    "hanging-windshield-wiper": {
+      "exerciseId": "hanging-windshield-wiper",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.661,
+      "visualEvidence": [
+        "候选只展示悬垂抬腿、Hanging Pike 或地面触踵，没有双腿左右摆动"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Hanging Windshield Wiper; 器械 单杠; 主练 obliques",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "缺少 Windshield Wiper 的横向旋转轨迹"
+      ],
+      "risks": [
+        "抬腿不能代表左右摆动"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Hanging_Leg_Raise",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Hanging_Pike",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        },
+        {
+          "sourceId": "Alternate_Heel_Touchers",
+          "reason": "名称不是精确或明确别名匹配"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-09.webp",
+      "batchNumber": 9,
+      "updatedAt": "2026-07-15T08:27:50.246Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Hanging_Leg_Raise",
+        "Hanging_Pike",
+        "Alternate_Heel_Touchers"
+      ]
+    },
+    "high-cable-curl": {
+      "exerciseId": "high-cable-curl",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.779,
+      "visualEvidence": [
+        "候选为牧师凳、机器或仰卧弯举，没有高位滑轮、上臂外展的 High Cable Curl"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: High Cable Curl; 器械 绳索器械; 主练 biceps-brachii",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "滑轮高度与身体姿态不一致"
+      ],
+      "risks": [
+        "普通 Cable Curl 会误导器械设置"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Cable_Preacher_Curl",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Machine_Bicep_Curl",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Lying_Cable_Curl",
+          "reason": "名称不是精确或明确别名匹配；身体姿态不一致：未注明 ≠ lying"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-09.webp",
+      "batchNumber": 9,
+      "updatedAt": "2026-07-15T08:27:50.246Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Cable_Preacher_Curl",
+        "Machine_Bicep_Curl",
+        "Lying_Cable_Curl"
+      ]
+    },
+    "high-to-low-cable-fly": {
+      "exerciseId": "high-to-low-cable-fly",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.588,
+      "visualEvidence": [
+        "Low Cable Crossover 方向为低到高，普通 Crossover 为水平，Iron Cross 也未表现高到低斜线"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: High-to-low Cable Fly; 器械 绳索器械; 主练 pectoralis-major",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "动作方向与目标 high-to-low 不一致"
+      ],
+      "risks": [
+        "绳索高度和轨迹错误"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Low_Cable_Crossover",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Cable_Crossover",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Cable_Iron_Cross",
+          "reason": "名称不是精确或明确别名匹配"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-09.webp",
+      "batchNumber": 9,
+      "updatedAt": "2026-07-15T08:27:50.246Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Low_Cable_Crossover",
+        "Cable_Crossover",
+        "Cable_Iron_Cross"
+      ]
+    },
+    "hollow-body-hold": {
+      "exerciseId": "hollow-body-hold",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "confidence": 0.594,
+      "visualEvidence": [
+        "候选为交叉卷腹、平板和站姿腹式真空，没有仰卧肩腿离地的 Hollow Hold"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Hollow Body Hold; 器械 自重; 主练 transverse-abdominis",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "支撑姿态和等长动作形态均不同"
+      ],
+      "risks": [
+        "普通核心动作不能替代 Hollow Body Hold"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Cross-Body_Crunch",
+          "reason": "名称不是精确或明确别名匹配；动作属性存在差异"
+        },
+        {
+          "sourceId": "Plank",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Stomach_Vacuum",
+          "reason": "名称不是精确或明确别名匹配"
+        }
+      ],
+      "reviewerMode": "codex-visual-review",
+      "contactSheetPath": "manual-review-contact-sheets/batch-09.webp",
+      "batchNumber": 9,
+      "updatedAt": "2026-07-15T08:27:50.246Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": [
+        "Cross-Body_Crunch",
+        "Plank",
+        "Stomach_Vacuum"
+      ]
+    }
+  },
+  "unresolved": {
+    "barbell-overhead-press": {
+      "exerciseId": "barbell-overhead-press",
+      "sourceId": null,
+      "decision": "unresolved",
+      "confidence": 0.599,
+      "visualEvidence": [
+        "第三候选 Standing Military Press 视觉上接近前侧站姿推举，但前两项分别是颈后和 Bradford Press"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Standing Barbell Overhead Press; 器械 杠铃; 主练 anterior-deltoid / lateral-deltoid",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "Military Press 的站距和动作规范可能比通用 Standing Overhead Press 更严格"
+      ],
+      "risks": [
+        "重点词 military 需要用户确认是否可作为通用站姿推举图片"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Standing_Barbell_Press_Behind_Neck",
+          "reason": "名称不是精确或明确别名匹配；关键变式不一致：overhead ≠ behind"
+        },
+        {
+          "sourceId": "Standing_Bradford_Press",
+          "reason": "名称不是精确或明确别名匹配；关键变式不一致：overhead ≠ 未注明"
+        },
+        {
+          "sourceId": "Standing_Military_Press",
+          "reason": "名称不是精确或明确别名匹配；关键变式不一致：overhead ≠ military"
+        }
+      ],
+      "reviewerMode": "unresolved",
+      "contactSheetPath": "manual-review-contact-sheets/batch-02.webp",
+      "batchNumber": 2,
+      "updatedAt": "2026-07-15T07:21:38.691Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "bent-over-reverse-fly": {
+      "exerciseId": "bent-over-reverse-fly",
+      "sourceId": null,
+      "decision": "unresolved",
+      "confidence": 0.561,
+      "visualEvidence": [
+        "首选图片展示坐姿俯身哑铃反向飞鸟，轨迹相符但支撑姿态不明确"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Bent-over Reverse Fly; 器械 哑铃; 主练 rear-deltoid",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "MuscleMap 仅写 Bent-over，无法确认预期是站姿还是坐姿"
+      ],
+      "risks": [
+        "坐姿与站姿支撑差异需要用户确认"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Reverse_Flyes",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Reverse_Flyes_With_External_Rotation",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Sled_Reverse_Flye",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致"
+        }
+      ],
+      "reviewerMode": "unresolved",
+      "contactSheetPath": "manual-review-contact-sheets/batch-03.webp",
+      "batchNumber": 3,
+      "updatedAt": "2026-07-15T07:27:47.692Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "decline-sit-up": {
+      "exerciseId": "decline-sit-up",
+      "sourceId": null,
+      "decision": "unresolved",
+      "confidence": 0.602,
+      "visualEvidence": [
+        "Decline Crunch 图片使用下斜凳且躯干屈曲，但无法从两帧可靠判断是否达到 Sit-up 的完整坐起幅度"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Decline Sit-up; 器械 卧推凳; 主练 rectus-abdominis",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "Crunch 与 Sit-up 的运动幅度存在关键差异"
+      ],
+      "risks": [
+        "需要用户判断是否接受较短幅度画面"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Decline_Crunch",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致"
+        },
+        {
+          "sourceId": "Decline_Oblique_Crunch",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致；动作属性存在差异"
+        },
+        {
+          "sourceId": "Sit-Up",
+          "reason": "名称不是精确或明确别名匹配；器械分类不完全一致；凳面角度不一致：decline ≠ 未注明"
+        }
+      ],
+      "reviewerMode": "unresolved",
+      "contactSheetPath": "manual-review-contact-sheets/batch-06.webp",
+      "batchNumber": 6,
+      "updatedAt": "2026-07-15T07:50:45.989Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    },
+    "hammer-curl": {
+      "exerciseId": "hammer-curl",
+      "sourceId": null,
+      "decision": "unresolved",
+      "confidence": 0.842,
+      "visualEvidence": [
+        "首选图片清楚展示交替锤式弯举，但目标未说明交替或双侧同步"
+      ],
+      "metadataEvidence": [
+        "MuscleMap: Hammer Curl; 器械 哑铃; 主练 brachialis / biceps-brachii",
+        "未选择单一候选"
+      ],
+      "differences": [
+        "Alternate、Cross-body 和 Preacher 三个候选均带有关键变式"
+      ],
+      "risks": [
+        "需要用户决定通用 Hammer Curl 是否可用交替画面表达"
+      ],
+      "alternativeCandidates": [
+        {
+          "sourceId": "Alternate_Hammer_Curl",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Cross_Body_Hammer_Curl",
+          "reason": "名称不是精确或明确别名匹配"
+        },
+        {
+          "sourceId": "Preacher_Hammer_Dumbbell_Curl",
+          "reason": "名称不是精确或明确别名匹配"
+        }
+      ],
+      "reviewerMode": "unresolved",
+      "contactSheetPath": "manual-review-contact-sheets/batch-08.webp",
+      "batchNumber": 8,
+      "updatedAt": "2026-07-15T08:18:58.385Z",
+      "baseExerciseId": null,
+      "rejectedSourceIds": []
+    }
+  },
+  "warnings": [
+    "尚有 70 条未完成视觉复核"
+  ]
+}

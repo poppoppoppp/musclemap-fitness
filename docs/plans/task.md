@@ -100,3 +100,25 @@
 | Exercise media back-001: add failing processor tests | completed |
 | Exercise media back-001: implement processor, config, and outputs | completed |
 | Exercise media back-001: verify files, page mapping, and build | completed |
+| Free Exercise DB report: audit runtime exercise and media sources | completed |
+| Free Exercise DB report: confirm source, license, cache, and approved design | completed |
+| Free Exercise DB report: write implementation plan | completed |
+| Free Exercise DB report: add failing normalization and matching tests | completed |
+| Free Exercise DB report: implement cache, runtime collection, and matcher | completed |
+| Free Exercise DB report: generate reports and review page | completed |
+| Free Exercise DB report: validate data, UI, determinism, and build | completed |
+| Free Exercise DB interactive review: versioned override model and validation | completed |
+| Free Exercise DB interactive review: apply human decisions to matching | completed |
+| Free Exercise DB interactive review: build localStorage review workbench | completed |
+| Free Exercise DB interactive review: regenerate and verify end to end | completed |
+| Free Exercise DB accepted media: validate 47 accepted mappings and fixed source | completed |
+| Free Exercise DB accepted media: implement cache and atomic image publishing | completed |
+| Free Exercise DB accepted media: write manifest, reports, and CLI | completed |
+| Free Exercise DB accepted media: execute downloads and verify App integration | completed |
+| Free Exercise DB manual review triage: freeze the 142-record scope and invariants | in progress |
+| Free Exercise DB manual review triage: implement cache, progress, proposal, and contact sheets | pending |
+| Free Exercise DB manual review triage: visually inspect and persist all batches | pending |
+| Free Exercise DB manual review triage: verify review pages, tests, and build | pending |
+| Free Exercise DB manual review page V0.3: freeze 72/70 data and formal baselines | completed |
+| Free Exercise DB manual review page V0.3: implement local assets, page state, and exports | in progress |
+| Free Exercise DB manual review page V0.3: generate and run lightweight HTTP checks | pending |

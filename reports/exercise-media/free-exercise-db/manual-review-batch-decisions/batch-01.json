@@ -1,0 +1,69 @@
+{
+  "batchNumber": 1,
+  "decisions": [
+    {
+      "exerciseId": "alternating-dumbbell-bench-press",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "visualEvidence": ["已查看三组 start/peak；候选分别表现双臂同步卧推、单臂卧推和站姿夹胸推"],
+      "differences": ["没有候选表现双哑铃在卧推凳上的交替推举"],
+      "risks": ["单侧、双侧与交替方式不同会误导动作节奏"]
+    },
+    {
+      "exerciseId": "alternating-dumbbell-curl",
+      "sourceId": "Dumbbell_Alternate_Bicep_Curl",
+      "decision": "proposed-forced",
+      "visualEvidence": ["图片明确显示站姿双手持哑铃并左右交替屈肘，start/peak 阶段完整"],
+      "differences": ["数据库名称包含 Alternate，和 MuscleMap 的 Alternating 为命名差异"],
+      "risks": ["算法 laterality 冲突为误报；画面本身明确展示 alternating"]
+    },
+    {
+      "exerciseId": "alternating-dumbbell-press",
+      "sourceId": "See-Saw_Press_Alternating_Side_Press",
+      "decision": "proposed-accepted",
+      "visualEvidence": ["图片显示站姿双哑铃一上一下交替肩推，器械、方向和交替方式一致"],
+      "differences": ["数据库使用 See-Saw Press 同义名称"],
+      "risks": []
+    },
+    {
+      "exerciseId": "arnold-press",
+      "sourceId": "Arnold_Dumbbell_Press",
+      "decision": "proposed-accepted",
+      "visualEvidence": ["坐姿哑铃由掌心朝内旋转至头顶，start/peak 与 Arnold Press 一致"],
+      "differences": [],
+      "risks": []
+    },
+    {
+      "exerciseId": "assisted-pull-up",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "visualEvidence": ["首选图片为弹力带辅助引体，其他候选为 V 把引体和杠铃上拉"],
+      "differences": ["MuscleMap 器械是辅助引体机，候选没有展示机器膝垫或配重辅助"],
+      "risks": ["弹力带和辅助引体机的支撑方式明显不同"]
+    },
+    {
+      "exerciseId": "band-chest-press",
+      "sourceId": null,
+      "decision": "proposed-rejected",
+      "visualEvidence": ["首选展示杠铃卧推加弹力带，其他为 Svend Press 与链条卧推"],
+      "differences": ["均未展示以弹力带作为主要阻力的胸前推举"],
+      "risks": ["杠铃卧推、站姿夹胸推与弹力带胸推器械和支撑姿态不同"]
+    },
+    {
+      "exerciseId": "band-hip-adduction",
+      "sourceId": "Band_Hip_Adductions",
+      "decision": "proposed-accepted",
+      "visualEvidence": ["站姿弹力带固定于踝部，腿从外侧向身体中线内收，阶段清晰"],
+      "differences": [],
+      "risks": []
+    },
+    {
+      "exerciseId": "band-lateral-raise",
+      "sourceId": "Lateral_Raise_-_With_Bands",
+      "decision": "proposed-accepted",
+      "visualEvidence": ["站姿踩带并向两侧抬臂，器械、姿态和肩外展方向一致"],
+      "differences": [],
+      "risks": []
+    }
+  ]
+}

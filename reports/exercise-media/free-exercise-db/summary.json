@@ -1,0 +1,45 @@
+{
+  "reportVersion": "0.1",
+  "generatedAt": "2026-07-15T02:39:06.945Z",
+  "source": {
+    "downloadedAt": "2026-07-15T02:39:06.945Z",
+    "sourceUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/b0eed061e1c832b3ed815fbaa4b45b3cdc14df49/dist/exercises.json",
+    "commit": "b0eed061e1c832b3ed815fbaa4b45b3cdc14df49",
+    "sha256": "4ee91b55470542030bb65f036f64bc688d702f558c6d576c308b75ddbd0ac577",
+    "recordCount": 873,
+    "license": "Unlicense",
+    "cacheFile": "D:\\AI\\FreeExerciseDB-cache\\exercises.json",
+    "cacheFallback": false
+  },
+  "thresholds": {
+    "exact": 0.95,
+    "highConfidence": 0.85,
+    "manualReview": 0.6,
+    "minimumCandidateMargin": 0.04
+  },
+  "visibleExerciseCount": 291,
+  "freeDbExerciseCount": 873,
+  "media": {
+    "complete": 53,
+    "partial": 0,
+    "missing": 238
+  },
+  "tiers": {
+    "alreadyCovered": 53,
+    "exact": 0,
+    "highConfidence": 0,
+    "manualReview": 117,
+    "unmatched": 121
+  },
+  "rates": {
+    "localCompleteRate": 0.1821,
+    "directCoverageRate": 0.1821,
+    "exactAndHighConfidenceRateOfAll": 0,
+    "exactAndHighConfidenceRateOfUncovered": 0,
+    "theoreticalCoverageAfterAdoption": 0.1821,
+    "manualReviewRate": 0.4021,
+    "unmatchedRate": 0.4158
+  },
+  "reuseGroupCount": 9,
+  "independentImageSetEstimate": 214
+}

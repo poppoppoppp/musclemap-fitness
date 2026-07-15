@@ -1,0 +1,13 @@
+{
+  "batchNumber": 2,
+  "decisions": [
+    {"exerciseId":"band-pull-apart","sourceId":"Band_Pull_Apart","decision":"proposed-accepted","visualEvidence":["站姿双臂在胸前将弹力带水平拉开，start/peak、器械和方向一致"],"differences":[],"risks":[]},
+    {"exerciseId":"band-shoulder-press","sourceId":"Shoulder_Press_-_With_Bands","decision":"proposed-accepted","visualEvidence":["站姿踩住弹力带并从肩部推至头顶，阶段和器械一致"],"differences":[],"risks":[]},
+    {"exerciseId":"bar-hang","sourceId":null,"decision":"proposed-rejected","visualEvidence":["三组图片分别是 Dead Bug、V 把引体和等长夹胸，没有静态悬垂"],"differences":["候选姿态和动作模式均不符合 Dead Hang"],"risks":["使用核心训练或引体图片会误导悬垂动作"]},
+    {"exerciseId":"barbell-bench-press","sourceId":"Barbell_Bench_Press_-_Medium_Grip","decision":"proposed-accepted","visualEvidence":["平板凳杠铃由胸前推至肘伸，支撑面、器械和轨迹一致"],"differences":["候选名称明确中等握距，属于常规卧推表现"],"risks":[]},
+    {"exerciseId":"barbell-clean-and-press","sourceId":"Clean_and_Press","decision":"proposed-accepted","visualEvidence":["图片展示杠铃从地面翻至肩部并推举过头，复合动作阶段吻合"],"differences":[],"risks":[]},
+    {"exerciseId":"barbell-floor-press","sourceId":null,"decision":"proposed-rejected","visualEvidence":["候选均在卧推凳或站姿完成，没有人在地面仰卧进行杠铃推举"],"differences":["缺少 Floor Press 的地面支撑和受限肘部行程"],"risks":["卧推凳与地面支撑方式明显不同"]},
+    {"exerciseId":"barbell-good-morning","sourceId":"Stiff_Leg_Barbell_Good_Morning","decision":"proposed-forced","visualEvidence":["图片为站姿肩背杠铃的髋铰链前屈与起身，轨迹和支撑姿态一致"],"differences":["候选名称包含 Stiff Leg，膝屈程度可能比通用 Good Morning 更小"],"risks":["需用户确认是否接受较直腿的画面表达"]},
+    {"exerciseId":"barbell-overhead-press","sourceId":null,"decision":"unresolved","visualEvidence":["第三候选 Standing Military Press 视觉上接近前侧站姿推举，但前两项分别是颈后和 Bradford Press"],"differences":["Military Press 的站距和动作规范可能比通用 Standing Overhead Press 更严格"],"risks":["重点词 military 需要用户确认是否可作为通用站姿推举图片"]}
+  ]
+}

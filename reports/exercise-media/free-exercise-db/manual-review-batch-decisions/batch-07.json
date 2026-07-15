@@ -1,0 +1,13 @@
+{
+  "batchNumber": 7,
+  "decisions": [
+    {"exerciseId":"donkey-kick","sourceId":"Glute_Kickback","decision":"proposed-accepted","visualEvidence":["四点跪姿单腿屈膝向后上方伸髋，正是自重 Donkey Kick 轨迹"],"differences":["数据库使用 Glute Kickback 同义名称"],"risks":[]},
+    {"exerciseId":"dumbbell-curl","sourceId":"Dumbbell_Bicep_Curl","decision":"proposed-accepted","visualEvidence":["站姿双手持哑铃从肘伸至屈肘，器械和动作方向一致"],"differences":[],"risks":[]},
+    {"exerciseId":"dumbbell-farmer-hold","sourceId":null,"decision":"proposed-rejected","visualEvidence":["候选为哑铃高翻、肩胛平面抬举和单哑铃上提，没有双手静态负重站立或行走"],"differences":["缺少 Farmer Hold 的静态握持与身体直立"],"risks":["动态抬举不能代表负重握持"]},
+    {"exerciseId":"dumbbell-floor-press","sourceId":"Dumbbell_Floor_Press","decision":"proposed-forced","visualEvidence":["仰卧地面、上臂受地面限制并将双哑铃推至伸肘，支撑面和轨迹一致"],"differences":[],"risks":["算法 primary-muscle 冲突为肌群分类差异，视觉动作明确一致"]},
+    {"exerciseId":"dumbbell-lateral-raise","sourceId":"Side_Lateral_Raise","decision":"proposed-accepted","visualEvidence":["站姿双哑铃由身体两侧外展至肩高，动作方向一致"],"differences":["Side Lateral Raise 为常见同义名称"],"risks":[]},
+    {"exerciseId":"dumbbell-pronation","sourceId":null,"decision":"proposed-rejected","visualEvidence":["候选为耸肩、弯举和侧屈，没有前臂旋前的近景或腕部旋转"],"differences":["目标关节动作未出现"],"risks":["普通哑铃动作会误导康复/前臂训练"]},
+    {"exerciseId":"dumbbell-pullover-back","sourceId":null,"decision":"proposed-rejected","visualEvidence":["候选为引体、双力臂和悬吊桥，没有仰卧凳上哑铃越头上拉"],"differences":["器械、姿态和动作轨迹均不一致"],"risks":["悬吊动作不能代表 Dumbbell Pullover"]},
+    {"exerciseId":"dumbbell-skull-crusher","sourceId":"Dumbbell_Tricep_Extension_-Pronated_Grip","decision":"proposed-forced","visualEvidence":["单独查看原图确认：仰卧平凳、双哑铃从头侧屈肘位置伸至垂直，Skull Crusher 阶段完整"],"differences":["数据库使用 Dumbbell Tricep Extension - Pronated Grip 名称"],"risks":["名称不同但视觉和支撑面一致"]}
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "batchNumber": 8,
+  "decisions": [
+    {"exerciseId":"dumbbell-split-squat","sourceId":"Split_Squat_with_Dumbbells","decision":"proposed-accepted","visualEvidence":["双手持哑铃、前后分腿并垂直下蹲，器械和普通 Split Squat 姿态一致"],"differences":[],"risks":[]},
+    {"exerciseId":"dumbbell-supination","sourceId":null,"decision":"proposed-rejected","visualEvidence":["候选为耸肩、弯举和侧屈，没有可辨认的前臂旋后动作"],"differences":["目标关节旋转未出现"],"risks":["普通哑铃动作不能代表前臂旋后训练"]},
+    {"exerciseId":"dumbbell-thruster","sourceId":null,"decision":"proposed-rejected","visualEvidence":["候选分别只展示弓步、深蹲或 Arnold Press，没有深蹲接头顶推举"],"differences":["没有任何候选包含 Thruster 的完整两段动作"],"risks":["单一深蹲或推举图会遗漏关键阶段"]},
+    {"exerciseId":"dumbbell-wrist-curl","sourceId":null,"decision":"proposed-rejected","visualEvidence":["三项均是肘关节弯举，没有前臂固定后的腕屈"],"differences":["关节动作不同"],"risks":["Bicep Curl 会误导 Wrist Curl"]},
+    {"exerciseId":"EX_GLUTE_BRIDGE","sourceId":"Butt_Lift_Bridge","decision":"proposed-reuse","baseExerciseId":"glute-bridge","visualEvidence":["双腿屈膝仰卧并抬髋至肩髋膝成线，与已接入的 glute-bridge 为同一画面动作"],"differences":["本条来自 posture 数据集，中文名强调双腿；基础动作 ID 不同"],"risks":["共图前用户需确认 posture 条目无需额外康复语境画面"]},
+    {"exerciseId":"feet-elevated-inverted-row","sourceId":"Inverted_Row","decision":"proposed-accepted","visualEvidence":["仰身悬垂于横杆下方，双脚放在高处支撑并将胸部拉向杆，抬脚特征可见"],"differences":["数据库名称未写 Feet-elevated，但图片明确表现抬脚"],"risks":[]},
+    {"exerciseId":"frog-pump","sourceId":null,"decision":"proposed-rejected","visualEvidence":["候选为普通臀桥、站姿后抬腿和四点跪姿后踢，没有脚掌相对、膝外展的 Frog Pump"],"differences":["缺少蛙式髋外旋起始姿态"],"risks":["普通臀桥会掩盖关键脚位"]},
+    {"exerciseId":"hammer-curl","sourceId":null,"decision":"unresolved","visualEvidence":["首选图片清楚展示交替锤式弯举，但目标未说明交替或双侧同步"],"differences":["Alternate、Cross-body 和 Preacher 三个候选均带有关键变式"],"risks":["需要用户决定通用 Hammer Curl 是否可用交替画面表达"]}
+  ]
+}

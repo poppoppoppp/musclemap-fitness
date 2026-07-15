@@ -1,0 +1,506 @@
+# Unmatched 动作
+
+## 普通力量动作（21）
+
+- **band-chest-fly** · 弹力带夹胸 · Band Chest Fly
+  - 器械：弹力带
+  - 主练肌群：pectoralis-major
+  - 原因：最佳候选置信度低于 0.60
+- **band-row** · 弹力带划船 · Band Row
+  - 器械：弹力带
+  - 主练肌群：rhomboids / middle-lower-trapezius
+  - 原因：最佳候选置信度低于 0.60
+- **band-straight-arm-pulldown** · 弹力带直臂下拉 · Band Straight-arm Pulldown
+  - 器械：弹力带
+  - 主练肌群：latissimus-dorsi
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **behind-back-wrist-curl** · 身后杠铃屈腕 · Behind-the-back Barbell Wrist Curl
+  - 器械：杠铃
+  - 主练肌群：forearm-flexors
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **dumbbell-farmer-hold** · 哑铃农夫静态握持 · Dumbbell Farmer Hold
+  - 器械：哑铃
+  - 主练肌群：forearm-flexors
+  - 原因：最佳候选置信度低于 0.60
+- **dumbbell-reverse-wrist-curl** · 哑铃伸腕 · Dumbbell Reverse Wrist Curl
+  - 器械：哑铃
+  - 主练肌群：forearm-extensors
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **half-kneeling-landmine-press** · 半跪姿地雷架推举 · Half-kneeling Landmine Press
+  - 器械：地雷架 / 杠铃
+  - 主练肌群：anterior-deltoid
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **kettlebell-row** · 壶铃划船 · Kettlebell Row
+  - 器械：壶铃
+  - 主练肌群：latissimus-dorsi
+  - 原因：最佳候选置信度低于 0.60
+- **landmine-row** · 地雷架双臂划船 · Landmine Row
+  - 器械：地雷架 / 杠铃
+  - 主练肌群：rhomboids / middle-lower-trapezius
+  - 原因：最佳候选置信度低于 0.60
+- **meadows-row** · 梅多斯划船 · Meadows Row
+  - 器械：地雷架 / 杠铃
+  - 主练肌群：latissimus-dorsi
+  - 原因：最佳候选置信度低于 0.60
+- **neutral-grip-seated-row** · 坐姿对握划船 · Neutral-grip Seated Row
+  - 器械：坐姿划船器
+  - 主练肌群：latissimus-dorsi
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **overhead-dumbbell-triceps-extension** · 双手哑铃过顶臂屈伸 · Two-hand Dumbbell Overhead Triceps Extension
+  - 器械：哑铃
+  - 主练肌群：triceps-brachii
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **pec-deck-fly** · 蝴蝶机夹胸 · Pec Deck Fly
+  - 器械：蝴蝶机
+  - 主练肌群：pectoralis-major
+  - 原因：最佳候选置信度低于 0.60
+- **plate-loaded-chest-press** · 杠片式器械推胸 · Plate-loaded Chest Press
+  - 器械：推胸器 / 杠铃片
+  - 主练肌群：pectoralis-major
+  - 原因：最佳候选置信度低于 0.60
+- **rear-delt-machine-fly** · 蝴蝶机反向飞鸟 · Reverse Pec Deck Fly
+  - 器械：蝴蝶机
+  - 主练肌群：rear-deltoid
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **renegade-row** · 俯卧撑位哑铃划船 · Renegade Row
+  - 器械：哑铃
+  - 主练肌群：latissimus-dorsi
+  - 原因：最佳候选置信度低于 0.60
+- **single-arm-landmine-row** · 地雷架单臂划船 · Single-arm Landmine Row
+  - 器械：地雷架 / 杠铃
+  - 主练肌群：latissimus-dorsi
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **single-leg-romanian-deadlift** · 单腿罗马尼亚硬拉 · Single-leg Romanian Deadlift
+  - 器械：哑铃
+  - 主练肌群：hamstrings
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **t-bar-row** · T杠划船 · T-bar Row
+  - 器械：T杠
+  - 主练肌群：latissimus-dorsi / rhomboids
+  - 原因：最佳候选置信度低于 0.60
+- **underhand-barbell-row** · 反握杠铃划船 · Underhand Barbell Row
+  - 器械：杠铃
+  - 主练肌群：latissimus-dorsi
+  - 原因：最佳候选置信度低于 0.60
+- **underhand-seated-row** · 坐姿反握划船 · Underhand Seated Row
+  - 器械：坐姿划船器
+  - 主练肌群：latissimus-dorsi
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+
+## 自重动作（22）
+
+- **bar-hang** · 单杠悬垂 · Dead Hang
+  - 器械：单杠
+  - 主练肌群：forearm-flexors
+  - 原因：最佳候选置信度低于 0.60
+- **burpee** · 波比跳 · Burpee
+  - 器械：自重
+  - 主练肌群：quadriceps / pectoralis-major
+  - 原因：最佳候选置信度低于 0.60
+- **diamond-push-up** · 钻石俯卧撑 · Diamond Push-up
+  - 器械：自重
+  - 主练肌群：triceps-brachii
+  - 原因：最佳候选置信度低于 0.60
+- **donkey-calf-raise** · 俯身提踵 · Donkey Calf Raise
+  - 器械：自重
+  - 主练肌群：calves
+  - 原因：最佳候选置信度低于 0.60
+- **frog-pump** · 蛙式臀桥 · Frog Pump
+  - 器械：自重
+  - 主练肌群：gluteus-maximus
+  - 原因：最佳候选置信度低于 0.60
+- **handstand-push-up** · 倒立撑 · Handstand Push-up
+  - 器械：自重
+  - 主练肌群：anterior-deltoid / lateral-deltoid
+  - 原因：最佳候选置信度低于 0.60
+- **lunge** · 弓步蹲 · Lunge
+  - 器械：自重
+  - 主练肌群：quadriceps / gluteus-maximus
+  - 原因：最佳候选置信度低于 0.60
+- **neutral-grip-pull-up** · 对握引体向上 · Neutral-grip Pull-up
+  - 器械：单杠
+  - 主练肌群：latissimus-dorsi
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **nordic-hamstring-curl** · 北欧腿弯举 · Nordic Hamstring Curl
+  - 器械：自重
+  - 主练肌群：hamstrings
+  - 原因：最佳候选置信度低于 0.60
+- **pike-push-up** · 折刀俯卧撑 · Pike Push-up
+  - 器械：自重
+  - 主练肌群：anterior-deltoid / lateral-deltoid
+  - 原因：最佳候选置信度低于 0.60
+- **prone-w-raise** · 俯卧 W Raise · Prone W Raise
+  - 器械：自重
+  - 主练肌群：middle-lower-trapezius / rear-deltoid
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **reverse-lunge** · 后撤弓步蹲 · Reverse Lunge
+  - 器械：自重 / 哑铃
+  - 主练肌群：quadriceps
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **side-lying-hip-abduction** · 侧卧髋外展 · Side-lying Hip Abduction
+  - 器械：自重
+  - 主练肌群：hip-abductors
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **side-lying-hip-adduction** · 侧卧髋内收 · Side-lying Hip Adduction
+  - 器械：自重
+  - 主练肌群：hip-adductors
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **single-leg-calf-raise** · 单腿提踵 · Single-leg Calf Raise
+  - 器械：自重 / 哑铃
+  - 主练肌群：calves
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **sissy-squat** · 西斯深蹲 · Sissy Squat
+  - 器械：自重
+  - 主练肌群：quadriceps
+  - 原因：最佳候选置信度低于 0.60
+- **sliding-leg-curl** · 滑垫腿弯举 · Sliding Leg Curl
+  - 器械：滑垫
+  - 主练肌群：hamstrings
+  - 原因：最佳候选置信度低于 0.60
+- **squat-position-calf-raise** · 深蹲姿提踵 · Squat-position Calf Raise
+  - 器械：自重
+  - 主练肌群：calves
+  - 原因：最佳候选置信度低于 0.60
+- **sternum-pull-up** · 胸触杠引体向上 · Sternum Pull-up
+  - 器械：单杠
+  - 主练肌群：rhomboids / middle-lower-trapezius
+  - 原因：最佳候选置信度低于 0.60
+- **towel-hang** · 毛巾悬垂 · Towel Hang
+  - 器械：单杠
+  - 主练肌群：forearm-flexors
+  - 原因：最佳候选置信度低于 0.60
+- **towel-row** · 毛巾划船 · Towel Row
+  - 器械：自重
+  - 主练肌群：latissimus-dorsi / rhomboids
+  - 原因：最佳候选置信度低于 0.60
+- **wide-grip-pull-up** · 宽握引体向上 · Wide-grip Pull-up
+  - 器械：单杠
+  - 主练肌群：latissimus-dorsi
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+
+## 器械特殊动作（34）
+
+- **behind-back-cable-lateral-raise** · 身后绳索侧平举 · Behind-the-back Cable Lateral Raise
+  - 器械：绳索器械
+  - 主练肌群：lateral-deltoid
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **cable-hip-abduction** · 绳索髋外展 · Cable Hip Abduction
+  - 器械：绳索器械
+  - 主练肌群：hip-abductors
+  - 原因：最佳候选置信度低于 0.60
+- **cable-lateral-raise** · 绳索侧平举 · Cable Lateral Raise
+  - 器械：绳索器械
+  - 主练肌群：lateral-deltoid
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **cable-rear-delt-row** · 绳索后束划船 · Cable Rear Delt Row
+  - 器械：绳索器械
+  - 主练肌群：rear-deltoid
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **cable-romanian-deadlift** · 绳索罗马尼亚硬拉 · Cable Romanian Deadlift
+  - 器械：绳索器械
+  - 主练肌群：hamstrings
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **cable-upright-row** · 绳索直立划船 · Cable Upright Row
+  - 器械：绳索器械
+  - 主练肌群：lateral-deltoid / upper-trapezius
+  - 原因：最佳候选置信度低于 0.60
+- **decline-dumbbell-fly** · 下斜哑铃飞鸟 · Decline Dumbbell Fly
+  - 器械：哑铃 / 卧推凳
+  - 主练肌群：pectoralis-major
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **dumbbell-chest-fly** · 平板哑铃飞鸟 · Flat Dumbbell Fly
+  - 器械：哑铃 / 卧推凳
+  - 主练肌群：pectoralis-major
+  - 原因：最佳候选置信度低于 0.60
+- **dumbbell-hip-thrust** · 哑铃臀推 · Dumbbell Hip Thrust
+  - 器械：哑铃 / 卧推凳
+  - 主练肌群：gluteus-maximus
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **high-to-low-cable-fly** · 绳索高位夹胸 · High-to-low Cable Fly
+  - 器械：绳索器械
+  - 主练肌群：pectoralis-major
+  - 原因：人工 accepted：Cable_Iron_Cross；原判定 unmatched
+- **incline-dumbbell-fly** · 上斜哑铃飞鸟 · Incline Dumbbell Fly
+  - 器械：哑铃 / 卧推凳
+  - 主练肌群：pectoralis-major
+  - 原因：最佳候选置信度低于 0.60
+- **kneeling-single-arm-pulldown** · 跪姿单臂下拉 · Kneeling Single-arm Pulldown
+  - 器械：绳索器械
+  - 主练肌群：latissimus-dorsi
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **leg-curl** · 腿弯举 · Leg Curl
+  - 器械：腿弯举机
+  - 主练肌群：hamstrings
+  - 原因：最佳候选置信度低于 0.60
+- **lying-cable-lateral-raise** · 侧卧绳索侧平举 · Lying Cable Lateral Raise
+  - 器械：绳索器械
+  - 主练肌群：lateral-deltoid
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **lying-triceps-extension** · 仰卧臂屈伸 · Lying Triceps Extension
+  - 器械：杠铃 / 卧推凳
+  - 主练肌群：triceps-brachii
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **machine-hip-abduction** · 器械髋外展 · Machine Hip Abduction
+  - 器械：髋外展机
+  - 主练肌群：hip-abductors
+  - 原因：最佳候选置信度低于 0.60
+- **machine-hip-adduction** · 器械髋内收 · Machine Hip Adduction
+  - 器械：髋内收机
+  - 主练肌群：hip-adductors
+  - 原因：最佳候选置信度低于 0.60
+- **machine-hip-thrust** · 器械臀推 · Machine Hip Thrust
+  - 器械：臀推机
+  - 主练肌群：gluteus-maximus
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **machine-lateral-raise** · 器械侧平举 · Machine Lateral Raise
+  - 器械：固定器械
+  - 主练肌群：lateral-deltoid
+  - 原因：最佳候选置信度低于 0.60
+- **machine-low-row** · 器械低位划船 · Machine Low Row
+  - 器械：坐姿划船器
+  - 主练肌群：rhomboids / middle-lower-trapezius
+  - 原因：最佳候选置信度低于 0.60
+- **machine-pullover** · 器械直臂上拉 · Machine Pullover
+  - 器械：固定器械
+  - 主练肌群：latissimus-dorsi
+  - 原因：最佳候选置信度低于 0.60
+- **machine-standing-calf-raise** · 器械站姿提踵 · Machine Standing Calf Raise
+  - 器械：站姿提踵机
+  - 主练肌群：calves
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **narrow-grip-pulldown** · 窄握下拉 · Narrow-grip Pulldown
+  - 器械：高位下拉器
+  - 主练肌群：latissimus-dorsi
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **reverse-fly** · 反向飞鸟 · Reverse Pec Deck Fly
+  - 器械：绳索器械
+  - 主练肌群：rear-deltoid
+  - 原因：最佳候选置信度低于 0.60
+- **reverse-grip-lat-pulldown** · 反握高位下拉 · Reverse-grip Lat Pulldown
+  - 器械：高位下拉器
+  - 主练肌群：latissimus-dorsi
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **single-arm-cable-row** · 单臂绳索划船 · Single-arm Cable Row
+  - 器械：绳索器械
+  - 主练肌群：latissimus-dorsi
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **single-arm-lat-pulldown** · 单臂高位下拉 · Single-arm Lat Pulldown
+  - 器械：高位下拉器
+  - 主练肌群：latissimus-dorsi
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **single-arm-machine-chest-press** · 单臂器械推胸 · Single-arm Machine Chest Press
+  - 器械：推胸器
+  - 主练肌群：pectoralis-major
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **single-leg-curl** · 单腿器械弯举 · Single-leg Curl
+  - 器械：腿弯举机
+  - 主练肌群：hamstrings
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **smith-hip-thrust** · 史密斯机臀推 · Smith Machine Hip Thrust
+  - 器械：史密斯机 / 卧推凳
+  - 主练肌群：gluteus-maximus
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **standing-cable-row** · 站姿绳索划船 · Standing Cable Row
+  - 器械：绳索器械
+  - 主练肌群：rhomboids / middle-lower-trapezius
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **straight-bar-pushdown** · 直杆下压 · Straight-bar Pushdown
+  - 器械：绳索器械
+  - 主练肌群：triceps-brachii
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **wide-grip-lat-pulldown** · 宽握高位下拉 · Wide-grip Lat Pulldown
+  - 器械：高位下拉器
+  - 主练肌群：latissimus-dorsi
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **wide-grip-seated-row** · 坐姿宽握划船 · Wide-grip Seated Row
+  - 器械：坐姿划船器 / 绳索器械
+  - 主练肌群：middle-lower-trapezius / rhomboids
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+
+## 核心动作（11）
+
+- **ab-wheel-rollout** · 健腹轮跪姿滚动 · Kneeling Ab Wheel Rollout
+  - 器械：健腹轮
+  - 主练肌群：transverse-abdominis
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **battle-rope-slams** · 战绳双臂砸绳 · Battle Rope Slams
+  - 器械：战绳
+  - 主练肌群：anterior-deltoid / rectus-abdominis
+  - 原因：最佳候选置信度低于 0.60
+- **copenhagen-plank** · 哥本哈根侧桥 · Copenhagen Plank
+  - 器械：自重 / 卧推凳
+  - 主练肌群：hip-adductors / obliques
+  - 原因：最佳候选置信度低于 0.60
+- **half-kneeling-pallof-press** · 半跪姿绳索抗旋推 · Half-kneeling Pallof Press
+  - 器械：绳索器械
+  - 主练肌群：obliques / transverse-abdominis
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **landmine-rotation** · 地雷架转体 · Landmine Rotation
+  - 器械：地雷架 / 杠铃
+  - 主练肌群：obliques
+  - 原因：最佳候选置信度低于 0.60
+- **pallof-press** · 站姿绳索抗旋推 · Standing Pallof Press
+  - 器械：绳索器械
+  - 主练肌群：obliques / transverse-abdominis
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **plank-shoulder-tap** · 平板支撑交替触肩 · Plank Shoulder Tap
+  - 器械：自重
+  - 主练肌群：transverse-abdominis
+  - 原因：最佳候选置信度低于 0.60
+- **side-plank** · 侧桥 · Side Plank
+  - 器械：自重
+  - 主练肌群：obliques
+  - 原因：人工 accepted：Side_Bridge；原判定 unmatched
+- **stability-ball-rollout** · 健身球前滚 · Stability Ball Rollout
+  - 器械：健身球
+  - 主练肌群：transverse-abdominis
+  - 原因：最佳候选置信度低于 0.60
+- **standing-ab-wheel-rollout** · 健腹轮站姿滚动 · Standing Ab Wheel Rollout
+  - 器械：健腹轮
+  - 主练肌群：transverse-abdominis
+  - 原因：最佳候选置信度低于 0.60
+- **trx-body-saw** · TRX 锯式平板支撑 · TRX Body Saw
+  - 器械：TRX 悬挂带
+  - 主练肌群：transverse-abdominis
+  - 原因：最佳候选置信度低于 0.60
+
+## 体态康复动作（27）
+
+- **EX_ASSISTED_CERVICAL_SIDE_BEND_STRETCH** · 辅助式单侧颈部侧屈拉伸 · 辅助式单侧颈部侧屈拉伸
+  - 器械：双手
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_BAND_LOWER_LIMB_OPPOSITION_CRUNCH** · 弹力带下肢对抗卷腹 · 弹力带下肢对抗卷腹
+  - 器械：弹力带 / 瑜伽垫
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_CERVICAL_RETRACTION_SMALL_EXTENSION** · 颈部水平回缩与小幅后伸 · 颈部水平回缩与小幅后伸
+  - 器械：自重
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_DOORWAY_ANTERIOR_CHEST_STRETCH** · 门框胸前侧静态拉伸 · 门框胸前侧静态拉伸
+  - 器械：门框
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_DOUBLE_KNEE_TO_CHEST** · 仰卧双膝抱胸 · 仰卧双膝抱胸
+  - 器械：瑜伽垫
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_FOAM_ROLL_THORACIC** · 泡沫轴胸椎后侧滚动 · 泡沫轴胸椎后侧滚动
+  - 器械：泡沫轴
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_HALF_KNEEL_HIP_FLEXOR_STRETCH** · 半跪姿髋前侧拉伸 · 半跪姿髋前侧拉伸
+  - 器械：瑜伽垫
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_LOW_ANGLE_ABDUCTION_CABLE** · 低位龙门架单侧低角度肩外展 · 低位龙门架单侧低角度肩外展
+  - 器械：龙门架
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_LOW_ANGLE_ABDUCTION_DUMBBELL** · 轻哑铃单侧低角度肩外展 · 轻哑铃单侧低角度肩外展
+  - 器械：轻哑铃
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_MASSETER_SELF_MASSAGE** · 咬肌区域轻柔自我按摩 · 咬肌区域轻柔自我按摩
+  - 器械：双手
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_POSTERIOR_SHOULDER_PRESSURE_RELEASE** · 肩后侧局部按压放松 · 肩后侧局部按压放松
+  - 器械：按摩球或手指
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_QUADRUPED_THORACIC_FLEX_EXTENSION** · 四点跪姿胸椎屈伸控制 · 四点跪姿胸椎屈伸控制
+  - 器械：瑜伽垫
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_QUADRUPED_THORACIC_ROTATION** · 四点跪姿手扶头胸椎旋转 · 四点跪姿手扶头胸椎旋转
+  - 器械：瑜伽垫
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_SCAP_BAND_POSTERIOR_TILT_ELEVATION** · 弹力带辅助肩胛后倾上举 · 弹力带辅助肩胛后倾上举
+  - 器械：弹力带
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_SCAP_ELEVATED_PROTRACTION** · 高位支撑肩胛俯卧撑 · 高位支撑肩胛俯卧撑
+  - 器械：稳固桌面或高位支撑面
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_SCAP_QUADRUPED_PROTRACTION** · 四点跪姿肩胛前伸控制 · 四点跪姿肩胛前伸控制
+  - 器械：瑜伽垫
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_SCAP_WALL_PROTRACTION** · 墙面肩胛俯卧撑 · 墙面肩胛俯卧撑
+  - 器械：墙面
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_SCM_STRETCH** · 胸锁乳突肌区域拉伸 · 胸锁乳突肌区域拉伸
+  - 器械：自重
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_SINGLE_KNEE_TO_CHEST** · 仰卧单膝抱胸 · 仰卧单膝抱胸
+  - 器械：瑜伽垫
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_STANDING_CERVICAL_RETRACTION_HOLD** · 站姿颈部水平回缩保持 · 站姿颈部水平回缩保持
+  - 器械：自重
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_SUBOCCIPITAL_SELF_MASSAGE** · 枕下区域轻柔自我按揉 · 枕下区域轻柔自我按揉
+  - 器械：双手
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_SUPINE_POSTERIOR_PELVIC_TILT** · 仰卧骨盆后倾控制 · 仰卧骨盆后倾控制
+  - 器械：瑜伽垫
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_TOWEL_CERVICAL_EXTENSION** · 毛巾辅助颈部后伸活动 · 毛巾辅助颈部后伸活动
+  - 器械：毛巾
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_TOWEL_RESISTED_CERVICAL_RETRACTION_ISOMETRIC** · 毛巾抗阻颈部回缩等长控制 · 毛巾抗阻颈部回缩等长控制
+  - 器械：毛巾
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_WALL_ELBOW_CHEST_SHOULDER_STRETCH** · 墙面肘支撑胸肩前侧拉伸 · 墙面肘支撑胸肩前侧拉伸
+  - 器械：墙面
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_WALL_FIVE_POINT_ALIGNMENT** · 靠墙五点对齐与颈肩回缩保持 · 靠墙五点对齐与颈肩回缩保持
+  - 器械：墙面
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_WALL_SCAPULAR_RETRACTION_ISOMETRIC** · 靠墙肩胛后缩等长控制 · 靠墙肩胛后缩等长控制
+  - 器械：墙面
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+
+## 呼吸或神经类动作（3）
+
+- **EX_CONTRALATERAL_DEAD_BUG** · 仰卧对侧死虫 · Dead Bug
+  - 器械：瑜伽垫
+  - 主练肌群：transverse-abdominis
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_SUPINE_EXHALE_RIBCAGE_CONTROL** · 仰卧屈膝呼气胸廓控制 · 仰卧屈膝呼气胸廓控制
+  - 器械：瑜伽垫
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **EX_TEMPORALIS_CONTACT_CONTROLLED_OPENING** · 双侧颞肌接触式控制张口 · 双侧颞肌接触式控制张口
+  - 器械：双手
+  - 主练肌群：未标注
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+
+## 其他（3）
+
+- **band-lateral-walk** · 弹力带侧向行走 · Band Lateral Walk
+  - 器械：弹力带
+  - 主练肌群：hip-abductors
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **clamshell** · 蚌式开合 · Clamshell
+  - 器械：弹力带
+  - 主练肌群：hip-abductors
+  - 原因：所有合理候选均存在硬性冲突或置信度不足
+- **y-raise** · Y Raise · Y Raise
+  - 器械：哑铃 / 弹力带
+  - 主练肌群：middle-lower-trapezius
+  - 原因：最佳候选置信度低于 0.60

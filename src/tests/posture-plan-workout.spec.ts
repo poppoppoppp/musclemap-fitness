@@ -25,6 +25,13 @@ test('appends today task without replacing existing exercises', () => {
   expect(next.exercises.length).toBeGreaterThan(1);
 });
 
+test('does not overwrite an unfinished posture task from another scheduled date', () => {
+  const existing = startPosturePlanWorkout(plan, { date: '2026-07-16', weekIndex: 1 }, new Date('2026-07-16T08:00:00+08:00'));
+  const next = addPosturePlanTaskToActiveWorkout(existing, plan, occurrence, new Date('2026-07-17T08:00:00+08:00'));
+  expect(next).toBe(existing);
+  expect(next.posturePlanContext?.scheduledDate).toBe('2026-07-16');
+});
+
 test('archives plan context and keeps legacy workouts valid', () => {
   const workout = startPosturePlanWorkout(plan, occurrence, new Date('2026-07-17T08:00:00+08:00'));
   workout.exercises[0].sets[0].durationSeconds = 30;

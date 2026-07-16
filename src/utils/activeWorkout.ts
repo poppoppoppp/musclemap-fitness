@@ -70,8 +70,7 @@ export function addPosturePlanTaskToActiveWorkout(
   now = new Date(),
   dataset: PostureDataset = postureDataset
 ): ActiveWorkout {
-  if (workout.posturePlanContext?.planId && workout.posturePlanContext.planId !== plan.id) return workout;
-  if (workout.posturePlanContext?.planId === plan.id && workout.posturePlanContext.scheduledDate === occurrence.date) return workout;
+  if (workout.posturePlanContext) return workout;
   const protocol = getPostureProtocolById(plan.protocolId, dataset);
   if (!protocol || !getPosturePlanEligibility(protocol, dataset).eligible) return workout;
   const next = addPostureProtocolToActiveWorkout(workout, plan.protocolId, now, dataset);

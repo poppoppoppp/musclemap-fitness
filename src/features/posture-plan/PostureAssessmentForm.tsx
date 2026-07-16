@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { PostureAssessmentDraft, PostureAssessmentInput, PostureEquipment, PostureGoal, PostureRegion, PostureRiskFlag } from '../../types/posturePlan';
 
 interface Props {
@@ -10,6 +10,7 @@ interface Props {
 }
 
 export default function PostureAssessmentForm({ draft, kind = 'initial', planId, onDraft, onComplete }: Props) {
+  const titleRef = useRef<HTMLHeadingElement>(null);
   const [step, setStep] = useState(draft?.step ?? 1);
   const [goal, setGoal] = useState<PostureGoal>(draft?.goals?.[0] ?? 'comfort');
   const [region, setRegion] = useState<PostureRegion>(draft?.regions?.[0] ?? 'upper_posture');
@@ -19,6 +20,10 @@ export default function PostureAssessmentForm({ draft, kind = 'initial', planId,
   const [weeklyFrequency, setWeeklyFrequency] = useState(draft?.weeklyFrequency ?? 3);
   const [discomfort, setDiscomfort] = useState(draft?.discomfort ?? 4);
   const [functionScore, setFunctionScore] = useState(draft?.functionScore ?? 6);
+
+  useEffect(() => {
+    titleRef.current?.focus();
+  }, [step]);
 
   const next = () => {
     const nextStep = step + 1;
@@ -31,7 +36,7 @@ export default function PostureAssessmentForm({ draft, kind = 'initial', planId,
 
   return (
     <section className="mt-7" aria-labelledby="assessment-title">
-      <div className="flex items-center justify-between"><h2 id="assessment-title" className="text-xl font-black">{kind === 'reassessment' ? '周期复测' : '非诊断式初筛'}</h2><span className="text-sm font-bold text-zinc-300">{step} / 4</span></div>
+      <div className="flex items-center justify-between"><h2 ref={titleRef} tabIndex={-1} id="assessment-title" className="text-xl font-black outline-none">{kind === 'reassessment' ? '周期复测' : '非诊断式初筛'}</h2><span className="text-sm font-bold text-zinc-300">{step} / 4</span></div>
       {step === 1 ? <fieldset className="mt-5 space-y-4"><legend className="text-base font-black">目标与区域</legend>
         <div className="space-y-2"><p className="text-sm text-zinc-300">主要目标</p>{([['comfort', '舒适度'], ['mobility', '活动能力'], ['training', '训练表现'], ['appearance', '外观关注']] as const).map(([value, label]) => <Choice key={value} type="radio" name="goal" label={label} checked={goal === value} onChange={() => setGoal(value)} />)}</div>
         <div className="space-y-2"><p className="text-sm text-zinc-300">关注区域</p>{([['upper_posture', '上半身体态'], ['cervical_head', '颈部与头部'], ['pelvis_lumbopelvic', '骨盆与腰盆'], ['thoracic', '胸椎活动']] as const).map(([value, label]) => <Choice key={value} type="radio" name="region" label={label} checked={region === value} onChange={() => setRegion(value)} />)}</div>

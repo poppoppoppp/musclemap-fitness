@@ -135,7 +135,7 @@
 | Posture improvement loop: backup, regression, and mobile QA | pending |
 | Training template closed loop: approved design | completed |
 | Training template closed loop: implementation plan | completed |
-| Training template closed loop: repository and normalization | pending |
+| Training template closed loop: repository and normalization | completed |
 | Training template closed loop: active workout mapping | pending |
 | Training template closed loop: reusable picker and editor | pending |
 | Training template closed loop: lifecycle and safe start | pending |

@@ -17,3 +17,10 @@ export type TrainingTemplateItem = {
   restSeconds: number;
   note?: string;
 };
+
+export type TrainingTemplateInput = Pick<TrainingTemplate, 'name' | 'focusTags' | 'items'>;
+
+export type TrainingTemplateDraft = TrainingTemplateInput & {
+  key: string;
+  savedAt: string;
+};

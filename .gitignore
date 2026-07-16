@@ -4,6 +4,7 @@ test-results
 playwright-report
 .env
 .DS_Store
+.worktrees/
 local-models/
 public/models/private/*
 !public/models/private/

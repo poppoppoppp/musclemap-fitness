@@ -126,3 +126,10 @@
 | Figma mobile UI import: capture all default mobile states | pending |
 | Figma mobile UI import: capture all populated mobile states | pending |
 | Figma mobile UI import: organize and validate captures | pending |
+| Posture improvement loop: approved functional design | completed |
+| Posture improvement loop: write implementation plan | completed |
+| Posture improvement loop: repository and recommendation rules | pending |
+| Posture improvement loop: schedule and workout integration | pending |
+| Posture improvement loop: growth hub and assessment flow | pending |
+| Posture improvement loop: today task, feedback, and reassessment | pending |
+| Posture improvement loop: backup, regression, and mobile QA | pending |

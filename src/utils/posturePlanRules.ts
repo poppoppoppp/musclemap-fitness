@@ -1,5 +1,5 @@
 import type { PostureDataset, PostureDose, PostureProtocol } from '../types/posture';
-import type { PostureAssessment, PostureEquipment, PostureRiskFlag } from '../types/posturePlan';
+import type { PostureAssessment, PostureEquipment, PosturePlan, PostureRiskFlag, PostureSessionFeedback } from '../types/posturePlan';
 import { getPostureStandardExerciseById, getProtocolExerciseSteps, postureDataset } from './postureProtocols';
 
 export type PostureEligibilityFailure = 'secondary' | 'internal' | 'limited' | 'low-quality' | 'missing-source' | 'missing-dose' | 'visual-review-required';
@@ -19,6 +19,27 @@ export interface PostureProtocolRecommendation {
 export type PostureRecommendationResult =
   | { status: 'blocked'; riskFlags: PostureRiskFlag[] }
   | { status: 'ready'; recommendations: PostureProtocolRecommendation[] };
+
+export interface PosturePlanLogLike {
+  id: string;
+  date: string;
+  posturePlanContext?: { planId: string; weekIndex: number; scheduledDate: string };
+}
+
+export interface PosturePlanProgress {
+  weekIndex: number;
+  totalSessions: number;
+  dueSessions: number;
+  completedSessions: number;
+  missedSessions: number;
+  cycleComplete: boolean;
+}
+
+export interface PostureTodayTask {
+  date: string;
+  weekIndex: number;
+  protocolId: string;
+}
 
 export function getPosturePlanEligibility(protocol: PostureProtocol, dataset: PostureDataset = postureDataset): PosturePlanEligibility {
   const reasons: PostureEligibilityFailure[] = [];
@@ -71,6 +92,70 @@ export function getRecommendedPostureProtocols(
     })
     .sort((left, right) => right.score - left.score || left.protocol.id.localeCompare(right.protocol.id))
     .slice(0, 2);
+}
+
+export function getPosturePlanOccurrences(plan: PosturePlan): Array<{ date: string; weekIndex: number }> {
+  const start = parseDateKey(plan.startDate);
+  if (!start) return [];
+  const occurrences: Array<{ date: string; weekIndex: number }> = [];
+  const totalDays = plan.durationWeeks * 7;
+  for (let offset = 0; offset < totalDays; offset += 1) {
+    const date = new Date(start.getFullYear(), start.getMonth(), start.getDate() + offset);
+    if (plan.weekdays.includes(date.getDay() as PosturePlan['weekdays'][number])) {
+      occurrences.push({ date: toDateKey(date), weekIndex: Math.floor(offset / 7) + 1 });
+    }
+  }
+  return occurrences;
+}
+
+export function getPosturePlanProgress(
+  plan: PosturePlan,
+  logs: PosturePlanLogLike[],
+  feedback: PostureSessionFeedback[],
+  now = new Date()
+): PosturePlanProgress {
+  const today = toDateKey(now);
+  const pauseDate = plan.status === 'paused' && plan.pausedAt ? toDateKey(new Date(plan.pausedAt)) : null;
+  const occurrences = getPosturePlanOccurrences(plan);
+  const due = occurrences.filter(({ date }) => date <= today && (!pauseDate || date < pauseDate));
+  const completedLogIds = new Set(feedback.filter((item) => item.planId === plan.id && item.status === 'completed').map(({ workoutLogId }) => workoutLogId));
+  const completedDates = new Set(logs.flatMap((log) => {
+    const context = log.posturePlanContext;
+    return context?.planId === plan.id && completedLogIds.has(log.id) ? [context.scheduledDate] : [];
+  }));
+  const completedSessions = due.filter(({ date }) => completedDates.has(date)).length;
+  const missedSessions = due.filter(({ date }) => date < today && !completedDates.has(date)).length;
+  const start = parseDateKey(plan.startDate);
+  const elapsedDays = start ? Math.max(0, calendarDayDifference(start, now)) : 0;
+  const weekIndex = Math.min(plan.durationWeeks, Math.floor(elapsedDays / 7) + 1);
+  const cycleEnd = start
+    ? toDateKey(new Date(start.getFullYear(), start.getMonth(), start.getDate() + plan.durationWeeks * 7 - 1))
+    : null;
+  return {
+    weekIndex,
+    totalSessions: occurrences.length,
+    dueSessions: due.length,
+    completedSessions,
+    missedSessions,
+    cycleComplete: Boolean(cycleEnd && today > cycleEnd)
+  };
+}
+
+export function getPostureTodayTask(
+  plan: PosturePlan,
+  logs: PosturePlanLogLike[],
+  feedback: PostureSessionFeedback[],
+  now = new Date()
+): PostureTodayTask | null {
+  if (plan.status !== 'active') return null;
+  const today = toDateKey(now);
+  const occurrence = getPosturePlanOccurrences(plan).find(({ date }) => date === today);
+  if (!occurrence) return null;
+  const completedLogIds = new Set(feedback.filter((item) => item.planId === plan.id && item.status === 'completed').map(({ workoutLogId }) => workoutLogId));
+  const completed = logs.some((log) => log.posturePlanContext?.planId === plan.id
+    && log.posturePlanContext.scheduledDate === today
+    && completedLogIds.has(log.id));
+  return completed ? null : { ...occurrence, protocolId: plan.protocolId };
 }
 
 function hasExecutableDose(dose: PostureDose | undefined) {
@@ -127,4 +212,21 @@ function numericDose(value: number | string | undefined): number {
 
 function categoryLabel(category: string) {
   return postureDataset.categories.find(({ id }) => id === category)?.name ?? '所选';
+}
+
+function parseDateKey(value: string) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return null;
+  const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function toDateKey(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
+function calendarDayDifference(start: Date, end: Date) {
+  const startUtc = Date.UTC(start.getFullYear(), start.getMonth(), start.getDate());
+  const endUtc = Date.UTC(end.getFullYear(), end.getMonth(), end.getDate());
+  return Math.floor((endUtc - startUtc) / 86_400_000);
 }

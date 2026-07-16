@@ -268,7 +268,7 @@ type TrainingTemplateEditorProps = {
 
 Use the generalized picker with `showPosture={false}`. Add exercises with `crypto.randomUUID()`, current array length as `order`, and approved defaults. Use buttons for move up/down rather than drag and drop.
 
-Keep one compact editor surface and one sticky save action. Reuse the current focus tags and dark product shell, but remove the redundant three-entry add-method grid.
+Keep one compact editor surface and one bottom-safe save action. Reuse the current focus tags and dark product shell, but remove the redundant three-entry add-method grid.
 
 **Step 4: Run create-flow tests and verify GREEN**
 

@@ -186,6 +186,29 @@ test('repository restores a draft before the user has entered a name', async ({ 
   expect(restored).toMatchObject({ name: '', focusTags: ['背部'], items: [{ exerciseId: 'pull-up' }] });
 });
 
+test('draft recovery keeps exercises when prescription input is incomplete', async ({ page }) => {
+  await page.goto('/');
+
+  const restored = await page.evaluate(async () => {
+    const modulePath = '/src/utils/trainingTemplates.ts';
+    const repository = await import(/* @vite-ignore */ modulePath) as typeof import('../utils/trainingTemplates');
+    localStorage.setItem(repository.TRAINING_TEMPLATE_DRAFTS_STORAGE_KEY, JSON.stringify({
+      new: {
+        key: 'new',
+        name: '未完成处方',
+        focusTags: [],
+        items: [{ id: 'item-1', exerciseId: 'pull-up', order: 0, sets: 0, repRange: '', restSeconds: -1 }],
+        savedAt: '2026-07-16T08:00:00.000Z'
+      }
+    }));
+    return repository.readTrainingTemplateDraft('new');
+  });
+
+  expect(restored?.items).toEqual([
+    expect.objectContaining({ exerciseId: 'pull-up', sets: 1, repRange: '8-12', restSeconds: 0 })
+  ]);
+});
+
 test('repository reports storage failures without erasing existing templates', async ({ page }) => {
   await page.goto('/');
 
@@ -229,4 +252,167 @@ test('repository safely falls back when local storage cannot be read', async ({ 
   });
 
   expect(result).toEqual({ templates: [], draft: null });
+});
+
+test('template editor reuses the exercise picker without posture mode', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/templates/new');
+
+  await page.getByRole('button', { name: '+ 添加动作', exact: true }).click();
+
+  await expect(page.getByRole('dialog', { name: '添加模板动作' })).toBeVisible();
+  await expect(page.getByTestId('exercise-picker-search')).toBeVisible();
+  await expect(page.getByTestId('open-2d-muscle-picker')).toBeVisible();
+  await expect(page.getByTestId('open-posture-picker')).toHaveCount(0);
+  await expect(page.getByText('搜索、筛选或从身体图中精确查找模板动作')).toBeVisible();
+});
+
+test('creates a usable template with editable exercise prescription', async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.removeItem('musclemap.trainingTemplates.v1');
+    localStorage.removeItem('musclemap.trainingTemplateDrafts.v1');
+  });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/templates/new');
+
+  await page.getByPlaceholder('请输入模板名称').fill('背部增肌');
+  await page.getByRole('button', { name: '保存模板', exact: true }).click();
+  await expect(page.getByRole('alert')).toHaveText('请至少添加一个动作');
+
+  await page.getByRole('button', { name: '+ 添加动作', exact: true }).click();
+  await page.getByTestId('exercise-picker-search').fill('高位下拉');
+  await page.getByTestId('add-exercise-lat-pulldown').click();
+
+  const row = page.getByTestId('template-item-lat-pulldown');
+  await expect(row).toBeVisible();
+  await expect(row.getByRole('heading', { name: '高位下拉' })).toBeVisible();
+  await expect(row.getByLabel('高位下拉组数')).toHaveValue('3');
+  await expect(row.getByLabel('高位下拉次数范围')).toHaveValue('8-12');
+  await expect(row.getByLabel('高位下拉休息秒数')).toHaveValue('90');
+
+  await row.getByLabel('高位下拉组数').fill('4');
+  await row.getByLabel('高位下拉次数范围').fill('6-10');
+  await row.getByLabel('高位下拉休息秒数').fill('120');
+  await row.getByLabel('高位下拉备注').fill('控制离心');
+  await page.getByRole('button', { name: '保存模板', exact: true }).click();
+
+  await expect(page).toHaveURL(/\/plan-builder$/);
+  await expect(page.getByRole('status')).toHaveText('模板已保存');
+  const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('musclemap.trainingTemplates.v1') ?? '[]'));
+  expect(stored).toHaveLength(1);
+  expect(stored[0]).toMatchObject({
+    name: '背部增肌',
+    items: [{ exerciseId: 'lat-pulldown', order: 0, sets: 4, repRange: '6-10', restSeconds: 120, note: '控制离心' }]
+  });
+});
+
+test('restores a new template draft after refresh and clears it after save', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    localStorage.removeItem('musclemap.trainingTemplates.v1');
+    localStorage.removeItem('musclemap.trainingTemplateDrafts.v1');
+  });
+  await page.goto('/templates/new');
+
+  await page.getByPlaceholder('请输入模板名称').fill('可恢复草稿');
+  await page.getByRole('button', { name: '背部', exact: true }).click();
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('musclemap.trainingTemplateDrafts.v1'))).toContain('可恢复草稿');
+
+  await page.reload();
+  await expect(page.getByPlaceholder('请输入模板名称')).toHaveValue('可恢复草稿');
+  await expect(page.getByRole('button', { name: '背部', exact: true })).toHaveAttribute('aria-pressed', 'true');
+
+  await page.getByRole('button', { name: '+ 添加动作', exact: true }).click();
+  await page.getByTestId('exercise-picker-search').fill('引体向上');
+  await page.getByTestId('add-exercise-pull-up').click();
+  await page.getByRole('button', { name: '保存模板', exact: true }).click();
+
+  await expect(page).toHaveURL(/\/plan-builder$/);
+  const drafts = await page.evaluate(() => JSON.parse(localStorage.getItem('musclemap.trainingTemplateDrafts.v1') ?? '{}'));
+  expect(drafts.new).toBeUndefined();
+});
+
+test('edits an existing template and persists prescription changes', async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('musclemap.trainingTemplates.v1', JSON.stringify([{
+      id: 'template-1',
+      name: '旧模板',
+      focusTags: ['背部'],
+      items: [{ id: 'item-1', exerciseId: 'lat-pulldown', order: 0, sets: 3, repRange: '8-12', restSeconds: 90 }],
+      createdAt: '2026-07-16T00:00:00.000Z',
+      updatedAt: '2026-07-16T00:00:00.000Z'
+    }]));
+    localStorage.removeItem('musclemap.trainingTemplateDrafts.v1');
+  });
+  await page.goto('/templates/template-1/edit');
+
+  await expect(page.getByRole('heading', { name: '编辑模板' })).toBeVisible();
+  await expect(page.getByPlaceholder('请输入模板名称')).toHaveValue('旧模板');
+  const row = page.getByTestId('template-item-lat-pulldown');
+  await expect(row).toBeVisible();
+  await page.getByPlaceholder('请输入模板名称').fill('新模板');
+  await row.getByLabel('高位下拉组数').fill('5');
+  await page.getByRole('button', { name: '保存模板', exact: true }).click();
+
+  await expect(page).toHaveURL(/\/plan-builder$/);
+  const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('musclemap.trainingTemplates.v1') ?? '[]'));
+  expect(stored).toHaveLength(1);
+  expect(stored[0]).toMatchObject({ id: 'template-1', name: '新模板', items: [{ sets: 5 }] });
+  expect(stored[0].updatedAt).not.toBe('2026-07-16T00:00:00.000Z');
+});
+
+test('reorders and removes template exercises', async ({ page }) => {
+  await page.goto('/templates/new');
+
+  await page.getByRole('button', { name: '+ 添加动作', exact: true }).click();
+  await page.getByTestId('exercise-picker-search').fill('高位下拉');
+  await page.getByTestId('add-exercise-lat-pulldown').click();
+  await page.getByRole('button', { name: '+ 添加动作', exact: true }).click();
+  await page.getByTestId('exercise-picker-search').fill('引体向上');
+  await page.getByTestId('add-exercise-pull-up').click();
+
+  await page.getByRole('button', { name: '上移 引体向上' }).click();
+  const rows = page.locator('[data-testid^="template-item-"]');
+  await expect(rows.nth(0)).toHaveAttribute('data-testid', 'template-item-pull-up');
+  await expect(rows.nth(1)).toHaveAttribute('data-testid', 'template-item-lat-pulldown');
+
+  await page.getByRole('button', { name: '删除 高位下拉' }).click();
+  await expect(page.getByTestId('template-item-lat-pulldown')).toHaveCount(0);
+  await expect(page.getByTestId('template-item-pull-up')).toBeVisible();
+});
+
+test('blocks invalid template prescription values before save', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('musclemap.trainingTemplates.v1', JSON.stringify([{
+    id: 'template-1',
+    name: '背部训练',
+    focusTags: ['背部'],
+    items: [{ id: 'item-1', exerciseId: 'lat-pulldown', order: 0, sets: 3, repRange: '8-12', restSeconds: 90 }],
+    createdAt: '2026-07-16T00:00:00.000Z',
+    updatedAt: '2026-07-16T00:00:00.000Z'
+  }])));
+  await page.goto('/templates/template-1/edit');
+  const row = page.getByTestId('template-item-lat-pulldown');
+
+  await row.getByLabel('高位下拉组数').fill('0');
+  await page.getByRole('button', { name: '保存模板', exact: true }).click();
+  await expect(page.getByRole('alert')).toHaveText('每个动作至少需要 1 组');
+
+  await row.getByLabel('高位下拉组数').fill('3');
+  await row.getByLabel('高位下拉次数范围').fill('');
+  await page.getByRole('button', { name: '保存模板', exact: true }).click();
+  await expect(page.getByRole('alert')).toHaveText('请填写每个动作的次数范围');
+
+  await row.getByLabel('高位下拉次数范围').fill('8-12');
+  await row.getByLabel('高位下拉休息秒数').fill('-1');
+  await page.getByRole('button', { name: '保存模板', exact: true }).click();
+  await expect(page.getByRole('alert')).toHaveText('休息时间不能小于 0 秒');
+  await expect(page).toHaveURL(/\/templates\/template-1\/edit$/);
+});
+
+test('shows a safe state when an edit template is missing', async ({ page }) => {
+  await page.addInitScript(() => localStorage.removeItem('musclemap.trainingTemplates.v1'));
+  await page.goto('/templates/missing/edit');
+
+  await expect(page.getByRole('heading', { name: '找不到训练模板' })).toBeVisible();
+  await expect(page.getByRole('link', { name: '返回训练模板' })).toHaveAttribute('href', '/plan-builder');
 });

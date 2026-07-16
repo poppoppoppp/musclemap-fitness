@@ -5,6 +5,7 @@ import Dashboard from '../pages/Dashboard';
 import BodyMetricHistoryPage from '../pages/BodyMetricHistoryPage';
 import ExerciseDetail from '../pages/ExerciseDetail';
 import ExerciseLibrary from '../pages/ExerciseLibrary';
+import EditTrainingTemplate from '../pages/EditTrainingTemplate';
 import GrowthPage from '../pages/GrowthPage';
 import ProgressPhotoGalleryPage from '../pages/ProgressPhotoGalleryPage';
 import ProgressPhotoComparePage from '../pages/ProgressPhotoComparePage';
@@ -33,6 +34,7 @@ export const router = createBrowserRouter([
       { path: 'growth/photos/compare/:category', element: <ProgressPhotoComparePage /> },
       { path: 'plan-builder', element: <PlanBuilder /> },
       { path: 'templates/new', element: <NewTrainingTemplate /> },
+      { path: 'templates/:templateId/edit', element: <EditTrainingTemplate /> },
       { path: 'data-management', element: <DataManagement /> },
       { path: 'three-muscle-selector', element: <TwoDMuscleSelector /> },
       { path: 'three-muscle-demo', element: <TwoDMuscleSelector /> },

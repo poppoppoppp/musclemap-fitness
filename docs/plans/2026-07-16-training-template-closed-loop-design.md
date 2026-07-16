@@ -101,7 +101,7 @@ Keep the existing dark mobile product shell, touch targets, typography, and lime
 - one editor surface
 - compact exercise rows
 - one primary action per state
-- sticky mobile save action with bottom-navigation clearance
+- mobile save action with bottom-safe scroll clearance
 - existing focus-ring and reduced-motion conventions
 
 ## Testing

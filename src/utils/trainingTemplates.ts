@@ -208,7 +208,25 @@ function normalizeDraft(value: unknown, key: string): TrainingTemplateDraft | nu
     key,
     name: value.name.trim(),
     focusTags: cleanFocusTags(value.focusTags),
-    items: normalizeInputItems(value.items as TrainingTemplateItem[]),
+    items: normalizeDraftItems(value.items),
     savedAt: value.savedAt
   };
+}
+
+function normalizeDraftItems(value: unknown[]): TrainingTemplateItem[] {
+  const seenExerciseIds = new Set<string>();
+  return value.flatMap((item) => {
+    if (!isPlainObject(item) || !isNonEmptyString(item.id) || !isNonEmptyString(item.exerciseId)) return [];
+    if (!getExerciseById(item.exerciseId) || seenExerciseIds.has(item.exerciseId)) return [];
+    seenExerciseIds.add(item.exerciseId);
+    return [{
+      id: item.id,
+      exerciseId: item.exerciseId,
+      order: 0,
+      sets: Number.isInteger(item.sets) && (item.sets as number) >= 1 ? item.sets as number : 1,
+      repRange: isNonEmptyString(item.repRange) ? item.repRange.trim() : '8-12',
+      restSeconds: Number.isInteger(item.restSeconds) && (item.restSeconds as number) >= 0 ? item.restSeconds as number : 0,
+      ...(typeof item.note === 'string' && item.note.trim() ? { note: item.note.trim() } : {})
+    }];
+  }).map((item, order) => ({ ...item, order }));
 }

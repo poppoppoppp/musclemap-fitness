@@ -1732,20 +1732,18 @@ test('training templates start empty and open the new template page', async ({ p
   await expect(page).toHaveURL(/\/templates\/new$/);
 });
 
-test('new template validates and saves an empty user template', async ({ page }) => {
+test('new template requires a real exercise before save', async ({ page }) => {
   await page.addInitScript(() => localStorage.removeItem('musclemap.trainingTemplates.v1'));
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/templates/new');
 
-  for (const text of ['新建模板', '模板名称', '训练重点', '动作列表', '添加方式', '还没有添加动作', '+ 添加动作', '搜索动作', '从肌群地图添加', '从动作库', '保存模板']) {
+  for (const text of ['新建模板', '模板名称', '训练重点', '动作列表', '还没有添加动作', '+ 添加动作', '保存模板']) {
     await expect(page.getByText(text, { exact: true }).first()).toBeVisible();
   }
   await expect(page.getByPlaceholder('请输入模板名称')).toBeVisible();
-  for (const tag of ['胸部', '背部', '肩部', '手臂', '腿部', '核心', '+']) {
+  for (const tag of ['胸部', '背部', '肩部', '手臂', '腿部', '核心']) {
     await expect(page.getByRole('button', { name: tag, exact: true })).toBeVisible();
   }
-  await expect(page.getByText('想专门练某块肌肉？')).toHaveCount(0);
-  await expect(page.getByText('打开肌群地图')).toHaveCount(0);
 
   await page.getByRole('button', { name: '保存模板' }).click();
   await expect(page.getByRole('alert')).toHaveText('请输入模板名称');
@@ -1755,27 +1753,28 @@ test('new template validates and saves an empty user template', async ({ page })
   await page.getByRole('button', { name: '手臂', exact: true }).click();
   await page.getByRole('button', { name: '保存模板' }).click();
 
-  await expect(page).toHaveURL(/\/plan-builder$/);
-  await expect(page.getByRole('status')).toHaveText('模板已保存');
-  await expect(page.getByRole('heading', { name: '我的背部训练' })).toBeVisible();
-  await expect(page.getByText('0 个动作')).toBeVisible();
+  await expect(page).toHaveURL(/\/templates\/new$/);
+  await expect(page.getByRole('alert')).toHaveText('请至少添加一个动作');
   const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('musclemap.trainingTemplates.v1') ?? '[]'));
-  expect(stored).toHaveLength(1);
-  expect(stored[0]).toMatchObject({ name: '我的背部训练', focusTags: ['背部', '手臂'], items: [] });
+  expect(stored).toHaveLength(0);
 });
 
-test('new template add methods route correctly and clear mobile navigation', async ({ page }) => {
+test('new template opens the reusable picker and clears mobile navigation', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/templates/new');
 
-  await expect(page.getByRole('link', { name: '从肌群地图添加' })).toHaveAttribute('href', '/three-muscle-selector?mode=template');
-  await expect(page.getByRole('link', { name: '从动作库' })).toHaveAttribute('href', '/exercises?mode=template');
+  await page.getByRole('button', { name: '+ 添加动作', exact: true }).click();
+  await expect(page.getByTestId('exercise-picker-search')).toBeVisible();
+  await expect(page.getByTestId('open-2d-muscle-picker')).toBeVisible();
+  await expect(page.getByTestId('open-posture-picker')).toHaveCount(0);
+  await page.getByRole('button', { name: '关闭动作选择器' }).click();
   await expect(page.getByRole('link', { name: '我的', exact: true })).toHaveClass(/text-lime-300/);
   expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
 
-  await page.getByRole('button', { name: '保存模板' }).scrollIntoViewIfNeeded();
+  await page.getByTestId('template-editor-content-end').scrollIntoViewIfNeeded();
   const saveBox = await page.getByRole('button', { name: '保存模板' }).boundingBox();
-  const navBox = await page.locator('nav').boundingBox();
+  const bottomNav = page.getByRole('navigation').filter({ has: page.getByRole('link', { name: '我的', exact: true }) });
+  const navBox = await bottomNav.boundingBox();
   expect(saveBox).not.toBeNull();
   expect(navBox).not.toBeNull();
   expect(saveBox!.y + saveBox!.height).toBeLessThanOrEqual(navBox!.y);

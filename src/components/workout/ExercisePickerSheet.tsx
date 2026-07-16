@@ -17,12 +17,29 @@ type ExercisePickerSheetProps = {
   initialPostureCategoryId?: string | null;
   initialPostureScrollTop?: number;
   onClose: () => void;
+  title?: string;
+  description?: string;
+  duplicateMessage?: string;
+  showPosture?: boolean;
 };
 
 const defaultMuscleId = 'latissimus-dorsi';
 const transitionMs = 250;
 
-export default function ExercisePickerSheet({ open, existingExerciseIds, onAddExercise, onAddPostureProtocol, initialPostureProtocolId, initialPostureCategoryId, initialPostureScrollTop, onClose }: ExercisePickerSheetProps) {
+export default function ExercisePickerSheet({
+  open,
+  existingExerciseIds,
+  onAddExercise,
+  onAddPostureProtocol,
+  initialPostureProtocolId,
+  initialPostureCategoryId,
+  initialPostureScrollTop,
+  onClose,
+  title = '添加动作',
+  description = '搜索、筛选或从身体图中精确查找',
+  duplicateMessage = '该动作已在当前训练中',
+  showPosture = true
+}: ExercisePickerSheetProps) {
   const [mounted, setMounted] = useState(open);
   const [entered, setEntered] = useState(false);
   const [query, setQuery] = useState('');
@@ -49,7 +66,7 @@ export default function ExercisePickerSheet({ open, existingExerciseIds, onAddEx
       setMounted(true);
       setQuery('');
       setCategory('all');
-      setMode(initialPostureProtocolId ? 'posture' : 'list');
+      setMode(showPosture && initialPostureProtocolId ? 'posture' : 'list');
       setSelectedMuscleId(defaultMuscleId);
       setMuscleView('back');
       setStatus('');
@@ -63,7 +80,7 @@ export default function ExercisePickerSheet({ open, existingExerciseIds, onAddEx
       restoreFocusRef.current?.focus();
     }, transitionMs);
     return () => window.clearTimeout(timeout);
-  }, [initialPostureProtocolId, open]);
+  }, [initialPostureProtocolId, open, showPosture]);
 
   useEffect(() => {
     if (!open) return;
@@ -128,11 +145,11 @@ export default function ExercisePickerSheet({ open, existingExerciseIds, onAddEx
 
   const handleAdd = (exercise: Exercise) => {
     if (existingExerciseIds.has(exercise.id)) {
-      setStatus('该动作已在当前训练中');
+      setStatus(duplicateMessage);
       return;
     }
     if (!onAddExercise(exercise.id)) {
-      setStatus('该动作已在当前训练中');
+      setStatus(duplicateMessage);
     }
   };
 
@@ -172,8 +189,8 @@ export default function ExercisePickerSheet({ open, existingExerciseIds, onAddEx
           <div aria-hidden="true" className="mx-auto mb-2 h-1 w-11 rounded-full bg-white/25" />
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h2 id="exercise-picker-title" className="text-xl font-black tracking-tight">{mode === 'posture' ? '体态改善' : '添加动作'}</h2>
-              <p className="mt-0.5 text-xs text-zinc-400">{mode === 'posture' ? '将有序动作模块加入当前训练' : '搜索、筛选或从身体图中精确查找'}</p>
+              <h2 id="exercise-picker-title" className="text-xl font-black tracking-tight">{mode === 'posture' ? '体态改善' : title}</h2>
+              <p className="mt-0.5 text-xs text-zinc-400">{mode === 'posture' ? '将有序动作模块加入当前训练' : description}</p>
             </div>
             <button type="button" aria-label="关闭动作选择器" onClick={onClose} className="grid min-h-11 min-w-11 place-items-center rounded-full text-xl text-zinc-400 transition hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-lime-300/60">×</button>
           </div>
@@ -206,7 +223,7 @@ export default function ExercisePickerSheet({ open, existingExerciseIds, onAddEx
             ))}
           </nav>
 
-          <div className="mt-1 grid grid-cols-2 gap-2">
+          <div className={`mt-1 grid gap-2 ${showPosture ? 'grid-cols-2' : 'grid-cols-1'}`}>
             <button
               type="button"
               data-testid="open-2d-muscle-picker"
@@ -215,14 +232,14 @@ export default function ExercisePickerSheet({ open, existingExerciseIds, onAddEx
             >
               2D 找肌群
             </button>
-            <button
+            {showPosture ? <button
               type="button"
               data-testid="open-posture-picker"
               onClick={() => { setMode('posture'); setStatus(''); }}
               className="min-h-11 rounded-xl border border-lime-300/30 px-3 text-xs font-black text-lime-300 transition hover:bg-lime-300/[0.07] focus:outline-none focus:ring-2 focus:ring-lime-300/60"
             >
               体态改善
-            </button>
+            </button> : null}
           </div>
           <p role={status ? 'status' : undefined} className="mt-1 truncate text-xs font-semibold text-amber-200">{status}</p></> : null}
         </div>

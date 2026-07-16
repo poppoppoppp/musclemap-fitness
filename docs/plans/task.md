@@ -122,3 +122,7 @@
 | Free Exercise DB manual review page V0.3: freeze 72/70 data and formal baselines | completed |
 | Free Exercise DB manual review page V0.3: implement local assets, page state, and exports | in progress |
 | Free Exercise DB manual review page V0.3: generate and run lightweight HTTP checks | pending |
+| Figma mobile UI import: verify access and create target file | in progress |
+| Figma mobile UI import: capture all default mobile states | pending |
+| Figma mobile UI import: capture all populated mobile states | pending |
+| Figma mobile UI import: organize and validate captures | pending |

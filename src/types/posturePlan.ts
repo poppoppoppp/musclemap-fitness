@@ -81,6 +81,8 @@ export interface PostureSessionFeedback {
   createdAt: string;
 }
 
+export type PostureSessionFeedbackInput = Omit<PostureSessionFeedback, 'id' | 'createdAt'>;
+
 export interface PosturePlanWorkoutContext {
   planId: string;
   weekIndex: number;

@@ -4,7 +4,8 @@ import type {
   PostureAssessmentInput,
   PosturePlan,
   PosturePlanInput,
-  PostureSessionFeedback
+  PostureSessionFeedback,
+  PostureSessionFeedbackInput
 } from '../types/posturePlan';
 
 export const POSTURE_ASSESSMENTS_KEY = 'musclemap.postureAssessments.v1';
@@ -13,6 +14,7 @@ export const POSTURE_FEEDBACK_KEY = 'musclemap.postureFeedback.v1';
 export const POSTURE_ASSESSMENT_DRAFT_KEY = 'musclemap.postureAssessmentDraft.v1';
 
 export type CreatePosturePlanResult = { ok: true; plan: PosturePlan } | { ok: false; error: 'active-plan-exists' | 'invalid-plan' | 'storage-failed' };
+export type SavePostureFeedbackResult = { ok: true; feedback: PostureSessionFeedback } | { ok: false; error: 'invalid-feedback' | 'storage-failed' };
 
 export class PosturePlanRepository {
   constructor(private readonly storage: Storage, private readonly now: () => Date = () => new Date()) {}
@@ -58,6 +60,25 @@ export class PosturePlanRepository {
 
   listFeedback(): PostureSessionFeedback[] {
     return this.readArray(POSTURE_FEEDBACK_KEY, normalizeFeedback).sort((left, right) => right.createdAt.localeCompare(left.createdAt));
+  }
+
+  saveFeedback(input: PostureSessionFeedbackInput): SavePostureFeedbackResult {
+    if (!isValidFeedbackInput(input)) return { ok: false, error: 'invalid-feedback' };
+    const createdAt = this.now().toISOString();
+    const feedback: PostureSessionFeedback = {
+      ...input,
+      abortReason: cleanText(input.abortReason),
+      note: cleanText(input.note),
+      id: createId('posture-feedback', createdAt),
+      createdAt
+    };
+    try {
+      const retained = this.listFeedback().filter((item) => item.workoutLogId !== input.workoutLogId);
+      this.storage.setItem(POSTURE_FEEDBACK_KEY, JSON.stringify([...retained, feedback]));
+      return { ok: true, feedback };
+    } catch {
+      return { ok: false, error: 'storage-failed' };
+    }
   }
 
   saveAssessmentDraft(draft: PostureAssessmentDraft): void {
@@ -109,7 +130,7 @@ function normalizePlan(value: unknown): PosturePlan | null {
 
 function normalizeFeedback(value: unknown): PostureSessionFeedback | null {
   if (!isRecord(value) || typeof value.id !== 'string' || typeof value.planId !== 'string' || typeof value.workoutLogId !== 'string' || typeof value.createdAt !== 'string') return null;
-  if (value.status !== 'completed' && value.status !== 'aborted') return null;
+  if (!isValidFeedbackInput(value as unknown as PostureSessionFeedbackInput)) return null;
   return value as unknown as PostureSessionFeedback;
 }
 
@@ -146,6 +167,16 @@ function isStringArrayOf(value: unknown, allowed: readonly string[]): value is s
 
 function isScore(value: unknown): value is number {
   return typeof value === 'number' && Number.isInteger(value) && value >= 0 && value <= 10;
+}
+
+function isValidFeedbackInput(value: PostureSessionFeedbackInput): boolean {
+  if (!value || typeof value.planId !== 'string' || !value.planId || typeof value.workoutLogId !== 'string' || !value.workoutLogId || !isScore(value.discomfortBefore)) return false;
+  if (value.status === 'completed') return isScore(value.discomfortAfter) && (value.difficulty === 'easy' || value.difficulty === 'appropriate' || value.difficulty === 'hard');
+  return value.status === 'aborted' && Boolean(cleanText(value.abortReason));
+}
+
+function cleanText(value: string | undefined): string | undefined {
+  return value?.trim() || undefined;
 }
 
 function isDateKey(value: unknown): value is string {

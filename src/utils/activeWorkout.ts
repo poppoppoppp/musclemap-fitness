@@ -1,5 +1,6 @@
 import type { ActiveWorkout, ActiveWorkoutExercise, ActiveWorkoutSet, ActiveWorkoutSource } from '../types/activeWorkout';
 import type { PostureDataset, PostureDose, PostureProtocolExerciseSnapshot, PostureProtocolStepSnapshot, PostureProtocolWorkoutSnapshot } from '../types/posture';
+import type { TrainingTemplate, TrainingTemplateItem } from '../types/trainingTemplate';
 import type { GeneratedPlan, GeneratedPlanItem, GeneratedWorkoutDay, WorkoutLog, WorkoutLogExercise, WorkoutSet } from '../types/workout';
 import {
   formatDose,
@@ -208,6 +209,37 @@ export function createActiveWorkoutFromPlanDay(plan: GeneratedPlan, day: Generat
     exercises: day.items.map(mapGeneratedPlanItemToActiveWorkoutExercise),
     createdAt: timestamp,
     updatedAt: timestamp
+  };
+}
+
+export function createActiveWorkoutFromTemplate(template: TrainingTemplate, now = new Date()): ActiveWorkout {
+  const timestamp = now.toISOString();
+  return {
+    id: createId('active-workout'),
+    status: 'active',
+    startedAt: timestamp,
+    trainingDate: getLocalDateKeyFromDate(now),
+    source: 'template',
+    templateId: template.id,
+    exercises: [...template.items].sort((left, right) => left.order - right.order).map(mapTrainingTemplateItemToActiveWorkoutExercise),
+    createdAt: timestamp,
+    updatedAt: timestamp
+  };
+}
+
+export function mapTrainingTemplateItemToActiveWorkoutExercise(item: TrainingTemplateItem, index: number): ActiveWorkoutExercise {
+  return {
+    id: createId('active-exercise'),
+    exerciseId: item.exerciseId,
+    order: index,
+    source: 'template',
+    planned: {
+      sets: item.sets,
+      repRange: item.repRange,
+      restSeconds: item.restSeconds,
+      note: item.note
+    },
+    sets: Array.from({ length: Math.max(1, item.sets) }, (_, setIndex) => createActiveWorkoutSet(setIndex + 1))
   };
 }
 
@@ -572,7 +604,7 @@ function isActiveWorkout(value: unknown): value is ActiveWorkout {
     typeof workout.id === 'string' &&
     typeof workout.startedAt === 'string' &&
     typeof workout.trainingDate === 'string' &&
-    (workout.source === 'manual' || workout.source === 'exercise-detail' || workout.source === 'plan' || workout.source === 'posture') &&
+    (workout.source === 'manual' || workout.source === 'exercise-detail' || workout.source === 'plan' || workout.source === 'posture' || workout.source === 'template') &&
     Array.isArray(workout.exercises)
   );
 }

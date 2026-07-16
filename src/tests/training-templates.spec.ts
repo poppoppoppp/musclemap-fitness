@@ -1,5 +1,41 @@
 import { expect, test } from '@playwright/test';
+import type { TrainingTemplate } from '../types/trainingTemplate';
+import { createActiveWorkoutFromTemplate } from '../utils/activeWorkout';
 import { normalizeTrainingTemplates } from '../utils/trainingTemplates';
+
+const templateFixture: TrainingTemplate = {
+  id: 'template-1',
+  name: '背部训练',
+  focusTags: ['背部'],
+  items: [
+    {
+      id: 'item-1',
+      exerciseId: 'lat-pulldown',
+      order: 0,
+      sets: 3,
+      repRange: '8-12',
+      restSeconds: 90,
+      note: '控制离心'
+    }
+  ],
+  createdAt: '2026-07-16T00:00:00.000Z',
+  updatedAt: '2026-07-16T00:00:00.000Z'
+};
+
+test('creates an active workout from template prescription', () => {
+  const workout = createActiveWorkoutFromTemplate(templateFixture, new Date('2026-07-16T08:00:00.000Z'));
+
+  expect(workout.source).toBe('template');
+  expect(workout.templateId).toBe(templateFixture.id);
+  expect(workout.exercises).toHaveLength(1);
+  expect(workout.exercises[0]).toMatchObject({
+    exerciseId: 'lat-pulldown',
+    order: 0,
+    source: 'template',
+    planned: { sets: 3, repRange: '8-12', restSeconds: 90, note: '控制离心' }
+  });
+  expect(workout.exercises[0].sets).toHaveLength(3);
+});
 
 test('normalizes valid templates and drops unsafe records', () => {
   const result = normalizeTrainingTemplates([

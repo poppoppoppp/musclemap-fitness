@@ -1,4 +1,4 @@
-export type GrowthSection = 'training' | 'body';
+export type GrowthSection = 'training' | 'body' | 'posture';
 export type GrowthTimeRange = '4w' | '3m' | '6m' | 'all';
 export type BodyMetricId = 'weight' | 'waist' | 'arm';
 

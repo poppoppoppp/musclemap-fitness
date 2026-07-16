@@ -15,12 +15,14 @@ export const POSTURE_ASSESSMENT_DRAFT_KEY = 'musclemap.postureAssessmentDraft.v1
 
 export type CreatePosturePlanResult = { ok: true; plan: PosturePlan } | { ok: false; error: 'active-plan-exists' | 'invalid-plan' | 'storage-failed' };
 export type SavePostureFeedbackResult = { ok: true; feedback: PostureSessionFeedback } | { ok: false; error: 'invalid-feedback' | 'storage-failed' };
+export type UpdatePosturePlanResult = { ok: true; plan: PosturePlan } | { ok: false; error: 'plan-not-found' | 'invalid-transition' | 'storage-failed' };
+export type SavePostureReassessmentResult = { ok: true; assessment: PostureAssessment; plan: PosturePlan } | { ok: false; error: 'plan-not-found' | 'invalid-assessment' | 'storage-failed' };
 
 export class PosturePlanRepository {
   constructor(private readonly storage: Storage, private readonly now: () => Date = () => new Date()) {}
 
   listAssessments(): PostureAssessment[] {
-    return this.readArray(POSTURE_ASSESSMENTS_KEY, normalizeAssessment).sort((left, right) => right.createdAt.localeCompare(left.createdAt));
+    return this.readArray(POSTURE_ASSESSMENTS_KEY, normalizePostureAssessment).sort((left, right) => right.createdAt.localeCompare(left.createdAt));
   }
 
   saveAssessment(input: PostureAssessmentInput): PostureAssessment {
@@ -31,11 +33,11 @@ export class PosturePlanRepository {
   }
 
   listPlans(): PosturePlan[] {
-    return this.readArray(POSTURE_PLANS_KEY, normalizePlan).sort((left, right) => right.createdAt.localeCompare(left.createdAt));
+    return this.readArray(POSTURE_PLANS_KEY, normalizePosturePlan).sort((left, right) => right.createdAt.localeCompare(left.createdAt));
   }
 
   getActivePlan(): PosturePlan | null {
-    return this.listPlans().find(({ status }) => status === 'active') ?? null;
+    return this.listPlans().find(({ status }) => status === 'active' || status === 'paused') ?? null;
   }
 
   tryCreatePlan(input: PosturePlanInput): CreatePosturePlanResult {
@@ -59,7 +61,7 @@ export class PosturePlanRepository {
   }
 
   listFeedback(): PostureSessionFeedback[] {
-    return this.readArray(POSTURE_FEEDBACK_KEY, normalizeFeedback).sort((left, right) => right.createdAt.localeCompare(left.createdAt));
+    return this.readArray(POSTURE_FEEDBACK_KEY, normalizePostureFeedback).sort((left, right) => right.createdAt.localeCompare(left.createdAt));
   }
 
   saveFeedback(input: PostureSessionFeedbackInput): SavePostureFeedbackResult {
@@ -81,6 +83,62 @@ export class PosturePlanRepository {
     }
   }
 
+  pausePlan(planId: string): UpdatePosturePlanResult {
+    return this.updatePlan(planId, (plan, timestamp) => {
+      if (plan.status !== 'active') return null;
+      return {
+        ...plan,
+        status: 'paused',
+        pausedAt: timestamp,
+        pauseIntervals: [...(plan.pauseIntervals ?? []), { startedAt: timestamp }],
+        updatedAt: timestamp
+      };
+    });
+  }
+
+  resumePlan(planId: string): UpdatePosturePlanResult {
+    return this.updatePlan(planId, (plan, timestamp) => {
+      if (plan.status !== 'paused') return null;
+      return {
+        ...plan,
+        status: 'active',
+        pausedAt: undefined,
+        pauseIntervals: closeOpenPauseInterval(plan.pauseIntervals, plan.pausedAt, timestamp),
+        updatedAt: timestamp
+      };
+    });
+  }
+
+  completePlan(planId: string): UpdatePosturePlanResult {
+    return this.updatePlan(planId, (plan, timestamp) => {
+      if (plan.status === 'completed') return null;
+      return {
+        ...plan,
+        status: 'completed',
+        pausedAt: undefined,
+        pauseIntervals: closeOpenPauseInterval(plan.pauseIntervals, plan.pausedAt, timestamp),
+        completedAt: timestamp,
+        updatedAt: timestamp
+      };
+    });
+  }
+
+  saveReassessment(planId: string, input: PostureAssessmentInput): SavePostureReassessmentResult {
+    const plan = this.listPlans().find(({ id }) => id === planId);
+    if (!plan) return { ok: false, error: 'plan-not-found' };
+    if (input.kind !== 'reassessment' || input.planId !== planId || !isAssessmentInput(input as unknown as Record<string, unknown>)) {
+      return { ok: false, error: 'invalid-assessment' };
+    }
+    try {
+      const assessment = this.saveAssessment(input);
+      const updated = { ...plan, reassessmentIds: [...plan.reassessmentIds, assessment.id], updatedAt: this.now().toISOString() };
+      this.storage.setItem(POSTURE_PLANS_KEY, JSON.stringify(this.listPlans().map((item) => item.id === planId ? updated : item)));
+      return { ok: true, assessment, plan: updated };
+    } catch {
+      return { ok: false, error: 'storage-failed' };
+    }
+  }
+
   saveAssessmentDraft(draft: PostureAssessmentDraft): void {
     this.storage.setItem(POSTURE_ASSESSMENT_DRAFT_KEY, JSON.stringify(draft));
   }
@@ -92,6 +150,20 @@ export class PosturePlanRepository {
 
   clearAssessmentDraft(): void {
     this.storage.removeItem(POSTURE_ASSESSMENT_DRAFT_KEY);
+  }
+
+  private updatePlan(planId: string, updater: (plan: PosturePlan, timestamp: string) => PosturePlan | null): UpdatePosturePlanResult {
+    const plans = this.listPlans();
+    const plan = plans.find(({ id }) => id === planId);
+    if (!plan) return { ok: false, error: 'plan-not-found' };
+    const updated = updater(plan, this.now().toISOString());
+    if (!updated) return { ok: false, error: 'invalid-transition' };
+    try {
+      this.storage.setItem(POSTURE_PLANS_KEY, JSON.stringify(plans.map((item) => item.id === planId ? updated : item)));
+      return { ok: true, plan: updated };
+    } catch {
+      return { ok: false, error: 'storage-failed' };
+    }
   }
 
   private readArray<T>(key: string, normalize: (value: unknown) => T | null): T[] {
@@ -114,21 +186,22 @@ export function createPosturePlanRepository() {
   return new PosturePlanRepository(window.localStorage);
 }
 
-function normalizeAssessment(value: unknown): PostureAssessment | null {
+export function normalizePostureAssessment(value: unknown): PostureAssessment | null {
   if (!isRecord(value) || typeof value.id !== 'string' || typeof value.createdAt !== 'string') return null;
   if (!isAssessmentInput(value)) return null;
   return value as unknown as PostureAssessment;
 }
 
-function normalizePlan(value: unknown): PosturePlan | null {
+export function normalizePosturePlan(value: unknown): PosturePlan | null {
   if (!isRecord(value) || typeof value.id !== 'string' || typeof value.protocolId !== 'string' || typeof value.assessmentId !== 'string') return null;
   if (value.status !== 'active' && value.status !== 'paused' && value.status !== 'completed') return null;
   if (typeof value.createdAt !== 'string' || typeof value.updatedAt !== 'string' || !Array.isArray(value.weekdays) || !Array.isArray(value.recommendationReasons) || !Array.isArray(value.reassessmentIds)) return null;
   if (!isValidPlanInput(value as unknown as PosturePlanInput)) return null;
+  if (value.pauseIntervals !== undefined && (!Array.isArray(value.pauseIntervals) || !value.pauseIntervals.every(isPauseInterval))) return null;
   return value as unknown as PosturePlan;
 }
 
-function normalizeFeedback(value: unknown): PostureSessionFeedback | null {
+export function normalizePostureFeedback(value: unknown): PostureSessionFeedback | null {
   if (!isRecord(value) || typeof value.id !== 'string' || typeof value.planId !== 'string' || typeof value.workoutLogId !== 'string' || typeof value.createdAt !== 'string') return null;
   if (!isValidFeedbackInput(value as unknown as PostureSessionFeedbackInput)) return null;
   return value as unknown as PostureSessionFeedback;
@@ -177,6 +250,15 @@ function isValidFeedbackInput(value: PostureSessionFeedbackInput): boolean {
 
 function cleanText(value: string | undefined): string | undefined {
   return value?.trim() || undefined;
+}
+
+function closeOpenPauseInterval(intervals: PosturePlan['pauseIntervals'], legacyPausedAt: string | undefined, endedAt: string) {
+  const values = intervals?.length ? intervals : legacyPausedAt ? [{ startedAt: legacyPausedAt }] : [];
+  return values.map((interval, index) => index === values.length - 1 && !interval.endedAt ? { ...interval, endedAt } : interval);
+}
+
+function isPauseInterval(value: unknown): value is { startedAt: string; endedAt?: string } {
+  return isRecord(value) && typeof value.startedAt === 'string' && (value.endedAt === undefined || typeof value.endedAt === 'string');
 }
 
 function isDateKey(value: unknown): value is string {

@@ -64,6 +64,7 @@ export interface PosturePlan extends PosturePlanInput {
   createdAt: string;
   updatedAt: string;
   reassessmentIds: string[];
+  pauseIntervals?: Array<{ startedAt: string; endedAt?: string }>;
   pausedAt?: string;
   completedAt?: string;
 }

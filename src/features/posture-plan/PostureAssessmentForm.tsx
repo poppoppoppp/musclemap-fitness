@@ -3,11 +3,13 @@ import type { PostureAssessmentDraft, PostureAssessmentInput, PostureEquipment, 
 
 interface Props {
   draft?: PostureAssessmentDraft | null;
+  kind?: 'initial' | 'reassessment';
+  planId?: string;
   onDraft: (draft: PostureAssessmentDraft) => void;
   onComplete: (input: PostureAssessmentInput) => void;
 }
 
-export default function PostureAssessmentForm({ draft, onDraft, onComplete }: Props) {
+export default function PostureAssessmentForm({ draft, kind = 'initial', planId, onDraft, onComplete }: Props) {
   const [step, setStep] = useState(draft?.step ?? 1);
   const [goal, setGoal] = useState<PostureGoal>(draft?.goals?.[0] ?? 'comfort');
   const [region, setRegion] = useState<PostureRegion>(draft?.regions?.[0] ?? 'upper_posture');
@@ -25,11 +27,11 @@ export default function PostureAssessmentForm({ draft, onDraft, onComplete }: Pr
   };
   const toggleRisk = (flag: PostureRiskFlag) => setRiskFlags((values) => values.includes(flag) ? values.filter((item) => item !== flag) : [...values, flag]);
   const toggleEquipment = (item: PostureEquipment) => setEquipment((values) => values.includes(item) ? values.filter((value) => value !== item) : [...values, item]);
-  const finish = () => onComplete({ kind: 'initial', goals: [goal], regions: [region], symptomDuration: '1-3m', discomfort, functionScore, riskFlags, equipment, sessionMinutes, weeklyFrequency });
+  const finish = () => onComplete({ kind, planId, goals: [goal], regions: [region], symptomDuration: '1-3m', discomfort, functionScore, riskFlags, equipment, sessionMinutes, weeklyFrequency });
 
   return (
     <section className="mt-7" aria-labelledby="assessment-title">
-      <div className="flex items-center justify-between"><h2 id="assessment-title" className="text-xl font-black">非诊断式初筛</h2><span className="text-sm font-bold text-zinc-300">{step} / 4</span></div>
+      <div className="flex items-center justify-between"><h2 id="assessment-title" className="text-xl font-black">{kind === 'reassessment' ? '周期复测' : '非诊断式初筛'}</h2><span className="text-sm font-bold text-zinc-300">{step} / 4</span></div>
       {step === 1 ? <fieldset className="mt-5 space-y-4"><legend className="text-base font-black">目标与区域</legend>
         <div className="space-y-2"><p className="text-sm text-zinc-300">主要目标</p>{([['comfort', '舒适度'], ['mobility', '活动能力'], ['training', '训练表现'], ['appearance', '外观关注']] as const).map(([value, label]) => <Choice key={value} type="radio" name="goal" label={label} checked={goal === value} onChange={() => setGoal(value)} />)}</div>
         <div className="space-y-2"><p className="text-sm text-zinc-300">关注区域</p>{([['upper_posture', '上半身体态'], ['cervical_head', '颈部与头部'], ['pelvis_lumbopelvic', '骨盆与腰盆'], ['thoracic', '胸椎活动']] as const).map(([value, label]) => <Choice key={value} type="radio" name="region" label={label} checked={region === value} onChange={() => setRegion(value)} />)}</div>
@@ -48,7 +50,7 @@ export default function PostureAssessmentForm({ draft, onDraft, onComplete }: Pr
       {step === 4 ? <fieldset className="mt-5 space-y-4"><legend className="text-base font-black">基线记录</legend>
         <label className="block text-sm text-zinc-200">当前不适度（0-10）<input type="number" min="0" max="10" value={discomfort} onChange={(event) => setDiscomfort(Number(event.target.value))} className="mt-1 h-12 w-full rounded-xl border border-white/15 bg-black/25 px-3 text-white" /></label>
         <label className="block text-sm text-zinc-200">当前功能评分（0-10）<input type="number" min="0" max="10" value={functionScore} onChange={(event) => setFunctionScore(Number(event.target.value))} className="mt-1 h-12 w-full rounded-xl border border-white/15 bg-black/25 px-3 text-white" /></label>
-        <Next label="查看推荐" onClick={finish} />
+        <Next label={kind === 'reassessment' ? '保存复测结果' : '查看推荐'} onClick={finish} />
       </fieldset> : null}
     </section>
   );

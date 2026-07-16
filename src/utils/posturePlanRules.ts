@@ -115,9 +115,8 @@ export function getPosturePlanProgress(
   now = new Date()
 ): PosturePlanProgress {
   const today = toDateKey(now);
-  const pauseDate = plan.status === 'paused' && plan.pausedAt ? toDateKey(new Date(plan.pausedAt)) : null;
   const occurrences = getPosturePlanOccurrences(plan);
-  const due = occurrences.filter(({ date }) => date <= today && (!pauseDate || date < pauseDate));
+  const due = occurrences.filter(({ date }) => date <= today && !isDateInsidePlanPause(plan, date));
   const completedLogIds = new Set(feedback.filter((item) => item.planId === plan.id && item.status === 'completed').map(({ workoutLogId }) => workoutLogId));
   const completedDates = new Set(logs.flatMap((log) => {
     const context = log.posturePlanContext;
@@ -139,6 +138,17 @@ export function getPosturePlanProgress(
     missedSessions,
     cycleComplete: Boolean(cycleEnd && today > cycleEnd)
   };
+}
+
+function isDateInsidePlanPause(plan: PosturePlan, date: string) {
+  const intervals = plan.pauseIntervals?.length
+    ? plan.pauseIntervals
+    : plan.status === 'paused' && plan.pausedAt ? [{ startedAt: plan.pausedAt }] : [];
+  return intervals.some(({ startedAt, endedAt }) => {
+    const startDate = toDateKey(new Date(startedAt));
+    const endDate = endedAt ? toDateKey(new Date(endedAt)) : null;
+    return date >= startDate && (!endDate || date <= endDate);
+  });
 }
 
 export function getPostureTodayTask(

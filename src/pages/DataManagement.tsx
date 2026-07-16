@@ -160,6 +160,7 @@ export default function DataManagement() {
             <div className="grid grid-cols-2 gap-3 text-sm">
               <BackupMetric label="训练记录" value={`${currentSummary.workoutLogCount} 条`} testId="backup-workout-log-count" />
               <BackupMetric label="身体记录" value={`${currentSummary.bodySnapshotCount} 条`} />
+              <BackupMetric label="体态计划" value={`${currentSummary.posturePlanCount} 条`} />
             </div>
 
             {emptyExportNotice ? <p className="text-sm leading-6 text-amber-200">{emptyExportNotice}</p> : null}
@@ -187,6 +188,7 @@ export default function DataManagement() {
                   <p>训练记录：{pendingSummary.workoutLogCount} 条</p>
                   <p>最近训练记录：{pendingSummary.hasLatestWorkoutLog ? '有' : '无'}</p>
                   <p>身体记录：{pendingSummary.bodySnapshotCount} 条</p>
+                  <p>体态计划：{pendingSummary.posturePlanCount} 条</p>
                   <button type="button" data-testid="confirm-overwrite-import" onClick={handleConfirmImport} className="mt-2 min-h-11 w-full rounded-full border border-lime-300/40 px-4 font-bold text-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/70">
                     确认覆盖当前本地数据
                   </button>

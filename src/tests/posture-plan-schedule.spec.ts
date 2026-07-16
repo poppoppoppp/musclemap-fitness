@@ -35,6 +35,17 @@ test('does not count today or paused dates as missed', () => {
   expect(getPosturePlanProgress(plan, [], [], new Date('2026-07-17T09:00:00+08:00')).missedSessions).toBe(0);
 });
 
+test('does not count dates inside completed pause intervals as due or missed', () => {
+  const resumed = {
+    ...plan,
+    pauseIntervals: [{ startedAt: '2026-07-20T08:00:00+08:00', endedAt: '2026-07-22T18:00:00+08:00' }]
+  };
+  expect(getPosturePlanProgress(resumed, [], [], new Date('2026-07-23T09:00:00+08:00'))).toMatchObject({
+    dueSessions: 1,
+    missedSessions: 1
+  });
+});
+
 test('returns today task until the matching session is completed', () => {
   const now = new Date('2026-07-17T09:00:00+08:00');
   expect(getPostureTodayTask(plan, [], [], now)).toMatchObject({ date: '2026-07-17', weekIndex: 1 });

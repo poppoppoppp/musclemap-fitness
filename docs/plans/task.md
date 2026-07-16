@@ -131,5 +131,5 @@
 | Posture improvement loop: repository and recommendation rules | completed |
 | Posture improvement loop: schedule and workout integration | completed |
 | Posture improvement loop: growth hub and assessment flow | completed |
-| Posture improvement loop: today task, feedback, and reassessment | in progress |
-| Posture improvement loop: backup, regression, and mobile QA | pending |
+| Posture improvement loop: today task, feedback, and reassessment | completed |
+| Posture improvement loop: backup, regression, and mobile QA | in progress |

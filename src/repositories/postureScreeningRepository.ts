@@ -19,6 +19,7 @@ export interface PostureMeasurementSnapshot {
 
 export interface PosturePhotoMeasurementSnapshot {
   view: PosturePhotoView;
+  protocolVersion?: 'posture-photo-standard-v1';
   photoAssetId?: string;
   photoAssetAvailable: boolean;
   landmarks: Partial<Record<PostureLandmarkId, NormalizedPoint>>;
@@ -340,6 +341,7 @@ function isPostureScreeningResult(value: unknown): value is PostureScreeningResu
 
 function isPhotoMeasurementSnapshot(value: unknown): value is PosturePhotoMeasurementSnapshot {
   if (!isRecord(value) || (value.view !== 'front' && value.view !== 'left-lateral') || typeof value.photoAssetAvailable !== 'boolean') return false;
+  if (value.protocolVersion !== undefined && value.protocolVersion !== 'posture-photo-standard-v1') return false;
   if (value.photoAssetId !== undefined && typeof value.photoAssetId !== 'string') return false;
   if (!isRecord(value.landmarks) || !Object.values(value.landmarks).every(isNormalizedPoint)) return false;
   if (!Array.isArray(value.measurements) || !value.measurements.every(isMeasurementSnapshot)) return false;

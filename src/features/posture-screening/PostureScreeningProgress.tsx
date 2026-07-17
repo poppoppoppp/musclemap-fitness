@@ -5,11 +5,12 @@ const stages: { id: PostureScreeningDraftStep; label: string }[] = [
   { id: 'safety', label: '安全检查' },
   { id: 'concern', label: '关注表现' },
   { id: 'movement', label: '引导观察' },
+  { id: 'photo', label: '可选照片' },
   { id: 'review', label: '生成结果' },
 ];
 
 export default function PostureScreeningProgress({ currentStep }: { currentStep: PostureScreeningDraftStep }) {
-  const normalized = currentStep === 'follow-up' ? 'concern' : currentStep === 'photo' ? 'review' : currentStep;
+  const normalized = currentStep === 'follow-up' ? 'concern' : currentStep;
   const currentIndex = Math.max(0, stages.findIndex(({ id }) => id === normalized));
 
   return (

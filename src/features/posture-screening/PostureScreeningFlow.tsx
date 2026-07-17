@@ -1,9 +1,9 @@
 import { useEffect, useReducer, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getGuidedPostureTest } from '../../data/posture/postureScreeningTests';
 import type { PosturePrimaryConcern } from '../../data/posture/postureScreeningQuestions';
 import type { PosturePhotoMeasurementSnapshot, PostureScreeningDraftStep, PostureScreeningRepository } from '../../repositories/postureScreeningRepository';
-import { evaluatePostureScreening, type FunctionalPostureObservation, type PostureSafetyFlag, type PostureScreeningInput, type PostureScreeningResult, type PostureTestStopSymptom, type SubjectivePostureObservation } from '../../utils/postureScreeningRules';
+import { evaluatePostureScreening, type FunctionalPostureObservation, type PostureSafetyFlag, type PostureScreeningInput, type PostureTestStopSymptom, type SubjectivePostureObservation } from '../../utils/postureScreeningRules';
 import PostureBoundaryStep from './PostureBoundaryStep';
 import PostureConcernStep from './PostureConcernStep';
 import PostureMovementStep from './PostureMovementStep';
@@ -15,6 +15,7 @@ type FlowStep = 'boundary' | 'safety' | 'concern' | 'movement' | 'photo' | 'revi
 type FlowAction = { type: 'go'; step: FlowStep };
 
 export default function PostureScreeningFlow({ repository }: { repository: PostureScreeningRepository }) {
+  const navigate = useNavigate();
   const [draftRead] = useState(() => repository.readDraft());
   const answers = draftRead.value?.answers;
   const restoredStep = normalizeStep(draftRead.value?.currentStep);
@@ -30,7 +31,6 @@ export default function PostureScreeningFlow({ repository }: { repository: Postu
   const [photoInput, setPhotoInput] = useState<PostureScreeningInput['photo']>(answers?.photo ?? { status: 'skipped', observations: [], reasonCodes: [] });
   const [photoMeasurements, setPhotoMeasurements] = useState<PosturePhotoMeasurementSnapshot[]>(draftRead.value?.photoMeasurements ?? []);
   const [draftId, setDraftId] = useState(draftRead.value?.id ?? 'posture-screening-draft-local');
-  const [terminalResult, setTerminalResult] = useState<PostureScreeningResult | null>(null);
   const [error, setError] = useState(draftRead.ok ? '' : '上次未完成的筛查草稿已损坏，本次已从头开始。');
   const completionLock = useRef(false);
 
@@ -71,7 +71,7 @@ export default function PostureScreeningFlow({ repository }: { repository: Postu
   };
 
   const complete = (input: PostureScreeningInput, measurements = photoMeasurements) => {
-    if (completionLock.current || terminalResult) return;
+    if (completionLock.current) return;
     completionLock.current = true;
     const result = evaluatePostureScreening(input);
     const saved = repository.saveSession({ input, result, photoMeasurements: measurements });
@@ -82,7 +82,7 @@ export default function PostureScreeningFlow({ repository }: { repository: Postu
     }
     repository.clearDraft();
     setError('');
-    setTerminalResult(result);
+    navigate(`/growth/posture/results/${saved.session.id}`);
   };
 
   const continueBoundary = () => {
@@ -142,8 +142,6 @@ export default function PostureScreeningFlow({ repository }: { repository: Postu
     persist('review', input, measurements);
   };
 
-  if (terminalResult) return <ScreeningTerminal result={terminalResult} />;
-
   return (
     <>
       <PostureScreeningProgress currentStep={step} />
@@ -171,24 +169,6 @@ function ReviewStep({ hasPhoto, onBack, onComplete }: { hasPhoto: boolean; onBac
       </div>
       <button type="button" onClick={onComplete} className="mt-5 min-h-12 w-full rounded-xl bg-lime-300 px-4 text-sm font-black text-[#10130d] outline-none focus-visible:ring-2 focus-visible:ring-lime-100">{hasPhoto ? '使用照片测量，生成结果' : '暂不使用照片，生成结果'}</button>
       <button type="button" onClick={onBack} className="mt-3 min-h-12 w-full rounded-xl border border-white/15 px-4 text-sm font-bold text-zinc-200 outline-none focus-visible:ring-2 focus-visible:ring-lime-200">返回修改观察</button>
-    </section>
-  );
-}
-
-function ScreeningTerminal({ result }: { result: PostureScreeningResult }) {
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  useEffect(() => { titleRef.current?.focus(); }, []);
-  return (
-    <section data-testid="screening-terminal" className="mt-8" aria-labelledby="screening-result-title">
-      <p className="text-xs font-black tracking-[0.12em] text-lime-300">筛查结果</p>
-      <h2 ref={titleRef} tabIndex={-1} id="screening-result-title" className="mt-2 text-2xl font-black leading-8 outline-none">{result.status === 'safety-review' ? '本次筛查已停止' : '本次筛查已完成'}</h2>
-      <p className="mt-3 text-sm leading-6 text-zinc-200">{result.summary}</p>
-      {result.findings.length > 0 ? <div className="mt-5 space-y-3">{result.findings.map((finding) => <article key={finding.patternId} className="rounded-xl border border-lime-300/25 bg-lime-300/[0.05] px-4 py-4"><h3 className="font-black text-white">{finding.label}</h3><p className="mt-2 text-sm leading-6 text-zinc-300">{finding.allowedConclusion}</p></article>)}</div> : null}
-      <div className="mt-6 space-y-2.5" aria-label="下一步">
-        {result.nextActions.map((action) => action.kind === 'return'
-          ? <Link key={action.id} to="/growth/posture" className="flex min-h-12 items-center justify-center rounded-xl bg-lime-300 px-4 text-sm font-black text-[#10130d] outline-none focus-visible:ring-2 focus-visible:ring-lime-100">{action.label}</Link>
-          : <div key={action.id} className="flex min-h-12 items-center rounded-xl border border-white/10 px-3 text-sm font-bold text-zinc-100">{action.label}</div>)}
-      </div>
     </section>
   );
 }

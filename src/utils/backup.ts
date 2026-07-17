@@ -4,9 +4,10 @@ import { PLAN_STORAGE_KEY } from './planRules';
 import { readStorage } from './storage';
 import { BODY_SNAPSHOTS_KEY, readBodySnapshots } from './bodySnapshots';
 import { normalizeBodyMetricRecord } from '../repositories/bodyMetricRepository';
+import { normalizeTrainingTemplates, readTrainingTemplates, TRAINING_TEMPLATES_STORAGE_KEY } from './trainingTemplates';
 
 export const BACKUP_APP_NAME = 'MuscleMap Fitness';
-export const BACKUP_EXPORT_VERSION = 3;
+export const BACKUP_EXPORT_VERSION = 4;
 export const WORKOUT_LOGS_KEY = 'musclemap.workoutLogs.v0.3';
 export const LATEST_WORKOUT_LOG_KEY = 'musclemap.latestWorkoutLog.v0.3';
 
@@ -16,7 +17,8 @@ export type BackupValidationError =
   | 'wrong-app'
   | 'unsupported-version'
   | 'damaged-workout-logs'
-  | 'damaged-body-snapshots';
+  | 'damaged-body-snapshots'
+  | 'damaged-training-templates';
 
 export const backupErrorMessages: Record<BackupValidationError, string> = {
   'invalid-json': '文件内容不是有效 JSON。',
@@ -24,7 +26,8 @@ export const backupErrorMessages: Record<BackupValidationError, string> = {
   'wrong-app': '这不是 MuscleMap Fitness 的导出文件。',
   'unsupported-version': '当前版本不支持该备份文件。',
   'damaged-workout-logs': '备份文件中的训练记录结构损坏。',
-  'damaged-body-snapshots': '备份文件中的身体记录结构损坏。'
+  'damaged-body-snapshots': '备份文件中的身体记录结构损坏。',
+  'damaged-training-templates': '备份文件中的训练模板结构损坏。'
 };
 
 type ValidationResult = { ok: true; backup: MuscleMapBackupFile; summary: BackupSummary } | { ok: false; error: BackupValidationError };
@@ -34,12 +37,14 @@ export function readCurrentBackupData(): MuscleMapBackupData {
   const workoutLogs = readStorage<WorkoutLog[]>(WORKOUT_LOGS_KEY, []);
   const latestWorkoutLog = readStorage<WorkoutLog | null>(LATEST_WORKOUT_LOG_KEY, null);
   const bodySnapshots = readBodySnapshots();
+  const trainingTemplates = readTrainingTemplates();
 
   return {
     latestGeneratedPlan: isGeneratedPlan(latestGeneratedPlan) ? latestGeneratedPlan : null,
     workoutLogs: Array.isArray(workoutLogs) ? workoutLogs.filter(isWorkoutLog) : [],
     latestWorkoutLog: isWorkoutLog(latestWorkoutLog) ? latestWorkoutLog : null,
-    bodySnapshots
+    bodySnapshots,
+    trainingTemplates
   };
 }
 
@@ -58,6 +63,7 @@ export function summarizeBackupData(data: MuscleMapBackupData, exportedAt?: stri
     workoutLogCount: data.workoutLogs.length,
     hasLatestWorkoutLog: data.latestWorkoutLog !== null,
     bodySnapshotCount: data.bodySnapshots.length,
+    trainingTemplateCount: data.trainingTemplates.length,
     exportedAt
   };
 }
@@ -78,7 +84,7 @@ export function validateBackupText(text: string): ValidationResult {
   }
 
   if (parsed.app !== BACKUP_APP_NAME) return { ok: false, error: 'wrong-app' };
-  if (parsed.exportVersion !== 1 && parsed.exportVersion !== 2 && parsed.exportVersion !== BACKUP_EXPORT_VERSION) return { ok: false, error: 'unsupported-version' };
+  if (parsed.exportVersion !== 1 && parsed.exportVersion !== 2 && parsed.exportVersion !== 3 && parsed.exportVersion !== BACKUP_EXPORT_VERSION) return { ok: false, error: 'unsupported-version' };
   if (typeof parsed.exportedAt !== 'string' || !isPlainObject(parsed.data)) return { ok: false, error: 'missing-fields' };
 
   const data = parsed.data;
@@ -105,6 +111,20 @@ export function validateBackupText(text: string): ValidationResult {
   const bodySnapshots = rawBodySnapshots.map(normalizeBodyMetricRecord);
   if (bodySnapshots.some((record) => record === null)) return { ok: false, error: 'damaged-body-snapshots' };
 
+  const rawTrainingTemplates = parsed.exportVersion === 4 ? data.trainingTemplates : [];
+  if (!Array.isArray(rawTrainingTemplates)) return { ok: false, error: 'damaged-training-templates' };
+  const trainingTemplates = normalizeTrainingTemplates(rawTrainingTemplates);
+  if (
+    trainingTemplates.length !== rawTrainingTemplates.length ||
+    rawTrainingTemplates.some((template, index) => (
+      !isPlainObject(template) ||
+      !Array.isArray(template.items) ||
+      trainingTemplates[index]?.items.length !== template.items.length
+    ))
+  ) {
+    return { ok: false, error: 'damaged-training-templates' };
+  }
+
   const backup: MuscleMapBackupFile = {
     app: BACKUP_APP_NAME,
     exportVersion: parsed.exportVersion,
@@ -113,7 +133,8 @@ export function validateBackupText(text: string): ValidationResult {
       latestGeneratedPlan: data.latestGeneratedPlan,
       workoutLogs: data.workoutLogs,
       latestWorkoutLog: data.latestWorkoutLog,
-      bodySnapshots: bodySnapshots.filter((record): record is NonNullable<typeof record> => record !== null)
+      bodySnapshots: bodySnapshots.filter((record): record is NonNullable<typeof record> => record !== null),
+      trainingTemplates
     }
   };
 
@@ -137,6 +158,7 @@ export function applyBackupData(data: MuscleMapBackupData): boolean {
     }
 
     window.localStorage.setItem(BODY_SNAPSHOTS_KEY, JSON.stringify(data.bodySnapshots));
+    window.localStorage.setItem(TRAINING_TEMPLATES_STORAGE_KEY, JSON.stringify(data.trainingTemplates));
 
     return true;
   } catch {

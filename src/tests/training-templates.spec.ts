@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import type { TrainingTemplate } from '../types/trainingTemplate';
 import { createActiveWorkoutFromTemplate } from '../utils/activeWorkout';
+import { BACKUP_EXPORT_VERSION, validateBackupText } from '../utils/backup';
 import { normalizeTrainingTemplates } from '../utils/trainingTemplates';
 
 const templateFixture: TrainingTemplate = {
@@ -528,4 +529,45 @@ test('preserves an existing active workout when starting a template', async ({ p
   }));
   expect(state.workout).toMatchObject({ id: 'existing-workout', exercises: [{ exerciseId: 'push-up' }] });
   expect(state.templates[0].lastUsedAt).toBeUndefined();
+});
+
+test('backup v4 validates training templates and keeps legacy imports compatible', () => {
+  expect(BACKUP_EXPORT_VERSION).toBe(4);
+  const commonData = {
+    latestGeneratedPlan: null,
+    workoutLogs: [],
+    latestWorkoutLog: null,
+    bodySnapshots: []
+  };
+  const current = validateBackupText(JSON.stringify({
+    app: 'MuscleMap Fitness',
+    exportVersion: 4,
+    exportedAt: '2026-07-17T08:00:00.000Z',
+    data: { ...commonData, trainingTemplates: [templateFixture] }
+  }));
+
+  expect(current.ok).toBe(true);
+  if (current.ok) {
+    expect(current.backup.data.trainingTemplates).toEqual([templateFixture]);
+    expect(current.summary.trainingTemplateCount).toBe(1);
+  }
+
+  const damaged = validateBackupText(JSON.stringify({
+    app: 'MuscleMap Fitness',
+    exportVersion: 4,
+    exportedAt: '2026-07-17T08:00:00.000Z',
+    data: { ...commonData, trainingTemplates: [{ id: 'broken' }] }
+  }));
+  expect(damaged).toEqual({ ok: false, error: 'damaged-training-templates' });
+
+  for (const exportVersion of [1, 2, 3]) {
+    const legacy = validateBackupText(JSON.stringify({
+      app: 'MuscleMap Fitness',
+      exportVersion,
+      exportedAt: '2026-07-17T08:00:00.000Z',
+      data: exportVersion === 1 ? { ...commonData, bodySnapshots: undefined } : commonData
+    }));
+    expect(legacy.ok).toBe(true);
+    if (legacy.ok) expect(legacy.backup.data.trainingTemplates).toEqual([]);
+  }
 });

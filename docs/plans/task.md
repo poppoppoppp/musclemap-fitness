@@ -139,5 +139,5 @@
 | Training template closed loop: active workout mapping | completed |
 | Training template closed loop: reusable picker and editor | completed |
 | Training template closed loop: lifecycle and safe start | completed |
-| Training template closed loop: backup v4 | pending |
+| Training template closed loop: backup v4 | completed |
 | Training template closed loop: regression and mobile QA | pending |

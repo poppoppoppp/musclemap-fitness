@@ -2243,6 +2243,17 @@ test('data management exports current local backup data', async ({ page }) => {
       'musclemap.bodySnapshots.v0.1',
       JSON.stringify([{ id: 'body-export', date: '2026-05-25', bodyWeightKg: 70.5, waistCm: 78, createdAt: '2026-05-25T09:00:00.000Z' }])
     );
+    window.localStorage.setItem(
+      'musclemap.trainingTemplates.v1',
+      JSON.stringify([{
+        id: 'template-export',
+        name: '导出模板',
+        focusTags: ['背部'],
+        items: [{ id: 'template-item', exerciseId: 'lat-pulldown', order: 0, sets: 3, repRange: '8-12', restSeconds: 90 }],
+        createdAt: '2026-05-25T09:00:00.000Z',
+        updatedAt: '2026-05-25T09:00:00.000Z'
+      }])
+    );
   });
 
   await page.goto('/');
@@ -2253,6 +2264,7 @@ test('data management exports current local backup data', async ({ page }) => {
   await page.getByTestId('open-backup-panel').click();
   await expect(page.getByText('进行中的训练不会导出，请先结束训练后再备份。')).toBeVisible();
   await expect(page.getByTestId('backup-workout-log-count')).toContainText('2 条');
+  await expect(page.getByTestId('backup-training-template-count')).toContainText('1 个');
 
   const downloadPromise = page.waitForEvent('download');
   await page.getByTestId('export-backup-json').click();
@@ -2268,12 +2280,13 @@ test('data management exports current local backup data', async ({ page }) => {
 
   expect(download.suggestedFilename()).toMatch(/^musclemap-backup-\d{4}-\d{2}-\d{2}\.json$/);
   expect(exported.app).toBe('MuscleMap Fitness');
-  expect(exported.exportVersion).toBe(3);
+  expect(exported.exportVersion).toBe(4);
   expect(typeof exported.exportedAt).toBe('string');
   expect(exported.data.workoutLogs).toHaveLength(2);
   expect(exported.data.bodySnapshots).toEqual([
     { id: 'body-export', date: '2026-05-25', weightKg: 70.5, waistCm: 78, createdAt: '2026-05-25T09:00:00.000Z', updatedAt: '2026-05-25T09:00:00.000Z' }
   ]);
+  expect(exported.data.trainingTemplates).toEqual([expect.objectContaining({ id: 'template-export', name: '导出模板' })]);
 });
 
 test('data management validates imported backup files before overwriting storage', async ({ page }) => {
@@ -2317,7 +2330,7 @@ test('data management validates imported backup files before overwriting storage
 
   const validBackup = {
     app: 'MuscleMap Fitness',
-    exportVersion: 2,
+    exportVersion: 4,
     exportedAt: '2026-05-25T08:00:00.000Z',
     data: {
       latestGeneratedPlan: null,
@@ -2337,7 +2350,15 @@ test('data management validates imported backup files before overwriting storage
       },
       bodySnapshots: [
         { id: 'imported-body', date: '2026-05-25', bodyWeightKg: 69.8, waistCm: 77, createdAt: '2026-05-25T08:00:00.000Z' }
-      ]
+      ],
+      trainingTemplates: [{
+        id: 'imported-template',
+        name: '导入模板',
+        focusTags: ['背部'],
+        items: [{ id: 'imported-template-item', exerciseId: 'lat-pulldown', order: 0, sets: 4, repRange: '6-10', restSeconds: 120 }],
+        createdAt: '2026-05-25T08:00:00.000Z',
+        updatedAt: '2026-05-25T08:00:00.000Z'
+      }]
     }
   };
 
@@ -2349,6 +2370,7 @@ test('data management validates imported backup files before overwriting storage
 
   await expect(page.getByTestId('import-summary')).toContainText('训练记录：1 条');
   await expect(page.getByTestId('import-summary')).toContainText('最近训练记录：有');
+  await expect(page.getByTestId('import-summary')).toContainText('训练模板：1 个');
   expect(await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.latestWorkoutLog.v0.3') ?? 'null').id)).toBe('existing-log');
 
   await page.getByTestId('confirm-overwrite-import').click();
@@ -2358,6 +2380,9 @@ test('data management validates imported backup files before overwriting storage
   expect(await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.latestWorkoutLog.v0.3') ?? 'null').id)).toBe('imported-log');
   expect(await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.bodySnapshots.v0.1') ?? '[]'))).toEqual([
     { id: 'imported-body', date: '2026-05-25', weightKg: 69.8, waistCm: 77, createdAt: '2026-05-25T08:00:00.000Z', updatedAt: '2026-05-25T08:00:00.000Z' }
+  ]);
+  expect(await page.evaluate(() => JSON.parse(window.localStorage.getItem('musclemap.trainingTemplates.v1') ?? '[]'))).toEqual([
+    expect.objectContaining({ id: 'imported-template', name: '导入模板' })
   ]);
 
   await page.reload();

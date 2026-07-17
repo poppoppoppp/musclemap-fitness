@@ -10,6 +10,7 @@ import GrowthPage from '../pages/GrowthPage';
 import PosturePlanPage from '../pages/PosturePlanPage';
 import PostureScreeningPage from '../pages/PostureScreeningPage';
 import PostureScreeningResultPage from '../pages/PostureScreeningResultPage';
+import PostureScreeningHistoryPage from '../pages/PostureScreeningHistoryPage';
 import ProgressPhotoGalleryPage from '../pages/ProgressPhotoGalleryPage';
 import ProgressPhotoComparePage from '../pages/ProgressPhotoComparePage';
 import MuscleMap from '../pages/MuscleMap';
@@ -35,6 +36,7 @@ export const router = createBrowserRouter([
       { path: 'growth/posture', element: <PosturePlanPage /> },
       { path: 'growth/posture/screening', element: <PostureScreeningPage /> },
       { path: 'growth/posture/results/:sessionId', element: <PostureScreeningResultPage /> },
+      { path: 'growth/posture/history', element: <PostureScreeningHistoryPage /> },
       { path: 'growth/body-records', element: <BodyMetricHistoryPage /> },
       { path: 'growth/photos', element: <ProgressPhotoGalleryPage /> },
       { path: 'growth/photos/compare/:category', element: <ProgressPhotoComparePage /> },

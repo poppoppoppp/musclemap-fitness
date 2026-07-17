@@ -155,6 +155,7 @@
 | Posture focused screening: draftable adaptive UI flow | completed |
 | Posture focused screening: local photo capture and manual landmarking | completed |
 | Posture focused screening: explainable result report | completed |
-| Posture focused screening: history, retest, and hub integration | pending |
+| Posture focused screening: history, deletion, and method-aware retest | completed |
+| Posture focused screening: hub integration | pending |
 | Posture focused screening: regression, mobile, privacy, and accessibility QA | pending |
 | Posture focused screening: training-data gap report | pending |

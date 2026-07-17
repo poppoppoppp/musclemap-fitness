@@ -17,11 +17,11 @@ export default function PostureNextActions({ session, repository, onSessionChang
   const rawPhotos = session.photoMeasurements.filter((photo) => photo.photoAssetAvailable && photo.photoAssetId);
 
   const prepareDraft = (action: PostureNextAction): boolean => {
-    const step = action.kind === 'retake' ? 'photo' : action.kind === 'edit' ? 'concern' : 'review';
-    const answers = action.kind === 'skip-photo'
+    const step = action.kind === 'retest' ? 'boundary' : action.kind === 'retake' ? 'photo' : action.kind === 'edit' ? 'concern' : 'review';
+    const answers = action.kind === 'retest' ? {} : action.kind === 'skip-photo'
       ? { ...session.input, photo: { status: 'skipped' as const, observations: [], reasonCodes: [] } }
       : session.input;
-    const saved = repository.saveDraft({ currentStep: step, answers, photoMeasurements: action.kind === 'skip-photo' ? [] : session.photoMeasurements });
+    const saved = repository.saveDraft({ currentStep: step, answers, photoMeasurements: action.kind === 'skip-photo' || action.kind === 'retest' ? [] : session.photoMeasurements, context: action.kind === 'retest' ? { baselineSessionId: session.id } : session.context });
     if (!saved.ok) {
       setError('无法准备修改，请检查浏览器存储设置后重试。');
       return false;
@@ -69,7 +69,7 @@ function Action({ action, session, onPrepare, onSkip }: { action: PostureNextAct
   const base = 'flex min-h-12 w-full items-center justify-center rounded-xl px-4 text-center text-sm font-black outline-none focus-visible:ring-2 focus-visible:ring-lime-100';
   if (action.kind === 'return') return <Link to="/growth/posture" className={`${base} bg-lime-300 text-[#10130d]`}>{action.label}</Link>;
   if (action.kind === 'history') return <Link to="/growth/posture/history" className={`${base} border border-white/15 text-zinc-100`}>{action.label}</Link>;
-  if (action.kind === 'retest') return <Link to={`/growth/posture/screening?baselineSessionId=${session.id}`} className={`${base} border border-white/15 text-zinc-100`}>{action.label}</Link>;
+  if (action.kind === 'retest') return <Link to={`/growth/posture/screening?baselineSessionId=${session.id}`} onClick={(event) => { if (!onPrepare()) event.preventDefault(); }} className={`${base} border border-white/15 text-zinc-100`}>{action.label}</Link>;
   if (action.kind === 'edit' || action.kind === 'retake') return <Link to="/growth/posture/screening" onClick={(event) => { if (!onPrepare()) event.preventDefault(); }} className={`${base} border border-white/15 text-zinc-100`}>{action.label}</Link>;
   if (action.kind === 'skip-photo') return <button type="button" onClick={onSkip} className={`${base} border border-white/15 text-zinc-100`}>{action.label}</button>;
   if (action.kind === 'professional-review') return <div className="flex min-h-12 items-center rounded-xl border border-amber-300/30 bg-amber-300/[0.06] px-3 text-sm font-bold text-amber-100">{action.label}</div>;

@@ -31,6 +31,7 @@ export default function PostureScreeningFlow({ repository }: { repository: Postu
   const [photoInput, setPhotoInput] = useState<PostureScreeningInput['photo']>(answers?.photo ?? { status: 'skipped', observations: [], reasonCodes: [] });
   const [photoMeasurements, setPhotoMeasurements] = useState<PosturePhotoMeasurementSnapshot[]>(draftRead.value?.photoMeasurements ?? []);
   const [draftId, setDraftId] = useState(draftRead.value?.id ?? 'posture-screening-draft-local');
+  const [context] = useState(draftRead.value?.context);
   const [error, setError] = useState(draftRead.ok ? '' : '上次未完成的筛查草稿已损坏，本次已从头开始。');
   const completionLock = useRef(false);
 
@@ -58,7 +59,7 @@ export default function PostureScreeningFlow({ repository }: { repository: Postu
   });
 
   const persist = (nextStep: FlowStep, input = buildInput(), measurements = photoMeasurements) => {
-    const saved = repository.saveDraft({ currentStep: nextStep, answers: input, photoMeasurements: measurements });
+    const saved = repository.saveDraft({ currentStep: nextStep, answers: input, photoMeasurements: measurements, context });
     if (!saved.ok) {
       setError(saved.error === 'damaged-storage' ? '草稿数据异常，无法继续保存。请清除浏览器站点数据后重试。' : '无法保存当前进度，请检查浏览器存储设置后重试。');
       return false;
@@ -74,7 +75,7 @@ export default function PostureScreeningFlow({ repository }: { repository: Postu
     if (completionLock.current) return;
     completionLock.current = true;
     const result = evaluatePostureScreening(input);
-    const saved = repository.saveSession({ input, result, photoMeasurements: measurements });
+    const saved = repository.saveSession({ input, result, photoMeasurements: measurements, context });
     if (!saved.ok) {
       completionLock.current = false;
       setError(saved.error === 'damaged-storage' ? '已有筛查记录损坏，暂时无法保存本次结果。' : '结果保存失败，请检查浏览器存储设置后重试。');

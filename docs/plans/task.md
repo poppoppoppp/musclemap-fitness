@@ -141,3 +141,9 @@
 | Training template closed loop: lifecycle and safe start | completed |
 | Training template closed loop: backup v4 | completed |
 | Training template closed loop: regression and mobile QA | completed |
+| Posture focused screening: explore project context and clinical evidence | completed |
+| Posture focused screening: clarify result labels and diagnostic boundary | completed |
+| Posture focused screening: compare 2-3 assessment approaches | completed |
+| Posture focused screening: present and approve design | completed |
+| Posture focused screening: write approved design document | completed |
+| Posture focused screening: transition to implementation plan | pending |

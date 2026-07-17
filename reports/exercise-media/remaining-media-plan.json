@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T12:24:37.712Z",
+  "generatedAt": "2026-07-15T12:34:02.889Z",
   "scope": {
     "exerciseSource": "当前 App 运行时动作全集（核心动作 + App 可见体态方案动作，按 exerciseId 去重）",
     "mediaDirectory": "public/exercise-media/{exerciseId}/",

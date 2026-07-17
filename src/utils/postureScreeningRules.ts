@@ -42,6 +42,7 @@ export interface PostureScreeningInput {
   boundaryAccepted: boolean;
   safetyFlags: PostureSafetyFlag[];
   primaryConcern: PosturePrimaryConcern;
+  functionalImpact?: number;
   subjectiveObservations: SubjectivePostureObservation[];
   movement: {
     testId: GuidedPostureTestDefinition['id'];

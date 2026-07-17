@@ -8,6 +8,7 @@ import ExerciseLibrary from '../pages/ExerciseLibrary';
 import EditTrainingTemplate from '../pages/EditTrainingTemplate';
 import GrowthPage from '../pages/GrowthPage';
 import PosturePlanPage from '../pages/PosturePlanPage';
+import PostureScreeningPage from '../pages/PostureScreeningPage';
 import ProgressPhotoGalleryPage from '../pages/ProgressPhotoGalleryPage';
 import ProgressPhotoComparePage from '../pages/ProgressPhotoComparePage';
 import MuscleMap from '../pages/MuscleMap';
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
       { path: 'exercises/:exerciseId', element: <ExerciseDetail /> },
       { path: 'growth', element: <GrowthPage /> },
       { path: 'growth/posture', element: <PosturePlanPage /> },
+      { path: 'growth/posture/screening', element: <PostureScreeningPage /> },
       { path: 'growth/body-records', element: <BodyMetricHistoryPage /> },
       { path: 'growth/photos', element: <ProgressPhotoGalleryPage /> },
       { path: 'growth/photos/compare/:category', element: <ProgressPhotoComparePage /> },

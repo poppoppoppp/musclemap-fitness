@@ -323,6 +323,7 @@ function normalizePostureScreeningDraft(value: unknown): PostureScreeningDraft |
 
 function isPostureScreeningInput(value: unknown): value is PostureScreeningInput {
   if (!isRecord(value) || typeof value.age !== 'number' || typeof value.boundaryAccepted !== 'boolean') return false;
+  if (value.functionalImpact !== undefined && (typeof value.functionalImpact !== 'number' || !Number.isInteger(value.functionalImpact) || value.functionalImpact < 0 || value.functionalImpact > 10)) return false;
   if (!Array.isArray(value.safetyFlags) || !Array.isArray(value.subjectiveObservations) || !isRecord(value.movement) || !isRecord(value.photo)) return false;
   if (!['neck-upper-quarter', 'thoracic-trunk', 'shoulder-asymmetry', 'unsure'].includes(String(value.primaryConcern))) return false;
   return typeof value.movement.testId === 'string' && (value.movement.status === 'completed' || value.movement.status === 'stopped')

@@ -150,8 +150,9 @@
 | Posture focused screening: evidence registry and domain contracts | completed |
 | Posture focused screening: photogrammetry and capture-quality rules | completed |
 | Posture focused screening: adaptive questions and decision rules | completed |
-| Posture focused screening: local session and photo persistence | pending |
-| Posture focused screening: backup v6 and draftable UI flow | pending |
+| Posture focused screening: local session and photo persistence | completed |
+| Posture focused screening: backup v6 structured screening data | in progress |
+| Posture focused screening: draftable adaptive UI flow | pending |
 | Posture focused screening: photo landmarking and explainable report | pending |
 | Posture focused screening: history, retest, and hub integration | pending |
 | Posture focused screening: regression, mobile, privacy, and accessibility QA | pending |

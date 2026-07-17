@@ -14,9 +14,15 @@ import {
   POSTURE_FEEDBACK_KEY,
   POSTURE_PLANS_KEY
 } from '../repositories/posturePlanRepository';
+import {
+  createPostureScreeningRepository,
+  normalizePostureScreeningSession,
+  POSTURE_SCREENING_SESSIONS_KEY,
+  type PostureScreeningSession,
+} from '../repositories/postureScreeningRepository';
 
 export const BACKUP_APP_NAME = 'MuscleMap Fitness';
-export const BACKUP_EXPORT_VERSION = 5;
+export const BACKUP_EXPORT_VERSION = 6;
 export const WORKOUT_LOGS_KEY = 'musclemap.workoutLogs.v0.3';
 export const LATEST_WORKOUT_LOG_KEY = 'musclemap.latestWorkoutLog.v0.3';
 
@@ -28,7 +34,8 @@ export type BackupValidationError =
   | 'damaged-workout-logs'
   | 'damaged-body-snapshots'
   | 'damaged-training-templates'
-  | 'damaged-posture-data';
+  | 'damaged-posture-data'
+  | 'damaged-posture-screening-data';
 
 export const backupErrorMessages: Record<BackupValidationError, string> = {
   'invalid-json': '文件内容不是有效 JSON。',
@@ -38,7 +45,8 @@ export const backupErrorMessages: Record<BackupValidationError, string> = {
   'damaged-workout-logs': '备份文件中的训练记录结构损坏。',
   'damaged-body-snapshots': '备份文件中的身体记录结构损坏。',
   'damaged-training-templates': '备份文件中的训练模板结构损坏。',
-  'damaged-posture-data': '备份文件中的体态计划数据结构损坏。'
+  'damaged-posture-data': '备份文件中的体态计划数据结构损坏。',
+  'damaged-posture-screening-data': '备份文件中的体态筛查记录结构损坏。'
 };
 
 type ValidationResult = { ok: true; backup: MuscleMapBackupFile; summary: BackupSummary } | { ok: false; error: BackupValidationError };
@@ -50,6 +58,7 @@ export function readCurrentBackupData(): MuscleMapBackupData {
   const bodySnapshots = readBodySnapshots();
   const trainingTemplates = readTrainingTemplates();
   const postureRepository = createPosturePlanRepository();
+  const screeningSessions = createPostureScreeningRepository().readSessions();
 
   return {
     latestGeneratedPlan: isGeneratedPlan(latestGeneratedPlan) ? latestGeneratedPlan : null,
@@ -59,7 +68,8 @@ export function readCurrentBackupData(): MuscleMapBackupData {
     trainingTemplates,
     postureAssessments: postureRepository.listAssessments(),
     posturePlans: postureRepository.listPlans(),
-    postureFeedback: postureRepository.listFeedback()
+    postureFeedback: postureRepository.listFeedback(),
+    postureScreeningSessions: screeningSessions.ok ? screeningSessions.value.map(sanitizePostureScreeningSession) : []
   };
 }
 
@@ -68,7 +78,10 @@ export function createBackupFile(data: MuscleMapBackupData): MuscleMapBackupFile
     app: BACKUP_APP_NAME,
     exportVersion: BACKUP_EXPORT_VERSION,
     exportedAt: new Date().toISOString(),
-    data
+    data: {
+      ...data,
+      postureScreeningSessions: data.postureScreeningSessions.map(sanitizePostureScreeningSession),
+    }
   };
 }
 
@@ -80,6 +93,7 @@ export function summarizeBackupData(data: MuscleMapBackupData, exportedAt?: stri
     bodySnapshotCount: data.bodySnapshots.length,
     trainingTemplateCount: data.trainingTemplates.length,
     posturePlanCount: data.posturePlans.length,
+    postureScreeningSessionCount: data.postureScreeningSessions.length,
     exportedAt
   };
 }
@@ -101,7 +115,7 @@ export function validateBackupText(text: string): ValidationResult {
 
   if (parsed.app !== BACKUP_APP_NAME) return { ok: false, error: 'wrong-app' };
   const exportVersion = parsed.exportVersion;
-  if (exportVersion !== 1 && exportVersion !== 2 && exportVersion !== 3 && exportVersion !== 4 && exportVersion !== BACKUP_EXPORT_VERSION) return { ok: false, error: 'unsupported-version' };
+  if (exportVersion !== 1 && exportVersion !== 2 && exportVersion !== 3 && exportVersion !== 4 && exportVersion !== 5 && exportVersion !== BACKUP_EXPORT_VERSION) return { ok: false, error: 'unsupported-version' };
   if (typeof parsed.exportedAt !== 'string' || !isPlainObject(parsed.data)) return { ok: false, error: 'missing-fields' };
 
   const data = parsed.data;
@@ -155,6 +169,11 @@ export function validateBackupText(text: string): ValidationResult {
   const postureFeedback = rawPostureFeedback.map(normalizePostureFeedback);
   if ([...postureAssessments, ...posturePlans, ...postureFeedback].some((item) => item === null)) return { ok: false, error: 'damaged-posture-data' };
 
+  const rawPostureScreeningSessions = exportVersion >= 6 ? data.postureScreeningSessions : [];
+  if (!Array.isArray(rawPostureScreeningSessions)) return { ok: false, error: 'damaged-posture-screening-data' };
+  const postureScreeningSessions = rawPostureScreeningSessions.map(normalizePostureScreeningSession);
+  if (postureScreeningSessions.some((session) => session === null)) return { ok: false, error: 'damaged-posture-screening-data' };
+
   const backup: MuscleMapBackupFile = {
     app: BACKUP_APP_NAME,
     exportVersion,
@@ -167,7 +186,10 @@ export function validateBackupText(text: string): ValidationResult {
       trainingTemplates,
       postureAssessments: postureAssessments.filter((record): record is NonNullable<typeof record> => record !== null),
       posturePlans: posturePlans.filter((record): record is NonNullable<typeof record> => record !== null),
-      postureFeedback: postureFeedback.filter((record): record is NonNullable<typeof record> => record !== null)
+      postureFeedback: postureFeedback.filter((record): record is NonNullable<typeof record> => record !== null),
+      postureScreeningSessions: postureScreeningSessions
+        .filter((record): record is NonNullable<typeof record> => record !== null)
+        .map(sanitizePostureScreeningSession)
     }
   };
 
@@ -195,11 +217,22 @@ export function applyBackupData(data: MuscleMapBackupData): boolean {
     window.localStorage.setItem(POSTURE_ASSESSMENTS_KEY, JSON.stringify(data.postureAssessments));
     window.localStorage.setItem(POSTURE_PLANS_KEY, JSON.stringify(data.posturePlans));
     window.localStorage.setItem(POSTURE_FEEDBACK_KEY, JSON.stringify(data.postureFeedback));
+    window.localStorage.setItem(POSTURE_SCREENING_SESSIONS_KEY, JSON.stringify(data.postureScreeningSessions.map(sanitizePostureScreeningSession)));
 
     return true;
   } catch {
     return false;
   }
+}
+
+function sanitizePostureScreeningSession(session: PostureScreeningSession): PostureScreeningSession {
+  return {
+    ...session,
+    photoMeasurements: session.photoMeasurements.map((photo) => {
+      const { photoAssetId: _localOnly, ...structured } = photo;
+      return { ...structured, photoAssetAvailable: false };
+    }),
+  };
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {

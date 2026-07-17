@@ -531,8 +531,8 @@ test('preserves an existing active workout when starting a template', async ({ p
   expect(state.templates[0].lastUsedAt).toBeUndefined();
 });
 
-test('backup v5 validates training templates and keeps legacy imports compatible', () => {
-  expect(BACKUP_EXPORT_VERSION).toBe(5);
+test('current backup validates training templates and keeps legacy imports compatible', () => {
+  expect(BACKUP_EXPORT_VERSION).toBe(6);
   const commonData = {
     latestGeneratedPlan: null,
     workoutLogs: [],
@@ -543,7 +543,7 @@ test('backup v5 validates training templates and keeps legacy imports compatible
     app: 'MuscleMap Fitness',
     exportVersion: BACKUP_EXPORT_VERSION,
     exportedAt: '2026-07-17T08:00:00.000Z',
-    data: { ...commonData, trainingTemplates: [templateFixture], postureAssessments: [], posturePlans: [], postureFeedback: [] }
+    data: { ...commonData, trainingTemplates: [templateFixture], postureAssessments: [], posturePlans: [], postureFeedback: [], postureScreeningSessions: [] }
   }));
 
   expect(current.ok).toBe(true);
@@ -556,7 +556,7 @@ test('backup v5 validates training templates and keeps legacy imports compatible
     app: 'MuscleMap Fitness',
     exportVersion: BACKUP_EXPORT_VERSION,
     exportedAt: '2026-07-17T08:00:00.000Z',
-    data: { ...commonData, trainingTemplates: [{ id: 'broken' }], postureAssessments: [], posturePlans: [], postureFeedback: [] }
+    data: { ...commonData, trainingTemplates: [{ id: 'broken' }], postureAssessments: [], posturePlans: [], postureFeedback: [], postureScreeningSessions: [] }
   }));
   expect(damaged).toEqual({ ok: false, error: 'damaged-training-templates' });
 

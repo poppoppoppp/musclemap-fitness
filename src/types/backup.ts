@@ -2,6 +2,7 @@ import type { GeneratedPlan, WorkoutLog } from './workout';
 import type { BodySnapshot } from './body';
 import type { TrainingTemplate } from './trainingTemplate';
 import type { PostureAssessment, PosturePlan, PostureSessionFeedback } from './posturePlan';
+import type { PostureScreeningSession } from '../repositories/postureScreeningRepository';
 
 export interface MuscleMapBackupData {
   latestGeneratedPlan: GeneratedPlan | null;
@@ -12,11 +13,12 @@ export interface MuscleMapBackupData {
   postureAssessments: PostureAssessment[];
   posturePlans: PosturePlan[];
   postureFeedback: PostureSessionFeedback[];
+  postureScreeningSessions: PostureScreeningSession[];
 }
 
 export interface MuscleMapBackupFile {
   app: 'MuscleMap Fitness';
-  exportVersion: 1 | 2 | 3 | 4 | 5;
+  exportVersion: 1 | 2 | 3 | 4 | 5 | 6;
   exportedAt: string;
   data: MuscleMapBackupData;
 }
@@ -28,5 +30,6 @@ export interface BackupSummary {
   bodySnapshotCount: number;
   trainingTemplateCount: number;
   posturePlanCount: number;
+  postureScreeningSessionCount: number;
   exportedAt?: string;
 }

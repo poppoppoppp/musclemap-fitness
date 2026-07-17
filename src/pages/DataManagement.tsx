@@ -29,8 +29,8 @@ export default function DataManagement() {
   const [statusKind, setStatusKind] = useState<'info' | 'success' | 'error'>('info');
   const [trainingCount] = useState(() => readWorkoutLogs().length);
   const [latestBodySnapshot] = useState(() => getLatestBodySnapshot(readBodySnapshots()));
-  const emptyExportNotice = currentSummary.workoutLogCount === 0 && currentSummary.bodySnapshotCount === 0 && currentSummary.trainingTemplateCount === 0 && currentSummary.posturePlanCount === 0
-    ? '当前没有训练记录、身体记录、训练模板或体态计划，导出的文件只包含空数据结构。'
+  const emptyExportNotice = currentSummary.workoutLogCount === 0 && currentSummary.bodySnapshotCount === 0 && currentSummary.trainingTemplateCount === 0 && currentSummary.posturePlanCount === 0 && currentSummary.postureScreeningSessionCount === 0
+    ? '当前没有训练记录、身体记录、训练模板、体态计划或体态筛查，导出的文件只包含空数据结构。'
     : '';
 
   const showStatus = (message: string, kind: 'info' | 'success' | 'error' = 'info') => {
@@ -162,10 +162,12 @@ export default function DataManagement() {
               <BackupMetric label="身体记录" value={`${currentSummary.bodySnapshotCount} 条`} />
               <BackupMetric label="训练模板" value={`${currentSummary.trainingTemplateCount} 个`} testId="backup-training-template-count" />
               <BackupMetric label="体态计划" value={`${currentSummary.posturePlanCount} 条`} />
+              <BackupMetric label="体态筛查" value={`${currentSummary.postureScreeningSessionCount} 条`} testId="backup-posture-screening-count" />
             </div>
 
             {emptyExportNotice ? <p className="text-sm leading-6 text-amber-200">{emptyExportNotice}</p> : null}
             <p className="text-sm leading-6 text-zinc-400">进行中的训练不会导出，请先结束训练后再备份。</p>
+            <p className="text-sm leading-6 text-zinc-400">体态筛查原图仅保存在当前设备，不会导出。</p>
             <button type="button" data-testid="export-backup-json" onClick={handleExport} className="min-h-11 w-full rounded-full bg-lime-300 px-5 font-bold text-[#10130d] focus:outline-none focus:ring-2 focus:ring-lime-100">
               导出为 JSON
             </button>
@@ -191,6 +193,7 @@ export default function DataManagement() {
                   <p>身体记录：{pendingSummary.bodySnapshotCount} 条</p>
                   <p>训练模板：{pendingSummary.trainingTemplateCount} 个</p>
                   <p>体态计划：{pendingSummary.posturePlanCount} 条</p>
+                  <p>体态筛查：{pendingSummary.postureScreeningSessionCount} 条</p>
                   <button type="button" data-testid="confirm-overwrite-import" onClick={handleConfirmImport} className="mt-2 min-h-11 w-full rounded-full border border-lime-300/40 px-4 font-bold text-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/70">
                     确认覆盖当前本地数据
                   </button>

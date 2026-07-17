@@ -2,7 +2,7 @@ import { useEffect, useReducer, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getGuidedPostureTest } from '../../data/posture/postureScreeningTests';
 import type { PosturePrimaryConcern } from '../../data/posture/postureScreeningQuestions';
-import type { PosturePhotoMeasurementSnapshot, PostureScreeningDraftStep, PostureScreeningRepository } from '../../repositories/postureScreeningRepository';
+import type { PosturePhotoMeasurementSnapshot, PostureScreeningContext, PostureScreeningDraftStep, PostureScreeningRepository } from '../../repositories/postureScreeningRepository';
 import { evaluatePostureScreening, type FunctionalPostureObservation, type PostureSafetyFlag, type PostureScreeningInput, type PostureTestStopSymptom, type SubjectivePostureObservation } from '../../utils/postureScreeningRules';
 import PostureBoundaryStep from './PostureBoundaryStep';
 import PostureConcernStep from './PostureConcernStep';
@@ -14,11 +14,13 @@ import PostureScreeningProgress from './PostureScreeningProgress';
 type FlowStep = 'boundary' | 'safety' | 'concern' | 'movement' | 'photo' | 'review';
 type FlowAction = { type: 'go'; step: FlowStep };
 
-export default function PostureScreeningFlow({ repository }: { repository: PostureScreeningRepository }) {
+export default function PostureScreeningFlow({ repository, entryContext }: { repository: PostureScreeningRepository; entryContext?: PostureScreeningContext }) {
   const navigate = useNavigate();
   const [draftRead] = useState(() => repository.readDraft());
-  const answers = draftRead.value?.answers;
-  const restoredStep = normalizeStep(draftRead.value?.currentStep);
+  const replacingDraft = Boolean(entryContext && draftRead.value && !sameContext(entryContext, draftRead.value.context));
+  const resumedDraft = replacingDraft ? null : draftRead.value;
+  const answers = resumedDraft?.answers;
+  const restoredStep = normalizeStep(resumedDraft?.currentStep);
   const [step, dispatch] = useReducer(flowReducer, restoredStep);
   const [age, setAge] = useState(answers?.age ? String(answers.age) : '');
   const [boundaryAccepted, setBoundaryAccepted] = useState(answers?.boundaryAccepted ?? false);
@@ -29,10 +31,11 @@ export default function PostureScreeningFlow({ repository }: { repository: Postu
   const [stopSymptoms, setStopSymptoms] = useState<PostureTestStopSymptom[]>(answers?.movement?.stopSymptoms ?? []);
   const [movementObservations, setMovementObservations] = useState<FunctionalPostureObservation[]>(answers?.movement?.observations ?? []);
   const [photoInput, setPhotoInput] = useState<PostureScreeningInput['photo']>(answers?.photo ?? { status: 'skipped', observations: [], reasonCodes: [] });
-  const [photoMeasurements, setPhotoMeasurements] = useState<PosturePhotoMeasurementSnapshot[]>(draftRead.value?.photoMeasurements ?? []);
-  const [draftId, setDraftId] = useState(draftRead.value?.id ?? 'posture-screening-draft-local');
-  const [context] = useState(draftRead.value?.context);
+  const [photoMeasurements, setPhotoMeasurements] = useState<PosturePhotoMeasurementSnapshot[]>(resumedDraft?.photoMeasurements ?? []);
+  const [draftId, setDraftId] = useState(resumedDraft?.id ?? 'posture-screening-draft-local');
+  const [context] = useState(entryContext ?? resumedDraft?.context);
   const [error, setError] = useState(draftRead.ok ? '' : '上次未完成的筛查草稿已损坏，本次已从头开始。');
+  const [preparation, setPreparation] = useState<'preparing' | 'ready' | 'failed'>(replacingDraft ? 'preparing' : 'ready');
   const completionLock = useRef(false);
 
   useEffect(() => {
@@ -40,6 +43,17 @@ export default function PostureScreeningFlow({ repository }: { repository: Postu
     const cleared = repository.clearDraft();
     if (!cleared.ok) setError('上次未完成的筛查草稿已损坏，且无法自动清除。请清除浏览器站点数据后重试。');
   }, [draftRead, repository]);
+
+  useEffect(() => {
+    if (!replacingDraft) return;
+    let active = true;
+    void repository.discardDraft().then((result) => {
+      if (!active) return;
+      if (result.ok) setPreparation('ready');
+      else setPreparation('failed');
+    });
+    return () => { active = false; };
+  }, [replacingDraft, repository]);
 
   const buildInput = (patch: Partial<PostureScreeningInput> = {}): PostureScreeningInput => ({
     age: Number(age),
@@ -143,6 +157,12 @@ export default function PostureScreeningFlow({ repository }: { repository: Postu
     persist('review', input, measurements);
   };
 
+  if (preparation !== 'ready') {
+    return preparation === 'preparing'
+      ? <p role="status" className="mt-7 text-sm leading-6 text-zinc-300">正在准备本次筛查…</p>
+      : <div className="mt-7"><p role="alert" className="rounded-xl border border-red-300/25 bg-red-300/[0.06] px-3 py-3 text-sm leading-5 text-red-100">无法安全清理上次未完成筛查的本地数据，请检查浏览器站点存储后重试。</p><button type="button" onClick={() => window.location.reload()} className="mt-4 min-h-12 w-full rounded-xl border border-white/15 px-4 text-sm font-bold text-zinc-100 outline-none focus-visible:ring-2 focus-visible:ring-lime-200">重新尝试</button></div>;
+  }
+
   return (
     <>
       <PostureScreeningProgress currentStep={step} />
@@ -178,6 +198,10 @@ function normalizeStep(step?: PostureScreeningDraftStep): FlowStep {
   if (step === 'safety' || step === 'concern' || step === 'movement' || step === 'photo' || step === 'review') return step;
   if (step === 'follow-up') return 'concern';
   return 'boundary';
+}
+
+function sameContext(left: PostureScreeningContext, right: PostureScreeningContext | undefined): boolean {
+  return left.planId === right?.planId && left.baselineSessionId === right?.baselineSessionId;
 }
 
 function normalizeConcern(concern?: PosturePrimaryConcern): PosturePrimaryConcern {

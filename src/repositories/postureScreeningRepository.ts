@@ -10,6 +10,11 @@ const PHOTO_BLOB_STORE = 'photo-blobs';
 
 export type PostureScreeningDraftStep = 'boundary' | 'safety' | 'concern' | 'follow-up' | 'movement' | 'photo' | 'review';
 
+export interface PostureScreeningContext {
+  planId?: string;
+  baselineSessionId?: string;
+}
+
 export interface PostureMeasurementSnapshot {
   metricId: string;
   value: number;
@@ -32,7 +37,7 @@ export interface PostureScreeningDraft {
   currentStep: PostureScreeningDraftStep;
   answers: Partial<PostureScreeningInput>;
   photoMeasurements: PosturePhotoMeasurementSnapshot[];
-  context?: { planId?: string; baselineSessionId?: string };
+  context?: PostureScreeningContext;
   createdAt: string;
   updatedAt: string;
 }
@@ -45,7 +50,7 @@ export interface PostureScreeningSession {
   input: PostureScreeningInput;
   result: PostureScreeningResult;
   photoMeasurements: PosturePhotoMeasurementSnapshot[];
-  context?: { planId?: string; baselineSessionId?: string };
+  context?: PostureScreeningContext;
   createdAt: string;
   updatedAt: string;
   completedAt: string;
@@ -75,6 +80,7 @@ type ReadResult<T> = { ok: true; value: T } | { ok: false; error: 'damaged-stora
 type WriteError = 'storage-failed' | 'damaged-storage';
 type SaveDraftResult = { ok: true; draft: PostureScreeningDraft } | { ok: false; error: WriteError };
 type SaveSessionResult = { ok: true; session: PostureScreeningSession } | { ok: false; error: WriteError };
+type DiscardDraftResult = { ok: true } | { ok: false; error: WriteError };
 type DeleteResult = { ok: true } | { ok: false; error: 'session-not-found' | 'photo-not-found' | 'storage-failed' | 'damaged-storage' };
 type SavePhotoResult = { ok: true; asset: PosturePhotoAsset } | { ok: false; error: 'invalid-photo' | 'storage-failed' };
 
@@ -119,6 +125,18 @@ export class PostureScreeningRepository {
     } catch {
       return { ok: false, error: 'storage-failed' };
     }
+  }
+
+  async discardDraft(): Promise<DiscardDraftResult> {
+    const existing = this.readDraft();
+    if (!existing.ok) return { ok: false, error: 'damaged-storage' };
+    if (existing.value) {
+      const assetIds = unique(existing.value.photoMeasurements.flatMap(({ photoAssetId }) => photoAssetId ? [photoAssetId] : []));
+      for (const assetId of assetIds) {
+        if (!(await this.deletePhotoAsset(assetId))) return { ok: false, error: 'storage-failed' };
+      }
+    }
+    return this.clearDraft();
   }
 
   readSessions(): ReadResult<PostureScreeningSession[]> {
@@ -358,7 +376,7 @@ function isNormalizedPoint(value: unknown): value is NormalizedPoint {
     && Number.isFinite(value.x) && Number.isFinite(value.y) && value.x >= 0 && value.x <= 1 && value.y >= 0 && value.y <= 1;
 }
 
-function isContext(value: unknown): value is { planId?: string; baselineSessionId?: string } {
+function isContext(value: unknown): value is PostureScreeningContext {
   return isRecord(value) && (value.planId === undefined || typeof value.planId === 'string')
     && (value.baselineSessionId === undefined || typeof value.baselineSessionId === 'string');
 }

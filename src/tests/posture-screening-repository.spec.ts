@@ -172,6 +172,24 @@ test('deleting a session cascades all referenced photo assets', async ({ page })
   expect(result).toEqual({ deleted: { ok: true }, session: null, front: null, lateral: null });
 });
 
+test('discarding a draft cascades its local photo assets', async ({ page }) => {
+  const result = await page.evaluate(async () => {
+    const modulePath = '/src/repositories/postureScreeningRepository.ts';
+    const { PostureScreeningRepository } = await import(/* @vite-ignore */ modulePath) as typeof import('../repositories/postureScreeningRepository');
+    const values = new Map<string, string>();
+    const storage: Storage = { get length() { return values.size; }, clear: () => values.clear(), getItem: (key) => values.get(key) ?? null, key: (index) => [...values.keys()][index] ?? null, removeItem: (key) => values.delete(key), setItem: (key, value) => values.set(key, value) };
+    const repository = new PostureScreeningRepository(storage, indexedDB, `posture-screening-${crypto.randomUUID()}`);
+    const asset = await repository.savePhotoAsset({ ownerId: 'draft-1', view: 'front', blob: new Blob(['draft-photo']), width: 800, height: 1200 });
+    if (!asset.ok) return { error: asset.error };
+    const saved = repository.saveDraft({ currentStep: 'photo', answers: {}, photoMeasurements: [{ view: 'front', photoAssetId: asset.asset.id, photoAssetAvailable: true, landmarks: {}, measurements: [], quality: 'valid' }] });
+    if (!saved.ok) return { error: saved.error };
+    const discarded = await repository.discardDraft();
+    return { discarded, draft: repository.readDraft(), blob: await repository.getPhotoBlob(asset.asset.id) };
+  });
+
+  expect(result).toEqual({ discarded: { ok: true }, draft: { ok: true, value: null }, blob: null });
+});
+
 test('surfaces IndexedDB open failures', async ({ page }) => {
   const result = await page.evaluate(async () => {
     const modulePath = '/src/repositories/postureScreeningRepository.ts';

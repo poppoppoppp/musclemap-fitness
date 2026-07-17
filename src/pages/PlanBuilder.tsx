@@ -18,26 +18,31 @@ export default function PlanBuilder() {
   const [templates, setTemplates] = useState(() => readTrainingTemplates());
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [messageIsError, setMessageIsError] = useState(false);
   const saved = (location.state as TemplateListLocationState)?.saved === true;
 
   const handleDuplicate = (templateId: string) => {
     const result = duplicateTrainingTemplate(templateId);
     if (!result.ok) {
+      setMessageIsError(true);
       setMessage('复制模板失败，请稍后重试');
       return;
     }
     setTemplates(readTrainingTemplates());
+    setMessageIsError(false);
     setMessage('模板已复制');
   };
 
   const handleDelete = (templateId: string) => {
     const result = deleteTrainingTemplate(templateId);
     if (!result.ok) {
+      setMessageIsError(true);
       setMessage('删除模板失败，请稍后重试');
       return;
     }
     setTemplates(readTrainingTemplates());
     setPendingDeleteId(null);
+    setMessageIsError(false);
     setMessage('模板已删除');
   };
 
@@ -52,6 +57,7 @@ export default function PlanBuilder() {
       markTrainingTemplateUsed(template.id);
       navigate('/workout-log');
     } catch {
+      setMessageIsError(true);
       setMessage('无法开始训练，请检查浏览器存储空间');
     }
   };
@@ -67,7 +73,7 @@ export default function PlanBuilder() {
           <h1 className="text-4xl font-black tracking-[-0.035em]">训练模板</h1>
         </header>
 
-        {saved || message ? <p role="status" className="mb-4 rounded-xl bg-lime-300/10 px-4 py-3 text-sm font-bold text-lime-300">{message ?? '模板已保存'}</p> : null}
+        {saved || message ? <p role={messageIsError ? 'alert' : 'status'} className={`mb-4 rounded-xl px-4 py-3 text-sm font-bold ${messageIsError ? 'bg-red-300/10 text-red-300' : 'bg-lime-300/10 text-lime-300'}`}>{message ?? '模板已保存'}</p> : null}
 
         <Link to="/templates/new" className="flex min-h-14 w-full items-center justify-center rounded-full bg-lime-300 px-5 text-base font-black text-[#10130d] transition hover:bg-lime-200 focus:outline-none focus:ring-2 focus:ring-lime-100 focus:ring-offset-2 focus:ring-offset-[#070907] active:scale-[0.99]">
           ＋ 新建模板

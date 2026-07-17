@@ -571,3 +571,54 @@ test('backup v4 validates training templates and keeps legacy imports compatible
     if (legacy.ok) expect(legacy.backup.data.trainingTemplates).toEqual([]);
   }
 });
+
+test('mobile template flow avoids horizontal overflow and restores keyboard focus after the picker closes', async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('musclemap.trainingTemplates.v1', JSON.stringify([{
+      id: 'template-mobile',
+      name: '移动端背部训练',
+      focusTags: ['背部'],
+      items: [{ id: 'item-mobile', exerciseId: 'lat-pulldown', order: 0, sets: 3, repRange: '8-12', restSeconds: 90 }],
+      createdAt: '2026-07-17T08:00:00.000Z',
+      updatedAt: '2026-07-17T08:00:00.000Z'
+    }]));
+    localStorage.removeItem('musclemap.trainingTemplateDrafts.v1');
+  });
+  await page.setViewportSize({ width: 320, height: 700 });
+  await page.goto('/plan-builder');
+
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
+  await page.getByRole('link', { name: '编辑 移动端背部训练' }).click();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
+
+  const addExercise = page.getByRole('button', { name: '+ 添加动作', exact: true });
+  await addExercise.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('dialog', { name: '添加模板动作' })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
+
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog', { name: '添加模板动作' })).toHaveCount(0);
+  await expect(addExercise).toBeFocused();
+});
+
+test('template list announces storage mutation failures as alerts', async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('musclemap.trainingTemplates.v1', JSON.stringify([{
+      id: 'template-storage-error',
+      name: '存储错误模板',
+      focusTags: [],
+      items: [{ id: 'item-storage-error', exerciseId: 'pull-up', order: 0, sets: 3, repRange: '8-12', restSeconds: 90 }],
+      createdAt: '2026-07-17T08:00:00.000Z',
+      updatedAt: '2026-07-17T08:00:00.000Z'
+    }]));
+  });
+  await page.goto('/plan-builder');
+  await page.evaluate(() => {
+    Storage.prototype.setItem = () => { throw new DOMException('quota', 'QuotaExceededError'); };
+  });
+
+  await page.getByRole('button', { name: '复制 存储错误模板' }).click();
+
+  await expect(page.getByRole('alert')).toHaveText('复制模板失败，请稍后重试');
+});

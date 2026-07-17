@@ -5,9 +5,18 @@ import { readStorage } from './storage';
 import { BODY_SNAPSHOTS_KEY, readBodySnapshots } from './bodySnapshots';
 import { normalizeBodyMetricRecord } from '../repositories/bodyMetricRepository';
 import { normalizeTrainingTemplates, readTrainingTemplates, TRAINING_TEMPLATES_STORAGE_KEY } from './trainingTemplates';
+import {
+  createPosturePlanRepository,
+  normalizePostureAssessment,
+  normalizePostureFeedback,
+  normalizePosturePlan,
+  POSTURE_ASSESSMENTS_KEY,
+  POSTURE_FEEDBACK_KEY,
+  POSTURE_PLANS_KEY
+} from '../repositories/posturePlanRepository';
 
 export const BACKUP_APP_NAME = 'MuscleMap Fitness';
-export const BACKUP_EXPORT_VERSION = 4;
+export const BACKUP_EXPORT_VERSION = 5;
 export const WORKOUT_LOGS_KEY = 'musclemap.workoutLogs.v0.3';
 export const LATEST_WORKOUT_LOG_KEY = 'musclemap.latestWorkoutLog.v0.3';
 
@@ -18,7 +27,8 @@ export type BackupValidationError =
   | 'unsupported-version'
   | 'damaged-workout-logs'
   | 'damaged-body-snapshots'
-  | 'damaged-training-templates';
+  | 'damaged-training-templates'
+  | 'damaged-posture-data';
 
 export const backupErrorMessages: Record<BackupValidationError, string> = {
   'invalid-json': '文件内容不是有效 JSON。',
@@ -27,7 +37,8 @@ export const backupErrorMessages: Record<BackupValidationError, string> = {
   'unsupported-version': '当前版本不支持该备份文件。',
   'damaged-workout-logs': '备份文件中的训练记录结构损坏。',
   'damaged-body-snapshots': '备份文件中的身体记录结构损坏。',
-  'damaged-training-templates': '备份文件中的训练模板结构损坏。'
+  'damaged-training-templates': '备份文件中的训练模板结构损坏。',
+  'damaged-posture-data': '备份文件中的体态计划数据结构损坏。'
 };
 
 type ValidationResult = { ok: true; backup: MuscleMapBackupFile; summary: BackupSummary } | { ok: false; error: BackupValidationError };
@@ -38,13 +49,17 @@ export function readCurrentBackupData(): MuscleMapBackupData {
   const latestWorkoutLog = readStorage<WorkoutLog | null>(LATEST_WORKOUT_LOG_KEY, null);
   const bodySnapshots = readBodySnapshots();
   const trainingTemplates = readTrainingTemplates();
+  const postureRepository = createPosturePlanRepository();
 
   return {
     latestGeneratedPlan: isGeneratedPlan(latestGeneratedPlan) ? latestGeneratedPlan : null,
     workoutLogs: Array.isArray(workoutLogs) ? workoutLogs.filter(isWorkoutLog) : [],
     latestWorkoutLog: isWorkoutLog(latestWorkoutLog) ? latestWorkoutLog : null,
     bodySnapshots,
-    trainingTemplates
+    trainingTemplates,
+    postureAssessments: postureRepository.listAssessments(),
+    posturePlans: postureRepository.listPlans(),
+    postureFeedback: postureRepository.listFeedback()
   };
 }
 
@@ -64,6 +79,7 @@ export function summarizeBackupData(data: MuscleMapBackupData, exportedAt?: stri
     hasLatestWorkoutLog: data.latestWorkoutLog !== null,
     bodySnapshotCount: data.bodySnapshots.length,
     trainingTemplateCount: data.trainingTemplates.length,
+    posturePlanCount: data.posturePlans.length,
     exportedAt
   };
 }
@@ -84,7 +100,8 @@ export function validateBackupText(text: string): ValidationResult {
   }
 
   if (parsed.app !== BACKUP_APP_NAME) return { ok: false, error: 'wrong-app' };
-  if (parsed.exportVersion !== 1 && parsed.exportVersion !== 2 && parsed.exportVersion !== 3 && parsed.exportVersion !== BACKUP_EXPORT_VERSION) return { ok: false, error: 'unsupported-version' };
+  const exportVersion = parsed.exportVersion;
+  if (exportVersion !== 1 && exportVersion !== 2 && exportVersion !== 3 && exportVersion !== 4 && exportVersion !== BACKUP_EXPORT_VERSION) return { ok: false, error: 'unsupported-version' };
   if (typeof parsed.exportedAt !== 'string' || !isPlainObject(parsed.data)) return { ok: false, error: 'missing-fields' };
 
   const data = parsed.data;
@@ -104,14 +121,14 @@ export function validateBackupText(text: string): ValidationResult {
     return { ok: false, error: 'damaged-workout-logs' };
   }
 
-  const rawBodySnapshots = parsed.exportVersion === 1 ? [] : data.bodySnapshots;
+  const rawBodySnapshots = exportVersion === 1 ? [] : data.bodySnapshots;
   if (!Array.isArray(rawBodySnapshots)) {
     return { ok: false, error: 'damaged-body-snapshots' };
   }
   const bodySnapshots = rawBodySnapshots.map(normalizeBodyMetricRecord);
   if (bodySnapshots.some((record) => record === null)) return { ok: false, error: 'damaged-body-snapshots' };
 
-  const rawTrainingTemplates = parsed.exportVersion === 4 ? data.trainingTemplates : [];
+  const rawTrainingTemplates = exportVersion >= 4 && (exportVersion >= 5 || 'trainingTemplates' in data) ? data.trainingTemplates : [];
   if (!Array.isArray(rawTrainingTemplates)) return { ok: false, error: 'damaged-training-templates' };
   const trainingTemplates = normalizeTrainingTemplates(rawTrainingTemplates);
   if (
@@ -125,16 +142,32 @@ export function validateBackupText(text: string): ValidationResult {
     return { ok: false, error: 'damaged-training-templates' };
   }
 
+  const expectsPostureData = exportVersion >= 5 || (
+    exportVersion === 4 &&
+    ('postureAssessments' in data || 'posturePlans' in data || 'postureFeedback' in data)
+  );
+  const rawPostureAssessments = expectsPostureData ? data.postureAssessments : [];
+  const rawPosturePlans = expectsPostureData ? data.posturePlans : [];
+  const rawPostureFeedback = expectsPostureData ? data.postureFeedback : [];
+  if (!Array.isArray(rawPostureAssessments) || !Array.isArray(rawPosturePlans) || !Array.isArray(rawPostureFeedback)) return { ok: false, error: 'damaged-posture-data' };
+  const postureAssessments = rawPostureAssessments.map(normalizePostureAssessment);
+  const posturePlans = rawPosturePlans.map(normalizePosturePlan);
+  const postureFeedback = rawPostureFeedback.map(normalizePostureFeedback);
+  if ([...postureAssessments, ...posturePlans, ...postureFeedback].some((item) => item === null)) return { ok: false, error: 'damaged-posture-data' };
+
   const backup: MuscleMapBackupFile = {
     app: BACKUP_APP_NAME,
-    exportVersion: parsed.exportVersion,
+    exportVersion,
     exportedAt: parsed.exportedAt,
     data: {
       latestGeneratedPlan: data.latestGeneratedPlan,
       workoutLogs: data.workoutLogs,
       latestWorkoutLog: data.latestWorkoutLog,
       bodySnapshots: bodySnapshots.filter((record): record is NonNullable<typeof record> => record !== null),
-      trainingTemplates
+      trainingTemplates,
+      postureAssessments: postureAssessments.filter((record): record is NonNullable<typeof record> => record !== null),
+      posturePlans: posturePlans.filter((record): record is NonNullable<typeof record> => record !== null),
+      postureFeedback: postureFeedback.filter((record): record is NonNullable<typeof record> => record !== null)
     }
   };
 
@@ -159,6 +192,9 @@ export function applyBackupData(data: MuscleMapBackupData): boolean {
 
     window.localStorage.setItem(BODY_SNAPSHOTS_KEY, JSON.stringify(data.bodySnapshots));
     window.localStorage.setItem(TRAINING_TEMPLATES_STORAGE_KEY, JSON.stringify(data.trainingTemplates));
+    window.localStorage.setItem(POSTURE_ASSESSMENTS_KEY, JSON.stringify(data.postureAssessments));
+    window.localStorage.setItem(POSTURE_PLANS_KEY, JSON.stringify(data.posturePlans));
+    window.localStorage.setItem(POSTURE_FEEDBACK_KEY, JSON.stringify(data.postureFeedback));
 
     return true;
   } catch {

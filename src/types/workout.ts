@@ -34,6 +34,7 @@ export interface WorkoutLog {
   durationSeconds?: number;
   exercises: WorkoutLogExercise[];
   postureProtocolGroups?: PostureProtocolWorkoutSnapshot[];
+  posturePlanContext?: import('./posturePlan').PosturePlanWorkoutContext;
   notes?: string;
   createdAt: string;
 }

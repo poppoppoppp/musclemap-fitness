@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ExercisePickerSheet from '../../components/workout/ExercisePickerSheet';
+import { createPosturePlanRepository } from '../../repositories/posturePlanRepository';
 import type { ActiveWorkout, ActiveWorkoutExercise } from '../../types/activeWorkout';
+import type { PostureSessionFeedbackInput } from '../../types/posturePlan';
 import type { WorkoutLog, WorkoutSet } from '../../types/workout';
 import {
   addExerciseToActiveWorkout,
@@ -25,6 +27,7 @@ import CurrentExerciseCard, { getActiveExerciseElementId } from './CurrentExerci
 import WorkoutMiniPlayer from './WorkoutMiniPlayer';
 import WorkoutTimerCard from './WorkoutTimerCard';
 import PostureProtocolGroupCard from './PostureProtocolGroupCard';
+import PostureSessionFeedback from '../posture-plan/PostureSessionFeedback';
 
 const archiveMessages: Record<ActiveWorkoutArchiveError, string> = {
   'no-exercise': '请先添加至少一个动作',
@@ -44,6 +47,8 @@ export default function ActiveWorkoutView({ workout, onChange, onArchive, onDisc
   const [searchParams, setSearchParams] = useSearchParams();
   const focusedExerciseId = searchParams.get('focusExercise');
   const [status, setStatus] = useState('');
+  const [postureRepository] = useState(createPosturePlanRepository);
+  const [pendingPostureLog, setPendingPostureLog] = useState<WorkoutLog | null>(null);
   const [pickerOpen, setPickerOpen] = useState(() => searchParams.get('picker') === 'posture');
   const currentExercise = useMemo(() => getCurrentExercise(workout.exercises, focusedExerciseId), [workout.exercises, focusedExerciseId]);
   const completedExercises = useMemo(() => workout.exercises.filter((exercise) => Boolean(exercise.endedAt)).sort(byExerciseOrder), [workout.exercises]);
@@ -63,7 +68,21 @@ export default function ActiveWorkoutView({ workout, onChange, onArchive, onDisc
       setStatus(archiveMessages[archived.error]);
       return;
     }
+    if (workout.posturePlanContext) {
+      setPendingPostureLog(archived.log);
+      return;
+    }
     onArchive(archived.log);
+  };
+
+  const handlePostureFeedback = (input: PostureSessionFeedbackInput) => {
+    if (!pendingPostureLog) return;
+    const saved = postureRepository.saveFeedback(input);
+    if (!saved.ok) {
+      setStatus(saved.error === 'storage-failed' ? '反馈保存失败，请检查浏览器存储后重试' : '请完整填写本次反馈');
+      return;
+    }
+    onArchive(pendingPostureLog);
   };
 
   const handleDiscardWorkout = () => {
@@ -152,6 +171,15 @@ export default function ActiveWorkoutView({ workout, onChange, onArchive, onDisc
         <ActiveWorkoutHeader onEndWorkout={handleEndWorkout} onDiscardWorkout={handleDiscardWorkout} musicPlayer={<WorkoutMiniPlayer compact />} />
         <WorkoutTimerCard startedAt={workout.startedAt} />
         <p data-testid="save-status" role={status ? 'status' : undefined} className={`min-h-0 text-sm font-semibold ${status ? `rounded-xl border px-3 py-2 ${status.startsWith('已加入') ? 'border-lime-300/20 bg-lime-300/[0.06] text-lime-200' : 'border-red-300/20 bg-red-400/[0.07] text-red-200'}` : ''}`}>{status}</p>
+
+        {pendingPostureLog && workout.posturePlanContext ? (
+          <PostureSessionFeedback
+            planId={workout.posturePlanContext.planId}
+            workoutLogId={pendingPostureLog.id}
+            onCancel={() => setPendingPostureLog(null)}
+            onSubmit={handlePostureFeedback}
+          />
+        ) : null}
 
         {postureGroups.map((group, index) => (
           <PostureProtocolGroupCard

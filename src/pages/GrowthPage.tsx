@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import UserIcon from '../components/icons/UserIcon';
 import BodyMetricSheet from '../features/growth/BodyMetricSheet';
 import ProgressPhotoSheet from '../features/growth/ProgressPhotoSheet';
@@ -14,6 +14,7 @@ import { createProgressPhotoRepository } from '../repositories/progressPhotoRepo
 import type { ProgressPhotoRecord } from '../types/progressPhoto';
 
 export default function GrowthPage() {
+  const navigate = useNavigate();
   const [section, setSection] = useState<GrowthSection>('training');
   const [range, setRange] = useState<GrowthTimeRange>('3m');
   const [logs] = useState(readWorkoutLogs);
@@ -35,7 +36,7 @@ export default function GrowthPage() {
           </div>
           <Link to="/data-management" aria-label="打开个人资料" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.055] text-zinc-300 transition hover:border-lime-300/40 hover:text-lime-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/70"><UserIcon className="h-5 w-5" /></Link>
         </header>
-        <div className="mt-7 space-y-3"><GrowthTabs value={section} onChange={setSection} /><TimeRangeSelector value={range} onChange={setRange} /></div>
+        <div className="mt-7 space-y-3"><GrowthTabs value={section} onChange={(value) => value === 'posture' ? navigate('/growth/posture') : setSection(value)} /><TimeRangeSelector value={range} onChange={setRange} /></div>
         <div className="mt-6">{section === 'training' ? <TrainingGrowthSection logs={logs} bodyRecords={bodyRecords} range={range} /> : <BodyChangesSection records={bodyRecords} photos={photos} range={range} onRecord={() => setBodySheetOpen(true)} onAddPhoto={() => setPhotoSheetOpen(true)} />}</div>
       </div>
       <BodyMetricSheet open={bodySheetOpen} onClose={() => setBodySheetOpen(false)} onSaved={() => { setBodyRecords(readBodySnapshots()); setBodySheetOpen(false); }} />

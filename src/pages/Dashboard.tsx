@@ -1,26 +1,32 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import DashboardMusicPlayer from '../components/dashboard/DashboardMusicPlayer';
+import DashboardPostureTaskCard from '../components/dashboard/DashboardPostureTaskCard';
 import DashboardPrimaryAction from '../components/dashboard/DashboardPrimaryAction';
 import DashboardRecentPlanCard from '../components/dashboard/DashboardRecentPlanCard';
 import DashboardRecentWorkoutCard from '../components/dashboard/DashboardRecentWorkoutCard';
 import UserIcon from '../components/icons/UserIcon';
+import { createPosturePlanRepository } from '../repositories/posturePlanRepository';
 import type { ActiveWorkout } from '../types/activeWorkout';
 import type { GeneratedPlan, WorkoutLog } from '../types/workout';
-import { createActiveWorkoutFromPlanDay, createManualActiveWorkout, readActiveWorkout, writeActiveWorkout } from '../utils/activeWorkout';
+import { addPosturePlanTaskToActiveWorkout, createActiveWorkoutFromPlanDay, createManualActiveWorkout, readActiveWorkout, startPosturePlanWorkout, writeActiveWorkout } from '../utils/activeWorkout';
 import { getDashboardPlanProgress, getDashboardWorkoutSummary } from '../utils/dashboard';
 import { PLAN_STORAGE_KEY } from '../utils/planRules';
+import { getPostureTodayTask } from '../utils/posturePlanRules';
 import { readStorage } from '../utils/storage';
 import { readWorkoutLogs } from '../utils/workoutHistory';
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const [postureRepository] = useState(createPosturePlanRepository);
   const [activeWorkout, setActiveWorkout] = useState<ActiveWorkout | null>(() => readActiveWorkout());
   const [recentPlan] = useState<GeneratedPlan | null>(() => {
     const plan = readStorage<GeneratedPlan | null>(PLAN_STORAGE_KEY, null);
     return isGeneratedPlan(plan) ? plan : null;
   });
   const [workoutLogs] = useState<WorkoutLog[]>(() => readWorkoutLogs());
+  const [posturePlan] = useState(() => postureRepository.getActivePlan());
+  const [postureFeedback] = useState(() => postureRepository.listFeedback());
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
   useEffect(() => {
@@ -45,6 +51,7 @@ export default function Dashboard() {
   const planProgress = recentPlan ? getDashboardPlanProgress(recentPlan, workoutLogs) : null;
   const activeSummary = activeWorkout ? `${activeWorkout.exercises.length} 个动作已加入` : null;
   const activeElapsedLabel = activeWorkout ? formatElapsedSeconds(elapsedSeconds) : null;
+  const postureTask = posturePlan ? getPostureTodayTask(posturePlan, workoutLogs, postureFeedback) : null;
 
   const handleStartPlanDay = () => {
     if (!recentPlan || !planProgress?.nextDay) return;
@@ -63,6 +70,17 @@ export default function Dashboard() {
     const workout = createManualActiveWorkout();
     writeActiveWorkout(workout);
     setActiveWorkout(workout);
+  };
+
+  const handleStartPostureTask = () => {
+    if (!posturePlan || !postureTask) return;
+    const existing = readActiveWorkout();
+    const workout = existing
+      ? addPosturePlanTaskToActiveWorkout(existing, posturePlan, postureTask)
+      : startPosturePlanWorkout(posturePlan, postureTask);
+    writeActiveWorkout(workout);
+    setActiveWorkout(workout);
+    navigate('/workout-log');
   };
 
   return (
@@ -88,6 +106,15 @@ export default function Dashboard() {
           isActive={Boolean(activeWorkout)}
           onStartWorkout={handleStartTraining}
         />
+        {posturePlan && postureTask ? (
+          <DashboardPostureTaskCard
+            feedback={postureFeedback}
+            logs={workoutLogs}
+            onStart={handleStartPostureTask}
+            plan={posturePlan}
+            task={postureTask}
+          />
+        ) : null}
         <DashboardRecentWorkoutCard workouts={recentWorkouts} />
         <DashboardRecentPlanCard
           day={planProgress?.nextDay ?? null}

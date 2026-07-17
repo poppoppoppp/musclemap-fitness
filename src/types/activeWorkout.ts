@@ -1,5 +1,6 @@
 export type ActiveWorkoutStatus = 'active';
 import type { PostureProtocolWorkoutSnapshot } from './posture';
+import type { PosturePlanWorkoutContext } from './posturePlan';
 
 export type ActiveWorkoutSource = 'manual' | 'exercise-detail' | 'plan' | 'posture' | 'template';
 
@@ -14,6 +15,7 @@ export interface ActiveWorkout {
   templateId?: string;
   exercises: ActiveWorkoutExercise[];
   postureProtocolGroups?: PostureProtocolWorkoutSnapshot[];
+  posturePlanContext?: PosturePlanWorkoutContext;
   notes?: string;
   createdAt: string;
   updatedAt: string;

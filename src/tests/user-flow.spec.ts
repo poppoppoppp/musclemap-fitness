@@ -2280,7 +2280,7 @@ test('data management exports current local backup data', async ({ page }) => {
 
   expect(download.suggestedFilename()).toMatch(/^musclemap-backup-\d{4}-\d{2}-\d{2}\.json$/);
   expect(exported.app).toBe('MuscleMap Fitness');
-  expect(exported.exportVersion).toBe(4);
+  expect(exported.exportVersion).toBe(5);
   expect(typeof exported.exportedAt).toBe('string');
   expect(exported.data.workoutLogs).toHaveLength(2);
   expect(exported.data.bodySnapshots).toEqual([

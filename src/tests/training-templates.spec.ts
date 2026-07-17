@@ -531,8 +531,8 @@ test('preserves an existing active workout when starting a template', async ({ p
   expect(state.templates[0].lastUsedAt).toBeUndefined();
 });
 
-test('backup v4 validates training templates and keeps legacy imports compatible', () => {
-  expect(BACKUP_EXPORT_VERSION).toBe(4);
+test('backup v5 validates training templates and keeps legacy imports compatible', () => {
+  expect(BACKUP_EXPORT_VERSION).toBe(5);
   const commonData = {
     latestGeneratedPlan: null,
     workoutLogs: [],
@@ -541,9 +541,9 @@ test('backup v4 validates training templates and keeps legacy imports compatible
   };
   const current = validateBackupText(JSON.stringify({
     app: 'MuscleMap Fitness',
-    exportVersion: 4,
+    exportVersion: BACKUP_EXPORT_VERSION,
     exportedAt: '2026-07-17T08:00:00.000Z',
-    data: { ...commonData, trainingTemplates: [templateFixture] }
+    data: { ...commonData, trainingTemplates: [templateFixture], postureAssessments: [], posturePlans: [], postureFeedback: [] }
   }));
 
   expect(current.ok).toBe(true);
@@ -554,11 +554,23 @@ test('backup v4 validates training templates and keeps legacy imports compatible
 
   const damaged = validateBackupText(JSON.stringify({
     app: 'MuscleMap Fitness',
-    exportVersion: 4,
+    exportVersion: BACKUP_EXPORT_VERSION,
     exportedAt: '2026-07-17T08:00:00.000Z',
-    data: { ...commonData, trainingTemplates: [{ id: 'broken' }] }
+    data: { ...commonData, trainingTemplates: [{ id: 'broken' }], postureAssessments: [], posturePlans: [], postureFeedback: [] }
   }));
   expect(damaged).toEqual({ ok: false, error: 'damaged-training-templates' });
+
+  const templateOnlyV4 = validateBackupText(JSON.stringify({
+    app: 'MuscleMap Fitness',
+    exportVersion: 4,
+    exportedAt: '2026-07-17T08:00:00.000Z',
+    data: { ...commonData, trainingTemplates: [templateFixture] }
+  }));
+  expect(templateOnlyV4.ok).toBe(true);
+  if (templateOnlyV4.ok) {
+    expect(templateOnlyV4.backup.data.trainingTemplates).toEqual([templateFixture]);
+    expect(templateOnlyV4.backup.data.posturePlans).toEqual([]);
+  }
 
   for (const exportVersion of [1, 2, 3]) {
     const legacy = validateBackupText(JSON.stringify({

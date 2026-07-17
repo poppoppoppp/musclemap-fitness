@@ -7,12 +7,13 @@ interface GrowthTabsProps {
 
 const tabs: Array<{ id: GrowthSection; label: string }> = [
   { id: 'training', label: '训练成长' },
-  { id: 'body', label: '身体变化' }
+  { id: 'body', label: '身体变化' },
+  { id: 'posture', label: '体态改善' }
 ];
 
 export default function GrowthTabs({ value, onChange }: GrowthTabsProps) {
   return (
-    <div role="tablist" aria-label="成长分类" className="grid grid-cols-2 rounded-full border border-lime-300/20 bg-black/30 p-1">
+    <div role="tablist" aria-label="成长分类" className="grid grid-cols-3 rounded-full border border-lime-300/20 bg-black/30 p-1">
       {tabs.map((tab) => {
         const selected = tab.id === value;
         return (

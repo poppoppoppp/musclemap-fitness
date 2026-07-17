@@ -1,6 +1,7 @@
 import type { ActiveWorkout, ActiveWorkoutExercise, ActiveWorkoutSet, ActiveWorkoutSource } from '../types/activeWorkout';
 import type { PostureDataset, PostureDose, PostureProtocolExerciseSnapshot, PostureProtocolStepSnapshot, PostureProtocolWorkoutSnapshot } from '../types/posture';
 import type { TrainingTemplate, TrainingTemplateItem } from '../types/trainingTemplate';
+import type { PosturePlan } from '../types/posturePlan';
 import type { GeneratedPlan, GeneratedPlanItem, GeneratedWorkoutDay, WorkoutLog, WorkoutLogExercise, WorkoutSet } from '../types/workout';
 import {
   formatDose,
@@ -12,6 +13,7 @@ import {
   postureDataset
 } from './postureProtocols';
 import { readStorage, removeStorage, writeStorage } from './storage';
+import { getPosturePlanEligibility } from './posturePlanRules';
 
 export const ACTIVE_WORKOUT_KEY = 'musclemap.activeWorkout.v0.7';
 
@@ -49,6 +51,35 @@ export function createManualActiveWorkout(now = new Date()): ActiveWorkout {
     createdAt: timestamp,
     updatedAt: timestamp
   };
+}
+
+export function startPosturePlanWorkout(
+  plan: PosturePlan,
+  occurrence: { date: string; weekIndex: number },
+  now = new Date(),
+  dataset: PostureDataset = postureDataset
+): ActiveWorkout {
+  const workout = createManualActiveWorkout(now);
+  workout.source = 'posture';
+  return addPosturePlanTaskToActiveWorkout(workout, plan, occurrence, now, dataset);
+}
+
+export function addPosturePlanTaskToActiveWorkout(
+  workout: ActiveWorkout,
+  plan: PosturePlan,
+  occurrence: { date: string; weekIndex: number },
+  now = new Date(),
+  dataset: PostureDataset = postureDataset
+): ActiveWorkout {
+  if (workout.posturePlanContext) return workout;
+  const protocol = getPostureProtocolById(plan.protocolId, dataset);
+  if (!protocol || !getPosturePlanEligibility(protocol, dataset).eligible) return workout;
+  const next = addPostureProtocolToActiveWorkout(workout, plan.protocolId, now, dataset);
+  if (next === workout) return workout;
+  return touch({
+    ...next,
+    posturePlanContext: { planId: plan.id, weekIndex: occurrence.weekIndex, scheduledDate: occurrence.date }
+  });
 }
 
 export function addExerciseToActiveWorkout(workout: ActiveWorkout, exerciseId: string): ActiveWorkout {
@@ -478,6 +509,7 @@ export function archiveActiveWorkout(workout: ActiveWorkout, endedAt = new Date(
       durationSeconds,
       exercises: exercisesWithSets,
       postureProtocolGroups: clonePostureGroups(workout.postureProtocolGroups),
+      posturePlanContext: workout.posturePlanContext ? { ...workout.posturePlanContext } : undefined,
       notes: workout.notes?.trim() || undefined,
       createdAt: endedAt.toISOString()
     }

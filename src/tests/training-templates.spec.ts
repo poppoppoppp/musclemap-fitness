@@ -416,3 +416,116 @@ test('shows a safe state when an edit template is missing', async ({ page }) => 
   await expect(page.getByRole('heading', { name: '找不到训练模板' })).toBeVisible();
   await expect(page.getByRole('link', { name: '返回训练模板' })).toHaveAttribute('href', '/plan-builder');
 });
+
+test('template list shows prescription metadata and supports duplicate and confirmed delete', async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('musclemap.trainingTemplates.v1', JSON.stringify([{
+      id: 'template-1',
+      name: '背部训练',
+      focusTags: ['背部', '手臂'],
+      items: [
+        { id: 'item-1', exerciseId: 'lat-pulldown', order: 0, sets: 3, repRange: '8-12', restSeconds: 90 },
+        { id: 'item-2', exerciseId: 'pull-up', order: 1, sets: 4, repRange: '6-8', restSeconds: 120 }
+      ],
+      createdAt: '2026-07-14T00:00:00.000Z',
+      updatedAt: '2026-07-14T00:00:00.000Z',
+      lastUsedAt: '2026-07-15T08:00:00.000Z'
+    }]));
+  });
+  await page.goto('/plan-builder');
+
+  const card = page.getByTestId('training-template-template-1');
+  await expect(card).toContainText('2 个动作 · 7 组');
+  await expect(card).toContainText('上次使用 2026-07-15');
+  await expect(card).toContainText('背部');
+  await expect(card).toContainText('手臂');
+  await expect(card.getByRole('button', { name: '开始 背部训练' })).toBeVisible();
+  await expect(card.getByRole('link', { name: '编辑 背部训练' })).toHaveAttribute('href', '/templates/template-1/edit');
+
+  await card.getByRole('button', { name: '复制 背部训练' }).click();
+  const copyCard = page.getByRole('article', { name: '背部训练 副本' });
+  await expect(copyCard).toBeVisible();
+  const copiedId = await copyCard.getAttribute('data-template-id');
+  expect(copiedId).toBeTruthy();
+  expect(copiedId).not.toBe('template-1');
+
+  await copyCard.getByRole('button', { name: '删除 背部训练 副本' }).click();
+  await expect(copyCard.getByRole('button', { name: '确认删除 背部训练 副本' })).toBeVisible();
+  await copyCard.getByRole('button', { name: '确认删除 背部训练 副本' }).click();
+  await expect(page.getByRole('article', { name: '背部训练 副本' })).toHaveCount(0);
+
+  const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('musclemap.trainingTemplates.v1') ?? '[]'));
+  expect(stored).toHaveLength(1);
+  expect(stored[0].id).toBe('template-1');
+});
+
+test('starts a template workout and records template usage when no workout is active', async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.removeItem('musclemap.activeWorkout.v0.7');
+    localStorage.setItem('musclemap.trainingTemplates.v1', JSON.stringify([{
+      id: 'template-1',
+      name: '背部训练',
+      focusTags: ['背部'],
+      items: [{ id: 'item-1', exerciseId: 'lat-pulldown', order: 0, sets: 3, repRange: '8-12', restSeconds: 90, note: '控制离心' }],
+      createdAt: '2026-07-14T00:00:00.000Z',
+      updatedAt: '2026-07-14T00:00:00.000Z'
+    }]));
+  });
+  await page.goto('/plan-builder');
+
+  await page.getByRole('button', { name: '开始 背部训练' }).click();
+
+  await expect(page).toHaveURL(/\/workout-log$/);
+  await expect(page.getByRole('link', { name: '高位下拉', exact: true })).toBeVisible();
+  await page.getByText('查看计划建议').click();
+  await expect(page.getByText('3 组 · 8-12 次 · 休息 90 秒 · 控制离心')).toBeVisible();
+
+  const state = await page.evaluate(() => ({
+    workout: JSON.parse(localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null'),
+    templates: JSON.parse(localStorage.getItem('musclemap.trainingTemplates.v1') ?? '[]')
+  }));
+  expect(state.workout).toMatchObject({ source: 'template', templateId: 'template-1' });
+  expect(state.workout.exercises).toHaveLength(1);
+  expect(state.templates[0].lastUsedAt).toEqual(expect.any(String));
+});
+
+test('preserves an existing active workout when starting a template', async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('musclemap.trainingTemplates.v1', JSON.stringify([{
+      id: 'template-1',
+      name: '背部训练',
+      focusTags: ['背部'],
+      items: [{ id: 'item-1', exerciseId: 'lat-pulldown', order: 0, sets: 3, repRange: '8-12', restSeconds: 90 }],
+      createdAt: '2026-07-14T00:00:00.000Z',
+      updatedAt: '2026-07-14T00:00:00.000Z'
+    }]));
+    localStorage.setItem('musclemap.activeWorkout.v0.7', JSON.stringify({
+      id: 'existing-workout',
+      status: 'active',
+      startedAt: '2026-07-17T01:00:00.000Z',
+      trainingDate: '2026-07-17',
+      source: 'manual',
+      exercises: [{
+        id: 'existing-exercise',
+        exerciseId: 'push-up',
+        order: 0,
+        source: 'manual',
+        sets: [{ id: 'existing-set', setIndex: 1, reps: 12 }]
+      }],
+      createdAt: '2026-07-17T01:00:00.000Z',
+      updatedAt: '2026-07-17T01:00:00.000Z'
+    }));
+  });
+  await page.goto('/plan-builder');
+
+  await page.getByRole('button', { name: '开始 背部训练' }).click();
+
+  await expect(page).toHaveURL(/\/workout-log$/);
+  await expect(page.getByRole('link', { name: '俯卧撑', exact: true })).toBeVisible();
+  const state = await page.evaluate(() => ({
+    workout: JSON.parse(localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null'),
+    templates: JSON.parse(localStorage.getItem('musclemap.trainingTemplates.v1') ?? '[]')
+  }));
+  expect(state.workout).toMatchObject({ id: 'existing-workout', exercises: [{ exerciseId: 'push-up' }] });
+  expect(state.templates[0].lastUsedAt).toBeUndefined();
+});

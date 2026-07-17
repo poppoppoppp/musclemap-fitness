@@ -146,4 +146,11 @@
 | Posture focused screening: compare 2-3 assessment approaches | completed |
 | Posture focused screening: present and approve design | completed |
 | Posture focused screening: write approved design document | completed |
-| Posture focused screening: transition to implementation plan | pending |
+| Posture focused screening: transition to implementation plan | completed |
+| Posture focused screening: evidence registry and domain contracts | pending |
+| Posture focused screening: geometry, adaptive rules, and local persistence | pending |
+| Posture focused screening: backup v6 and draftable UI flow | pending |
+| Posture focused screening: photo landmarking and explainable report | pending |
+| Posture focused screening: history, retest, and hub integration | pending |
+| Posture focused screening: regression, mobile, privacy, and accessibility QA | pending |
+| Posture focused screening: training-data gap report | pending |

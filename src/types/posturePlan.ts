@@ -47,9 +47,19 @@ export interface PosturePlanQualitySnapshot {
   sourceUrl: string;
 }
 
+export interface PosturePlanSourceSnapshot {
+  screeningCompletedAt: string;
+  primaryFinding: string;
+  selectedProtocolId: string;
+  createdAt: string;
+  selectionMode: 'manual';
+}
+
 export interface PosturePlanInput {
   protocolId: string;
-  assessmentId: string;
+  assessmentId?: string;
+  screeningSessionId?: string;
+  sourceSnapshot?: PosturePlanSourceSnapshot;
   startDate: string;
   durationWeeks: number;
   weeklyFrequency: number;

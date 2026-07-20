@@ -43,7 +43,7 @@ test('exposes pause, resume, and evidence-screening reassessment controls in the
   await expect(page.getByText('计划已暂停。')).toBeVisible();
   await page.getByRole('button', { name: '继续计划' }).click();
   await expect(page.getByText('计划已继续。')).toBeVisible();
-  await page.getByRole('button', { name: '开始复测' }).click();
+  await page.getByRole('link', { name: '开始复测' }).click();
   await expect(page).toHaveURL('/growth/posture/screening?planId=plan-ui');
   await expect(page.getByRole('heading', { name: '体态表现筛查' })).toBeVisible();
 });

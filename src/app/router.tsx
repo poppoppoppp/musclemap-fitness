@@ -7,7 +7,8 @@ import ExerciseDetail from '../pages/ExerciseDetail';
 import ExerciseLibrary from '../pages/ExerciseLibrary';
 import EditTrainingTemplate from '../pages/EditTrainingTemplate';
 import GrowthPage from '../pages/GrowthPage';
-import PosturePlanPage from '../pages/PosturePlanPage';
+import PosturePlanBuilderPage from '../pages/PosturePlanBuilderPage';
+import PostureCaptureLabPage from '../pages/PostureCaptureLabPage';
 import PostureScreeningPage from '../pages/PostureScreeningPage';
 import PostureScreeningResultPage from '../pages/PostureScreeningResultPage';
 import PostureScreeningHistoryPage from '../pages/PostureScreeningHistoryPage';
@@ -33,7 +34,9 @@ export const router = createBrowserRouter([
       { path: 'exercises', element: <ExerciseLibrary /> },
       { path: 'exercises/:exerciseId', element: <ExerciseDetail /> },
       { path: 'growth', element: <GrowthPage /> },
-      { path: 'growth/posture', element: <PosturePlanPage /> },
+      { path: 'growth/posture', element: <GrowthPage /> },
+      { path: 'growth/posture/capture-lab', element: <PostureCaptureLabPage /> },
+      { path: 'growth/posture/plan/new', element: <PosturePlanBuilderPage /> },
       { path: 'growth/posture/screening', element: <PostureScreeningPage /> },
       { path: 'growth/posture/results/:sessionId', element: <PostureScreeningResultPage /> },
       { path: 'growth/posture/history', element: <PostureScreeningHistoryPage /> },

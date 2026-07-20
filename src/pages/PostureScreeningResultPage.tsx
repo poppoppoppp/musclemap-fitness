@@ -10,6 +10,7 @@ export default function PostureScreeningResultPage() {
   return (
     <div className="workout-dark relative -mx-4 -mt-5 min-h-[calc(100dvh-5rem)] bg-[#080a08] px-4 pb-12 pt-6 text-white sm:-mx-6 sm:px-6">
       <main className="mx-auto max-w-[440px]">
+        <Link to="/growth/posture" className="mb-5 inline-flex min-h-11 items-center rounded-xl px-1 text-sm font-bold text-zinc-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300">← 返回体态改善</Link>
         {session ? <PostureAssessmentReport session={session} repository={repository} onSessionChange={setSession} /> : <section className="mt-8"><h1 className="text-2xl font-black">未找到这次筛查记录</h1><p className="mt-3 text-sm leading-6 text-zinc-300">记录可能已被删除，或当前链接不完整。</p><Link to="/growth/posture" className="mt-6 flex min-h-12 items-center justify-center rounded-xl bg-lime-300 px-4 text-sm font-black text-[#10130d]">返回体态主页</Link></section>}
       </main>
     </div>

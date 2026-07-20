@@ -5,10 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "tsc -b && vite build",
+    "build": "npm run posture:assets:verify && tsc -b && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "test": "playwright test",
     "test:e2e": "playwright test",
+    "posture:assets:download": "node scripts/download-posture-models.mjs",
+    "posture:assets:verify": "node scripts/verify-posture-assets.mjs",
     "media:process": "node scripts/exercise-media/processExerciseSheet.mjs",
     "media:free-db:report": "tsx scripts/exercise-media/free-exercise-db/buildMatchReport.mts",
     "media:free-db:download-accepted": "tsx scripts/exercise-media/free-exercise-db/downloadAcceptedMedia.mts",
@@ -17,6 +19,7 @@
     "test:media:free-db": "tsx --test scripts/exercise-media/free-exercise-db/buildMatchReport.test.mts"
   },
   "dependencies": {
+    "@mediapipe/tasks-vision": "0.10.35",
     "@vitejs/plugin-react": "^5.1.1",
     "qrcode": "^1.5.4",
     "react": "^19.2.0",

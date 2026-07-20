@@ -45,6 +45,7 @@ test.beforeEach(async ({ page }) => {
 
 test('renders an instructive empty history state', async ({ page }) => {
   await page.goto('/growth/posture/history');
+  await expect(page.getByRole('link', { name: '返回体态改善' })).toHaveAttribute('href', '/growth/posture');
   await expect(page.getByRole('heading', { name: '还没有体态筛查记录' })).toBeVisible();
   await expect(page.getByRole('link', { name: '开始第一次筛查' })).toHaveAttribute('href', '/growth/posture/screening');
 });

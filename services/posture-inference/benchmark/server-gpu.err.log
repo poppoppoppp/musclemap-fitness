@@ -1,0 +1,10 @@
+INFO:     Started server process [37736]
+INFO:     Waiting for application startup.
+D:\MuscleMap Fitness\services\posture-inference\.venv\lib\site-packages\mmengine\utils\package_utils.py:48: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import DistributionNotFound, get_distribution
+C:\Users\20534\AppData\Local\Programs\Python\Python310\lib\importlib\__init__.py:169: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  _bootstrap._exec(spec, module)
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8765 (Press CTRL+C to quit)
+D:\MuscleMap Fitness\services\posture-inference\.venv\lib\site-packages\torch\functional.py:504: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at ..\aten\src\ATen\native\TensorShape.cpp:3527.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]

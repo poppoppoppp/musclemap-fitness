@@ -9,10 +9,10 @@ test('opens posture improvement from Growth without adding a bottom navigation i
   await page.goto('/growth');
   await page.getByRole('tab', { name: '体态改善' }).click();
   await expect(page).toHaveURL('/growth/posture');
-  await expect(page.getByRole('heading', { name: '体态改善计划' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '成长', exact: true })).toBeVisible();
   await expect(page.locator('main')).toHaveCount(1);
   await expect(page.locator('nav').last().getByRole('link')).toHaveCount(4);
-  await expect(page.getByRole('link', { name: '开始体态筛查' })).toHaveAttribute('href', '/growth/posture/screening');
+  await expect(page.getByRole('link', { name: '开始体态分析' })).toHaveAttribute('href', '/growth/posture/screening');
 });
 
 test('keeps the active plan usable without horizontal overflow at 320px and 390px', async ({ page }) => {
@@ -31,7 +31,7 @@ test('keeps legacy assessment data readable but does not reopen the retired reco
   await page.evaluate((value) => localStorage.setItem('musclemap.postureAssessmentDraft.v1', JSON.stringify(value)), legacyDraft);
   await page.goto('/growth/posture');
 
-  await expect(page.getByRole('link', { name: '开始体态筛查' })).toBeVisible();
+  await expect(page.getByRole('link', { name: '开始体态分析' })).toBeVisible();
   await expect(page.getByRole('heading', { name: '非诊断式初筛' })).toHaveCount(0);
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('musclemap.postureAssessmentDraft.v1') ?? 'null'))).toEqual(legacyDraft);
 });

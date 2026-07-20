@@ -1,8 +1,10 @@
 import { defineConfig } from 'vite';
+import { readFileSync } from 'node:fs';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
+  server: resolveDevelopmentServer(),
   plugins: [
     react(),
     VitePWA({
@@ -41,3 +43,13 @@ export default defineConfig({
     })
   ],
 });
+
+function resolveDevelopmentServer() {
+  const keyPath = process.env.MUSCLEMAP_DEV_HTTPS_KEY_FILE;
+  const certificatePath = process.env.MUSCLEMAP_DEV_HTTPS_CERT_FILE;
+  if (!keyPath && !certificatePath) return undefined;
+  if (!keyPath || !certificatePath) {
+    throw new Error('Both MUSCLEMAP_DEV_HTTPS_KEY_FILE and MUSCLEMAP_DEV_HTTPS_CERT_FILE are required for HTTPS development.');
+  }
+  return { https: { key: readFileSync(keyPath), cert: readFileSync(certificatePath) } };
+}

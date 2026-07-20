@@ -3,6 +3,7 @@ dist
 test-results
 playwright-report
 .env
+.local-certs/
 .DS_Store
 .worktrees/
 local-models/
@@ -11,6 +12,13 @@ public/models/private/*
 !public/models/private/local-anatomy.glb
 !public/models/private/upper-body-local.glb
 !public/models/private/lower-body-local.glb
+public/models/posture/*.task
+services/posture-inference/.venv/
+services/posture-inference/models/checkpoints/
+services/posture-inference/benchmark/images/
+services/posture-inference/benchmark/results/
+services/posture-inference/.pytest_cache/
+services/posture-inference/**/__pycache__/
 *.blend
 *.fbx
 *.obj

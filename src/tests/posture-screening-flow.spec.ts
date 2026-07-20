@@ -20,6 +20,7 @@ async function passSafety(page: import('@playwright/test').Page) {
 
 test('starts the adaptive route, moves focus, and restores the movement step after reload', async ({ page }) => {
   await page.goto('/growth/posture/screening');
+  await expect(page.getByRole('link', { name: '返回体态改善' })).toHaveAttribute('href', '/growth/posture');
   await expect(page.getByRole('heading', { name: '体态表现筛查' })).toBeVisible();
   await expect(page.getByTestId('screening-progress')).toContainText('成人边界');
   await expect(page.getByTestId('screening-progress')).not.toContainText('/');
@@ -36,6 +37,15 @@ test('starts the adaptive route, moves focus, and restores the movement step aft
   await expect(page.getByText('出现眩晕、麻木或放射感、明显疼痛加重或突然无力时立即停止。')).toBeVisible();
   await page.reload();
   await expect(page.getByRole('heading', { name: '自然站立双臂慢速上举观察' })).toBeVisible();
+});
+
+test('browser back from screening restores the posture Growth tab', async ({ page }) => {
+  await page.goto('/growth/posture');
+  await page.getByRole('link', { name: '开始体态分析' }).click();
+  await page.goBack();
+
+  await expect(page).toHaveURL('/growth/posture');
+  await expect(page.getByRole('tab', { name: '体态改善' })).toHaveAttribute('aria-selected', 'true');
 });
 
 test('discards a damaged draft and allows a fresh screening to continue', async ({ page }) => {

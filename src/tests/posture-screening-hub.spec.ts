@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
 
 test('takes a no-plan user through the new screening and reloads the saved result', async ({ page }) => {
   await page.goto('/growth/posture');
-  await page.getByRole('link', { name: '开始体态筛查' }).click();
+  await page.getByRole('link', { name: '开始体态分析' }).click();
   await expect(page).toHaveURL('/growth/posture/screening');
 
   await completeFunctionalOnlyScreening(page);
@@ -27,7 +27,7 @@ test('opens active-plan reassessment in a typed screening context without mutati
   const planBefore = await page.evaluate(() => localStorage.getItem('musclemap.posturePlans.v1'));
   await page.goto('/growth/posture');
 
-  await page.getByRole('button', { name: '开始复测' }).click();
+  await page.getByRole('link', { name: '开始复测' }).click();
   await expect(page).toHaveURL('/growth/posture/screening?planId=plan-ui');
   await expect(page.getByRole('heading', { name: '体态表现筛查' })).toBeVisible();
   await completeBoundaryStop(page);
@@ -57,7 +57,7 @@ test('discards an unrelated draft before starting a plan-linked reassessment', a
     localStorage.setItem('musclemap.postureScreeningDraft.v1', JSON.stringify({ id: 'stale-draft', currentStep: 'safety', answers: { age: 30, boundaryAccepted: true }, photoMeasurements: [], context: { planId: 'other-plan' }, createdAt: timestamp, updatedAt: timestamp }));
   });
   await page.goto('/growth/posture');
-  await page.getByRole('button', { name: '开始复测' }).click();
+  await page.getByRole('link', { name: '开始复测' }).click();
 
   await expect(page.getByRole('heading', { name: '先确认适用边界' })).toBeVisible();
   await expect.poll(() => page.evaluate(() => localStorage.getItem('musclemap.postureScreeningDraft.v1'))).toBeNull();

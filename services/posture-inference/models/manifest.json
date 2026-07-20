@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "acquiredAt": "2026-07-20T05:21:16Z",
+  "runtime": "pytorch",
+  "artifacts": [
+    {
+      "id": "rtmpose-m-body26-256x192",
+      "kind": "pose-estimator",
+      "framework": "mmpose",
+      "version": "1.3.2",
+      "config": "rtmpose-m_8xb512-700e_body8-halpe26-256x192",
+      "configSource": "https://github.com/open-mmlab/mmpose/blob/v1.3.2/configs/body_2d_keypoint/rtmpose/body8/rtmpose-m_8xb512-700e_body8-halpe26-256x192.py",
+      "checkpointSource": "https://download.openmmlab.com/mmpose/v1/projects/rtmposev1/rtmpose-m_simcc-body7_pt-body7-halpe26_700e-256x192-4d3e73dd_20230605.pth",
+      "file": "rtmpose-m_body26_256x192.pth",
+      "bytes": 55897557,
+      "sha256": "4d3e73ddd31222b7b0db36caeda396af1d7630c3b5a60451bdfa99a79e8dbb90",
+      "keypointSchema": "halpe26",
+      "coordinateSpace": "original-image-pixels",
+      "license": "Apache-2.0 project code and model release; upstream dataset terms apply",
+      "licenseSource": "https://github.com/open-mmlab/mmpose/blob/v1.3.2/LICENSE",
+      "trainingData": ["COCO-WholeBody", "AI Challenger", "CrowdPose", "MPII", "JHMDB", "Halpe", "PoseTrack18"]
+    },
+    {
+      "id": "rtmdet-m-person-640",
+      "kind": "person-detector",
+      "framework": "mmdetection",
+      "version": "3.2.0",
+      "config": "rtmdet_m_640-8xb32_coco-person",
+      "configSource": "https://github.com/open-mmlab/mmpose/blob/v1.3.2/demo/mmdetection_cfg/rtmdet_m_640-8xb32_coco-person.py",
+      "checkpointSource": "https://download.openmmlab.com/mmpose/v1/projects/rtmposev1/rtmdet_m_8xb32-100e_coco-obj365-person-235e8209.pth",
+      "file": "rtmdet-m_person_640.pth",
+      "bytes": 99013732,
+      "sha256": "35b0c7406499e0d141dd6a0235db07c10d2bee8f891f8f4e353c16a009de30e8",
+      "keypointSchema": null,
+      "coordinateSpace": "original-image-pixels",
+      "license": "Apache-2.0 project code and model release; upstream dataset terms apply",
+      "licenseSource": "https://github.com/open-mmlab/mmdetection/blob/v3.2.0/LICENSE",
+      "trainingData": ["COCO", "Objects365"]
+    }
+  ]
+}

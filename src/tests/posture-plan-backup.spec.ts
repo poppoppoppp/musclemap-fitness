@@ -13,6 +13,37 @@ test('validates current posture data and keeps it in the normalized backup', () 
   expect(result.summary.posturePlanCount).toBe(1);
 });
 
+test('round-trips a manual screening plan source snapshot', () => {
+  const exportedAt = '2026-07-30T09:00:00.000Z';
+  const plan = {
+    id: 'plan-screening-1',
+    protocolId: 'UPPER_POSTURE_001',
+    screeningSessionId: 'screening-1',
+    sourceSnapshot: {
+      screeningCompletedAt: '2026-07-29T09:00:00.000Z',
+      primaryFinding: '头肩控制需要改善',
+      selectedProtocolId: 'UPPER_POSTURE_001',
+      createdAt: exportedAt,
+      selectionMode: 'manual'
+    },
+    status: 'active',
+    startDate: '2026-07-30',
+    durationWeeks: 4,
+    weeklyFrequency: 3,
+    weekdays: [1, 3, 5],
+    recommendationReasons: ['用户主动选择'],
+    qualitySnapshot: { dataQuality: 'high', completeness: 'complete', sourceUrl: 'https://example.com' },
+    reassessmentIds: [],
+    createdAt: exportedAt,
+    updatedAt: exportedAt
+  };
+  const result = validateBackupText(JSON.stringify({ app: BACKUP_APP_NAME, exportVersion: BACKUP_EXPORT_VERSION, exportedAt, data: { latestGeneratedPlan: null, workoutLogs: [], latestWorkoutLog: null, bodySnapshots: [], trainingTemplates: [], postureAssessments: [], posturePlans: [plan], postureFeedback: [], postureScreeningSessions: [] } }));
+
+  expect(result.ok).toBe(true);
+  if (!result.ok) return;
+  expect(result.backup.data.posturePlans).toEqual([plan]);
+});
+
 test('migrates posture-only v4 backups with empty training templates', () => {
   const exportedAt = '2026-07-30T09:00:00.000Z';
   const assessment = { id: 'assessment-1', kind: 'initial', goals: ['comfort'], regions: ['upper_posture'], symptomDuration: '1-3m', discomfort: 4, functionScore: 6, riskFlags: [], equipment: ['bodyweight'], sessionMinutes: 15, weeklyFrequency: 1, createdAt: exportedAt };

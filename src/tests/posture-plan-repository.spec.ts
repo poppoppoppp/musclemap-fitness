@@ -35,6 +35,64 @@ test('refuses a second active plan', () => {
   expect(repository.tryCreatePlan({ ...planInput(assessment.id), protocolId: 'PELVIS_002' })).toEqual({ ok: false, error: 'active-plan-exists' });
 });
 
+test('creates a manual plan from one screening source and stores its trace snapshot', () => {
+  const repository = createRepository();
+  const created = repository.tryCreatePlan(manualScreeningPlanInput());
+
+  expect(created.ok).toBe(true);
+  if (!created.ok) return;
+  expect(created.plan.assessmentId).toBeUndefined();
+  expect(created.plan.screeningSessionId).toBe('screening-1');
+  expect(created.plan.sourceSnapshot).toEqual({
+    screeningCompletedAt: '2026-07-15T08:00:00.000Z',
+    primaryFinding: '头肩控制需要改善',
+    selectedProtocolId: 'UPPER_POSTURE_001',
+    createdAt: '2026-07-16T08:00:00.000Z',
+    selectionMode: 'manual'
+  });
+});
+
+test('rejects ambiguous or incomplete plan sources at creation', () => {
+  const repository = createRepository();
+  const manualInput = manualScreeningPlanInput();
+
+  expect(repository.tryCreatePlan({ ...manualInput, assessmentId: 'assessment-1' })).toEqual({ ok: false, error: 'invalid-plan' });
+  expect(repository.tryCreatePlan({ ...manualInput, sourceSnapshot: undefined })).toEqual({ ok: false, error: 'invalid-plan' });
+  expect(repository.tryCreatePlan({
+    ...manualInput,
+    sourceSnapshot: { ...manualInput.sourceSnapshot!, selectedProtocolId: 'THORACIC_001' }
+  })).toEqual({ ok: false, error: 'invalid-plan' });
+  expect(repository.tryCreatePlan({
+    ...manualInput,
+    sourceSnapshot: { ...manualInput.sourceSnapshot!, selectionMode: 'automatic' }
+  } as unknown as PosturePlanInput)).toEqual({ ok: false, error: 'invalid-plan' });
+});
+
+test('keeps persisted legacy plans that have neither source field', () => {
+  const storage = new MemoryStorage();
+  const repository = new PosturePlanRepository(storage, () => new Date('2026-07-16T08:00:00.000Z'));
+  const assessment = repository.saveAssessment(assessmentInput);
+  const created = repository.tryCreatePlan(planInput(assessment.id));
+  if (!created.ok) throw new Error('fixture create failed');
+  const legacyPlan = { ...created.plan } as Record<string, unknown>;
+  delete legacyPlan.assessmentId;
+  storage.setItem(POSTURE_PLANS_KEY, JSON.stringify([legacyPlan]));
+
+  expect(repository.listPlans()).toEqual([legacyPlan]);
+});
+
+test('ignores malformed persisted source fields without throwing', () => {
+  const storage = new MemoryStorage();
+  const repository = new PosturePlanRepository(storage, () => new Date('2026-07-16T08:00:00.000Z'));
+  const assessment = repository.saveAssessment(assessmentInput);
+  const created = repository.tryCreatePlan(planInput(assessment.id));
+  if (!created.ok) throw new Error('fixture create failed');
+  storage.setItem(POSTURE_PLANS_KEY, JSON.stringify([{ ...created.plan, assessmentId: 42 }]));
+
+  expect(() => repository.listPlans()).not.toThrow();
+  expect(repository.listPlans()).toEqual([]);
+});
+
 test('ignores corrupt records while preserving valid plans', () => {
   const storage = new MemoryStorage();
   const repository = new PosturePlanRepository(storage, () => new Date('2026-07-16T08:00:00.000Z'));
@@ -68,6 +126,26 @@ function planInput(assessmentId: string): PosturePlanInput {
     weeklyFrequency: 3,
     weekdays: [1, 3, 5],
     recommendationReasons: ['匹配颈部与头部区域'],
+    qualitySnapshot: { dataQuality: 'high', completeness: 'complete', sourceUrl: 'https://example.com/source' }
+  };
+}
+
+function manualScreeningPlanInput(): PosturePlanInput {
+  return {
+    protocolId: 'UPPER_POSTURE_001',
+    screeningSessionId: 'screening-1',
+    sourceSnapshot: {
+      screeningCompletedAt: '2026-07-15T08:00:00.000Z',
+      primaryFinding: '头肩控制需要改善',
+      selectedProtocolId: 'UPPER_POSTURE_001',
+      createdAt: '2026-07-15T08:05:00.000Z',
+      selectionMode: 'manual'
+    },
+    startDate: '2026-07-16',
+    durationWeeks: 4,
+    weeklyFrequency: 3,
+    weekdays: [1, 3, 5],
+    recommendationReasons: ['用户主动选择'],
     qualitySnapshot: { dataQuality: 'high', completeness: 'complete', sourceUrl: 'https://example.com/source' }
   };
 }

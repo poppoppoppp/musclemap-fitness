@@ -63,6 +63,8 @@ test('renders an answer-first completed report with evidence, limits, sources, a
   const id = await createSession(page, 'completed');
   await page.goto(`/growth/posture/results/${id}`);
 
+  await expect(page.getByRole('link', { name: '返回体态改善' })).toHaveAttribute('href', '/growth/posture');
+
   await expect(page.getByTestId('screening-terminal')).toContainText('本次筛查支持：头位前移伴上段控制负担倾向');
   await expect(page.getByRole('heading', { name: '判断依据' })).toBeVisible();
   await expect(page.getByText('主观描述')).toBeVisible();

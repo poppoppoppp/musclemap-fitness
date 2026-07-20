@@ -46,6 +46,7 @@ export class PosturePlanRepository {
     const timestamp = this.now().toISOString();
     const plan: PosturePlan = {
       ...input,
+      sourceSnapshot: input.sourceSnapshot ? { ...input.sourceSnapshot, createdAt: timestamp } : undefined,
       id: createId('posture-plan', timestamp),
       status: 'active',
       createdAt: timestamp,
@@ -193,10 +194,10 @@ export function normalizePostureAssessment(value: unknown): PostureAssessment | 
 }
 
 export function normalizePosturePlan(value: unknown): PosturePlan | null {
-  if (!isRecord(value) || typeof value.id !== 'string' || typeof value.protocolId !== 'string' || typeof value.assessmentId !== 'string') return null;
+  if (!isRecord(value) || typeof value.id !== 'string' || typeof value.protocolId !== 'string') return null;
   if (value.status !== 'active' && value.status !== 'paused' && value.status !== 'completed') return null;
   if (typeof value.createdAt !== 'string' || typeof value.updatedAt !== 'string' || !Array.isArray(value.weekdays) || !Array.isArray(value.recommendationReasons) || !Array.isArray(value.reassessmentIds)) return null;
-  if (!isValidPlanInput(value as unknown as PosturePlanInput)) return null;
+  if (!isValidPersistedPlanInput(value as unknown as PosturePlanInput)) return null;
   if (value.pauseIntervals !== undefined && (!Array.isArray(value.pauseIntervals) || !value.pauseIntervals.every(isPauseInterval))) return null;
   return value as unknown as PosturePlan;
 }
@@ -213,13 +214,50 @@ function normalizeDraft(value: unknown): PostureAssessmentDraft | null {
 }
 
 function isValidPlanInput(input: PosturePlanInput) {
-  return Boolean(input.protocolId && input.assessmentId && isDateKey(input.startDate))
+  return isValidPlanFields(input) && isValidCreationSource(input);
+}
+
+function isValidPersistedPlanInput(input: PosturePlanInput) {
+  return isValidPlanFields(input) && isValidPersistedSource(input);
+}
+
+function isValidPlanFields(input: PosturePlanInput) {
+  return Boolean(input.protocolId && isDateKey(input.startDate))
     && Number.isInteger(input.durationWeeks) && input.durationWeeks >= 2 && input.durationWeeks <= 4
     && Number.isInteger(input.weeklyFrequency) && input.weeklyFrequency >= 1 && input.weeklyFrequency <= 7
     && Array.isArray(input.weekdays) && input.weekdays.every((day) => Number.isInteger(day) && day >= 0 && day <= 6)
     && input.weekdays.length === input.weeklyFrequency && new Set(input.weekdays).size === input.weekdays.length
     && Array.isArray(input.recommendationReasons) && input.recommendationReasons.length > 0
     && isRecord(input.qualitySnapshot) && typeof input.qualitySnapshot.sourceUrl === 'string' && Boolean(input.qualitySnapshot.sourceUrl);
+}
+
+function isValidCreationSource(input: PosturePlanInput): boolean {
+  if (input.assessmentId !== undefined && !isNonEmptyString(input.assessmentId)) return false;
+  if (input.screeningSessionId !== undefined && !isNonEmptyString(input.screeningSessionId)) return false;
+  const hasAssessment = isNonEmptyString(input.assessmentId);
+  const hasScreening = isNonEmptyString(input.screeningSessionId);
+  if (hasAssessment === hasScreening) return false;
+  if (hasAssessment) return input.sourceSnapshot === undefined;
+  return isValidSourceSnapshot(input.sourceSnapshot, input.protocolId);
+}
+
+function isValidPersistedSource(input: PosturePlanInput): boolean {
+  if (input.assessmentId !== undefined && !isNonEmptyString(input.assessmentId)) return false;
+  if (input.screeningSessionId !== undefined && !isNonEmptyString(input.screeningSessionId)) return false;
+  const hasAssessment = isNonEmptyString(input.assessmentId);
+  const hasScreening = isNonEmptyString(input.screeningSessionId);
+  if (hasAssessment && hasScreening) return false;
+  if (hasScreening) return isValidSourceSnapshot(input.sourceSnapshot, input.protocolId);
+  return input.sourceSnapshot === undefined;
+}
+
+function isValidSourceSnapshot(value: unknown, protocolId: string): boolean {
+  return isRecord(value)
+    && isIsoTimestamp(value.screeningCompletedAt)
+    && typeof value.primaryFinding === 'string' && Boolean(value.primaryFinding.trim())
+    && value.selectedProtocolId === protocolId
+    && isIsoTimestamp(value.createdAt)
+    && value.selectionMode === 'manual';
 }
 
 function isAssessmentInput(value: Record<string, unknown>): boolean {
@@ -267,6 +305,14 @@ function isDateKey(value: unknown): value is string {
   if (!match) return false;
   const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
   return date.getFullYear() === Number(match[1]) && date.getMonth() === Number(match[2]) - 1 && date.getDate() === Number(match[3]);
+}
+
+function isIsoTimestamp(value: unknown): value is string {
+  return typeof value === 'string' && Number.isFinite(Date.parse(value));
+}
+
+function isNonEmptyString(value: unknown): value is string {
+  return typeof value === 'string' && Boolean(value.trim());
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> { return Boolean(value) && typeof value === 'object' && !Array.isArray(value); }

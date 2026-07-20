@@ -159,3 +159,28 @@
 | Posture focused screening: hub integration | completed |
 | Posture focused screening: regression, mobile, privacy, and accessibility QA | completed |
 | Posture focused screening: training-data gap report | completed |
+| Figma design-to-code: explore project context | completed |
+| Figma design-to-code: inspect target node and clarify scope | in progress |
+| Figma design-to-code: compare implementation approaches | pending |
+| Figma design-to-code: present and approve design | pending |
+| Figma design-to-code: write approved design document | pending |
+| Figma design-to-code: create implementation plan | pending |
+| Posture RTMPose batch one: scan and protect existing work | completed |
+| Posture RTMPose batch one: approve design and implementation plan | completed |
+| Posture RTMPose batch one: service contracts and official model supply chain | completed |
+| Posture RTMPose batch one: FastAPI RTMDet and RTMPose integration | completed |
+| Posture RTMPose batch one: frontend submission, overlay, and comparison | completed |
+| Posture RTMPose batch one: GPU/CPU and failure verification | completed |
+| Posture RTMPose batch one: full regression and human three-view acceptance | completed |
+| Posture metrics batch two: explore current capture, inference, tests, and dirty worktree | completed |
+| Posture metrics batch two: clarify bounded dynamic capture and acceptance contract | completed |
+| Posture metrics batch two: compare analysis placement approaches | completed |
+| Posture metrics batch two: present and approve static/dynamic design | completed |
+| Posture metrics batch two: write approved design document | completed |
+| Posture metrics batch two: write TDD implementation plan | completed |
+| Posture metrics batch two: implement pure metric and sequence analysis | completed |
+| Posture metrics batch two: integrate bounded API and Capture Lab UI | in progress |
+| Posture metrics batch two: automated, CPU/GPU, and human verification | pending |
+| Capture Lab adaptive front stance calibration: approved design and plan | completed |
+| Capture Lab adaptive front stance calibration: TDD implementation | in progress |
+| Capture Lab adaptive front stance calibration: real-camera verification | pending |

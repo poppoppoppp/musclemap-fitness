@@ -118,7 +118,8 @@ test('completes a functional-only result once and preserves one session through 
   await page.getByRole('button', { name: '继续引导观察' }).click();
   await page.getByLabel('上举时头部会向前移动').check();
   await page.getByRole('button', { name: '保存观察结果' }).click();
-  await page.getByRole('button', { name: '暂不使用照片，生成结果' }).click();
+  await expect(page.getByRole('heading', { name: '正面静态采集' })).toBeVisible();
+  await page.getByRole('button', { name: '当前设备无法采集，暂不进行自动采集' }).click();
 
   await expect(page.getByRole('heading', { name: '本次筛查已完成' })).toBeFocused();
   await expect(page.getByTestId('screening-terminal')).toContainText('头位前移伴上段控制负担倾向');

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import DumbbellIcon from '../../components/icons/DumbbellIcon';
 import ExercisePickerSheet from '../../components/workout/ExercisePickerSheet';
 import { getExerciseById } from '../../data/exercises';
+import type { PostureProtocolWorkoutSnapshot } from '../../types/posture';
 import type { TrainingTemplateDraft, TrainingTemplateItem } from '../../types/trainingTemplate';
 import {
   clearTrainingTemplateDraft,
@@ -30,6 +31,9 @@ export default function TrainingTemplateEditor({ mode, templateId }: TrainingTem
   const [name, setName] = useState(initialValue?.name ?? '');
   const [focusTags, setFocusTags] = useState<string[]>(initialValue?.focusTags ?? []);
   const [items, setItems] = useState<TrainingTemplateItem[]>(initialValue?.items ?? []);
+  const [postureProtocolGroups, setPostureProtocolGroups] = useState<PostureProtocolWorkoutSnapshot[]>(
+    initialDraft?.postureProtocolGroups ?? savedTemplate?.postureProtocolGroups ?? []
+  );
   const [message, setMessage] = useState('');
   const [pickerOpen, setPickerOpen] = useState(false);
   const existingExerciseIds = useMemo(() => new Set(items.map((item) => item.exerciseId)), [items]);
@@ -41,11 +45,12 @@ export default function TrainingTemplateEditor({ mode, templateId }: TrainingTem
       name,
       focusTags,
       items,
+      postureProtocolGroups,
       savedAt: new Date().toISOString()
     };
     const result = writeTrainingTemplateDraft(draft);
     if (!result.ok) setMessage('草稿保存失败，请检查本地存储空间');
-  }, [draftKey, focusTags, items, missingTemplate, name]);
+  }, [draftKey, focusTags, items, missingTemplate, name, postureProtocolGroups]);
 
   const toggleFocus = (tag: string) => {
     setFocusTags((current) => current.includes(tag) ? current.filter((item) => item !== tag) : [...current, tag]);
@@ -81,12 +86,27 @@ export default function TrainingTemplateEditor({ mode, templateId }: TrainingTem
     setItems((current) => current.filter((item) => item.id !== itemId).map((item, order) => ({ ...item, order })));
   };
 
+  const movePostureGroup = (instanceId: string, direction: -1 | 1) => {
+    setPostureProtocolGroups((current) => {
+      const index = current.findIndex((group) => group.instanceId === instanceId);
+      const target = index + direction;
+      if (index < 0 || target < 0 || target >= current.length) return current;
+      const next = [...current];
+      [next[index], next[target]] = [next[target], next[index]];
+      return next.map((group, order) => ({ ...group, order }));
+    });
+  };
+
+  const removePostureGroup = (instanceId: string) => {
+    setPostureProtocolGroups((current) => current.filter((group) => group.instanceId !== instanceId).map((group, order) => ({ ...group, order })));
+  };
+
   const handleSave = () => {
     if (!name.trim()) {
       setMessage('请输入模板名称');
       return;
     }
-    if (items.length === 0) {
+    if (items.length === 0 && postureProtocolGroups.length === 0) {
       setMessage('请至少添加一个动作');
       return;
     }
@@ -104,8 +124,8 @@ export default function TrainingTemplateEditor({ mode, templateId }: TrainingTem
     }
 
     const result = mode === 'edit' && templateId
-      ? updateTrainingTemplate(templateId, { name, focusTags, items })
-      : createTrainingTemplate({ name, focusTags, items });
+      ? updateTrainingTemplate(templateId, { name, focusTags, items, postureProtocolGroups })
+      : createTrainingTemplate({ name, focusTags, items, postureProtocolGroups });
     if (!result.ok) {
       setMessage('模板保存失败，请检查本地存储空间');
       return;
@@ -178,6 +198,29 @@ export default function TrainingTemplateEditor({ mode, templateId }: TrainingTem
             <button type="button" onClick={() => setPickerOpen(true)} className="mt-3 min-h-12 w-full rounded-xl border border-dashed border-lime-300/55 text-base font-bold text-lime-300 transition hover:bg-lime-300/10 focus:outline-none focus:ring-2 focus:ring-lime-300/70">+ 添加动作</button>
           </section>
 
+          <section>
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-lg font-black">体态方案</h2>
+              <span className="text-sm text-zinc-500">{postureProtocolGroups.length} 个方案</span>
+            </div>
+            {postureProtocolGroups.length === 0 ? (
+              <p className="mt-3 rounded-xl bg-black/20 p-4 text-center text-sm text-zinc-500">还没有加入体态方案</p>
+            ) : (
+              <div className="mt-3 space-y-3">
+                {postureProtocolGroups.map((group, index) => (
+                  <PostureProtocolGroupRow
+                    key={group.instanceId}
+                    group={group}
+                    index={index}
+                    groupCount={postureProtocolGroups.length}
+                    onMove={movePostureGroup}
+                    onRemove={removePostureGroup}
+                  />
+                ))}
+              </div>
+            )}
+          </section>
+
           {message ? <p role="alert" className="text-center text-sm font-bold text-red-300">{message}</p> : null}
           <button type="button" onClick={handleSave} className="min-h-14 w-full rounded-full bg-lime-300 px-6 text-lg font-black text-[#10130d] transition hover:bg-lime-200 focus:outline-none focus:ring-2 focus:ring-lime-100 focus:ring-offset-2 focus:ring-offset-[#0f130f] active:scale-[0.99]">保存模板</button>
           <div data-testid="template-editor-content-end" className="h-24 lg:hidden" />
@@ -196,6 +239,32 @@ export default function TrainingTemplateEditor({ mode, templateId }: TrainingTem
         showPosture={false}
       />
     </div>
+  );
+}
+
+function PostureProtocolGroupRow({ group, index, groupCount, onMove, onRemove }: {
+  group: PostureProtocolWorkoutSnapshot;
+  index: number;
+  groupCount: number;
+  onMove: (instanceId: string, direction: -1 | 1) => void;
+  onRemove: (instanceId: string) => void;
+}) {
+  const source = group.sourceSnapshot === 'posture-screening' ? '体态筛查推荐' : '体态方案库';
+  return (
+    <article data-testid={`template-posture-group-${group.sourceProtocolId}`} className="rounded-xl border border-lime-300/20 bg-lime-300/[0.04] p-3">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h3 className="font-black text-white">{group.nameSnapshot}</h3>
+          <p className="mt-1 text-xs leading-5 text-zinc-400">对应体态问题：{group.targetIssueNamesSnapshot.join('、') || '保存时未记录'}</p>
+          <p className="mt-1 text-xs text-zinc-500">{group.exerciseSnapshots.length} 个动作 · 来源：{source}</p>
+        </div>
+        <div className="flex shrink-0 gap-1">
+          <button type="button" aria-label={`上移 ${group.nameSnapshot}`} disabled={index === 0} onClick={() => onMove(group.instanceId, -1)} className="min-h-10 min-w-10 rounded-lg text-zinc-400 disabled:opacity-30">↑</button>
+          <button type="button" aria-label={`下移 ${group.nameSnapshot}`} disabled={index === groupCount - 1} onClick={() => onMove(group.instanceId, 1)} className="min-h-10 min-w-10 rounded-lg text-zinc-400 disabled:opacity-30">↓</button>
+          <button type="button" aria-label={`删除 ${group.nameSnapshot}`} onClick={() => onRemove(group.instanceId)} className="min-h-10 min-w-10 rounded-lg text-red-300">×</button>
+        </div>
+      </div>
+    </article>
   );
 }
 

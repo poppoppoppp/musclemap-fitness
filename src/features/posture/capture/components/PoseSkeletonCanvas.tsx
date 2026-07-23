@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import type { PostureCaptureKeypoint } from '../../../../types/postureAnalysis';
+import { calculateContainRect, mapNormalizedPointToContainRect } from '../camera/cameraViewport';
 import { POSE_CONNECTIONS } from '../mediapipe/poseConnections';
 
 interface PoseSkeletonCanvasProps {
@@ -40,18 +41,13 @@ function drawSkeleton(canvas: HTMLCanvasElement, landmarks: PostureCaptureKeypoi
   context.clearRect(0, 0, width, height);
   if (landmarks.length !== 33 || !mediaWidth || !mediaHeight) return;
 
-  const mediaRatio = mediaWidth / mediaHeight;
-  const containerRatio = width / height;
-  const drawnWidth = mediaRatio > containerRatio ? width : height * mediaRatio;
-  const drawnHeight = mediaRatio > containerRatio ? width / mediaRatio : height;
-  const offsetX = (width - drawnWidth) / 2;
-  const offsetY = (height - drawnHeight) / 2;
+  const mediaRect = calculateContainRect(mediaWidth, mediaHeight, width, height);
   const point = (index: number) => {
     const landmark = landmarks[index];
     if (!landmark || !Number.isFinite(landmark.x) || !Number.isFinite(landmark.y)) return null;
+    const mapped = mapNormalizedPointToContainRect(landmark, mediaRect, mirrored);
     return {
-      x: offsetX + (mirrored ? 1 - landmark.x : landmark.x) * drawnWidth,
-      y: offsetY + landmark.y * drawnHeight,
+      ...mapped,
       visibility: landmark.visibility ?? 0,
     };
   };

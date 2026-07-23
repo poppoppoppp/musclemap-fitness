@@ -36,6 +36,20 @@ const makeSession = (): PostureScreeningSession => {
       measurements: [{ metricId: 'frontal-shoulder-height-difference', value: 0.04, unit: 'ratio', evidenceIds: ['upper-body-photogrammetry-review-v1'] }],
       quality: 'valid',
     }],
+    captureSnapshot: {
+      protocolVersion: 'automated-posture-capture-v1',
+      validity: 'partial',
+      completedAt: '2026-07-17T08:00:00.000Z',
+      staticCaptures: [],
+      movements: [],
+    },
+    recommendationSnapshots: [{
+      patternId: 'frontal-shoulder-asymmetry-tendency',
+      status: 'unavailable',
+      issueNames: ['抬手时肩胛控制不足'],
+      limitations: [],
+      reason: '暂无适配方案。',
+    }],
     createdAt: '2026-07-17T08:00:00.000Z',
     updatedAt: '2026-07-17T08:00:00.000Z',
     completedAt: '2026-07-17T08:00:00.000Z',
@@ -53,12 +67,12 @@ const emptyData = () => ({
   postureFeedback: [],
 });
 
-test('exports v6 structured screening sessions without local photo references or blobs', () => {
+test('exports v7 structured screening sessions and optional capture snapshots without local media', () => {
   const data = { ...emptyData(), postureScreeningSessions: [makeSession()] } as MuscleMapBackupData & { postureScreeningSessions: PostureScreeningSession[] };
   const backup = createBackupFile(data);
   const exportedData = backup.data as MuscleMapBackupData & { postureScreeningSessions: PostureScreeningSession[] };
 
-  expect(BACKUP_EXPORT_VERSION).toBe(6);
+  expect(BACKUP_EXPORT_VERSION).toBe(7);
   expect(exportedData.postureScreeningSessions).toHaveLength(1);
   expect(exportedData.postureScreeningSessions[0].photoMeasurements[0]).toMatchObject({
     photoAssetAvailable: false,
@@ -66,7 +80,24 @@ test('exports v6 structured screening sessions without local photo references or
     measurements: [{ metricId: 'frontal-shoulder-height-difference', value: 0.04 }],
   });
   expect(exportedData.postureScreeningSessions[0].photoMeasurements[0]).not.toHaveProperty('photoAssetId');
+  expect(exportedData.postureScreeningSessions[0].captureSnapshot).toEqual(makeSession().captureSnapshot);
+  expect(exportedData.postureScreeningSessions[0].recommendationSnapshots).toEqual(makeSession().recommendationSnapshots);
   expect(JSON.stringify(backup)).not.toContain('front-photo');
+  expect(JSON.stringify(backup)).not.toContain('rawFrames');
+});
+
+test('continues to validate v6 screening sessions without optional automated snapshots', () => {
+  const legacy = makeSession();
+  delete legacy.captureSnapshot;
+  delete legacy.recommendationSnapshots;
+  const result = validateBackupText(JSON.stringify({
+    app: BACKUP_APP_NAME,
+    exportVersion: 6,
+    exportedAt: '2026-07-17T09:00:00.000Z',
+    data: { ...emptyData(), postureScreeningSessions: [legacy] },
+  }));
+  expect(result.ok).toBe(true);
+  if (result.ok) expect(result.backup.data.postureScreeningSessions[0]).not.toHaveProperty('captureSnapshot');
 });
 
 test('validates v6 and reports the structured screening count', () => {

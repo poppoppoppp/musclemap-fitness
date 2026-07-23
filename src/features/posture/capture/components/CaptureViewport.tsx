@@ -1,4 +1,4 @@
-import type { RefObject } from 'react';
+import type { ReactNode, RefObject } from 'react';
 import type { PostureCaptureKeypoint } from '../../../../types/postureAnalysis';
 import type { CaptureLabMode, CaptureQualityEvaluation } from '../captureLabTypes';
 import type { CaptureSequenceState } from '../captureSequence';
@@ -6,6 +6,7 @@ import { POSTURE_CAPTURE_CONFIG } from '../poseLandmarkerConfig';
 import { describeQualityReason } from '../quality/qualityCopy';
 import type { StanceCalibrationState } from '../quality/stanceCalibration';
 import PoseSkeletonCanvas from './PoseSkeletonCanvas';
+import ResponsiveCameraStage from './ResponsiveCameraStage';
 
 interface CaptureViewportProps {
   videoRef: RefObject<HTMLVideoElement | null>;
@@ -16,23 +17,25 @@ interface CaptureViewportProps {
   clockMs: number;
   active: boolean;
   stanceCalibration: StanceCalibrationState;
+  controls?: ReactNode;
 }
 
-export default function CaptureViewport({ videoRef, mode, landmarks, quality, sequence, clockMs, active, stanceCalibration }: CaptureViewportProps) {
-  const video = videoRef.current;
+export default function CaptureViewport({ videoRef, mode, landmarks, quality, sequence, clockMs, active, stanceCalibration, controls }: CaptureViewportProps) {
   const countdown = sequence.countdownStartedAtMs === null ? null : Math.max(1, Math.ceil((POSTURE_CAPTURE_CONFIG.capture.countdownDurationMs - (clockMs - sequence.countdownStartedAtMs)) / 1000));
   const capturePercent = sequence.captureStartedAtMs === null ? 0 : Math.min(100, Math.max(0, ((clockMs - sequence.captureStartedAtMs) / POSTURE_CAPTURE_CONFIG.capture.captureDurationMs) * 100));
   const mainReason = quality?.blockingReasons[0];
   const modeCopy = mode === 'front' ? '正面模式' : mode === 'side' ? '侧面模式' : '背面模式由你确认';
 
   return (
-    <div className="relative mx-auto aspect-[3/4] max-h-[66dvh] w-full overflow-hidden rounded-2xl border border-zinc-700 bg-[#11140f] shadow-[0_24px_70px_rgba(5,10,3,0.45)]" data-testid="capture-viewport">
-      <video ref={videoRef} muted playsInline className={`h-full w-full scale-x-[-1] object-contain transition-opacity duration-200 ${active ? 'opacity-100' : 'opacity-0'}`} />
-      <PoseSkeletonCanvas landmarks={landmarks} mediaWidth={video?.videoWidth ?? 0} mediaHeight={video?.videoHeight ?? 0} mirrored />
-      <div className="pointer-events-none absolute inset-4 rounded-xl border border-lime-200/25" aria-hidden="true" />
-      <div className="absolute left-4 top-4 rounded-lg bg-zinc-950/85 px-3 py-2 text-xs font-black text-lime-200 backdrop-blur-sm">{modeCopy}</div>
+    <ResponsiveCameraStage videoRef={videoRef} active={active} mirrored immersive={active}>
+      {({ mediaWidth, mediaHeight }) => <div className="absolute inset-0" data-testid="capture-viewport">
+      <PoseSkeletonCanvas landmarks={landmarks} mediaWidth={mediaWidth} mediaHeight={mediaHeight} mirrored />
+      <div className="pointer-events-none absolute inset-[clamp(0.75rem,3vw,1.5rem)] rounded-xl border border-lime-200/25" aria-hidden="true" />
+      <div className="absolute inset-x-3 top-[max(0.75rem,env(safe-area-inset-top))] z-20 sm:inset-x-5">
+        {controls ?? <div className="inline-flex rounded-lg bg-zinc-950/85 px-3 py-2 text-xs font-black text-lime-200 backdrop-blur-sm">{modeCopy}</div>}
+      </div>
       {active && (
-        <div className="absolute inset-x-4 bottom-4 rounded-xl border border-white/10 bg-zinc-950/90 p-3 backdrop-blur-md" aria-live="polite">
+        <div className="absolute inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-20 rounded-xl border border-white/10 bg-zinc-950/90 p-3 backdrop-blur-md sm:inset-x-5" aria-live="polite">
           {stanceCalibration.status !== 'idle' && (
             <div className="mb-2 rounded-lg border border-cyan-300/20 bg-cyan-300/10 px-3 py-2 text-xs text-cyan-100" data-testid="stance-calibration-status">
               {stanceCalibration.status === 'calibrating'
@@ -51,6 +54,7 @@ export default function CaptureViewport({ videoRef, mode, landmarks, quality, se
           <span className="flex size-24 items-center justify-center rounded-full border-2 border-lime-300 bg-zinc-950/90 text-5xl font-black tabular-nums text-lime-300">{countdown}</span>
         </div>
       )}
-    </div>
+    </div>}
+    </ResponsiveCameraStage>
   );
 }

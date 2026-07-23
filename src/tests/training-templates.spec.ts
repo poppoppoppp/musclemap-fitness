@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import type { PostureProtocolWorkoutSnapshot } from '../types/posture';
 import type { TrainingTemplate } from '../types/trainingTemplate';
 import { createActiveWorkoutFromTemplate } from '../utils/activeWorkout';
 import { BACKUP_EXPORT_VERSION, validateBackupText } from '../utils/backup';
@@ -23,6 +24,46 @@ const templateFixture: TrainingTemplate = {
   updatedAt: '2026-07-16T00:00:00.000Z'
 };
 
+const postureGroupFixture: PostureProtocolWorkoutSnapshot = {
+  instanceId: 'template-protocol-1',
+  sourceProtocolId: 'UPPER_POSTURE_001',
+  nameSnapshot: '头前移与圆肩含胸靠墙控制方案',
+  targetIssueNamesSnapshot: ['头位前移倾向'],
+  limitationsSnapshot: ['不构成医学诊断'],
+  sourceSnapshot: 'posture-screening',
+  addedAt: '2026-07-22T12:00:00.000Z',
+  isModified: false,
+  order: 0,
+  exerciseInstanceIds: ['template-exercise-1'],
+  exerciseSnapshots: [{
+    instanceId: 'template-exercise-1',
+    exerciseId: 'UPPER_POSTURE_EXERCISE_001',
+    nameSnapshot: '靠墙上举',
+    order: 0,
+    roleInProtocol: 'control',
+    roleExplanation: '上段控制',
+    prescription: { sets: 2, reps: 8, durationSeconds: null, restSeconds: 30, frequencyText: null, rawText: '2 组 × 8 次' },
+    specialCues: ['保持舒适呼吸'],
+    sourceOriginalText: '2 组 × 8 次',
+    groupKey: 'control',
+    groupLabel: '上段控制',
+    dose: { sets: 2, reps: 8, confidence: 'high' }
+  }],
+  stepSnapshots: [{
+    id: 'step-1',
+    order: 0,
+    groupKey: 'control',
+    groupLabel: '上段控制',
+    kind: 'exercise',
+    titleSnapshot: '靠墙上举',
+    includedInWorkout: true,
+    exerciseId: 'UPPER_POSTURE_EXERCISE_001',
+    exerciseInstanceId: 'template-exercise-1',
+    dose: { sets: 2, reps: 8, confidence: 'high' },
+    notes: ['保持舒适呼吸']
+  }]
+};
+
 test('creates an active workout from template prescription', () => {
   const workout = createActiveWorkoutFromTemplate(templateFixture, new Date('2026-07-16T08:00:00.000Z'));
 
@@ -36,6 +77,62 @@ test('creates an active workout from template prescription', () => {
     planned: { sets: 3, repRange: '8-12', restSeconds: 90, note: '控制离心' }
   });
   expect(workout.exercises[0].sets).toHaveLength(3);
+});
+
+test('keeps old templates readable without posture protocol groups', () => {
+  const [normalized] = normalizeTrainingTemplates([templateFixture]);
+
+  expect(normalized).toMatchObject({ id: templateFixture.id, items: templateFixture.items });
+  expect(normalized.postureProtocolGroups).toBeUndefined();
+});
+
+test('normalizer preserves valid posture snapshots and drops damaged or duplicate groups only', () => {
+  const [normalized] = normalizeTrainingTemplates([{
+    ...templateFixture,
+    postureProtocolGroups: [
+      postureGroupFixture,
+      { ...postureGroupFixture, instanceId: 'duplicate-protocol-instance' },
+      { instanceId: 'broken-group', sourceProtocolId: 'BROKEN' }
+    ]
+  }]);
+
+  expect(normalized).toBeTruthy();
+  expect(normalized.items).toHaveLength(1);
+  expect(normalized.postureProtocolGroups).toEqual([postureGroupFixture]);
+});
+
+test('normalizer preserves frozen protocol-internal exercise order values', () => {
+  const group = {
+    ...postureGroupFixture,
+    exerciseSnapshots: postureGroupFixture.exerciseSnapshots.map((snapshot) => ({ ...snapshot, order: 7 }))
+  };
+  const [normalized] = normalizeTrainingTemplates([{ ...templateFixture, postureProtocolGroups: [group] }]);
+
+  expect(normalized.postureProtocolGroups?.[0].exerciseSnapshots[0].order).toBe(7);
+});
+
+test('starts posture template groups with fresh linked instance ids on every workout', () => {
+  const template: TrainingTemplate = { ...templateFixture, postureProtocolGroups: [postureGroupFixture] };
+  const first = createActiveWorkoutFromTemplate(template, new Date('2026-07-22T13:00:00.000Z'));
+  const second = createActiveWorkoutFromTemplate(template, new Date('2026-07-22T14:00:00.000Z'));
+  const firstGroup = first.postureProtocolGroups?.[0];
+  const secondGroup = second.postureProtocolGroups?.[0];
+
+  expect(firstGroup).toBeTruthy();
+  expect(firstGroup?.sourceProtocolId).toBe(postureGroupFixture.sourceProtocolId);
+  expect(firstGroup?.instanceId).not.toBe(postureGroupFixture.instanceId);
+  expect(secondGroup?.instanceId).not.toBe(firstGroup?.instanceId);
+  expect(firstGroup?.exerciseInstanceIds).toHaveLength(1);
+  expect(firstGroup?.exerciseInstanceIds[0]).not.toBe(postureGroupFixture.exerciseInstanceIds[0]);
+  expect(firstGroup?.exerciseSnapshots[0].instanceId).toBe(firstGroup?.exerciseInstanceIds[0]);
+  expect(firstGroup?.stepSnapshots?.[0].exerciseInstanceId).toBe(firstGroup?.exerciseInstanceIds[0]);
+  expect(first.exercises.find(({ id }) => id === firstGroup?.exerciseInstanceIds[0])).toMatchObject({
+    exerciseId: 'UPPER_POSTURE_EXERCISE_001',
+    postureProtocolInstanceId: firstGroup?.instanceId,
+    source: 'template'
+  });
+  expect(new Set(first.exercises.map(({ id }) => id)).size).toBe(first.exercises.length);
+  expect(first.exercises.every(({ id }) => !second.exercises.some((exercise) => exercise.id === id))).toBe(true);
 });
 
 test('normalizes valid templates and drops unsafe records', () => {
@@ -136,6 +233,95 @@ test('repository creates updates duplicates marks used and deletes templates', a
   expect(result.duplicate.id).not.toBe(result.updated?.id);
   expect(result.removed).toEqual({ ok: true });
   expect(result.templates).toHaveLength(1);
+});
+
+test('repository adds a posture snapshot to existing or new templates and blocks duplicates', async ({ page }) => {
+  await page.goto('/');
+
+  const result = await page.evaluate(async ({ postureGroupFixture }) => {
+    const modulePath = '/src/utils/trainingTemplates.ts';
+    const repository = await import(/* @vite-ignore */ modulePath) as typeof import('../utils/trainingTemplates');
+    localStorage.removeItem(repository.TRAINING_TEMPLATES_STORAGE_KEY);
+    const created = repository.createTrainingTemplate({ name: '混合模板', focusTags: [], items: [] });
+    if (!created.ok) throw new Error('create failed');
+    const added = repository.addPostureProtocolGroupToTrainingTemplate(created.template.id, postureGroupFixture);
+    const duplicate = repository.addPostureProtocolGroupToTrainingTemplate(created.template.id, postureGroupFixture);
+    const postureOnly = repository.createTrainingTemplate({
+      name: '体态模板', focusTags: [], items: [], postureProtocolGroups: [postureGroupFixture]
+    });
+    return { added, duplicate, postureOnly, templates: repository.readTrainingTemplates() };
+  }, { postureGroupFixture });
+
+  expect(result.added).toMatchObject({ ok: true, status: 'added', template: { name: '混合模板' } });
+  expect(result.duplicate).toMatchObject({ ok: true, status: 'already-added' });
+  expect(result.postureOnly).toMatchObject({ ok: true, template: { name: '体态模板', items: [], postureProtocolGroups: [{ sourceProtocolId: 'UPPER_POSTURE_001' }] } });
+  expect(result.templates).toHaveLength(2);
+  expect(result.templates[0].postureProtocolGroups).toHaveLength(1);
+});
+
+test('legacy update calls preserve existing optional posture groups when the field is omitted', async ({ page }) => {
+  await page.goto('/');
+  const updated = await page.evaluate(async ({ templateFixture, postureGroupFixture }) => {
+    const modulePath = '/src/utils/trainingTemplates.ts';
+    const repository = await import(/* @vite-ignore */ modulePath) as typeof import('../utils/trainingTemplates');
+    localStorage.setItem(repository.TRAINING_TEMPLATES_STORAGE_KEY, JSON.stringify([{ ...templateFixture, postureProtocolGroups: [postureGroupFixture] }]));
+    const result = repository.updateTrainingTemplate(templateFixture.id, {
+      name: '兼容更新', focusTags: templateFixture.focusTags, items: templateFixture.items
+    });
+    return result.ok ? result.template : null;
+  }, { templateFixture, postureGroupFixture });
+
+  expect(updated?.postureProtocolGroups).toEqual([postureGroupFixture]);
+});
+
+test('duplicating a template preserves frozen posture content with fresh internal ids', async ({ page }) => {
+  await page.goto('/');
+
+  const result = await page.evaluate(async ({ templateFixture, postureGroupFixture }) => {
+    const modulePath = '/src/utils/trainingTemplates.ts';
+    const repository = await import(/* @vite-ignore */ modulePath) as typeof import('../utils/trainingTemplates');
+    localStorage.setItem(repository.TRAINING_TEMPLATES_STORAGE_KEY, JSON.stringify([{ ...templateFixture, postureProtocolGroups: [postureGroupFixture] }]));
+    const duplicated = repository.duplicateTrainingTemplate(templateFixture.id);
+    if (!duplicated.ok) throw new Error('duplicate failed');
+    return { source: repository.getTrainingTemplate(templateFixture.id), duplicate: duplicated.template };
+  }, { templateFixture, postureGroupFixture });
+
+  const sourceGroup = result.source?.postureProtocolGroups?.[0];
+  const duplicateGroup = result.duplicate.postureProtocolGroups?.[0];
+  expect(duplicateGroup).toMatchObject({ sourceProtocolId: sourceGroup?.sourceProtocolId, nameSnapshot: sourceGroup?.nameSnapshot });
+  expect(duplicateGroup?.instanceId).not.toBe(sourceGroup?.instanceId);
+  expect(duplicateGroup?.exerciseInstanceIds[0]).not.toBe(sourceGroup?.exerciseInstanceIds[0]);
+  expect(duplicateGroup?.exerciseSnapshots[0].instanceId).toBe(duplicateGroup?.exerciseInstanceIds[0]);
+  expect(duplicateGroup?.stepSnapshots?.[0].exerciseInstanceId).toBe(duplicateGroup?.exerciseInstanceIds[0]);
+});
+
+test('backup v7 preserves template posture snapshots and degrades damaged groups without dropping the template', () => {
+  const commonData = {
+    latestGeneratedPlan: null,
+    workoutLogs: [],
+    latestWorkoutLog: null,
+    bodySnapshots: [],
+    postureAssessments: [],
+    posturePlans: [],
+    postureFeedback: [],
+    postureScreeningSessions: []
+  };
+  const valid = validateBackupText(JSON.stringify({
+    app: 'MuscleMap Fitness', exportVersion: 7, exportedAt: '2026-07-22T12:00:00.000Z',
+    data: { ...commonData, trainingTemplates: [{ ...templateFixture, postureProtocolGroups: [postureGroupFixture] }] }
+  }));
+  const damaged = validateBackupText(JSON.stringify({
+    app: 'MuscleMap Fitness', exportVersion: 7, exportedAt: '2026-07-22T12:00:00.000Z',
+    data: { ...commonData, trainingTemplates: [{ ...templateFixture, postureProtocolGroups: [{ instanceId: 'broken' }] }] }
+  }));
+
+  expect(valid.ok).toBe(true);
+  if (valid.ok) expect(valid.backup.data.trainingTemplates[0].postureProtocolGroups).toEqual([postureGroupFixture]);
+  expect(damaged.ok).toBe(true);
+  if (damaged.ok) {
+    expect(damaged.backup.data.trainingTemplates[0].id).toBe(templateFixture.id);
+    expect(damaged.backup.data.trainingTemplates[0].postureProtocolGroups).toBeUndefined();
+  }
 });
 
 test('repository restores and clears one editor draft', async ({ page }) => {
@@ -382,6 +568,60 @@ test('reorders and removes template exercises', async ({ page }) => {
   await expect(page.getByTestId('template-item-pull-up')).toBeVisible();
 });
 
+test('editor shows, reorders, restores and removes frozen posture protocol groups', async ({ page }) => {
+  const thoracicGroup = {
+    ...postureGroupFixture,
+    instanceId: 'template-protocol-2',
+    sourceProtocolId: 'THORACIC_001',
+    nameSnapshot: '胸椎旋转活动方案',
+    targetIssueNamesSnapshot: ['胸椎旋转活动倾向'],
+    order: 1,
+    exerciseInstanceIds: ['template-exercise-2'],
+    exerciseSnapshots: postureGroupFixture.exerciseSnapshots.map((snapshot) => ({ ...snapshot, instanceId: 'template-exercise-2' })),
+    stepSnapshots: postureGroupFixture.stepSnapshots?.map((snapshot) => ({ ...snapshot, id: 'step-2', exerciseInstanceId: 'template-exercise-2' }))
+  };
+  await page.goto('/');
+  await page.evaluate(({ templateFixture, postureGroupFixture, thoracicGroup }) => {
+    localStorage.setItem('musclemap.trainingTemplates.v1', JSON.stringify([{
+      ...templateFixture,
+      name: '体态方案模板',
+      items: [],
+      postureProtocolGroups: [postureGroupFixture, thoracicGroup]
+    }]));
+    localStorage.removeItem('musclemap.trainingTemplateDrafts.v1');
+  }, { templateFixture, postureGroupFixture, thoracicGroup });
+  await page.goto('/templates/template-1/edit');
+
+  await expect(page.getByRole('heading', { name: '动作列表' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '体态方案' })).toBeVisible();
+  const upper = page.getByTestId('template-posture-group-UPPER_POSTURE_001');
+  const thoracic = page.getByTestId('template-posture-group-THORACIC_001');
+  await expect(upper).toContainText('头前移与圆肩含胸靠墙控制方案');
+  await expect(upper).toContainText('头位前移倾向');
+  await expect(upper).toContainText('1 个动作');
+  await expect(upper).toContainText('体态筛查推荐');
+
+  await page.getByRole('button', { name: '上移 胸椎旋转活动方案' }).click();
+  const groups = page.locator('[data-testid^="template-posture-group-"]');
+  await expect(groups.nth(0)).toHaveAttribute('data-testid', 'template-posture-group-THORACIC_001');
+  await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('musclemap.trainingTemplateDrafts.v1') ?? '{}')['edit:template-1']?.postureProtocolGroups?.[0]?.sourceProtocolId)).toBe('THORACIC_001');
+  await expect.poll(() => page.evaluate(async () => {
+    const modulePath = '/src/utils/trainingTemplates.ts';
+    const repository = await import(/* @vite-ignore */ modulePath) as typeof import('../utils/trainingTemplates');
+    return repository.readTrainingTemplateDraft('edit:template-1')?.postureProtocolGroups?.[0]?.sourceProtocolId;
+  })).toBe('THORACIC_001');
+  await page.reload();
+  await expect(groups.nth(0)).toHaveAttribute('data-testid', 'template-posture-group-THORACIC_001');
+
+  await page.getByRole('button', { name: '删除 头前移与圆肩含胸靠墙控制方案' }).click();
+  await page.getByRole('button', { name: '保存模板', exact: true }).click();
+  await expect(page).toHaveURL(/\/plan-builder$/);
+  const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('musclemap.trainingTemplates.v1') ?? '[]')[0]);
+  expect(stored.items).toEqual([]);
+  expect(stored.postureProtocolGroups).toHaveLength(1);
+  expect(stored.postureProtocolGroups[0]).toMatchObject({ sourceProtocolId: 'THORACIC_001', order: 0 });
+});
+
 test('blocks invalid template prescription values before save', async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem('musclemap.trainingTemplates.v1', JSON.stringify([{
     id: 'template-1',
@@ -490,6 +730,62 @@ test('starts a template workout and records template usage when no workout is ac
   expect(state.templates[0].lastUsedAt).toEqual(expect.any(String));
 });
 
+test('starts a posture-only template with fresh group and exercise ids linked one-to-one', async ({ page }) => {
+  await page.addInitScript(({ templateFixture, postureGroupFixture }) => {
+    localStorage.removeItem('musclemap.activeWorkout.v0.7');
+    localStorage.setItem('musclemap.trainingTemplates.v1', JSON.stringify([{
+      ...templateFixture,
+      name: '体态筛查模板',
+      items: [],
+      postureProtocolGroups: [postureGroupFixture]
+    }]));
+  }, { templateFixture, postureGroupFixture });
+  await page.goto('/plan-builder');
+
+  const card = page.getByTestId('training-template-template-1');
+  await expect(card).toContainText('1 个体态方案');
+  await card.getByRole('button', { name: '开始 体态筛查模板' }).click();
+  await expect(page).toHaveURL(/\/workout-log$/);
+
+  const workout = await page.evaluate(() => JSON.parse(localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null'));
+  const group = workout.postureProtocolGroups[0];
+  expect(group.instanceId).not.toBe(postureGroupFixture.instanceId);
+  expect(group.exerciseInstanceIds).toHaveLength(postureGroupFixture.exerciseInstanceIds.length);
+  expect(group.exerciseInstanceIds[0]).not.toBe(postureGroupFixture.exerciseInstanceIds[0]);
+  expect(group.exerciseSnapshots.map((snapshot: { instanceId: string }) => snapshot.instanceId)).toEqual(group.exerciseInstanceIds);
+  expect(group.stepSnapshots[0].exerciseInstanceId).toBe(group.exerciseInstanceIds[0]);
+  expect(workout.exercises.map((exercise: { id: string }) => exercise.id)).toEqual(group.exerciseInstanceIds);
+  expect(workout.exercises[0]).toMatchObject({ postureProtocolInstanceId: group.instanceId, source: 'template' });
+});
+
+test('validated v7 backups restore template posture snapshots to local storage', async ({ page }) => {
+  await page.goto('/');
+  const restored = await page.evaluate(async ({ templateFixture, postureGroupFixture }) => {
+    const backupPath = '/src/utils/backup.ts';
+    const templatesPath = '/src/utils/trainingTemplates.ts';
+    const backup = await import(/* @vite-ignore */ backupPath) as typeof import('../utils/backup');
+    const templates = await import(/* @vite-ignore */ templatesPath) as typeof import('../utils/trainingTemplates');
+    const text = JSON.stringify({
+      app: 'MuscleMap Fitness', exportVersion: 7, exportedAt: '2026-07-22T12:00:00.000Z',
+      data: {
+        latestGeneratedPlan: null, workoutLogs: [], latestWorkoutLog: null, bodySnapshots: [],
+        trainingTemplates: [{ ...templateFixture, postureProtocolGroups: [postureGroupFixture] }],
+        postureAssessments: [], posturePlans: [], postureFeedback: [], postureScreeningSessions: []
+      }
+    });
+    const validated = backup.validateBackupText(text);
+    if (!validated.ok) throw new Error(validated.error);
+    localStorage.removeItem(templates.TRAINING_TEMPLATES_STORAGE_KEY);
+    return {
+      applied: backup.applyBackupData(validated.backup.data),
+      templates: templates.readTrainingTemplates()
+    };
+  }, { templateFixture, postureGroupFixture });
+
+  expect(restored.applied).toBe(true);
+  expect(restored.templates[0].postureProtocolGroups).toEqual([postureGroupFixture]);
+});
+
 test('preserves an existing active workout when starting a template', async ({ page }) => {
   await page.addInitScript(() => {
     localStorage.setItem('musclemap.trainingTemplates.v1', JSON.stringify([{
@@ -532,7 +828,7 @@ test('preserves an existing active workout when starting a template', async ({ p
 });
 
 test('current backup validates training templates and keeps legacy imports compatible', () => {
-  expect(BACKUP_EXPORT_VERSION).toBe(6);
+  expect(BACKUP_EXPORT_VERSION).toBe(7);
   const commonData = {
     latestGeneratedPlan: null,
     workoutLogs: [],

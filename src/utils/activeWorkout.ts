@@ -245,6 +245,8 @@ export function createActiveWorkoutFromPlanDay(plan: GeneratedPlan, day: Generat
 
 export function createActiveWorkoutFromTemplate(template: TrainingTemplate, now = new Date()): ActiveWorkout {
   const timestamp = now.toISOString();
+  const templateExercises = [...template.items].sort((left, right) => left.order - right.order).map(mapTrainingTemplateItemToActiveWorkoutExercise);
+  const instantiatedPosture = instantiateTemplatePostureGroups(template.postureProtocolGroups, templateExercises.length, now);
   return {
     id: createId('active-workout'),
     status: 'active',
@@ -252,9 +254,95 @@ export function createActiveWorkoutFromTemplate(template: TrainingTemplate, now 
     trainingDate: getLocalDateKeyFromDate(now),
     source: 'template',
     templateId: template.id,
-    exercises: [...template.items].sort((left, right) => left.order - right.order).map(mapTrainingTemplateItemToActiveWorkoutExercise),
+    exercises: [...templateExercises, ...instantiatedPosture.exercises],
+    ...(instantiatedPosture.groups ? { postureProtocolGroups: instantiatedPosture.groups } : {}),
     createdAt: timestamp,
     updatedAt: timestamp
+  };
+}
+
+function instantiateTemplatePostureGroups(
+  groups: PostureProtocolWorkoutSnapshot[] | undefined,
+  exerciseOffset: number,
+  now: Date
+): { groups?: PostureProtocolWorkoutSnapshot[]; exercises: ActiveWorkoutExercise[] } {
+  if (!groups?.length) return { exercises: [] };
+  const exercises: ActiveWorkoutExercise[] = [];
+  const instantiatedGroups = [...groups].sort((left, right) => left.order - right.order).flatMap((group, order) => {
+    const instanceId = createId('posture-protocol');
+    const snapshotsById = new Map(group.exerciseSnapshots.map((snapshot) => [snapshot.instanceId, snapshot]));
+    const exerciseIdMap = new Map<string, string>();
+    const groupExercises = group.exerciseInstanceIds.flatMap((templateExerciseId) => {
+      const snapshot = snapshotsById.get(templateExerciseId);
+      if (!snapshot) return [];
+      const exercise = createActiveWorkoutExercise(
+        snapshot.exerciseId,
+        exerciseOffset + exercises.length,
+        'template',
+        getInitialTemplatePostureSetCount(snapshot)
+      );
+      exercise.postureProtocolInstanceId = instanceId;
+      if (snapshot.dose?.durationSeconds !== undefined || snapshot.dose?.durationRangeSeconds !== undefined || snapshot.prescription.durationSeconds !== null) {
+        exercise.setEntryMode = 'duration';
+      }
+      exercise.planned = getTemplatePosturePlannedDose(snapshot);
+      exerciseIdMap.set(templateExerciseId, exercise.id);
+      exercises.push(exercise);
+      return [exercise];
+    });
+    if (groupExercises.length === 0) return [];
+
+    const exerciseInstanceIds = group.exerciseInstanceIds.flatMap((templateExerciseId) => {
+      const exerciseInstanceId = exerciseIdMap.get(templateExerciseId);
+      return exerciseInstanceId ? [exerciseInstanceId] : [];
+    });
+    return [{
+      ...group,
+      instanceId,
+      addedAt: now.toISOString(),
+      order,
+      targetIssueNamesSnapshot: [...group.targetIssueNamesSnapshot],
+      limitationsSnapshot: group.limitationsSnapshot ? [...group.limitationsSnapshot] : undefined,
+      exerciseInstanceIds,
+      exerciseSnapshots: group.exerciseSnapshots.flatMap((snapshot) => {
+        const exerciseInstanceId = exerciseIdMap.get(snapshot.instanceId);
+        return exerciseInstanceId ? [{
+          ...snapshot,
+          instanceId: exerciseInstanceId,
+          prescription: { ...snapshot.prescription },
+          specialCues: [...snapshot.specialCues],
+          dose: cloneDose(snapshot.dose)
+        }] : [];
+      }),
+      stepSnapshots: group.stepSnapshots?.map((snapshot) => ({
+        ...snapshot,
+        exerciseInstanceId: snapshot.exerciseInstanceId ? exerciseIdMap.get(snapshot.exerciseInstanceId) : undefined,
+        includedInWorkout: snapshot.kind === 'exercise' && snapshot.includedInWorkout
+          ? Boolean(snapshot.exerciseInstanceId && exerciseIdMap.has(snapshot.exerciseInstanceId))
+          : snapshot.includedInWorkout,
+        dose: cloneDose(snapshot.dose),
+        notes: snapshot.notes ? [...snapshot.notes] : undefined
+      }))
+    }];
+  });
+  return { groups: instantiatedGroups.length ? instantiatedGroups : undefined, exercises };
+}
+
+function getInitialTemplatePostureSetCount(snapshot: PostureProtocolExerciseSnapshot) {
+  if (typeof snapshot.dose?.sets === 'number') return snapshot.dose.sets;
+  if (typeof snapshot.prescription.sets === 'number') return snapshot.prescription.sets;
+  return getInitialPostureSetCount(snapshot.dose);
+}
+
+function getTemplatePosturePlannedDose(snapshot: PostureProtocolExerciseSnapshot): ActiveWorkoutExercise['planned'] {
+  const fromDose = getPosturePlannedDose(snapshot.dose) ?? {};
+  return {
+    ...fromDose,
+    ...(fromDose.sets === undefined && snapshot.prescription.sets !== null ? { sets: snapshot.prescription.sets } : {}),
+    ...(fromDose.repRange === undefined && snapshot.prescription.reps !== null ? { repRange: String(snapshot.prescription.reps) } : {}),
+    ...(fromDose.durationSeconds === undefined && snapshot.prescription.durationSeconds !== null ? { durationSeconds: snapshot.prescription.durationSeconds } : {}),
+    ...(snapshot.prescription.restSeconds !== null ? { restSeconds: snapshot.prescription.restSeconds } : {}),
+    ...(fromDose.note === undefined && snapshot.sourceOriginalText ? { note: snapshot.sourceOriginalText } : {})
   };
 }
 

@@ -3,6 +3,7 @@ import type { PostureMovementAction, PostureVisibleSide } from '../../../../type
 import { DYNAMIC_MOVEMENT_CONFIGS } from '../analysis/analysisConfig';
 import { useDynamicPostureCapture } from '../hooks/useDynamicPostureCapture';
 import DynamicAnalysisResult from './DynamicAnalysisResult';
+import ResponsiveCameraStage from './ResponsiveCameraStage';
 
 interface DynamicCaptureLabProps {
   inferenceApiUrl?: string;
@@ -26,6 +27,7 @@ export default function DynamicCaptureLab({ inferenceApiUrl, onBack }: DynamicCa
     capture.reset();
     onBack();
   };
+  const cameraImmersive = capture.stage === 'ready' || capture.stage === 'countdown' || capture.stage === 'capturing';
   return (
     <div>
       <button type="button" onClick={back} className="mb-5 min-h-11 text-sm font-bold text-zinc-300">← 返回静态拍摄</button>
@@ -53,16 +55,26 @@ export default function DynamicCaptureLab({ inferenceApiUrl, onBack }: DynamicCa
       )}
 
       <section className="mt-5 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950">
-        <div className="relative aspect-square bg-black">
-          <video ref={videoRef} muted playsInline className="h-full w-full object-contain" />
+        <ResponsiveCameraStage videoRef={videoRef} active={cameraImmersive} mirrored immersive={cameraImmersive}>
+          <div className="pointer-events-none absolute inset-0" data-testid="dynamic-camera-stage">
+            {cameraImmersive && (
+              <div className="pointer-events-auto absolute inset-x-3 top-[max(0.75rem,env(safe-area-inset-top))] z-20 flex items-center justify-between gap-3" data-testid="dynamic-floating-controls">
+                <button type="button" onClick={back} className="min-h-10 rounded-xl bg-zinc-950/85 px-3 text-xs font-black text-zinc-100 backdrop-blur-md">返回</button>
+                <div className="rounded-xl bg-zinc-950/85 px-3 py-2 text-xs font-black text-lime-200 backdrop-blur-md">{capture.config.label}</div>
+              </div>
+            )}
           {capture.stage === 'countdown' && <div className="absolute inset-0 grid place-items-center bg-black/60"><div className="text-center"><p className="text-sm font-black text-zinc-100">准备倒计时</p><p className="mt-2 text-6xl font-black text-lime-300">{capture.countdownRemaining}</p></div></div>}
           {capture.stage === 'capturing' && currentCue && <div className="absolute inset-x-3 bottom-3 rounded-xl bg-black/75 p-4 text-center"><p className="text-xs font-black text-lime-300">{currentCue.label}</p><p className="mt-1 text-base font-black text-white">{currentCue.instruction}</p><div className="mt-3 h-1.5 overflow-hidden rounded-full bg-zinc-700"><div className="h-full bg-lime-300" style={{ width: `${Math.min(100, capture.elapsedMs / capture.config.durationMs * 100)}%` }} /></div></div>}
-        </div>
+            {capture.stage === 'ready' && (
+              <button type="button" onClick={capture.startCapture} className="pointer-events-auto absolute inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] min-h-12 rounded-xl bg-lime-300 px-4 font-black text-zinc-950">开始一次完整动作</button>
+            )}
+          </div>
+        </ResponsiveCameraStage>
         <div className="p-4">
           {capture.stage === 'idle' || capture.stage === 'requesting-camera' || capture.stage === 'error' ? (
             <button type="button" onClick={() => void capture.startCamera()} disabled={capture.stage === 'requesting-camera' || (action === 'neck-retraction' && !visibleSide)} className="min-h-12 w-full rounded-xl bg-lime-300 px-4 font-black text-zinc-950 disabled:opacity-50">打开动态实验摄像头</button>
           ) : capture.stage === 'ready' ? (
-            <button type="button" onClick={capture.startCapture} className="min-h-12 w-full rounded-xl bg-lime-300 px-4 font-black text-zinc-950">开始一次完整动作</button>
+            null
           ) : capture.stage === 'captured' || capture.stage === 'submitting' ? (
             <div>
               <p className="text-center text-xs text-zinc-400">浏览器采集 {capture.rawFrameCount} 帧 · 送入 RTMPose {capture.frames.length} 帧</p>

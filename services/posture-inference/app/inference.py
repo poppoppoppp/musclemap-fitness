@@ -37,6 +37,12 @@ class InferenceOutput:
     pose_time_ms: float
 
 
+@dataclass(frozen=True)
+class DetectionSelection:
+    primary: DetectionCandidate
+    ignored: list[DetectionCandidate]
+
+
 class PersonDetector(Protocol):
     def detect(self, image: NDArray[np.uint8]) -> list[DetectionCandidate]: ...
 
@@ -53,12 +59,16 @@ class InferenceEngine:
         *,
         detection_score_threshold: float,
         keypoint_score_threshold: float,
+        secondary_person_score_ratio_threshold: float = 0.65,
+        secondary_person_area_ratio_threshold: float = 0.25,
         synchronize: Callable[[], None] | None = None,
     ) -> None:
         self.detector = detector
         self.pose_estimator = pose_estimator
         self.detection_score_threshold = detection_score_threshold
         self.keypoint_score_threshold = keypoint_score_threshold
+        self.secondary_person_score_ratio_threshold = secondary_person_score_ratio_threshold
+        self.secondary_person_area_ratio_threshold = secondary_person_area_ratio_threshold
         self.synchronize = synchronize or (lambda: None)
 
     def infer(self, image: NDArray[np.uint8]) -> InferenceOutput:
@@ -67,25 +77,13 @@ class InferenceEngine:
         detections = self.detector.detect(image)
         self.synchronize()
         detection_time_ms = (perf_counter() - detection_started) * 1000
-        eligible = [detection for detection in detections if detection.score >= self.detection_score_threshold]
-        if not eligible:
-            raise InferenceServiceError(
-                code="NO_PERSON_DETECTED",
-                message="No person met the detector confidence threshold.",
-                status_code=422,
-                retryable=True,
-                details={"detectionScoreThreshold": self.detection_score_threshold},
-            )
-        if len(eligible) > 1:
-            raise InferenceServiceError(
-                code="MULTIPLE_PEOPLE_DETECTED",
-                message="More than one person met the detector confidence threshold.",
-                status_code=422,
-                retryable=True,
-                details={"personCount": len(eligible), "detectionScoreThreshold": self.detection_score_threshold},
-            )
-
-        detection = eligible[0]
+        selection = select_dominant_person(
+            detections,
+            detection_score_threshold=self.detection_score_threshold,
+            secondary_score_ratio_threshold=self.secondary_person_score_ratio_threshold,
+            secondary_area_ratio_threshold=self.secondary_person_area_ratio_threshold,
+        )
+        detection = selection.primary
         self.synchronize()
         pose_started = perf_counter()
         pose = self.pose_estimator.infer(image, detection)
@@ -112,6 +110,20 @@ class InferenceEngine:
         ]
         low_confidence = [point.index for point in keypoints if point.score < self.keypoint_score_threshold]
         warnings = []
+        if selection.ignored:
+            warnings.append(
+                AnalysisWarning(
+                    code="IGNORED_WEAK_PERSON_CANDIDATE",
+                    severity="warning",
+                    message=f"Ignored {len(selection.ignored)} weak or small secondary person candidate(s).",
+                    details=_selection_diagnostics(
+                        detection,
+                        selection.ignored,
+                        secondary_score_ratio_threshold=self.secondary_person_score_ratio_threshold,
+                        secondary_area_ratio_threshold=self.secondary_person_area_ratio_threshold,
+                    ),
+                )
+            )
         if low_confidence:
             warnings.append(
                 AnalysisWarning(
@@ -134,6 +146,94 @@ class InferenceEngine:
             detection_time_ms=detection_time_ms,
             pose_time_ms=pose_time_ms,
         )
+
+
+def select_dominant_person(
+    detections: list[DetectionCandidate],
+    *,
+    detection_score_threshold: float,
+    secondary_score_ratio_threshold: float,
+    secondary_area_ratio_threshold: float,
+) -> DetectionSelection:
+    eligible = sorted(
+        (detection for detection in detections if detection.score >= detection_score_threshold),
+        key=lambda detection: detection.score,
+        reverse=True,
+    )
+    if not eligible:
+        raise InferenceServiceError(
+            code="NO_PERSON_DETECTED",
+            message="No person met the detector confidence threshold.",
+            status_code=422,
+            retryable=True,
+            details={"detectionScoreThreshold": detection_score_threshold},
+        )
+
+    primary = eligible[0]
+    secondary = eligible[1:]
+    plausible_secondary = [
+        candidate
+        for candidate in secondary
+        if _score_ratio(candidate, primary) >= secondary_score_ratio_threshold
+        and _area_ratio(candidate, primary) >= secondary_area_ratio_threshold
+    ]
+    if plausible_secondary:
+        raise InferenceServiceError(
+            code="MULTIPLE_PEOPLE_DETECTED",
+            message="More than one plausible person met the detector policy.",
+            status_code=422,
+            retryable=True,
+            details={
+                "personCount": 1 + len(plausible_secondary),
+                "eligibleCandidateCount": len(eligible),
+                "detectionScoreThreshold": detection_score_threshold,
+                **_selection_diagnostics(
+                    primary,
+                    secondary,
+                    secondary_score_ratio_threshold=secondary_score_ratio_threshold,
+                    secondary_area_ratio_threshold=secondary_area_ratio_threshold,
+                ),
+            },
+        )
+    return DetectionSelection(primary=primary, ignored=secondary)
+
+
+def _selection_diagnostics(
+    primary: DetectionCandidate,
+    secondary: list[DetectionCandidate],
+    *,
+    secondary_score_ratio_threshold: float,
+    secondary_area_ratio_threshold: float,
+) -> dict[str, object]:
+    return {
+        "primaryScore": primary.score,
+        "secondaryScoreRatioThreshold": secondary_score_ratio_threshold,
+        "secondaryAreaRatioThreshold": secondary_area_ratio_threshold,
+        "secondaryCandidates": [
+            {
+                "score": candidate.score,
+                "scoreRatio": _score_ratio(candidate, primary),
+                "areaRatio": _area_ratio(candidate, primary),
+                "boundingBox": {
+                    "x": candidate.x1,
+                    "y": candidate.y1,
+                    "width": candidate.x2 - candidate.x1,
+                    "height": candidate.y2 - candidate.y1,
+                },
+            }
+            for candidate in secondary
+        ],
+    }
+
+
+def _score_ratio(candidate: DetectionCandidate, primary: DetectionCandidate) -> float:
+    return candidate.score / primary.score if primary.score > 0 else 0.0
+
+
+def _area_ratio(candidate: DetectionCandidate, primary: DetectionCandidate) -> float:
+    primary_area = max(0.0, primary.x2 - primary.x1) * max(0.0, primary.y2 - primary.y1)
+    candidate_area = max(0.0, candidate.x2 - candidate.x1) * max(0.0, candidate.y2 - candidate.y1)
+    return candidate_area / primary_area if primary_area > 0 else 0.0
 
 
 class OpenMMLabDetector:
@@ -197,6 +297,8 @@ def load_openmmlab_engine(
     pose_checkpoint: Path,
     device: str,
     detection_score_threshold: float,
+    secondary_person_score_ratio_threshold: float,
+    secondary_person_area_ratio_threshold: float,
     keypoint_score_threshold: float,
 ) -> InferenceEngine:
     from mmdet.utils import register_all_modules as register_mmdet_modules
@@ -216,6 +318,8 @@ def load_openmmlab_engine(
         detector,
         pose_estimator,
         detection_score_threshold=detection_score_threshold,
+        secondary_person_score_ratio_threshold=secondary_person_score_ratio_threshold,
+        secondary_person_area_ratio_threshold=secondary_person_area_ratio_threshold,
         keypoint_score_threshold=keypoint_score_threshold,
         synchronize=synchronize,
     )

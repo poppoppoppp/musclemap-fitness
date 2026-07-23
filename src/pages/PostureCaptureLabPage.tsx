@@ -85,6 +85,25 @@ export default function PostureCaptureLabPage() {
             clockMs={lab.clockMs}
             active={lab.stage === 'live'}
             stanceCalibration={lab.stanceCalibration}
+            controls={lab.stage === 'live' ? (
+              <div data-testid="capture-floating-controls">
+                <div className="mb-2 flex items-center justify-between gap-2">
+                  <button type="button" onClick={leave} className="min-h-10 rounded-xl bg-zinc-950/85 px-3 text-xs font-black text-zinc-100 backdrop-blur-md">返回</button>
+                  <div className="rounded-xl bg-zinc-950/85 px-3 py-2 text-[11px] font-black text-lime-200 backdrop-blur-md">
+                    {lab.model === 'full' ? 'Full 模型' : 'Lite 模型'} / Web Worker
+                  </div>
+                  {lab.model === 'full' ? (
+                    <button type="button" onClick={() => setConfirmLite(true)} className="min-h-10 rounded-xl bg-zinc-950/85 px-3 text-xs font-black text-zinc-100 backdrop-blur-md">使用 Lite</button>
+                  ) : <span className="w-[4.6rem]" aria-hidden="true" />}
+                </div>
+                <ModeSelector mode={lab.mode} onChange={lab.changeMode} compact />
+                {lab.performanceWarning && lab.model === 'full' && (
+                  <p className="mt-2 rounded-xl border border-amber-300/30 bg-zinc-950/90 px-3 py-2 text-[11px] leading-4 text-amber-100" role="status">
+                    Full 模型实时帧率较低，可继续拍摄或主动切换 Lite。
+                  </p>
+                )}
+              </div>
+            ) : undefined}
           />
 
           {lab.stage !== 'live' && (
@@ -112,7 +131,7 @@ export default function PostureCaptureLabPage() {
 
 function LiteConfirmation({ onCancel, onConfirm }: { onCancel: () => void; onConfirm: () => void }) {
   return (
-    <div className="fixed inset-0 z-50 grid place-items-end bg-black/70 p-4 sm:place-items-center" role="presentation">
+    <div className="fixed inset-0 z-[80] grid place-items-end bg-black/70 p-4 sm:place-items-center" role="presentation">
       <section className="w-full max-w-md rounded-2xl border border-zinc-700 bg-zinc-950 p-5 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="lite-confirm-title">
         <p className="text-xs font-black tracking-[0.12em] text-lime-300">运行模式切换</p>
         <h2 id="lite-confirm-title" className="mt-2 text-xl font-black text-zinc-100">改用 Lite 模型？</h2>
@@ -161,7 +180,7 @@ function Intro({ mode, onModeChange, onStart, onDynamic }: { mode: CaptureLabMod
   );
 }
 
-function ModeSelector({ mode, onChange }: { mode: CaptureLabMode; onChange: (mode: CaptureLabMode) => void }) {
+function ModeSelector({ mode, onChange, compact = false }: { mode: CaptureLabMode; onChange: (mode: CaptureLabMode) => void; compact?: boolean }) {
   return (
     <div className="grid grid-cols-3 gap-2" aria-label="拍摄模式">
       {MODES.map((item) => (
@@ -170,10 +189,10 @@ function ModeSelector({ mode, onChange }: { mode: CaptureLabMode; onChange: (mod
           type="button"
           onClick={() => onChange(item.id)}
           aria-pressed={mode === item.id}
-          className={`min-h-[4.25rem] rounded-xl border px-2 py-2 text-left active:translate-y-px ${mode === item.id ? 'border-lime-300 bg-lime-300 text-zinc-950' : 'border-zinc-800 bg-zinc-950 text-zinc-200'}`}
+          className={`${compact ? 'min-h-10 text-center backdrop-blur-md' : 'min-h-[4.25rem] text-left'} rounded-xl border px-2 py-2 active:translate-y-px ${mode === item.id ? 'border-lime-300 bg-lime-300 text-zinc-950' : 'border-zinc-700 bg-zinc-950/85 text-zinc-200'}`}
         >
           <span className="block text-sm font-black">{item.label}</span>
-          <span className={`mt-1 block text-[10px] leading-4 ${mode === item.id ? 'text-zinc-800' : 'text-zinc-500'}`}>{item.help}</span>
+          {!compact && <span className={`mt-1 block text-[10px] leading-4 ${mode === item.id ? 'text-zinc-800' : 'text-zinc-500'}`}>{item.help}</span>}
         </button>
       ))}
     </div>
@@ -205,7 +224,7 @@ function Info({ label, value }: { label: string; value: string }) {
 
 function PageShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="workout-dark relative -mx-4 -mt-5 min-h-[calc(100dvh-5rem)] bg-[#080a08] px-4 pb-16 pt-6 text-white sm:-mx-6 sm:px-6">
+    <div className="workout-dark relative min-h-screen bg-[#080a08] px-4 pb-16 pt-6 text-white sm:px-6">
       <main className="mx-auto w-full max-w-[720px]">{children}</main>
     </div>
   );

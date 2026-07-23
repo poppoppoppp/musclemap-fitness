@@ -18,7 +18,7 @@ export interface MuscleMapBackupData {
 
 export interface MuscleMapBackupFile {
   app: 'MuscleMap Fitness';
-  exportVersion: 1 | 2 | 3 | 4 | 5 | 6;
+  exportVersion: 1 | 2 | 3 | 4 | 5 | 6 | 7;
   exportedAt: string;
   data: MuscleMapBackupData;
 }

@@ -73,7 +73,7 @@ async function completeFunctionalOnlyScreening(page: import('@playwright/test').
   await page.getByRole('button', { name: '继续引导观察' }).click();
   await page.getByLabel('上举时头部会向前移动').check();
   await page.getByRole('button', { name: '保存观察结果' }).click();
-  await page.getByRole('button', { name: '暂不使用照片，生成结果' }).click();
+  await page.getByRole('button', { name: '当前设备无法采集，暂不进行自动采集' }).click();
 }
 
 async function completeBoundaryStop(page: import('@playwright/test').Page) {

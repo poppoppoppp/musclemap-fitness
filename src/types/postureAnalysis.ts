@@ -196,6 +196,7 @@ export interface PostureInferenceWarning {
   severity: 'info' | 'warning';
   message: string;
   keypointIndices: number[];
+  details?: Record<string, unknown>;
 }
 
 export interface PostureKeypointResponse {
@@ -289,6 +290,7 @@ export interface PostureMovementFrameResult {
   person: { boundingBox: PostureInferenceBoundingBox; keypoints: PostureInferenceKeypoint[] } | null;
   timingMs: PostureInferenceTiming | null;
   error: PostureInferenceErrorBody['error'] | null;
+  warnings: PostureInferenceWarning[];
 }
 
 export interface PostureProcessedMovementFrame {

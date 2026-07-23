@@ -103,6 +103,28 @@ def test_squat_and_neck_retraction_use_action_specific_drivers() -> None:
     assert all("right_" not in name for name in neck.required_keypoints)
 
 
+def test_squat_segmentation_is_invariant_to_detector_box_translation() -> None:
+    depths = [0, 0, 0.1, 0.3, 0.6, 0.9, 1, 1, 0.95, 0.7, 0.4, 0.15, 0, 0]
+    frames = []
+    for index, depth in enumerate(depths):
+        frame = squat_frame(index, index * 300, depth)
+        hip_y = 85 + depth * 38
+        frames.append(
+            MovementInputFrame(
+                index=frame.index,
+                timestamp_ms=frame.timestamp_ms,
+                keypoints=frame.keypoints,
+                bounding_box=(10, hip_y - 90, 100, 180),
+            )
+        )
+
+    result = analyze_movement(frames, action="bodyweight-squat", view="front")
+
+    assert result.status == "valid"
+    assert result.phases.status == "complete"
+    assert movement_metric(result, "hold-stability").values[0].unit == "percent-shoulder-width"
+
+
 def test_missing_or_low_confidence_required_points_invalidate_only_real_frames() -> None:
     frames = [arm_frame(index, index * 250, angle) for index, angle in enumerate([0, 0, 30, 90, 160, 170, 170, 120, 50, 10, 0])]
     points = list(frames[4].keypoints)

@@ -59,6 +59,8 @@ def create_runtime(config: ServiceConfig) -> RuntimeBundle:
         pose_checkpoint=pose_artifact.path,
         device=config.device,
         detection_score_threshold=config.detection_score_threshold,
+        secondary_person_score_ratio_threshold=config.secondary_person_score_ratio_threshold,
+        secondary_person_area_ratio_threshold=config.secondary_person_area_ratio_threshold,
         keypoint_score_threshold=config.keypoint_score_threshold,
     )
     if config.device.startswith("cuda"):

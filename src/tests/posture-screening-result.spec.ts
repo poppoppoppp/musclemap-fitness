@@ -85,6 +85,65 @@ test('renders an answer-first completed report with evidence, limits, sources, a
   await expect(page.getByTestId('screening-terminal')).toContainText('头位前移伴上段控制负担倾向');
 });
 
+test('renders the frozen automated capture and recommendation snapshots and adds the protocol to the current workout', async ({ page }) => {
+  const id = await createSession(page, 'functional-only');
+  await page.evaluate(({ id }) => {
+    const sessions = JSON.parse(localStorage.getItem('musclemap.postureScreeningSessions.v1') ?? '[]');
+    const session = sessions.find((item: { id: string }) => item.id === id);
+    session.captureSnapshot = {
+      protocolVersion: 'automated-posture-capture-v1', validity: 'partial', completedAt: '2026-07-22T10:00:00.000Z',
+      staticCaptures: [{ view: 'front', visibleSide: null, status: 'partial', quality: { completeness: 1, landmarkReliability: 0.96, sharpness: 0.88, stability: 0.94, failedRules: [] }, warnings: [{ code: 'LOW_CONFIDENCE', severity: 'warning', message: '部分关键点置信度偏低' }], model: { id: 'rtmpose', version: '1.3.2', checkpointSha256: 'pose-hash' }, detector: { id: 'rtmdet', version: '1.0', checkpointSha256: 'detector-hash' }, metrics: [{ metricId: 'shoulder-angle', label: '肩线角度', status: 'valid', quality: 'valid', values: [{ label: 'angle', value: 2.4, unit: 'deg' }], confidence: 0.91, unavailableReasons: [], formula: 'angle', analysisVersion: 'static-v1', modelId: 'rtmpose', modelVersion: '1.3.2' }, { metricId: 'head-tilt', label: '头部倾斜', status: 'unavailable', quality: 'invalid', values: [], confidence: null, unavailableReasons: ['OCCLUDED'], formula: 'angle', analysisVersion: 'static-v1', modelId: 'rtmpose', modelVersion: '1.3.2' }] }],
+      movements: [{ action: 'bodyweight-squat', view: 'front', visibleSide: null, status: 'valid', submittedFrames: 40, validFrames: 40, phases: { status: 'complete', startIndex: 1, peakIndex: 20, returnIndex: 39, holdIndices: [], reasons: [] }, warnings: [], model: { id: 'rtmpose', version: '1.3.2', checkpointSha256: 'pose-hash' }, detector: { id: 'rtmdet', version: '1.0', checkpointSha256: 'detector-hash' }, metrics: [{ metricId: 'knee-range-difference', label: '左右膝范围差', status: 'valid', quality: 'valid', values: [{ label: 'difference', value: 1.3, unit: 'deg' }], confidence: 0.95, unavailableReasons: [], formula: 'difference', analysisVersion: 'movement-v1', modelId: 'rtmpose', modelVersion: '1.3.2' }] }],
+    };
+    session.recommendationSnapshots = [{ patternId: 'forward-head-upper-quarter-tendency', status: 'available', issueNames: ['头位前移倾向'], protocolId: 'UPPER_POSTURE_001', protocolTitle: '头前移与圆肩含胸靠墙控制方案', userFacingGoal: '改善上半身体态控制', limitations: ['不构成医学诊断'], reason: '白名单命中' }];
+    localStorage.setItem('musclemap.postureScreeningSessions.v1', JSON.stringify(sessions));
+  }, { id });
+  await page.goto(`/growth/posture/results/${id}`);
+  await expect(page.getByRole('heading', { name: '自动采集快照' })).toBeVisible();
+  await expect(page.getByTestId('capture-snapshot-report')).toContainText('部分有效');
+  await expect(page.getByTestId('capture-snapshot-report')).toContainText('正面静态');
+  await expect(page.getByTestId('capture-snapshot-report')).toContainText('徒手深蹲');
+  await expect(page.getByTestId('capture-snapshot-report')).toContainText('LOW_CONFIDENCE');
+  await expect(page.getByTestId('capture-snapshot-report')).toContainText('OCCLUDED');
+  await expect(page.getByTestId('capture-snapshot-report')).toContainText('pose-hash');
+  await expect(page.getByRole('heading', { name: '推荐体态改善方案' })).toBeVisible();
+  await page.getByRole('button', { name: '加入当前训练' }).click();
+  await expect(page.getByRole('status')).toContainText('已加入当前训练');
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('musclemap.activeWorkout.v0.7') ?? 'null')?.postureProtocolGroups?.[0]?.sourceProtocolId)).toBe('UPPER_POSTURE_001');
+});
+
+test('adds a frozen recommendation to an existing or newly created training template', async ({ page }) => {
+  const id = await createSession(page, 'functional-only');
+  await page.evaluate(({ id }) => {
+    const sessions = JSON.parse(localStorage.getItem('musclemap.postureScreeningSessions.v1') ?? '[]');
+    const session = sessions.find((item: { id: string }) => item.id === id);
+    session.recommendationSnapshots = [{ patternId: 'forward-head-upper-quarter-tendency', status: 'available', issueNames: ['头位前移倾向'], protocolId: 'UPPER_POSTURE_001', protocolTitle: '头前移与圆肩含胸靠墙控制方案', userFacingGoal: '改善上半身体态控制', limitations: ['不构成医学诊断'], reason: '白名单命中' }];
+    localStorage.setItem('musclemap.postureScreeningSessions.v1', JSON.stringify(sessions));
+    localStorage.setItem('musclemap.trainingTemplates.v1', JSON.stringify([{
+      id: 'template-existing', name: '已有训练模板', focusTags: [], items: [],
+      createdAt: '2026-07-22T10:00:00.000Z', updatedAt: '2026-07-22T10:00:00.000Z'
+    }]));
+  }, { id });
+  await page.goto(`/growth/posture/results/${id}`);
+
+  await page.getByRole('button', { name: '加入训练模板' }).click();
+  await page.getByRole('combobox', { name: '选择训练模板' }).selectOption('template-existing');
+  await page.getByRole('button', { name: '加入所选模板' }).click();
+  await expect(page.getByRole('status')).toContainText('已加入训练模板');
+  await expect(page.getByRole('link', { name: '编辑对应模板' })).toHaveAttribute('href', '/templates/template-existing/edit');
+
+  await page.getByRole('button', { name: '加入所选模板' }).click();
+  await expect(page.getByRole('status')).toContainText('该方案已在所选模板中');
+
+  await page.getByRole('textbox', { name: '新模板名称' }).fill('筛查体态模板');
+  await page.getByRole('button', { name: '新建模板并加入' }).click();
+  await expect(page.getByRole('status')).toContainText('新模板已创建并加入方案');
+  const templates = await page.evaluate(() => JSON.parse(localStorage.getItem('musclemap.trainingTemplates.v1') ?? '[]'));
+  expect(templates).toHaveLength(2);
+  expect(templates[0].postureProtocolGroups).toHaveLength(1);
+  expect(templates[1]).toMatchObject({ name: '筛查体态模板', postureProtocolGroups: [{ sourceProtocolId: 'UPPER_POSTURE_001' }] });
+});
+
 for (const [variant, expected] of [
   ['functional-only', '未使用照片，本次结论仅基于主观描述与引导动作'],
   ['mixed-evidence', '暂不强行归为某一种体态倾向'],

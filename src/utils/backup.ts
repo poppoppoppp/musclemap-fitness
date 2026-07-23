@@ -22,7 +22,7 @@ import {
 } from '../repositories/postureScreeningRepository';
 
 export const BACKUP_APP_NAME = 'MuscleMap Fitness';
-export const BACKUP_EXPORT_VERSION = 6;
+export const BACKUP_EXPORT_VERSION = 7;
 export const WORKOUT_LOGS_KEY = 'musclemap.workoutLogs.v0.3';
 export const LATEST_WORKOUT_LOG_KEY = 'musclemap.latestWorkoutLog.v0.3';
 
@@ -115,7 +115,7 @@ export function validateBackupText(text: string): ValidationResult {
 
   if (parsed.app !== BACKUP_APP_NAME) return { ok: false, error: 'wrong-app' };
   const exportVersion = parsed.exportVersion;
-  if (exportVersion !== 1 && exportVersion !== 2 && exportVersion !== 3 && exportVersion !== 4 && exportVersion !== 5 && exportVersion !== BACKUP_EXPORT_VERSION) return { ok: false, error: 'unsupported-version' };
+  if (exportVersion !== 1 && exportVersion !== 2 && exportVersion !== 3 && exportVersion !== 4 && exportVersion !== 5 && exportVersion !== 6 && exportVersion !== BACKUP_EXPORT_VERSION) return { ok: false, error: 'unsupported-version' };
   if (typeof parsed.exportedAt !== 'string' || !isPlainObject(parsed.data)) return { ok: false, error: 'missing-fields' };
 
   const data = parsed.data;

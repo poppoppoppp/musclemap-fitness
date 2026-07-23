@@ -44,6 +44,14 @@ def test_dynamic_endpoint_attempts_each_submitted_frame_once_and_preserves_times
     assert [frame["timestampMs"] for frame in body["frames"]] == timestamps
     assert [frame["status"] for frame in body["frames"]] == ["failed", "valid", "valid"]
     assert body["frames"][0]["error"]["code"] == "NO_PERSON_DETECTED"
+    assert body["frames"][0]["warnings"] == []
+    assert body["frames"][1]["warnings"] == [{
+        "code": "TEST",
+        "severity": "info",
+        "message": "test",
+        "keypointIndices": [],
+        "details": {},
+    }]
     assert len(body["analysis"]["rawFrames"]) == 3
     assert body["analysis"]["rawFrames"][0]["valid"] is False
     assert body["analysis"]["status"] == "incomplete"

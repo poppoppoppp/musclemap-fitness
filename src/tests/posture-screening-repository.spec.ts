@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { PostureScreeningRepository } from '../repositories/postureScreeningRepository';
+import type { PostureRecommendationSnapshot } from '../repositories/postureScreeningRepository';
 import type { PostureScreeningInput } from '../utils/postureScreeningRules';
 import { evaluatePostureScreening } from '../utils/postureScreeningRules';
 
@@ -56,6 +57,75 @@ test('lists immutable completed session snapshots newest first', () => {
   expect(listed.value.map(({ id }) => id)).toEqual([second.session.id, first.session.id]);
   expect(repository.getSession(first.session.id)?.input.subjectiveObservations).toEqual(['head-position-concern']);
   expect(repository.getSession(first.session.id)?.result.reasonCodes).not.toContain('MUTATED_RETURN_VALUE');
+});
+
+test('persists optional automated capture and recommendation snapshots without mutating legacy fields', () => {
+  const storage = new MemoryStorage();
+  const repository = new PostureScreeningRepository(storage, undefined, undefined, () => new Date('2026-07-22T08:00:00.000Z'));
+  const input = screeningInput();
+  const captureSnapshot = makeCaptureSnapshot();
+  const recommendationSnapshots: PostureRecommendationSnapshot[] = [{
+    patternId: 'forward-head-upper-quarter-tendency',
+    status: 'available' as const,
+    issueNames: ['上半身体态控制不足'],
+    protocolId: 'UPPER_POSTURE_001',
+    protocolTitle: '头前移与圆肩含胸靠墙控制方案',
+    userFacingGoal: '改善上半身活动与控制表现',
+    limitations: ['不构成医疗诊断。'],
+    reason: '筛查 finding 命中明确白名单。',
+  }];
+
+  const saved = repository.saveSession({
+    input,
+    result: evaluatePostureScreening(input),
+    photoMeasurements: [],
+    captureSnapshot,
+    recommendationSnapshots,
+  });
+  expect(saved.ok).toBe(true);
+  if (!saved.ok) return;
+
+  captureSnapshot.staticCaptures[0].metrics[0].values[0].value = 999;
+  recommendationSnapshots[0]!.protocolTitle = 'mutated';
+  expect(repository.getSession(saved.session.id)?.captureSnapshot?.staticCaptures[0].metrics[0].values[0].value).toBe(3.18);
+  expect(repository.getSession(saved.session.id)?.recommendationSnapshots?.[0]?.protocolTitle).toBe('头前移与圆肩含胸靠墙控制方案');
+
+  const raw = JSON.parse(storage.getItem('musclemap.postureScreeningSessions.v1') ?? '[]');
+  expect(raw[0].captureSnapshot.staticCaptures[0].model.checkpointSha256).toBe('rtmpose-hash');
+  expect(raw[0].captureSnapshot.staticCaptures[0].detector.checkpointSha256).toBe('rtmdet-hash');
+  expect(JSON.stringify(raw[0])).not.toContain('blob');
+  expect(JSON.stringify(raw[0])).not.toContain('rawFrames');
+  expect(JSON.stringify(raw[0])).not.toContain('keypoints');
+});
+
+test('continues to normalize legacy sessions that omit automated snapshots', () => {
+  const input = screeningInput();
+  const result = evaluatePostureScreening(input);
+  const legacy = {
+    id: 'legacy-session', status: result.status, input, result, photoMeasurements: [],
+    createdAt: '2026-07-17T08:00:00.000Z', updatedAt: '2026-07-17T08:00:00.000Z', completedAt: '2026-07-17T08:00:00.000Z',
+  };
+  const repository = new PostureScreeningRepository(new MemoryStorage({
+    'musclemap.postureScreeningSessions.v1': JSON.stringify([legacy]),
+  }));
+
+  expect(repository.readSessions()).toEqual({ ok: true, value: [legacy] });
+});
+
+test('rejects malformed optional automated snapshots instead of silently accepting them', () => {
+  const input = screeningInput();
+  const result = evaluatePostureScreening(input);
+  const malformed = {
+    id: 'malformed-session', status: result.status, input, result, photoMeasurements: [],
+    captureSnapshot: { protocolVersion: 'wrong-version', staticCaptures: 'not-an-array' },
+    recommendationSnapshots: [{ patternId: 'unknown', status: 'available' }],
+    createdAt: '2026-07-17T08:00:00.000Z', updatedAt: '2026-07-17T08:00:00.000Z', completedAt: '2026-07-17T08:00:00.000Z',
+  };
+  const repository = new PostureScreeningRepository(new MemoryStorage({
+    'musclemap.postureScreeningSessions.v1': JSON.stringify([malformed]),
+  }));
+
+  expect(repository.readSessions()).toEqual({ ok: false, error: 'damaged-storage', value: [] });
 });
 
 test('returns an empty diagnostic result for malformed storage', () => {
@@ -222,4 +292,35 @@ class MemoryStorage implements Storage {
 
 class ThrowingStorage extends MemoryStorage {
   override setItem(): void { throw new Error('quota-exceeded'); }
+}
+
+function makeCaptureSnapshot() {
+  return {
+    protocolVersion: 'automated-posture-capture-v1' as const,
+    validity: 'partial' as const,
+    completedAt: '2026-07-22T08:00:00.000Z',
+    staticCaptures: [{
+      view: 'front' as const,
+      visibleSide: null,
+      status: 'valid' as const,
+      quality: { completeness: 1, landmarkReliability: 0.96, sharpness: 1, stability: 0.98, failedRules: [] },
+      warnings: [{ code: 'IGNORED_WEAK_PERSON_CANDIDATE', severity: 'warning' as const, message: 'Ignored weak candidate.' }],
+      model: { id: 'rtmpose', version: '1.3.2', checkpointSha256: 'rtmpose-hash' },
+      detector: { id: 'rtmdet', version: '3.2.0', checkpointSha256: 'rtmdet-hash' },
+      metrics: [{
+        metricId: 'head-lateral-tilt', label: '头部左右倾斜', status: 'valid' as const, quality: 'valid' as const,
+        values: [{ label: 'angle', value: 3.18, unit: 'degrees' }], confidence: 0.92, unavailableReasons: [],
+        formula: 'atan2(...)', analysisVersion: 'posture-metrics-v1', modelId: 'rtmpose', modelVersion: '1.3.2',
+      }],
+    }],
+    movements: [{
+      action: 'bodyweight-squat' as const, view: 'front' as const, visibleSide: null, status: 'valid' as const,
+      submittedFrames: 40, validFrames: 40,
+      phases: { status: 'complete' as const, startIndex: 0, peakIndex: 20, returnIndex: 39, holdIndices: [20, 21], reasons: [] },
+      warnings: [],
+      model: { id: 'rtmpose', version: '1.3.2', checkpointSha256: 'rtmpose-hash' },
+      detector: { id: 'rtmdet', version: '3.2.0', checkpointSha256: 'rtmdet-hash' },
+      metrics: [],
+    }],
+  };
 }

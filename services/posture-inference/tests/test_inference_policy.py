@@ -61,6 +61,24 @@ def test_rejects_multiple_people_instead_of_selecting_silently() -> None:
     assert pose.calls == 0
 
 
+def test_uses_dominant_person_when_the_only_extra_candidate_is_weak_and_small() -> None:
+    primary = DetectionCandidate(10, 5, 70, 98, 0.95)
+    weak_small_extra = DetectionCandidate(1, 10, 12, 32, 0.31)
+    pose = StubPoseEstimator()
+    engine = InferenceEngine(
+        StubDetector([weak_small_extra, primary]),
+        pose,
+        detection_score_threshold=0.3,
+        keypoint_score_threshold=0.3,
+    )
+
+    result = engine.infer(np.zeros((100, 80, 3), dtype=np.uint8))
+
+    assert pose.last_box == primary
+    assert result.bounding_box.score == primary.score
+    assert [warning.code for warning in result.warnings] == ["IGNORED_WEAK_PERSON_CANDIDATE"]
+
+
 def test_returns_ordered_halpe26_pixels_box_confidence_warnings_and_timings() -> None:
     scores = np.full(26, 0.9)
     scores[[3, 20]] = [0.2, 0.1]

@@ -110,6 +110,7 @@ export default function PlanBuilder() {
                       </div>
                     ) : null}
                     <p className="mt-3 flex items-center gap-2 text-sm text-zinc-400"><DumbbellIcon className="h-4 w-4" /> {template.items.length} 个动作 · {getTotalSets(template)} 组</p>
+                    {(template.postureProtocolGroups?.length ?? 0) > 0 ? <p className="mt-1 text-xs text-lime-200">{template.postureProtocolGroups?.length} 个体态方案</p> : null}
                     <p className="mt-1 text-xs text-zinc-500">{template.lastUsedAt ? `上次使用 ${template.lastUsedAt.slice(0, 10)}` : '尚未使用'}</p>
                   </div>
                 </div>

@@ -1,7 +1,16 @@
-07/20 20:42:26 - mmengine - WARNING - The current default scope "mmpose" is not "mmdet", `init_default_scope` will force set the currentdefault scope to "mmdet".
+07/22 14:36:05 - mmengine - WARNING - The current default scope "mmpose" is not "mmdet", `init_default_scope` will force set the currentdefault scope to "mmdet".
 Loads checkpoint by local backend from path: D:\MuscleMap Fitness\services\posture-inference\models\checkpoints\rtmdet-m_person_640.pth
-07/20 20:42:27 - mmengine - WARNING - The current default scope "mmdet" is not "mmpose", `init_default_scope` will force set the currentdefault scope to "mmpose".
+07/22 14:36:06 - mmengine - WARNING - The current default scope "mmdet" is not "mmpose", `init_default_scope` will force set the currentdefault scope to "mmpose".
 Loads checkpoint by local backend from path: D:\MuscleMap Fitness\services\posture-inference\models\checkpoints\rtmpose-m_body26_256x192.pth
-INFO:     127.0.0.1:64190 - "GET /health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49340 - "POST /v1/posture/analysis/static HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50709 - "POST /v1/posture/keypoints HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62888 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65173 - "POST /v1/posture/keypoints HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52140 - "OPTIONS /v1/posture/analysis/static HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52140 - "POST /v1/posture/analysis/static HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57095 - "POST /v1/posture/keypoints HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53147 - "OPTIONS /v1/posture/analysis/static HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53147 - "POST /v1/posture/analysis/static HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54134 - "POST /v1/posture/analysis/movement HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59954 - "POST /v1/posture/analysis/movement HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55123 - "POST /v1/posture/analysis/movement HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58837 - "POST /v1/posture/analysis/movement HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51889 - "POST /v1/posture/analysis/movement HTTP/1.1" 200 OK

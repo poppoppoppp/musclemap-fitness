@@ -263,6 +263,7 @@ export interface PostureProtocolWorkoutSnapshot {
   nameSnapshot: string;
   targetIssueNamesSnapshot: string[];
   limitationsSnapshot?: string[];
+  sourceSnapshot?: 'posture-screening' | 'posture-library';
   addedAt: string;
   isModified: boolean;
   order: number;

@@ -16,7 +16,7 @@ export default function PostureRetestComparison({ baseline, current }: { baselin
     <section className="mt-5 border-t border-white/10 pt-4" aria-labelledby={`comparison-${current.id}`}>
       <h3 id={`comparison-${current.id}`} className="text-sm font-black text-zinc-100">同方法复测对照</h3>
       <p className="mt-2 text-xs leading-5 text-zinc-400">{comparison.summary}</p>
-      {comparison.measurements.length ? <ul className="mt-3 divide-y divide-white/10 border-y border-white/10">{comparison.measurements.map((measurement) => <li key={measurement.metricId} className="py-3"><p className="text-xs font-black text-zinc-200">{metricLabels[measurement.metricId ?? ''] ?? measurement.metricId}</p><p className="mt-1 text-xs leading-5 text-zinc-400">{measurement.summary}</p></li>)}</ul> : null}
+      {comparison.measurements.length ? <ul className="mt-3 divide-y divide-white/10 border-y border-white/10">{comparison.measurements.map((measurement) => <li key={measurement.comparisonKey ?? measurement.metricId} className="py-3"><p className="text-xs font-black text-zinc-200">{metricLabels[measurement.metricId ?? ''] ?? measurement.metricId}{measurement.valueLabel ? ` · ${measurement.valueLabel}` : ''}</p><p className="mt-1 text-xs leading-5 text-zinc-400">{measurement.summary}</p></li>)}</ul> : null}
     </section>
   );
 }

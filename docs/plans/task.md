@@ -179,8 +179,20 @@
 | Posture metrics batch two: write approved design document | completed |
 | Posture metrics batch two: write TDD implementation plan | completed |
 | Posture metrics batch two: implement pure metric and sequence analysis | completed |
-| Posture metrics batch two: integrate bounded API and Capture Lab UI | in progress |
-| Posture metrics batch two: automated, CPU/GPU, and human verification | pending |
+| Posture metrics batch two: integrate bounded API and Capture Lab UI | completed |
+| Posture metrics batch two: automated, CPU/GPU, and human verification | completed |
 | Capture Lab adaptive front stance calibration: approved design and plan | completed |
 | Capture Lab adaptive front stance calibration: TDD implementation | in progress |
 | Capture Lab adaptive front stance calibration: real-camera verification | pending |
+| Posture dominant subject selection: approved design and TDD plan | completed |
+| Posture dominant subject selection: failing policy tests | completed |
+| Posture dominant subject selection: implementation and regression | completed |
+| Posture dominant subject selection: GPU human retest | completed |
+| Posture squat phase driver: approved design and TDD plan | completed |
+| Posture squat phase driver: moving-box regression test | completed |
+| Posture squat phase driver: implementation and GPU retest | completed |
+| Posture responsive camera stage: approved design and implementation plan | completed |
+| Posture responsive camera stage: shared geometry and constraints | completed |
+| Posture responsive camera stage: static immersive capture | completed |
+| Posture responsive camera stage: dynamic capture reuse | completed |
+| Posture responsive camera stage: desktop/mobile verification | in progress |

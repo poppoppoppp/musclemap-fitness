@@ -3,6 +3,8 @@ import type { PostureScreeningRepository, PostureScreeningSession } from '../../
 import type { PostureEvidenceClass } from '../../types/postureScreening';
 import PostureEvidenceDetails from './PostureEvidenceDetails';
 import PostureNextActions from './PostureNextActions';
+import PostureCaptureSnapshotReport from './PostureCaptureSnapshotReport';
+import PostureRecommendationSnapshots from './PostureRecommendationSnapshots';
 
 interface Props {
   session: PostureScreeningSession;
@@ -73,6 +75,9 @@ export default function PostureAssessmentReport({ session, repository, onSession
         </div>
         {session.result.findings.length ? <div className="mt-6 space-y-3">{session.result.findings.map((finding) => <section key={finding.patternId} className="rounded-xl border border-lime-300/25 bg-lime-300/[0.05] px-4 py-4"><h3 className="font-black text-white">{finding.label}</h3><p className="mt-2 text-sm leading-6 text-zinc-300">{finding.allowedConclusion}</p></section>)}</div> : null}
       </section>
+
+      {session.captureSnapshot ? <PostureCaptureSnapshotReport snapshot={session.captureSnapshot} /> : null}
+      <PostureRecommendationSnapshots recommendations={session.recommendationSnapshots ?? []} />
 
       <section className="mt-8" aria-labelledby="limits-title">
         <h2 id="limits-title" className="text-lg font-black">不能说明什么</h2>

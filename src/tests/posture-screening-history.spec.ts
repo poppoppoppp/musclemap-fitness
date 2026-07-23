@@ -35,6 +35,23 @@ test('refuses trend conclusions when screening or photo methods differ', () => {
   expect(comparePostureScreeningSessions(baseline, invalidCapture)).toMatchObject({ status: 'not-comparable', summary: '任一次照片测量质量无效，不能做趋势判断。' });
 });
 
+test('compares automated metrics only when protocol, method, action, view, metric, value, unit and algorithm all match', () => {
+  const baseline = sessionFixture('baseline', 45);
+  const current = sessionFixture('current', 45, baseline.id);
+  baseline.captureSnapshot = automatedCapture(1.3, 'movement-v1');
+  current.captureSnapshot = automatedCapture(2.1, 'movement-v1');
+  const comparison = comparePostureScreeningSessions(baseline, current);
+  expect(comparison).toMatchObject({ status: 'comparable' });
+  expect(comparison.measurements).toEqual([expect.objectContaining({
+    metricId: 'left-right-knee-range-difference', baseline: 1.3, current: 2.1, unit: 'deg', difference: 0.8,
+    method: 'movement:bodyweight-squat:front:none', valueLabel: 'difference',
+  })]);
+  expect(comparison.measurements[0].summary).toContain('不代表改善、恶化或诊断');
+
+  current.captureSnapshot = automatedCapture(2.1, 'movement-v2');
+  expect(comparePostureScreeningSessions(baseline, current)).toMatchObject({ status: 'not-comparable', measurements: [] });
+});
+
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => {
@@ -125,6 +142,17 @@ function screeningInput(skipPhoto = true): PostureScreeningInput {
     subjectiveObservations: ['head-position-concern'],
     movement: { testId: 'upper-quarter-reach-observation-v1', status: 'completed', stopSymptoms: [], observations: ['head-advances-during-reach'] },
     photo: { status: skipPhoto ? 'skipped' : 'completed', observations: [], reasonCodes: [] },
+  };
+}
+
+function automatedCapture(value: number, analysisVersion: string): NonNullable<PostureScreeningSession['captureSnapshot']> {
+  return {
+    protocolVersion: 'automated-posture-capture-v1', validity: 'valid', completedAt: '2026-07-17T08:00:00.000Z', staticCaptures: [],
+    movements: [{
+      action: 'bodyweight-squat', view: 'front', visibleSide: null, status: 'valid', submittedFrames: 40, validFrames: 40,
+      phases: { status: 'complete', startIndex: 1, peakIndex: 20, returnIndex: 39, holdIndices: [], reasons: [] }, warnings: [], model: null, detector: null,
+      metrics: [{ metricId: 'left-right-knee-range-difference', label: '左右膝范围差', status: 'valid', quality: 'valid', values: [{ label: 'difference', value, unit: 'deg' }], confidence: 0.95, unavailableReasons: [], formula: 'absolute difference', analysisVersion, modelId: 'rtmpose', modelVersion: '1.3.2' }],
+    }],
   };
 }
 

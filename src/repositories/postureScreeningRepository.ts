@@ -1,5 +1,6 @@
 import type { NormalizedPoint, PostureLandmarkId, PosturePhotoView } from '../utils/posturePhotogrammetry';
 import type { PostureScreeningInput, PostureScreeningResult } from '../utils/postureScreeningRules';
+import type { PostureInferenceView, PostureMovementAction, PostureVisibleSide } from '../types/postureAnalysis';
 
 export const POSTURE_SCREENING_SESSIONS_KEY = 'musclemap.postureScreeningSessions.v1';
 export const POSTURE_SCREENING_DRAFT_KEY = 'musclemap.postureScreeningDraft.v1';
@@ -8,7 +9,10 @@ export const DEFAULT_POSTURE_SCREENING_DB_NAME = 'musclemap-posture-screening-v1
 const PHOTO_ASSET_STORE = 'photo-assets';
 const PHOTO_BLOB_STORE = 'photo-blobs';
 
-export type PostureScreeningDraftStep = 'boundary' | 'safety' | 'concern' | 'follow-up' | 'movement' | 'photo' | 'review';
+export type PostureScreeningDraftStep =
+  | 'boundary' | 'safety' | 'concern' | 'follow-up' | 'movement' | 'photo' | 'review'
+  | 'static-front' | 'static-side' | 'static-back'
+  | 'dynamic-arm-raise' | 'dynamic-squat' | 'dynamic-neck-retraction';
 
 export interface PostureScreeningContext {
   planId?: string;
@@ -32,17 +36,130 @@ export interface PosturePhotoMeasurementSnapshot {
   quality: 'valid' | 'invalid';
 }
 
+export type PostureCaptureProtocolVersion = 'automated-posture-capture-v1';
+
+export interface PostureCaptureModelSnapshot {
+  id: string;
+  version: string;
+  checkpointSha256: string;
+}
+
+export interface PostureCaptureWarningSnapshot {
+  code: string;
+  severity: 'info' | 'warning';
+  message: string;
+  details?: Record<string, unknown>;
+  frameIndex?: number;
+}
+
+export interface PostureCaptureMetricValueSnapshot {
+  label: string;
+  value: number;
+  unit: string;
+}
+
+export interface PostureCaptureMetricSnapshot {
+  metricId: string;
+  label: string;
+  status: 'valid' | 'unavailable';
+  quality: 'valid' | 'invalid';
+  values: PostureCaptureMetricValueSnapshot[];
+  confidence: number | null;
+  unavailableReasons: string[];
+  formula: string;
+  analysisVersion: string;
+  modelId: string;
+  modelVersion: string;
+}
+
+export interface PostureCaptureQualitySnapshot {
+  completeness: number;
+  landmarkReliability: number;
+  sharpness: number;
+  stability: number;
+  failedRules: string[];
+}
+
+export interface PostureCaptureTimingSnapshot {
+  decode: number;
+  detection: number;
+  pose: number;
+  total: number;
+}
+
+export interface PostureStaticCaptureSnapshot {
+  view: PostureInferenceView;
+  visibleSide: PostureVisibleSide | null;
+  status: 'valid' | 'partial' | 'unavailable';
+  quality: PostureCaptureQualitySnapshot | null;
+  warnings: PostureCaptureWarningSnapshot[];
+  model: PostureCaptureModelSnapshot | null;
+  detector: PostureCaptureModelSnapshot | null;
+  timingMs?: PostureCaptureTimingSnapshot;
+  metrics: PostureCaptureMetricSnapshot[];
+}
+
+export interface PostureMovementPhaseSnapshot {
+  status: 'complete' | 'incomplete';
+  startIndex: number | null;
+  peakIndex: number | null;
+  returnIndex: number | null;
+  holdIndices: number[];
+  reasons: string[];
+}
+
+export interface PostureMovementCaptureSnapshot {
+  action: PostureMovementAction;
+  view: 'front' | 'side';
+  visibleSide: PostureVisibleSide | null;
+  status: 'valid' | 'incomplete' | 'unavailable';
+  submittedFrames: number;
+  validFrames: number;
+  phases: PostureMovementPhaseSnapshot;
+  warnings: PostureCaptureWarningSnapshot[];
+  model: PostureCaptureModelSnapshot | null;
+  detector: PostureCaptureModelSnapshot | null;
+  timingMs?: PostureCaptureTimingSnapshot;
+  metrics: PostureCaptureMetricSnapshot[];
+}
+
+export interface PostureCaptureSnapshot {
+  protocolVersion: PostureCaptureProtocolVersion;
+  validity: 'valid' | 'partial' | 'invalid';
+  completedAt: string;
+  staticCaptures: PostureStaticCaptureSnapshot[];
+  movements: PostureMovementCaptureSnapshot[];
+}
+
+export type PostureScreeningPatternId =
+  | 'forward-head-upper-quarter-tendency'
+  | 'thoracic-rotation-mobility-tendency'
+  | 'frontal-shoulder-asymmetry-tendency'
+  | 'frontal-trunk-deviation-tendency';
+
+export interface PostureRecommendationSnapshot {
+  patternId: PostureScreeningPatternId;
+  status: 'available' | 'unavailable';
+  issueNames: string[];
+  protocolId?: string;
+  protocolTitle?: string;
+  userFacingGoal?: string;
+  limitations: string[];
+  reason: string;
+}
+
 export interface PostureScreeningDraft {
   id: string;
   currentStep: PostureScreeningDraftStep;
   answers: Partial<PostureScreeningInput>;
   photoMeasurements: PosturePhotoMeasurementSnapshot[];
+  captureSnapshot?: PostureCaptureSnapshot;
   context?: PostureScreeningContext;
   createdAt: string;
   updatedAt: string;
 }
 
-export type PostureScreeningDraftInput = Pick<PostureScreeningDraft, 'currentStep' | 'answers' | 'photoMeasurements' | 'context'>;
+export type PostureScreeningDraftInput = Pick<PostureScreeningDraft, 'currentStep' | 'answers' | 'photoMeasurements' | 'captureSnapshot' | 'context'>;
 
 export interface PostureScreeningSession {
   id: string;
@@ -50,13 +167,15 @@ export interface PostureScreeningSession {
   input: PostureScreeningInput;
   result: PostureScreeningResult;
   photoMeasurements: PosturePhotoMeasurementSnapshot[];
+  captureSnapshot?: PostureCaptureSnapshot;
+  recommendationSnapshots?: PostureRecommendationSnapshot[];
   context?: PostureScreeningContext;
   createdAt: string;
   updatedAt: string;
   completedAt: string;
 }
 
-export type PostureScreeningSessionInput = Pick<PostureScreeningSession, 'input' | 'result' | 'photoMeasurements' | 'context'>;
+export type PostureScreeningSessionInput = Pick<PostureScreeningSession, 'input' | 'result' | 'photoMeasurements' | 'captureSnapshot' | 'recommendationSnapshots' | 'context'>;
 
 export interface PosturePhotoAsset {
   id: string;
@@ -328,6 +447,8 @@ export function normalizePostureScreeningSession(value: unknown): PostureScreeni
   if (!isIsoString(value.createdAt) || !isIsoString(value.updatedAt) || !isIsoString(value.completedAt)) return null;
   if (!isPostureScreeningInput(value.input) || !isPostureScreeningResult(value.result)) return null;
   if (value.status !== value.result.status || !Array.isArray(value.photoMeasurements) || !value.photoMeasurements.every(isPhotoMeasurementSnapshot)) return null;
+  if (value.captureSnapshot !== undefined && !isCaptureSnapshot(value.captureSnapshot)) return null;
+  if (value.recommendationSnapshots !== undefined && (!Array.isArray(value.recommendationSnapshots) || !value.recommendationSnapshots.every(isRecommendationSnapshot))) return null;
   if (value.context !== undefined && !isContext(value.context)) return null;
   return clone(value as unknown as PostureScreeningSession);
 }
@@ -336,6 +457,7 @@ function normalizePostureScreeningDraft(value: unknown): PostureScreeningDraft |
   if (!isRecord(value) || typeof value.id !== 'string' || !isDraftStep(value.currentStep)) return null;
   if (!isRecord(value.answers) || !Array.isArray(value.photoMeasurements) || !value.photoMeasurements.every(isPhotoMeasurementSnapshot)) return null;
   if (!isIsoString(value.createdAt) || !isIsoString(value.updatedAt)) return null;
+  if (value.captureSnapshot !== undefined && !isCaptureSnapshot(value.captureSnapshot)) return null;
   if (value.context !== undefined && !isContext(value.context)) return null;
   return clone(value as unknown as PostureScreeningDraft);
 }
@@ -381,8 +503,108 @@ function isContext(value: unknown): value is PostureScreeningContext {
     && (value.baselineSessionId === undefined || typeof value.baselineSessionId === 'string');
 }
 
+function isCaptureSnapshot(value: unknown): value is PostureCaptureSnapshot {
+  return isRecord(value)
+    && value.protocolVersion === 'automated-posture-capture-v1'
+    && (value.validity === 'valid' || value.validity === 'partial' || value.validity === 'invalid')
+    && isIsoString(value.completedAt)
+    && Array.isArray(value.staticCaptures) && value.staticCaptures.every(isStaticCaptureSnapshot)
+    && Array.isArray(value.movements) && value.movements.every(isMovementCaptureSnapshot);
+}
+
+function isStaticCaptureSnapshot(value: unknown): value is PostureStaticCaptureSnapshot {
+  return isRecord(value)
+    && (value.view === 'front' || value.view === 'back' || value.view === 'side')
+    && isVisibleSideOrNull(value.visibleSide)
+    && (value.status === 'valid' || value.status === 'partial' || value.status === 'unavailable')
+    && (value.quality === null || isCaptureQualitySnapshot(value.quality))
+    && isCaptureResultFields(value);
+}
+
+function isMovementCaptureSnapshot(value: unknown): value is PostureMovementCaptureSnapshot {
+  if (!isRecord(value) || !['bilateral-arm-raise', 'bodyweight-squat', 'neck-retraction'].includes(String(value.action))) return false;
+  if (value.view !== 'front' && value.view !== 'side') return false;
+  if (!isVisibleSideOrNull(value.visibleSide) || !['valid', 'incomplete', 'unavailable'].includes(String(value.status))) return false;
+  if (!isNonNegativeInteger(value.submittedFrames) || !isNonNegativeInteger(value.validFrames) || value.validFrames > value.submittedFrames) return false;
+  return isMovementPhaseSnapshot(value.phases) && isCaptureResultFields(value);
+}
+
+function isCaptureResultFields(value: Record<string, unknown>): boolean {
+  return Array.isArray(value.warnings) && value.warnings.every(isCaptureWarningSnapshot)
+    && (value.model === null || isCaptureModelSnapshot(value.model))
+    && (value.detector === null || isCaptureModelSnapshot(value.detector))
+    && (value.timingMs === undefined || isTimingSnapshot(value.timingMs))
+    && Array.isArray(value.metrics) && value.metrics.every(isCaptureMetricSnapshot);
+}
+
+function isCaptureModelSnapshot(value: unknown): value is PostureCaptureModelSnapshot {
+  return isRecord(value) && hasText(value.id) && hasText(value.version) && hasText(value.checkpointSha256);
+}
+
+function isCaptureWarningSnapshot(value: unknown): value is PostureCaptureWarningSnapshot {
+  return isRecord(value) && hasText(value.code) && (value.severity === 'info' || value.severity === 'warning') && hasText(value.message)
+    && (value.details === undefined || isRecord(value.details))
+    && (value.frameIndex === undefined || isNonNegativeInteger(value.frameIndex));
+}
+
+function isCaptureMetricSnapshot(value: unknown): value is PostureCaptureMetricSnapshot {
+  return isRecord(value) && hasText(value.metricId) && hasText(value.label)
+    && (value.status === 'valid' || value.status === 'unavailable')
+    && (value.quality === 'valid' || value.quality === 'invalid')
+    && Array.isArray(value.values) && value.values.every(isMetricValueSnapshot)
+    && (value.confidence === null || (typeof value.confidence === 'number' && Number.isFinite(value.confidence)))
+    && isStringArray(value.unavailableReasons) && typeof value.formula === 'string'
+    && hasText(value.analysisVersion) && hasText(value.modelId) && hasText(value.modelVersion);
+}
+
+function isMetricValueSnapshot(value: unknown): value is PostureCaptureMetricValueSnapshot {
+  return isRecord(value) && hasText(value.label) && typeof value.value === 'number' && Number.isFinite(value.value) && hasText(value.unit);
+}
+
+function isCaptureQualitySnapshot(value: unknown): value is PostureCaptureQualitySnapshot {
+  return isRecord(value) && [value.completeness, value.landmarkReliability, value.sharpness, value.stability].every(isFiniteNumber)
+    && isStringArray(value.failedRules);
+}
+
+function isTimingSnapshot(value: unknown): value is PostureCaptureTimingSnapshot {
+  return isRecord(value) && [value.decode, value.detection, value.pose, value.total].every(isFiniteNumber);
+}
+
+function isMovementPhaseSnapshot(value: unknown): value is PostureMovementPhaseSnapshot {
+  return isRecord(value) && (value.status === 'complete' || value.status === 'incomplete')
+    && [value.startIndex, value.peakIndex, value.returnIndex].every((item) => item === null || isNonNegativeInteger(item))
+    && Array.isArray(value.holdIndices) && value.holdIndices.every(isNonNegativeInteger)
+    && isStringArray(value.reasons);
+}
+
+function isRecommendationSnapshot(value: unknown): value is PostureRecommendationSnapshot {
+  if (!isRecord(value) || !['forward-head-upper-quarter-tendency', 'thoracic-rotation-mobility-tendency', 'frontal-shoulder-asymmetry-tendency', 'frontal-trunk-deviation-tendency'].includes(String(value.patternId))) return false;
+  if ((value.status !== 'available' && value.status !== 'unavailable') || !isStringArray(value.issueNames) || !isStringArray(value.limitations) || !hasText(value.reason)) return false;
+  if (value.status === 'available') return hasText(value.protocolId) && hasText(value.protocolTitle) && hasText(value.userFacingGoal);
+  return value.protocolId === undefined && value.protocolTitle === undefined && value.userFacingGoal === undefined;
+}
+
+function isVisibleSideOrNull(value: unknown): value is PostureVisibleSide | null {
+  return value === null || value === 'left' || value === 'right';
+}
+
+function isNonNegativeInteger(value: unknown): value is number {
+  return typeof value === 'number' && Number.isInteger(value) && value >= 0;
+}
+
+function isFiniteNumber(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value);
+}
+
+function hasText(value: unknown): value is string {
+  return typeof value === 'string' && value.length > 0;
+}
+
 function isDraftStep(value: unknown): value is PostureScreeningDraftStep {
-  return typeof value === 'string' && ['boundary', 'safety', 'concern', 'follow-up', 'movement', 'photo', 'review'].includes(value);
+  return typeof value === 'string' && [
+    'boundary', 'safety', 'concern', 'follow-up', 'movement', 'photo', 'review',
+    'static-front', 'static-side', 'static-back', 'dynamic-arm-raise', 'dynamic-squat', 'dynamic-neck-retraction',
+  ].includes(value);
 }
 
 function isScreeningStatus(value: unknown): value is PostureScreeningResult['status'] {

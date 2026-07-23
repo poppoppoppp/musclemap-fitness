@@ -11,6 +11,7 @@ import type {
   StabilitySample,
 } from '../captureLabTypes';
 import { describeCameraError } from '../cameraError';
+import { buildCameraVideoConstraints } from '../camera/cameraViewport';
 import { checkCaptureCapabilities } from '../mediapipe/checkCaptureCapabilities';
 import { PoseLandmarkerWorkerClient } from '../mediapipe/PoseLandmarkerWorkerClient';
 import { POSTURE_CAPTURE_CONFIG } from '../poseLandmarkerConfig';
@@ -291,7 +292,7 @@ export function usePostureCaptureLab({ videoRef }: UsePostureCaptureLabOptions) 
     try {
       nextStream = await navigator.mediaDevices.getUserMedia({
         audio: false,
-        video: { facingMode: 'user', width: { ideal: 720 }, height: { ideal: 1280 }, frameRate: { ideal: 30, max: 30 } },
+        video: buildCameraVideoConstraints({ width: window.innerWidth, height: window.innerHeight }),
       });
     } catch (cause) {
       throw describeCameraError(cause);

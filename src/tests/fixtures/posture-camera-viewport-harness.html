@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Posture camera viewport harness</title></head>
+  <body>
+    <main id="harness"></main>
+    <script type="module">
+      import { mountPostureCameraViewport } from './PostureCameraViewportHarness.tsx';
+      mountPostureCameraViewport(document.querySelector('#harness'));
+      document.documentElement.dataset.harnessMounted = 'true';
+    </script>
+  </body>
+</html>

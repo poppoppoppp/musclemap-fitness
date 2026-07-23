@@ -252,6 +252,7 @@ def create_app(
                         ),
                         person=person,
                         timing_ms=frame_timing,
+                        warnings=output.warnings,
                     )
                 )
                 analysis_frames.append(

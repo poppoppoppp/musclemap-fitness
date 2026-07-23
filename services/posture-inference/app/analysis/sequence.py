@@ -228,11 +228,12 @@ def _signals(action: MovementId, points: dict[str, AnalysisPoint], visible_side:
         return {"driver": (left + right) / 2, "left-arm-angle": left, "right-arm-angle": right, "trunk-angle": trunk}
     if action == "bodyweight-squat":
         hip_mid = midpoint(points["left_hip"], points["right_hip"], name="hip_mid")
+        ankle_mid = midpoint(points["left_ankle"], points["right_ankle"], name="ankle_mid")
         shoulder_width = distance(points["left_shoulder"], points["right_shoulder"])
         left_knee_offset = signed_distance_to_line(points["left_knee"], points["left_hip"], points["left_ankle"]) / shoulder_width * 100
         right_knee_offset = signed_distance_to_line(points["right_knee"], points["right_hip"], points["right_ankle"]) / shoulder_width * 100
         return {
-            "driver": hip_mid.y * 100,
+            "driver": (hip_mid.y - ankle_mid.y) / shoulder_width * 100,
             "left-knee-angle": angle_between(_vector(points["left_knee"], points["left_hip"]), _vector(points["left_knee"], points["left_ankle"])),
             "right-knee-angle": angle_between(_vector(points["right_knee"], points["right_hip"]), _vector(points["right_knee"], points["right_ankle"])),
             "left-knee-offset": left_knee_offset,

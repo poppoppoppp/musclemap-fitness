@@ -23,6 +23,8 @@ class ServiceConfig(BaseSettings):
     movement_max_frame_pixels: int = Field(default=4_000_000, ge=1)
     movement_max_total_pixels: int = Field(default=80_000_000, ge=1)
     detection_score_threshold: float = Field(default=0.3, ge=0, le=1)
+    secondary_person_score_ratio_threshold: float = Field(default=0.65, ge=0, le=1)
+    secondary_person_area_ratio_threshold: float = Field(default=0.25, ge=0, le=1)
     keypoint_score_threshold: float = Field(default=0.3, ge=0, le=1)
     allowed_origins: str = "http://127.0.0.1:5173,http://localhost:5173"
 

@@ -114,6 +114,7 @@ class AnalysisWarning(ApiModel):
     severity: Literal["info", "warning"]
     message: str
     keypoint_indices: list[int] = Field(default_factory=list)
+    details: dict[str, Any] = Field(default_factory=dict)
 
 
 class KeypointResponse(ApiModel):
@@ -279,6 +280,7 @@ class MovementInferenceFrame(ApiModel):
     person: PersonKeypoints | None = None
     timing_ms: TimingInfo | None = None
     error: ErrorDetail | None = None
+    warnings: list[AnalysisWarning] = Field(default_factory=list)
 
 
 class MovementLimitsResponse(ApiModel):

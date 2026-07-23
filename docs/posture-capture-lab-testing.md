@@ -125,3 +125,76 @@ The model is initialized once per service process. `runtimeCreationMs` (includin
 ### Failure verification
 
 The real runtime returned structured failures for: no person (`NO_PERSON_DETECTED`, 422), multiple eligible people (`MULTIPLE_PEOPLE_DETECTED`, 422), damaged JPEG (`IMAGE_DECODE_FAILED`, 422), encoded upload over 10 MiB (`IMAGE_TOO_LARGE`, 413), and decoded image over 24 million pixels (`IMAGE_DIMENSIONS_EXCEEDED`, 413). Deterministic API tests also cover unsupported media, model unavailable, and response contracts. Multiple people are rejected rather than silently choosing one.
+
+## Batch two: static metrics and slow movement verification (2026-07-22)
+
+These values are transparent geometry outputs from the experimental page. They are not medical ranges, posture findings, diagnoses, or training recommendations. Images and selected dynamic frames remained in the browser session and were not written to formal screening, plan, trend, or training repositories.
+
+### Human static measurements
+
+| View | Valid measurements | Explicitly unavailable |
+| --- | --- | --- |
+| Front | head line 3.18 deg; shoulder height 0.00% / 0.00 deg; trunk offset 2.53%; pelvis height -2.22% / -1.27 deg; knee offsets -1.47% / 2.66%; foot directions 43.26 deg / -37.65 deg | same-side ear-to-shoulder, because it is side-only |
+| Right side | ear-to-shoulder offset 0.79% of same-side torso length / 1.59 deg; minimum input score 0.66; keypoint chain `right_ear -> right_shoulder -> right_hip` | all bilateral front/back-only measurements |
+| Back | head line 3.37 deg; shoulder height 1.19% / 0.68 deg; trunk offset -3.64%; pelvis height -3.92% / -2.25 deg; knee offsets -1.01% / 1.06%; foot directions -119.05 deg / 122.62 deg | same-side ear-to-shoulder, because it is side-only |
+
+The side calculation used only the user-confirmed right visible chain. It did not mix left and right landmarks. Front and back distances were normalized by shoulder width; the side distance was normalized by same-side torso length.
+
+### Human slow-movement measurements on GPU
+
+Each action was one paced repetition. Browser capture ran above the analysis rate, retained real timestamps, and selected at most 5 FPS / 40 total frames for RTMDet and RTMPose. Failed frames were not retried or replaced.
+
+| Action | View / side | Phase result | RTMPose frames | GPU total | Transparent metrics |
+| --- | --- | --- | --- | --- | --- |
+| Bilateral arm raise | front | complete | 31 / 31 | 2474.5 ms | left range 111.1 deg; right range 115.4 deg; absolute difference 4.2 deg; trunk excursion 2.4 deg; hold MAD 0.3 deg |
+| Bodyweight squat | front | complete | 40 / 40 | 5953.3 ms | left knee range 109.0 deg; right knee range 107.7 deg; absolute difference 1.3 deg; knee-offset ranges 52.8% / 32.1% of shoulder width; trunk excursion 4.9 deg; hold MAD 5.5% of shoulder width |
+| Neck retraction | right side | complete | 31 / 31 | 2457.2 ms | ear-to-shoulder excursion 19.4% of right torso length; head-line excursion 14.5 deg; hold MAD 1.3% of right torso length |
+
+### Real-camera defects found and corrected
+
+The first squat attempt produced 28 valid frames out of 40 because RTMDet intermittently reported `MULTIPLE_PEOPLE_DETECTED` in a single-person but visually cluttered scene. The old policy rejected every second candidate above the absolute 0.30 threshold. The corrected pure selection policy keeps strict rejection for a similarly confident, similarly sized second person, while a dominant primary can ignore weak or small secondary candidates and return `IGNORED_WEAK_PERSON_CANDIDATE` diagnostics. The final squat produced 40 valid frames out of 40.
+
+After detection was stable, the squat still reported an incomplete phase. The former driver used `hip_mid.y` after normalization around each frame's moving RTMDet box center, so box motion cancelled real hip descent. The driver is now `(hip_mid.y - ankle_mid.y) / shoulder_width * 100`, which is invariant to box translation and scaling. A moving-box regression failed before the change and passes after it; the final real squat detected start, peak hold, and return.
+
+### Automated regression status
+
+- Python unit and API suite: 55 passed.
+- Focused inference-policy and dynamic API suite: 15 passed.
+- Focused movement and analysis API suite: 16 passed.
+- Focused frontend sampling, capture, and contract suite: 9 passed.
+- TypeScript project check: passed.
+- Full frontend Playwright suite: 373 passed, 14 skipped, 0 failed.
+- Production build: passed; the asset verifier confirmed 2 MediaPipe model files and 6 WASM assets for `@mediapipe/tasks-vision` 0.10.35.
+- OpenMMLab checkpoint verification: RTMPose `4d3e73ddd31222b7b0db36caeda396af1d7630c3b5a60451bdfa99a79e8dbb90`; RTMDet `35b0c7406499e0d141dd6a0235db07c10d2bee8f891f8f4e353c16a009de30e8`.
+
+CPU framework/model loading and full RTMDet/RTMPose inference remain covered by the batch-one CPU benchmark above. Batch-two phase and metric calculations are pure CPU functions and are included in the 55-test Python suite. Human movement values in this section are the GPU run and must not be presented as CPU human acceptance.
+
+## Responsive camera stage verification (2026-07-22)
+
+This change is limited to camera acquisition and presentation. It does not change MediaPipe quality rules, RTMPose analysis, static metrics, movement phase logic, or any formal posture workflow.
+
+### Root cause
+
+- Both static and dynamic capture requested a fixed portrait ideal of 720 x 1280, including desktop browsers.
+- The static preview used a fixed 3:4 container capped at 66dvh, while the dynamic preview used a fixed square container.
+- A previously observed 720 x 720 desktop stream therefore rendered inside a 524 x 698 static container. `object-contain` correctly produced a 524 x 524 image, but the mismatched container added 174 pixels of combined vertical letterboxing and made full-body framing unnecessarily small.
+- The skeleton transform itself already followed `object-contain`; the defect was duplicated, incompatible stage geometry around otherwise correct mapping.
+- Ordinary AppShell padding and the bottom navigation reserved additional screen area during capture.
+
+### Implemented camera contract
+
+- Narrow portrait screens request 720 x 1280 as the ideal; desktop and landscape screens request 1280 x 720. These remain ideals because the browser and camera choose the actual track format.
+- After `loadedmetadata`, `videoWidth` and `videoHeight` are authoritative. The shared stage preserves that exact media ratio and fits it inside the current `visualViewport` without cropping.
+- Video, MediaPipe canvas, guide frame, hints, mode controls, and dynamic pace controls share the same stage. Video remains `object-contain`; normalized landmarks use the same tested contain rectangle and mirror transform.
+- Static front, side, and back modes share one stage. The three slow dynamic actions reuse it during ready, countdown, and capture.
+- The Capture Lab route removes AppShell bottom navigation and ordinary page padding. Live controls use safe-area-aware overlays.
+
+### Automated viewport evidence
+
+| Scenario | Screen | Actual media | Expected stage | Result |
+| --- | ---: | ---: | ---: | --- |
+| Mobile portrait | 390 x 844 | 720 x 1280 | 390 x 693.3 | passed |
+| Desktop square camera | 1440 x 900 | 720 x 720 | 900 x 900 | passed |
+| Dynamic camera ready | 390 x 844 | 720 x 1280 | shared immersive stage and floating controls | passed |
+
+Geometry tests also cover portrait/landscape constraint selection, portrait/landscape/square fit, exact `object-contain` rectangles, mirrored point mapping, and existing keypoint comparison/quality regressions. A real desktop camera and a real portrait phone remain the final human framing checks; synthetic or generated people are not used for this layout verification.

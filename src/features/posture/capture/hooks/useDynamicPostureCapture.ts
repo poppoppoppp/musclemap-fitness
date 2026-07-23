@@ -7,6 +7,7 @@ import type {
 } from '../../../../types/postureAnalysis';
 import { DYNAMIC_MOVEMENT_CONFIGS } from '../analysis/analysisConfig';
 import { selectFramesByTimestamp } from '../analysis/selectFramesByTimestamp';
+import { buildCameraVideoConstraints } from '../camera/cameraViewport';
 import { submitMovementAnalysis } from '../inference/postureAnalysisApi';
 import { PostureInferenceApiError } from '../inference/postureInferenceApi';
 
@@ -67,7 +68,7 @@ export function useDynamicPostureCapture({ videoRef, action, visibleSide, baseUr
     setStage('requesting-camera');
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user', width: { ideal: 720 }, height: { ideal: 1280 }, frameRate: { ideal: 30, max: 30 } },
+        video: buildCameraVideoConstraints({ width: window.innerWidth, height: window.innerHeight }),
         audio: false,
       });
       if (generation !== generationRef.current) {

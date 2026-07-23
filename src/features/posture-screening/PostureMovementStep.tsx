@@ -57,7 +57,7 @@ export default function PostureMovementStep({ concern, stopSymptoms, observation
       </fieldset>
       <div className="mt-5 grid grid-cols-[auto_1fr] gap-3">
         <button type="button" onClick={onBack} className="min-h-12 rounded-xl border border-white/15 px-4 text-sm font-bold text-zinc-200 outline-none focus-visible:ring-2 focus-visible:ring-lime-200">返回</button>
-        <button type="button" onClick={onContinue} className="min-h-12 rounded-xl bg-lime-300 px-4 text-sm font-black text-[#10130d] outline-none focus-visible:ring-2 focus-visible:ring-lime-100">保存观察结果</button>
+        <button type="button" onClick={onContinue} className="min-h-12 rounded-xl bg-lime-300 px-4 text-sm font-black text-[#10130d] outline-none focus-visible:ring-2 focus-visible:ring-lime-100">开始自动体态筛查</button>
       </div>
     </section>
   );

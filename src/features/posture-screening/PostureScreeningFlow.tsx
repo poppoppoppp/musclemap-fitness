@@ -2,22 +2,20 @@ import { useEffect, useReducer, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getGuidedPostureTest } from '../../data/posture/postureScreeningTests';
 import type { PosturePrimaryConcern } from '../../data/posture/postureScreeningQuestions';
-import type { PostureCaptureSnapshot, PostureMovementCaptureSnapshot, PosturePhotoMeasurementSnapshot, PostureScreeningContext, PostureScreeningDraftStep, PostureScreeningRepository, PostureStaticCaptureSnapshot } from '../../repositories/postureScreeningRepository';
+import type { PostureCaptureSnapshot, PostureMovementCaptureSnapshot, PosturePhotoMeasurementSnapshot, PostureScreeningContext, PostureScreeningRepository, PostureStaticCaptureSnapshot } from '../../repositories/postureScreeningRepository';
 import { evaluatePostureScreening, type FunctionalPostureObservation, type PostureSafetyFlag, type PostureScreeningInput, type PostureTestStopSymptom, type SubjectivePostureObservation } from '../../utils/postureScreeningRules';
 import { buildPostureCaptureSnapshot } from '../../utils/postureCaptureSnapshot';
+import { isPostureCaptureSequenceComplete, nextPostureCaptureStep, previousPostureCaptureStep, resolvePostureScreeningDraftStep, type PostureAutomatedCaptureStep, type PostureScreeningActiveStep } from '../../utils/postureScreeningFlow';
 import { buildPostureRecommendationSnapshots } from '../../utils/postureScreeningRecommendations';
 import PostureAutomatedMovementStep from './PostureAutomatedMovementStep';
 import PostureAutomatedStaticStep from './PostureAutomatedStaticStep';
 import PostureBoundaryStep from './PostureBoundaryStep';
 import PostureConcernStep from './PostureConcernStep';
 import PostureMovementStep from './PostureMovementStep';
-import PosturePhotoStep from './PosturePhotoStep';
 import PostureSafetyStep from './PostureSafetyStep';
 import PostureScreeningProgress from './PostureScreeningProgress';
 
-type FlowStep = 'boundary' | 'safety' | 'concern' | 'movement' | 'photo' | 'review'
-  | 'static-front' | 'static-side' | 'static-back'
-  | 'dynamic-arm-raise' | 'dynamic-squat' | 'dynamic-neck-retraction';
+type FlowStep = PostureScreeningActiveStep;
 type FlowAction = { type: 'go'; step: FlowStep };
 
 export default function PostureScreeningFlow({ repository, entryContext }: { repository: PostureScreeningRepository; entryContext?: PostureScreeningContext }) {
@@ -26,7 +24,7 @@ export default function PostureScreeningFlow({ repository, entryContext }: { rep
   const replacingDraft = Boolean(entryContext && draftRead.value && !sameContext(entryContext, draftRead.value.context));
   const resumedDraft = replacingDraft ? null : draftRead.value;
   const answers = resumedDraft?.answers;
-  const restoredStep = normalizeStep(resumedDraft?.currentStep);
+  const restoredStep = resolvePostureScreeningDraftStep(resumedDraft);
   const [step, dispatch] = useReducer(flowReducer, restoredStep);
   const [age, setAge] = useState(answers?.age ? String(answers.age) : '');
   const [boundaryAccepted, setBoundaryAccepted] = useState(answers?.boundaryAccepted ?? false);
@@ -36,13 +34,13 @@ export default function PostureScreeningFlow({ repository, entryContext }: { rep
   const [subjectiveObservations, setSubjectiveObservations] = useState<SubjectivePostureObservation[]>(answers?.subjectiveObservations ?? []);
   const [stopSymptoms, setStopSymptoms] = useState<PostureTestStopSymptom[]>(answers?.movement?.stopSymptoms ?? []);
   const [movementObservations, setMovementObservations] = useState<FunctionalPostureObservation[]>(answers?.movement?.observations ?? []);
-  const [photoInput, setPhotoInput] = useState<PostureScreeningInput['photo']>(answers?.photo ?? { status: 'skipped', observations: [], reasonCodes: [] });
+  const [photoInput] = useState<PostureScreeningInput['photo']>(answers?.photo ?? { status: 'skipped', observations: [], reasonCodes: [] });
   const [photoMeasurements, setPhotoMeasurements] = useState<PosturePhotoMeasurementSnapshot[]>(resumedDraft?.photoMeasurements ?? []);
   const [captureSnapshot, setCaptureSnapshot] = useState<PostureCaptureSnapshot | undefined>(resumedDraft?.captureSnapshot);
-  const [draftId, setDraftId] = useState(resumedDraft?.id ?? 'posture-screening-draft-local');
   const [context] = useState(entryContext ?? resumedDraft?.context);
   const [error, setError] = useState(draftRead.ok ? '' : '上次未完成的筛查草稿已损坏，本次已从头开始。');
   const [preparation, setPreparation] = useState<'preparing' | 'ready' | 'failed'>(replacingDraft ? 'preparing' : 'ready');
+  const [restarting, setRestarting] = useState(false);
   const completionLock = useRef(false);
 
   useEffect(() => {
@@ -86,7 +84,6 @@ export default function PostureScreeningFlow({ repository, entryContext }: { rep
       return false;
     }
     setError('');
-    setDraftId(saved.draft.id);
     setPhotoMeasurements(measurements);
     setCaptureSnapshot(capture);
     dispatch({ type: 'go', step: nextStep });
@@ -149,43 +146,33 @@ export default function PostureScreeningFlow({ repository, entryContext }: { rep
     else persist('static-front', input);
   };
 
-  const useStaticCapture = (capture: PostureStaticCaptureSnapshot, nextStep: FlowStep) => {
+  const useStaticCapture = (capture: PostureStaticCaptureSnapshot, currentStep: PostureAutomatedCaptureStep) => {
     const staticCaptures = replaceBy(captureSnapshot?.staticCaptures ?? [], capture, ({ view }) => view);
     const nextCapture = buildPostureCaptureSnapshot(staticCaptures, captureSnapshot?.movements ?? []);
+    const nextStep = nextPostureCaptureStep(currentStep);
+    if (!nextStep) return;
     persist(nextStep, buildInput({ photo: { status: 'skipped', observations: [], reasonCodes: [] } }), [], nextCapture);
   };
 
-  const useMovementCapture = (movementCapture: PostureMovementCaptureSnapshot, nextStep?: FlowStep) => {
+  const useMovementCapture = (movementCapture: PostureMovementCaptureSnapshot, currentStep: PostureAutomatedCaptureStep) => {
     const movements = replaceBy(captureSnapshot?.movements ?? [], movementCapture, ({ action }) => action);
     const nextCapture = buildPostureCaptureSnapshot(captureSnapshot?.staticCaptures ?? [], movements);
     const input = buildInput({ photo: { status: 'skipped', observations: [], reasonCodes: [] } });
+    const nextStep = nextPostureCaptureStep(currentStep);
     if (nextStep) persist(nextStep, input, [], nextCapture);
-    else complete(input, [], nextCapture);
+    else if (isPostureCaptureSequenceComplete(nextCapture)) complete(input, [], nextCapture);
+    else setError('自动采集结果不完整，无法生成正式报告。请返回并完成缺失步骤。');
   };
 
-  const skipAutomatedCapture = () => {
-    const photo: PostureScreeningInput['photo'] = { status: 'skipped', observations: [], reasonCodes: [] };
-    setPhotoInput(photo);
-    setPhotoMeasurements([]);
-    setCaptureSnapshot(undefined);
-    complete(buildInput({ photo }), [], undefined);
-  };
-
-  const skipPhoto = () => {
-    const photo: PostureScreeningInput['photo'] = { status: 'skipped', observations: [], reasonCodes: [] };
-    const input = buildInput({ photo });
-    setPhotoInput(photo);
-    setPhotoMeasurements([]);
-    complete(input, []);
-  };
-
-  const usePhoto = (measurement: PosturePhotoMeasurementSnapshot) => {
-    const photo: PostureScreeningInput['photo'] = { status: 'completed', observations: [], reasonCodes: [] };
-    const measurements = [measurement];
-    const input = buildInput({ photo });
-    setPhotoInput(photo);
-    setPhotoMeasurements(measurements);
-    persist('review', input, measurements);
+  const restartScreening = async () => {
+    setRestarting(true);
+    const discarded = await repository.discardDraft();
+    if (!discarded.ok) {
+      setRestarting(false);
+      setError('无法清除本次筛查草稿，请检查浏览器站点存储后重试。');
+      return;
+    }
+    window.location.reload();
   };
 
   if (preparation !== 'ready') {
@@ -198,45 +185,19 @@ export default function PostureScreeningFlow({ repository, entryContext }: { rep
     <>
       <PostureScreeningProgress currentStep={step} />
       {error ? <p role="alert" className="mt-5 rounded-xl border border-red-300/25 bg-red-300/[0.06] px-3 py-3 text-sm leading-5 text-red-100">{error}</p> : null}
+      {resumedDraft ? <button type="button" onClick={() => void restartScreening()} disabled={restarting} className="mt-4 min-h-11 w-full rounded-xl border border-white/15 px-4 text-xs font-bold text-zinc-300 disabled:opacity-50">{restarting ? '正在重新开始…' : '重新开始本次筛查'}</button> : null}
       {step === 'boundary' ? <PostureBoundaryStep age={age} boundaryAccepted={boundaryAccepted} onAgeChange={setAge} onBoundaryChange={setBoundaryAccepted} onContinue={continueBoundary} /> : null}
       {step === 'safety' ? <PostureSafetyStep flags={safetyFlags} onToggle={(flag) => setSafetyFlags((current) => toggle(current, flag))} onBack={() => persist('boundary')} onContinue={continueSafety} /> : null}
       {step === 'concern' ? <PostureConcernStep concern={primaryConcern} functionalImpact={functionalImpact} observations={subjectiveObservations} onConcernChange={changeConcern} onImpactChange={setFunctionalImpact} onToggleObservation={(observation) => setSubjectiveObservations((current) => toggle(current, observation))} onBack={() => persist('safety')} onContinue={continueConcern} /> : null}
       {step === 'movement' ? <PostureMovementStep concern={primaryConcern} stopSymptoms={stopSymptoms} observations={movementObservations} onToggleStop={(symptom) => setStopSymptoms((current) => toggle(current, symptom))} onToggleObservation={(observation) => setMovementObservations((current) => toggle(current, observation))} onBack={() => persist('concern')} onContinue={continueMovement} /> : null}
-      {step === 'static-front' ? <PostureAutomatedStaticStep view="front" stepNumber={1} onBack={() => persist('movement')} onComplete={(capture) => useStaticCapture(capture, 'static-side')} onSkipAll={skipAutomatedCapture} /> : null}
-      {step === 'static-side' ? <PostureAutomatedStaticStep view="side" stepNumber={2} onBack={() => persist('static-front')} onComplete={(capture) => useStaticCapture(capture, 'static-back')} /> : null}
-      {step === 'static-back' ? <PostureAutomatedStaticStep view="back" stepNumber={3} onBack={() => persist('static-side')} onComplete={(capture) => useStaticCapture(capture, 'dynamic-arm-raise')} /> : null}
-      {step === 'dynamic-arm-raise' ? <PostureAutomatedMovementStep action="bilateral-arm-raise" stepNumber={4} onBack={() => persist('static-back')} onComplete={(capture) => useMovementCapture(capture, 'dynamic-squat')} /> : null}
-      {step === 'dynamic-squat' ? <PostureAutomatedMovementStep action="bodyweight-squat" stepNumber={5} onBack={() => persist('dynamic-arm-raise')} onComplete={(capture) => useMovementCapture(capture, 'dynamic-neck-retraction')} /> : null}
-      {step === 'dynamic-neck-retraction' ? <PostureAutomatedMovementStep action="neck-retraction" stepNumber={6} onBack={() => persist('dynamic-squat')} onComplete={(capture) => useMovementCapture(capture)} /> : null}
-      {step === 'photo' ? <PosturePhotoStep draftId={draftId} repository={repository} onBack={() => persist('movement')} onSkip={skipPhoto} onUsePhoto={usePhoto} /> : null}
-      {step === 'review' ? <ReviewStep hasPhoto={photoInput.status === 'completed'} onBack={() => persist('photo')} onComplete={() => complete(buildInput())} /> : null}
+      {step === 'static-front' ? <PostureAutomatedStaticStep view="front" stepNumber={1} onBack={() => persist(previousPostureCaptureStep(step))} onComplete={(capture) => useStaticCapture(capture, step)} /> : null}
+      {step === 'static-side' ? <PostureAutomatedStaticStep view="side" stepNumber={2} onBack={() => persist(previousPostureCaptureStep(step))} onComplete={(capture) => useStaticCapture(capture, step)} /> : null}
+      {step === 'static-back' ? <PostureAutomatedStaticStep view="back" stepNumber={3} onBack={() => persist(previousPostureCaptureStep(step))} onComplete={(capture) => useStaticCapture(capture, step)} /> : null}
+      {step === 'dynamic-arm-raise' ? <PostureAutomatedMovementStep action="bilateral-arm-raise" stepNumber={4} onBack={() => persist(previousPostureCaptureStep(step))} onComplete={(capture) => useMovementCapture(capture, step)} /> : null}
+      {step === 'dynamic-squat' ? <PostureAutomatedMovementStep action="bodyweight-squat" stepNumber={5} onBack={() => persist(previousPostureCaptureStep(step))} onComplete={(capture) => useMovementCapture(capture, step)} /> : null}
+      {step === 'dynamic-neck-retraction' ? <PostureAutomatedMovementStep action="neck-retraction" stepNumber={6} onBack={() => persist(previousPostureCaptureStep(step))} onComplete={(capture) => useMovementCapture(capture, step)} /> : null}
     </>
   );
-}
-
-function ReviewStep({ hasPhoto, onBack, onComplete }: { hasPhoto: boolean; onBack: () => void; onComplete: () => void }) {
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  useEffect(() => { titleRef.current?.focus(); }, []);
-  return (
-    <section className="mt-7" aria-labelledby="review-title">
-      <h2 ref={titleRef} tabIndex={-1} id="review-title" className="text-xl font-black outline-none">生成本次筛查结果</h2>
-      <p className="mt-2 text-sm leading-6 text-zinc-300">主观描述与引导观察已完成。照片测量是可选证据，下一阶段开放后仍可补充，不影响先生成基于功能表现的结果。</p>
-      <div className="mt-5 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-4">
-        <p className="text-xs font-black tracking-[0.08em] text-lime-300">本次证据范围</p>
-        <p className="mt-2 text-sm leading-6 text-zinc-200">用户描述 + 引导动作观察；不包含医疗诊断，也不推断特定肌肉、关节或病因。</p>
-      </div>
-      <button type="button" onClick={onComplete} className="mt-5 min-h-12 w-full rounded-xl bg-lime-300 px-4 text-sm font-black text-[#10130d] outline-none focus-visible:ring-2 focus-visible:ring-lime-100">{hasPhoto ? '使用照片测量，生成结果' : '暂不使用照片，生成结果'}</button>
-      <button type="button" onClick={onBack} className="mt-3 min-h-12 w-full rounded-xl border border-white/15 px-4 text-sm font-bold text-zinc-200 outline-none focus-visible:ring-2 focus-visible:ring-lime-200">返回修改观察</button>
-    </section>
-  );
-}
-
-function normalizeStep(step?: PostureScreeningDraftStep): FlowStep {
-  if (step === 'safety' || step === 'concern' || step === 'movement' || step === 'photo' || step === 'review'
-    || step === 'static-front' || step === 'static-side' || step === 'static-back'
-    || step === 'dynamic-arm-raise' || step === 'dynamic-squat' || step === 'dynamic-neck-retraction') return step;
-  if (step === 'follow-up') return 'concern';
-  return 'boundary';
 }
 
 function sameContext(left: PostureScreeningContext, right: PostureScreeningContext | undefined): boolean {

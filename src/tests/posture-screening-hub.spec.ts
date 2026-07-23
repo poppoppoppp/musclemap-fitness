@@ -1,25 +1,25 @@
 import { expect, test } from '@playwright/test';
 
+test.setTimeout(60_000);
+
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => localStorage.clear());
 });
 
-test('takes a no-plan user through the new screening and reloads the saved result', async ({ page }) => {
+test('takes a no-plan user into mandatory automated capture and restores that draft after reload', async ({ page }) => {
   await page.goto('/growth/posture');
   await page.getByRole('link', { name: '开始体态分析' }).click();
   await expect(page).toHaveURL('/growth/posture/screening');
 
-  await completeFunctionalOnlyScreening(page);
+  await startAutomatedScreening(page);
 
-  await expect(page).toHaveURL(/\/growth\/posture\/results\//);
-  await expect(page.getByRole('heading', { name: '本次筛查已完成' })).toBeVisible();
-  await expect(page.getByRole('button', { name: '创建改善计划' })).toHaveCount(0);
-  const resultUrl = page.url();
+  await expect(page.getByRole('heading', { name: '正面静态采集' })).toBeVisible();
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('musclemap.postureScreeningSessions.v1') ?? '[]'))).toHaveLength(0);
   await page.reload();
-  await expect(page).toHaveURL(resultUrl);
-  await expect(page.getByTestId('screening-terminal')).toContainText('头位前移伴上段控制负担倾向');
-  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('musclemap.postureScreeningSessions.v1') ?? '[]'))).toHaveLength(1);
+  await expect(page).toHaveURL('/growth/posture/screening');
+  await expect(page.getByRole('heading', { name: '正面静态采集' })).toBeVisible();
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('musclemap.postureScreeningSessions.v1') ?? '[]'))).toHaveLength(0);
 });
 
 test('opens active-plan reassessment in a typed screening context without mutating the plan', async ({ page }) => {
@@ -63,7 +63,7 @@ test('discards an unrelated draft before starting a plan-linked reassessment', a
   await expect.poll(() => page.evaluate(() => localStorage.getItem('musclemap.postureScreeningDraft.v1'))).toBeNull();
 });
 
-async function completeFunctionalOnlyScreening(page: import('@playwright/test').Page) {
+async function startAutomatedScreening(page: import('@playwright/test').Page) {
   await page.getByLabel('年龄').fill('30');
   await page.getByLabel('我理解这是体态与功能表现筛查，不是医疗诊断').check();
   await page.getByRole('button', { name: '继续安全检查' }).click();
@@ -72,8 +72,7 @@ async function completeFunctionalOnlyScreening(page: import('@playwright/test').
   await page.getByLabel(/自然站立或久坐时.*头部相对肩部明显前移/).check();
   await page.getByRole('button', { name: '继续引导观察' }).click();
   await page.getByLabel('上举时头部会向前移动').check();
-  await page.getByRole('button', { name: '保存观察结果' }).click();
-  await page.getByRole('button', { name: '当前设备无法采集，暂不进行自动采集' }).click();
+  await page.getByRole('button', { name: '开始自动体态筛查' }).click();
 }
 
 async function completeBoundaryStop(page: import('@playwright/test').Page) {
